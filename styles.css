@@ -1,0 +1,35 @@
+body {
+    cursor: none; /* Hide default cursor */
+    overflow-x: hidden;
+}
+
+/* Ensure clickable elements preserve the logic */
+a, button, [role="button"], .cursor-pointer {
+    cursor: none;
+}
+
+/* Custom Cursor Styles */
+#custom-cursor {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #E11D48;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease-out, width 0.2s, height 0.2s, background-color 0.2s;
+    transform: translate(-50%, -50%);
+}
+
+#custom-cursor.hovering {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(225, 29, 72, 0.1);
+    border-width: 1px;
+}
+
+/* Progress Bar Animation */
+@keyframes progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}

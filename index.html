@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emilie El Chidiac | Architect</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            cursor: none; /* Hide default cursor */
+            overflow-x: hidden;
+        }
+        
+        /* Ensure clickable elements preserve the logic */
+        a, button, [role="button"], .cursor-pointer {
+            cursor: none;
+        }
+
+        /* Custom Cursor Styles */
+        #custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #E11D48;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease-out, width 0.2s, height 0.2s, background-color 0.2s;
+            transform: translate(-50%, -50%);
+        }
+
+        #custom-cursor.hovering {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(225, 29, 72, 0.1);
+            border-width: 1px;
+        }
+        
+        /* Progress Bar Animation */
+        @keyframes progress {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    keyframes: {
+                        'slide-in-left': {
+                            '0%': { transform: 'translateX(-100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        'slide-in-right': {
+                            '0%': { transform: 'translateX(100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        'slide-in-bottom': {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        'fade-in': {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        'zoom-in': {
+                            '0%': { transform: 'scale(0.95)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        }
+                    },
+                    animation: {
+                        'slide-in-from-left': 'slide-in-left 0.7s ease-out forwards',
+                        'slide-in-from-right': 'slide-in-right 0.7s ease-out forwards',
+                        'slide-in-from-bottom': 'slide-in-bottom 0.5s ease-out forwards',
+                        'fade-in': 'fade-in 0.3s ease-out forwards',
+                        'zoom-in': 'zoom-in 0.3s ease-out forwards',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white text-black">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- ICONS (Replaces Lucide-React Imports) ---
+        const Icon = ({ path, size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                {path}
+            </svg>
+        );
+
+        const ChevronRight = (props) => <Icon {...props} path={<polyline points="9 18 15 12 9 6" />} />;
+        const Mail = (props) => <Icon {...props} path={<><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></>} />;
+        const Phone = (props) => <Icon {...props} path={<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />} />;
+        const Linkedin = (props) => <Icon {...props} path={<><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></>} />;
+        const Youtube = (props) => <Icon {...props} path={<path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />} />;
+        const Smile = (props) => <Icon {...props} path={<><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" x2="9.01" y1="9" y2="9" /><line x1="15" x2="15.01" y1="9" y2="9" /></>} />;
+        const X = (props) => <Icon {...props} path={<><path d="M18 6 6 18" /><path d="m6 6 12 12" /></>} />;
+        const MapPin = (props) => <Icon {...props} path={<><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></>} />;
+        const Box = (props) => <Icon {...props} path={<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />} />;
+        const Code = (props) => <Icon {...props} path={<><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></>} />;
+
+
+        // --- CONSTANTS & DATA ---
+        
+        const Page = {
+            Home: 'home',
+            Work: 'work',
+            About: 'about',
+            Contact: 'contact'
+        };
+
+        const Logo = ({ className = "" }) => (
+            <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 15 L85 32.5 L85 67.5 L50 85 L15 67.5 L15 32.5 Z" stroke="currentColor" strokeWidth="4" strokeLinejoin="round" />
+                <path d="M50 15 L50 85" stroke="currentColor" strokeWidth="4" />
+                <path d="M50 50 L85 32.5" stroke="currentColor" strokeWidth="4" />
+                <path d="M50 50 L15 32.5" stroke="currentColor" strokeWidth="4" />
+                <path d="M30 30 L45 37.5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                <path d="M40 25 L55 32.5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                <path d="M50 20 L65 27.5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                <path d="M22 45 L42 55" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                <path d="M22 55 L42 65" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                <path d="M58 55 L78 45 L78 65 L58 75" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            </svg>
+        );
+
+        const ABOUT_IMAGE_BASE64 = "./images/pic-em.png";
+
+        const PROJECTS = [
+            {
+                id: 'homage',
+                number: '01',
+                title: 'The Homage',
+                category: 'Mixed-Use',
+                location: 'Tripoli, Lebanon',
+                pun: "Homage is where the heart is. And the reinforced concrete.",
+                description: "An ingenious response to rectify the disjuncture between Tripoli's historic enclave and its modern precinct. Features adaptive reuse of Oscar Niemeyer's 'Collective Housing'.",
+                softwares: ['Revit', 'Rhino', 'Illustrator', 'Premiere', 'V-Ray'],
+                imageUrl: 'https://picsum.photos/seed/homage/1200/800',
+                details: [
+                    "Divided into re-adapted units, workshops, and innovative spaces.",
+                    "Features the 'Transfer Box' concept: a dynamic exhibition space.",
+                    "Bridges past, present, and future through architectural narrative."
+                ]
+            },
+            {
+                id: 'chahine',
+                number: '02',
+                title: 'Chahine Square',
+                category: 'Competition Entry',
+                location: 'Khobar, KSA',
+                pun: "I'm just rounding out the competition here.",
+                description: "A monumental sculpture and square design inspired by aircraft take-off angles and lines. Reflects the power of the Royal Air Force and cultural heritage.",
+                softwares: ['Rhino', 'Photoshop', 'Illustrator', 'Premiere', 'V-Ray'],
+                imageUrl: 'https://picsum.photos/seed/chahine/1200/800',
+                details: [
+                    "Deconstruction of aircraft hulls into axes and lines.",
+                    "6 stages of conceptual development from heritage to sculpture.",
+                    "Collaborative entry with Jemma Chidiac Architects."
+                ]
+            },
+            {
+                id: 'culinary',
+                number: '03',
+                title: 'Culinary HUB',
+                category: 'Adaptive Reuse',
+                location: 'Najanojo, Japan',
+                pun: "A recipe for success, though I still can't cook a proper souffle.",
+                description: "Rejuvenating a disused school near the Shima River into a culinary school and vibrant food market. Seamlessly blends preservation with innovation.",
+                softwares: ['Rhino', 'Photoshop', 'Illustrator', 'Enscape'],
+                imageUrl: 'https://picsum.photos/seed/culinary/1200/800',
+                details: [
+                    "Features diverse classrooms, a production area, and a library.",
+                    "Collaborates with regional farmers for fresh produce.",
+                    "Interactive interaction between the market and educational spaces."
+                ]
+            },
+            {
+                id: 'escape',
+                number: '04',
+                title: 'Escape The Loop',
+                category: 'Event Booth',
+                location: 'Shuwaikh, Kuwait',
+                pun: "I design loops so you don't have to stay in them.",
+                description: "An interactive car booth for Ford's showroom exhibition. Thrilling fusion of innovation and automotive experience.",
+                softwares: ['Rhino', 'Grasshopper', 'V-Ray', 'Photoshop', 'Illustrator'],
+                imageUrl: 'https://picsum.photos/seed/escape/1200/800',
+                details: [
+                    "Kinetic experience ensuring engagement with the public.",
+                    "Unique infinity view and elevated Raptor area.",
+                    "Maintains the essence of a functional car display while being art."
+                ]
+            },
+            {
+                id: 'citywalk',
+                number: '05',
+                title: 'City Walk Tower',
+                category: 'Residential',
+                location: 'Dubai, UAE',
+                pun: "High-rise buildings, high-rise expectations.",
+                description: "SOMA Architects' innovative tower design in Dubai's dynamic City Walk district. Integrates green spaces within a luxurious structure.",
+                softwares: ['Revit', 'Rhino', 'Photoshop', 'Illustrator', 'V-Ray'],
+                imageUrl: 'https://picsum.photos/seed/citywalk/1200/800',
+                details: [
+                    "Managed BIM Revit Model during Pre-Design to Conceptual phases.",
+                    "Strategic 'cut-outs' to sculpt green urban oases.",
+                    "Category A tower blending luxury with ecological consciousness."
+                ]
+            },
+            {
+                id: 'solitude',
+                number: '06',
+                title: 'Suspended Solitude',
+                category: 'Nature Retreat',
+                location: 'Metaverse',
+                pun: "Living in the clouds is finally a professional career choice.",
+                description: "A groundbreaking architectural venture nestled within the boundless expanse of the metaverse. Redefines boundaries of human experience.",
+                softwares: ['Rhino', 'Midjourney', 'Photoshop', 'Illustrator'],
+                imageUrl: 'https://picsum.photos/seed/solitude/1200/800',
+                details: [
+                    "Experimentation between emerging AI technologies and an Architect's mind.",
+                    "Sanctuary for relaxation, introspection, and connection with nature.",
+                    "Transcends earthly confines using virtual reality."
+                ]
+            }
+        ];
+
+        const SKILLS = [
+            { name: 'AutoCAD', level: 'Intermediate' },
+            { name: 'Revit', level: 'Advanced' },
+            { name: 'Rhino 3D', level: 'Advanced' },
+            { name: 'Grasshopper', level: 'Basic' },
+            { name: 'LumiON', level: 'Advanced' },
+            { name: 'Enscape', level: 'Intermediate' },
+            { name: 'V-Ray', level: 'Advanced' },
+            { name: 'Maya 3D', level: 'Basic' },
+            { name: 'Generative AI', level: 'Intermediate' },
+            { name: 'Adobe Suite', level: 'Advanced' }
+        ];
+
+        const INTERESTS = ['Tennis', 'Photography', 'Gaming', 'Baking', '3D Printing', 'Travel'];
+
+        const PUNS = [
+            "Why do BIM managers stay calm? Because they have everything under (Revit) control.",
+            "Computational designers don't die, they just lose their parameters.",
+            "My code doesn't have bugs, it has 'unintended spatial features'.",
+            "Why did the Revit model go to therapy? It had too many internal conflicts.",
+            "If you think BIM is expensive, try building without it and seeing the 'change order' jokes write themselves.",
+            "Grasshopper is great until you realize you've just spent 4 hours building a digital spaghetti dinner.",
+            "Why was the script so good at architecture? It really knew how to draw a line.",
+            "My favorite BIM software? The one that doesn't crash on Fridays at 5 PM.",
+            "I tried to write a script for the perfect building, but it just kept returning 'Null'."
+        ];
+
+        // --- COMPONENTS ---
+
+        const Navigation = ({ currentPage, setPage }) => {
+            return (
+                <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center">
+                    <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setPage(Page.Home)}>
+                        <Logo className="w-10 h-10 text-black group-hover:text-red-600 transition-colors" />
+                        <span className="font-semibold tracking-tighter uppercase hidden sm:inline">Emilie El Chidiac</span>
+                    </div>
+                    
+                    <div className="flex gap-6 sm:gap-10">
+                        {[Page.Work, Page.About, Page.Contact].map((p) => (
+                            <button
+                                key={p}
+                                onClick={() => setPage(p)}
+                                className={`uppercase text-xs font-bold tracking-widest transition-all hover:text-red-600 ${
+                                    currentPage === p ? 'text-red-600 border-b-2 border-red-600' : 'text-black'
+                                }`}
+                            >
+                                {p}
+                            </button>
+                        ))}
+                    </div>
+                </nav>
+            );
+        };
+
+        const ProjectModal = ({ project, onClose }) => {
+            return (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 sm:p-10 overflow-y-auto">
+                    <button onClick={onClose} className="fixed top-6 right-6 text-white hover:text-red-600 transition-colors z-[110]">
+                        <X size={40} />
+                    </button>
+
+                    <div className="bg-white w-full max-w-6xl rounded-lg overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in fade-in zoom-in duration-300 relative" onClick={(e) => e.stopPropagation()}>
+                        <div className="md:w-1/2 h-[300px] md:h-auto overflow-hidden bg-gray-100">
+                            <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />
+                        </div>
+
+                        <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto max-h-[80vh]">
+                            <div className="flex items-baseline gap-4 mb-2">
+                                <span className="text-red-600 font-bold text-2xl">{project.number}</span>
+                                <h2 className="text-4xl font-extrabold uppercase tracking-tighter">{project.title}</h2>
+                            </div>
+                            
+                            <div className="flex flex-wrap gap-4 mb-8 text-gray-500 font-medium">
+                                <div className="flex items-center gap-1 uppercase text-xs tracking-widest">
+                                    <MapPin size={14} className="text-red-600" />
+                                    {project.location}
+                                </div>
+                                <div className="flex items-center gap-1 uppercase text-xs tracking-widest">
+                                    <Box size={14} className="text-red-600" />
+                                    {project.category}
+                                </div>
+                            </div>
+
+                            <div className="bg-red-50 p-4 border-l-4 border-red-600 mb-8 italic text-red-900 font-medium">
+                                "{project.pun}"
+                            </div>
+
+                            <p className="text-gray-700 leading-relaxed text-lg mb-8">
+                                {project.description}
+                            </p>
+
+                            <div className="mb-8">
+                                <h4 className="uppercase text-xs font-bold tracking-[0.2em] mb-4 text-black border-b border-gray-200 pb-2">Key Highlights</h4>
+                                <ul className="space-y-3">
+                                    {project.details?.map((detail, idx) => (
+                                        <li key={idx} className="flex items-start gap-3 text-gray-600">
+                                            <span className="w-1.5 h-1.5 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+                                            {detail}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="uppercase text-xs font-bold tracking-[0.2em] mb-4 text-black border-b border-gray-200 pb-2">Tools Used</h4>
+                                <div className="flex flex-wrap gap-2">
+                                    {project.softwares.map((sw) => (
+                                        <span key={sw} className="px-3 py-1 bg-black text-white text-[10px] uppercase font-bold tracking-wider">
+                                            {sw}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- MAIN APP ---
+
+        const App = () => {
+            const [currentPage, setCurrentPage] = useState(Page.Home);
+            const [selectedProject, setSelectedProject] = useState(null);
+            const [activePun, setActivePun] = useState(0);
+            const cursorRef = useRef(null);
+            const [isHovering, setIsHovering] = useState(false);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setActivePun((prev) => (prev + 1) % PUNS.length);
+                }, 8000);
+                return () => clearInterval(interval);
+            }, []);
+
+            // Custom Cursor Logic
+            useEffect(() => {
+                const moveCursor = (e) => {
+                    if (cursorRef.current) {
+                        cursorRef.current.style.left = `${e.clientX}px`;
+                        cursorRef.current.style.top = `${e.clientY}px`;
+                    }
+
+                    const target = e.target;
+                    const isClickable = 
+                        target.tagName === 'BUTTON' || 
+                        target.tagName === 'A' || 
+                        target.closest('.cursor-pointer') ||
+                        target.closest('button');
+                    
+                    setIsHovering(!!isClickable);
+                };
+
+                window.addEventListener('mousemove', moveCursor);
+                return () => window.removeEventListener('mousemove', moveCursor);
+            }, []);
+
+            const renderHome = () => (
+                <div className="min-h-screen flex flex-col justify-center px-6 sm:px-12 md:px-24 relative pt-20">
+                    <div className="max-w-4xl animate-in slide-in-from-left duration-700">
+                        <div className="flex items-center gap-4 mb-4">
+                           <Logo className="w-12 h-12 text-red-600 animate-pulse" />
+                           <h2 className="text-red-600 font-bold uppercase tracking-widest">Architect | Designer | Joker</h2>
+                        </div>
+                        <h1 className="text-7xl md:text-9xl font-extrabold uppercase tracking-tighter leading-none mb-8">
+                            Emilie <br /> El Chidiac
+                        </h1>
+                        <p className="text-xl md:text-2xl text-gray-600 max-w-2xl leading-relaxed mb-10">
+                            I build structures that last longer than my jokes. A passionate architect exploring the convergence of technology, art, and BIM.
+                        </p>
+                        <div className="flex flex-wrap gap-4">
+                            <button 
+                                onClick={() => setCurrentPage(Page.Work)}
+                                className="px-8 py-4 bg-black text-white uppercase text-sm font-bold tracking-widest hover:bg-red-600 transition-all flex items-center gap-3 group"
+                            >
+                                Explore Projects <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+                            </button>
+                            <button 
+                                onClick={() => setCurrentPage(Page.About)}
+                                className="px-8 py-4 border-2 border-black uppercase text-sm font-bold tracking-widest hover:bg-black hover:text-white transition-all"
+                            >
+                                Who is Emilie?
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="fixed bottom-12 right-12 hidden lg:block max-w-xs animate-in slide-in-from-bottom duration-500">
+                        <div className="p-6 bg-white border border-gray-100 shadow-xl rounded-2xl">
+                            <div className="flex items-center gap-2 mb-2 text-red-600 font-bold uppercase text-[10px] tracking-widest">
+                                <Smile size={14} /> Joke of the moment
+                            </div>
+                            <p className="text-sm italic text-gray-500 min-h-[4rem] flex items-center">"{PUNS[activePun]}"</p>
+                            <div className="mt-4 w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+                                <div className="h-full bg-red-600" key={activePun} style={{ width: '100%', animation: 'progress 8s linear forwards' }} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const renderWork = () => (
+                <div className="pt-32 pb-24 px-6 sm:px-12 md:px-24 min-h-screen">
+                    <div className="flex flex-col md:flex-row justify-between items-baseline mb-16 gap-4">
+                        <div>
+                            <h2 className="text-6xl md:text-8xl font-black uppercase tracking-tighter">Portfolio</h2>
+                            <p className="text-gray-500 uppercase tracking-[0.3em] font-medium text-sm mt-2">Selected Works 2018 - 2024</p>
+                        </div>
+                        <div className="h-0.5 flex-grow bg-gray-100 mx-8 hidden md:block" />
+                        <div className="text-right">
+                            <span className="text-4xl font-bold text-red-600">{PROJECTS.length}</span>
+                            <span className="text-gray-400 font-bold uppercase text-xs ml-2 tracking-widest">Projects</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {PROJECTS.map((project) => (
+                            <div 
+                                key={project.id}
+                                className="group cursor-pointer bg-white overflow-hidden border border-gray-100 transition-all hover:shadow-2xl hover:-translate-y-2"
+                                onClick={() => setSelectedProject(project)}
+                            >
+                                <div className="relative h-64 overflow-hidden">
+                                    <img 
+                                        src={project.imageUrl} 
+                                        alt={project.title} 
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                    />
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold uppercase tracking-[0.3em] border-2 border-white px-4 py-2">View Project</span>
+                                    </div>
+                                    <div className="absolute top-4 left-4 bg-white text-black px-3 py-1 text-xs font-bold">
+                                        {project.number}
+                                    </div>
+                                </div>
+                                <div className="p-6">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h3 className="text-2xl font-bold uppercase tracking-tight group-hover:text-red-600 transition-colors">
+                                            {project.title}
+                                        </h3>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-gray-400 text-[10px] uppercase font-bold tracking-widest">{project.category}</p>
+                                        <div className="w-8 h-[1px] bg-red-600 group-hover:w-16 transition-all" />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+
+            const renderAbout = () => (
+                <div className="pt-32 pb-24 px-6 sm:px-12 md:px-24 min-h-screen max-w-7xl mx-auto">
+                    <div className="grid md:grid-cols-2 gap-16 items-start">
+                        <div className="animate-in slide-in-from-left duration-700">
+                            <div className="relative">
+                                <div className="absolute -top-4 -left-4 w-24 h-24 bg-red-600 -z-10" />
+                                <img 
+                                    src={ABOUT_IMAGE_BASE64} 
+                                    alt="Emilie in a ball pit" 
+                                    className="w-full h-auto grayscale hover:grayscale-0 transition-all duration-500 shadow-2xl"
+                                />
+                                <div className="absolute -bottom-6 -right-6 bg-black text-white p-8">
+                                    <h3 className="text-3xl font-black uppercase leading-tight italic">Design with<br /><span className="text-red-600">Integrity</span></h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="animate-in slide-in-from-right duration-700">
+                            <h2 className="text-5xl font-black uppercase tracking-tighter mb-8">Professional <br /> Profile</h2>
+                            <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                                I am a passionate and creative architect, compelled by an insatiable curiosity to explore the boundless potential of design. 
+                                My keen interest lies in seamlessly integrating technology and art within my design process.
+                            </p>
+                            <p className="text-lg text-gray-700 leading-relaxed mb-12">
+                                This curiosity has led me to delve into areas such as BIM, Generative AI, 3D printing, and mixed reality, enriching my approach to architectural creation. 
+                                Beyond academic pursuits, I actively engage in freelance work where I leverage technology to conceptualize interactive event booths for international brands.
+                            </p>
+
+                            <div className="grid grid-cols-2 gap-8 mb-12">
+                                <div>
+                                    <h4 className="font-bold uppercase text-xs tracking-widest mb-4 border-b pb-2">Skills</h4>
+                                    <div className="space-y-2">
+                                        {SKILLS.slice(0, 5).map(s => (
+                                            <div key={s.name} className="flex justify-between text-sm">
+                                                <span className="font-medium">{s.name}</span>
+                                                <span className="text-red-600 text-[10px] uppercase font-bold">{s.level}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold uppercase text-xs tracking-widest mb-4 border-b pb-2">Interests</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {INTERESTS.map(i => (
+                                            <span key={i} className="px-2 py-1 bg-gray-100 text-gray-600 text-[10px] uppercase font-bold tracking-widest">
+                                                {i}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-black text-white p-8 rounded-lg">
+                                <h4 className="text-xl font-bold uppercase mb-4 flex items-center gap-2">
+                                    <Smile className="text-red-600" /> A quick note
+                                </h4>
+                                <p className="italic text-gray-300">
+                                    "I take my designs very seriously, but myself? Not so much. Life's too short for boring buildings and bad jokes."
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const renderContact = () => (
+                <div className="pt-32 pb-24 px-6 sm:px-12 md:px-24 min-h-screen flex items-center justify-center">
+                    <div className="max-w-4xl w-full">
+                        <h2 className="text-7xl md:text-9xl font-black uppercase tracking-tighter leading-none mb-12">
+                            Let's <br /><span className="text-red-600">Build</span> <br /> Something.
+                        </h2>
+                        
+                        <div className="grid md:grid-cols-2 gap-12">
+                            <div className="space-y-8">
+                                <div className="flex items-center gap-6 group">
+                                    <div className="w-16 h-16 bg-black flex items-center justify-center text-white rounded-full group-hover:bg-red-600 transition-colors">
+                                        <Mail size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="uppercase text-[10px] font-bold tracking-[0.2em] text-gray-400">Email Me</p>
+                                        <a href="mailto:emilie.elchidiac@lau.edu" className="text-xl font-bold hover:text-red-600 transition-colors">emilie.elchidiac@lau.edu</a>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-6 group">
+                                    <div className="w-16 h-16 bg-black flex items-center justify-center text-white rounded-full group-hover:bg-red-600 transition-colors">
+                                        <Phone size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="uppercase text-[10px] font-bold tracking-[0.2em] text-gray-400">Call Me</p>
+                                        <p className="text-xl font-bold">+961 (76) 36 35 30</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex gap-4 pt-6">
+                                    <a href="#" className="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all"><Linkedin size={20} /></a>
+                                    <a href="#" className="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all"><Youtube size={20} /></a>
+                                </div>
+                            </div>
+
+                            <div className="bg-gray-50 p-10 flex flex-col justify-center border-l-8 border-red-600">
+                                <h3 className="text-2xl font-bold uppercase mb-4">Drafting a message?</h3>
+                                <p className="text-gray-600 mb-8 italic">
+                                    "Please make sure your email is to scale. I'm allergic to 1:500 scale problems, I prefer 1:1 solutions!"
+                                </p>
+                                <div className="space-y-4">
+                                    <p className="text-sm font-bold uppercase tracking-widest text-black flex items-center gap-2">
+                                        <span className="w-2 h-2 bg-red-600 rounded-full" /> Located in Beirut, Lebanon
+                                    </p>
+                                    <p className="text-sm font-bold uppercase tracking-widest text-black flex items-center gap-2">
+                                        <span className="w-2 h-2 bg-red-600 rounded-full" /> Available for Global Work
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="bg-white min-h-screen text-black">
+                    {/* Custom Cursor Element */}
+                    <div id="custom-cursor" ref={cursorRef} className={isHovering ? 'hovering' : ''} />
+                    
+                    <Navigation currentPage={currentPage} setPage={setCurrentPage} />
+                    
+                    <main>
+                        {currentPage === Page.Home && renderHome()}
+                        {currentPage === Page.Work && renderWork()}
+                        {currentPage === Page.About && renderAbout()}
+                        {currentPage === Page.Contact && renderContact()}
+                    </main>
+
+                    <footer className="px-6 py-12 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-[0.3em] font-bold text-gray-400 gap-4">
+                        <p>© 2024 Emilie El Chidiac. All Rights and Puns Reserved.</p>
+                        <div className="flex gap-8">
+                            <span className="hover:text-red-600 cursor-pointer">Privacy</span>
+                            <span className="hover:text-red-600 cursor-pointer">Credits</span>
+                            <span className="text-red-600">Drafted with ❤️ & Rhino</span>
+                        </div>
+                    </footer>
+
+                    {selectedProject && (
+                        <ProjectModal 
+                            project={selectedProject} 
+                            onClose={() => setSelectedProject(null)} 
+                        />
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
