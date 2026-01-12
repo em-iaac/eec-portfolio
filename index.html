@@ -393,23 +393,34 @@
             "I tried to write a script for the perfect building, but it just kept returning 'Null'."
         ];
 
-        // Balloon Component
-        const Balloon = ({ onPop, isPopping }) => (
-            <div className={`fixed w-12 h-16 cursor-pointer pointer-events-auto balloon ${isPopping ? 'popping' : ''}`} onClick={onPop}>
-                <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
-                    {/* Balloon */}
-                    <ellipse cx="50" cy="40" rx="30" ry="38" fill="#E11D48" />
-                    {/* String */}
-                    <line x1="50" y1="78" x2="50" y2="140" stroke="#666" strokeWidth="1" />
-                    {/* Shine */}
-                    <ellipse cx="40" cy="25" rx="10" ry="12" fill="rgba(255,255,255,0.3)" />
-                </svg>
-            </div>
-        );
-
         // --- COMPONENTS ---
 
-        const Navigation = ({ currentPage, setPage }) => {
+        const Navigation = ({ currentPage, setPage, onBalloonPop }) => {
+            const [balloonPos, setBalloonPos] = useState({ x: 100, y: 15 });
+            const [isPopping, setIsPopping] = useState(false);
+
+            useEffect(() => {
+                const moveBalloon = setInterval(() => {
+                    setBalloonPos({
+                        x: Math.random() * (window.innerWidth - 100),
+                        y: 10 + Math.random() * 20
+                    });
+                }, 4000);
+                return () => clearInterval(moveBalloon);
+            }, []);
+
+            const handleBalloonClick = () => {
+                setIsPopping(true);
+                onBalloonPop();
+                setTimeout(() => {
+                    setIsPopping(false);
+                    setBalloonPos({ 
+                        x: Math.random() * (window.innerWidth - 100), 
+                        y: 10 + Math.random() * 20 
+                    });
+                }, 500);
+            };
+
             return (
                 <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setPage(Page.Home)}>
@@ -429,6 +440,20 @@
                                 {p}
                             </button>
                         ))}
+                    </div>
+
+                    {/* Floating Balloon in Nav */}
+                    <div style={{ position: 'fixed', left: `${balloonPos.x}px`, top: `${balloonPos.y}px`, zIndex: 50 }}>
+                        <div className={`w-12 h-16 cursor-pointer pointer-events-auto balloon ${isPopping ? 'popping' : ''}`} onClick={handleBalloonClick}>
+                            <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                                {/* Balloon */}
+                                <ellipse cx="50" cy="40" rx="30" ry="38" fill="#E11D48" />
+                                {/* String */}
+                                <line x1="50" y1="78" x2="50" y2="140" stroke="#666" strokeWidth="1" />
+                                {/* Shine */}
+                                <ellipse cx="40" cy="25" rx="10" ry="12" fill="rgba(255,255,255,0.3)" />
+                            </svg>
+                        </div>
                     </div>
                 </nav>
             );
@@ -506,11 +531,15 @@
             const [selectedProject, setSelectedProject] = useState(null);
             const [activePun, setActivePun] = useState(0);
             const [redMode, setRedMode] = useState(false);
-            const [isPopping, setIsPopping] = useState(false);
-            const [showRedModeText, setShowRedModeText] = useState(false);
-            const [balloonPos, setBalloonPos] = useState({ x: 50, y: 100 });
             const cursorRef = useRef(null);
             const [isHovering, setIsHovering] = useState(false);
+
+            const handleBalloonPop = () => {
+                setRedMode(true);
+                setTimeout(() => {
+                    setRedMode(false);
+                }, 2000);
+            };
 
             useEffect(() => {
                 const interval = setInterval(() => {
@@ -519,29 +548,6 @@
                 return () => clearInterval(interval);
             }, []);
 
-            // Balloon movement
-            useEffect(() => {
-                const moveBalloon = setInterval(() => {
-                    setBalloonPos({
-                        x: Math.random() * (window.innerWidth - 50),
-                        y: Math.random() * (window.innerHeight - 100)
-                    });
-                }, 6000);
-                return () => clearInterval(moveBalloon);
-            }, []);
-
-            const handleBalloonPop = () => {
-                setIsPoppin!redMode);
-                setShowRedModeText(true);
-                setTimeout(() => {
-                    setIsPopping(false);
-                    setBalloonPos({ x: Math.random() * (window.innerWidth - 50), y: Math.random() * (window.innerHeight - 50) });
-                }, 500);
-                setTimeout(() => {
-                    setShowRedModeText(false);
-                }, 20setBalloonPos({ x: Math.random() * (window.innerWidth - 50), y: Math.random() * (window.innerHeight - 100) });
-                }, 500);
-            };
 
             // Custom Cursor Logic
             useEffect(() => {
@@ -779,27 +785,11 @@
             );
 
             return (
-                <div showRedModeText && (
-                        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[200] red-mode-indicator">
-                            <div className="text-white text-6xl font-black uppercase tracking-tighter"
+                <div className={`${redMode ? 'red-mode' : 'bg-white'} min-h-screen text-black transition-colors duration-300`}>
+                    {/* Custom Cursor Element */}
+                    <div id="custom-cursor" ref={cursorRef} className={isHovering ? 'hovering' : ''} />
                     
-                    {/* Red Mode Indicator */}
-                    {redMode && (
-                        <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[200]">
-                            <div className="text-white text-8xl font-black uppercase tracking-tighter animate-bounce" style={{ animation: 'bounce 1s ease-in-out' }}>
-                                RED MODE
-                            </div>
-                        </div>
-                    )}
-                    
-                    {/* Floating Balloon */}
-                    {!redMode && (
-                        <div style={{ position: 'fixed', left: `${balloonPos.x}px`, top: `${balloonPos.y}px`, zIndex: 50 }}>
-                            <Balloon onPop={handleBalloonPop} isPopping={isPopping} />
-                        </div>
-                    )}
-                    
-                    <Navigation currentPage={currentPage} setPage={setCurrentPage} />
+                    <Navigation currentPage={currentPage} setPage={setCurrentPage} onBalloonPop={handleBalloonPop} />
                     
                     <main>
                         {currentPage === Page.Home && renderHome()}
