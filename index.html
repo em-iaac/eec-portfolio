@@ -397,22 +397,107 @@
 
         const Navigation = ({ currentPage, setPage, onBalloonPop }) => {
             const [balloons, setBalloons] = useState([
-                { id: 1, x: 100, y: 15 }
+                { id: 1, x: 100, y: 15, vx: 2, vy: 0.5 }
             ]);
             const [nextId, setNextId] = useState(2);
             const [poppingId, setPoppingId] = useState(null);
+            const balloonRadius = 8;
+            const navHeight = 72; // py-4 = 16px top+bottom, + border
+            const navPadding = 24; // px-6 = 24px left+right
 
+            // Physics simulation for balloons
             useEffect(() => {
-                const moveBalloons = setInterval(() => {
-                    setBalloons(prevBalloons => 
-                        prevBalloons.map(balloon => ({
-                            ...balloon,
-                            x: Math.random() * (window.innerWidth - 100),
-                            y: 10 + Math.random() * 20
-                        }))
-                    );
-                }, 4000);
-                return () => clearInterval(moveBalloons);
+                const animationFrame = setInterval(() => {
+                    setBalloons(prevBalloons => {
+                        let newBalloons = prevBalloons.map(balloon => {
+                            let { x, y, vx, vy, ...rest } = balloon;
+                            
+                            // Apply gravity
+                            vy += 0.3;
+                            
+                            // Update position
+                            x += vx;
+                            y += vy;
+                            
+                            // Bounce off nav bar boundaries
+                            // Left boundary
+                            if (x - balloonRadius < navPadding) {
+                                x = navPadding + balloonRadius;
+                                vx = Math.abs(vx) * 0.8;
+                            }
+                            // Right boundary
+                            if (x + balloonRadius > window.innerWidth - navPadding) {
+                                x = window.innerWidth - navPadding - balloonRadius;
+                                vx = -Math.abs(vx) * 0.8;
+                            }
+                            // Top boundary
+                            if (y - balloonRadius < 16) {
+                                y = 16 + balloonRadius;
+                                vy = Math.abs(vy) * 0.8;
+                            }
+                            // Bottom boundary
+                            if (y + balloonRadius > navHeight - 8) {
+                                y = navHeight - 8 - balloonRadius;
+                                vy = -Math.abs(vy) * 0.8;
+                            }
+                            
+                            // Apply friction/damping
+                            vx *= 0.98;
+                            vy *= 0.98;
+                            
+                            return { ...rest, id: balloon.id, x, y, vx, vy };
+                        });
+                        
+                        // Balloon-to-balloon collision detection
+                        for (let i = 0; i < newBalloons.length; i++) {
+                            for (let j = i + 1; j < newBalloons.length; j++) {
+                                const b1 = newBalloons[i];
+                                const b2 = newBalloons[j];
+                                const dx = b2.x - b1.x;
+                                const dy = b2.y - b1.y;
+                                const distance = Math.sqrt(dx * dx + dy * dy);
+                                const minDistance = balloonRadius * 2;
+                                
+                                if (distance < minDistance) {
+                                    // Collision detected
+                                    const angle = Math.atan2(dy, dx);
+                                    const sin = Math.sin(angle);
+                                    const cos = Math.cos(angle);
+                                    
+                                    // Rotate velocities
+                                    const vx1 = b1.vx * cos + b1.vy * sin;
+                                    const vy1 = b1.vy * cos - b1.vx * sin;
+                                    const vx2 = b2.vx * cos + b2.vy * sin;
+                                    const vy2 = b2.vy * cos - b2.vx * sin;
+                                    
+                                    // Swap x velocities (elastic collision)
+                                    const temp = vx1;
+                                    const nvx1 = vx2 * 0.8;
+                                    const nvx2 = temp * 0.8;
+                                    
+                                    // Rotate back
+                                    newBalloons[i].vx = nvx1 * cos - vy1 * sin;
+                                    newBalloons[i].vy = vy1 * cos + nvx1 * sin;
+                                    newBalloons[j].vx = nvx2 * cos - vy2 * sin;
+                                    newBalloons[j].vy = vy2 * cos + nvx2 * sin;
+                                    
+                                    // Separate balloons to prevent overlap
+                                    const overlap = minDistance - distance;
+                                    const moveX = (overlap / 2) * cos;
+                                    const moveY = (overlap / 2) * sin;
+                                    newBalloons[i].x -= moveX;
+                                    newBalloons[i].y -= moveY;
+                                    newBalloons[j].x += moveX;
+                                    newBalloons[j].y += moveY;
+                                }
+                            }
+                        }
+                        
+                        return newBalloons;
+                    });
+                }, 20);
+                
+                return () => clearInterval(animationFrame);
             }, []);
 
             const handleBalloonClick = (balloonId) => {
@@ -422,17 +507,23 @@
                 setTimeout(() => {
                     // Remove the popped balloon and add 2 new ones
                     setBalloons(prevBalloons => {
+                        const popped = prevBalloons.find(b => b.id === balloonId);
                         const filtered = prevBalloons.filter(b => b.id !== balloonId);
+                        
                         const newBalloons = [
                             {
                                 id: nextId,
-                                x: Math.random() * (window.innerWidth - 100),
-                                y: 10 + Math.random() * 20
+                                x: (popped?.x || 100) - 20,
+                                y: (popped?.y || 15),
+                                vx: Math.random() * 4 - 2,
+                                vy: Math.random() * 2 - 1
                             },
                             {
                                 id: nextId + 1,
-                                x: Math.random() * (window.innerWidth - 100),
-                                y: 10 + Math.random() * 20
+                                x: (popped?.x || 100) + 20,
+                                y: (popped?.y || 15),
+                                vx: Math.random() * 4 - 2,
+                                vy: Math.random() * 2 - 1
                             }
                         ];
                         setNextId(prevId => prevId + 2);
@@ -443,13 +534,13 @@
             };
 
             return (
-                <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center">
-                    <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setPage(Page.Home)}>
+                <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center overflow-hidden">
+                    <div className="flex items-center gap-3 cursor-pointer group z-10 relative" onClick={() => setPage(Page.Home)}>
                         <Logo className="w-10 h-10 text-black group-hover:text-red-600 transition-colors" />
                         <span className="font-semibold tracking-tighter uppercase hidden sm:inline">Emilie El Chidiac</span>
                     </div>
                     
-                    <div className="flex gap-6 sm:gap-10">
+                    <div className="flex gap-6 sm:gap-10 z-10 relative">
                         {[Page.Work, Page.About, Page.Contact].map((p) => (
                             <button
                                 key={p}
@@ -465,7 +556,7 @@
 
                     {/* Floating Balloons in Nav */}
                     {balloons.map((balloon) => (
-                        <div key={balloon.id} style={{ position: 'fixed', left: `${balloon.x}px`, top: `${balloon.y}px`, zIndex: 50 }}>
+                        <div key={balloon.id} style={{ position: 'fixed', left: `${balloon.x}px`, top: `${balloon.y}px`, zIndex: 40, pointerEvents: 'auto' }}>
                             <div 
                                 className={`w-8 h-12 cursor-pointer pointer-events-auto balloon ${poppingId === balloon.id ? 'popping' : ''}`} 
                                 onClick={() => handleBalloonClick(balloon.id)}
