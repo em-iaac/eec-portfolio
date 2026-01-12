@@ -396,28 +396,49 @@
         // --- COMPONENTS ---
 
         const Navigation = ({ currentPage, setPage, onBalloonPop }) => {
-            const [balloonPos, setBalloonPos] = useState({ x: 100, y: 15 });
-            const [isPopping, setIsPopping] = useState(false);
+            const [balloons, setBalloons] = useState([
+                { id: 1, x: 100, y: 15 }
+            ]);
+            const [nextId, setNextId] = useState(2);
+            const [poppingId, setPoppingId] = useState(null);
 
             useEffect(() => {
-                const moveBalloon = setInterval(() => {
-                    setBalloonPos({
-                        x: Math.random() * (window.innerWidth - 100),
-                        y: 10 + Math.random() * 20
-                    });
+                const moveBalloons = setInterval(() => {
+                    setBalloons(prevBalloons => 
+                        prevBalloons.map(balloon => ({
+                            ...balloon,
+                            x: Math.random() * (window.innerWidth - 100),
+                            y: 10 + Math.random() * 20
+                        }))
+                    );
                 }, 4000);
-                return () => clearInterval(moveBalloon);
+                return () => clearInterval(moveBalloons);
             }, []);
 
-            const handleBalloonClick = () => {
-                setIsPopping(true);
+            const handleBalloonClick = (balloonId) => {
+                setPoppingId(balloonId);
                 onBalloonPop();
+                
                 setTimeout(() => {
-                    setIsPopping(false);
-                    setBalloonPos({ 
-                        x: Math.random() * (window.innerWidth - 100), 
-                        y: 10 + Math.random() * 20 
+                    // Remove the popped balloon and add 2 new ones
+                    setBalloons(prevBalloons => {
+                        const filtered = prevBalloons.filter(b => b.id !== balloonId);
+                        const newBalloons = [
+                            {
+                                id: nextId,
+                                x: Math.random() * (window.innerWidth - 100),
+                                y: 10 + Math.random() * 20
+                            },
+                            {
+                                id: nextId + 1,
+                                x: Math.random() * (window.innerWidth - 100),
+                                y: 10 + Math.random() * 20
+                            }
+                        ];
+                        setNextId(prevId => prevId + 2);
+                        return [...filtered, ...newBalloons];
                     });
+                    setPoppingId(null);
                 }, 500);
             };
 
@@ -442,21 +463,26 @@
                         ))}
                     </div>
 
-                    {/* Floating Balloon in Nav */}
-                    <div style={{ position: 'fixed', left: `${balloonPos.x}px`, top: `${balloonPos.y}px`, zIndex: 50 }}>
-                        <div className={`w-8 h-12 cursor-pointer pointer-events-auto balloon ${isPopping ? 'popping' : ''}`} onClick={handleBalloonClick}>
-                            <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
-                                {/* Balloon */}
-                                <ellipse cx="50" cy="40" rx="30" ry="38" fill="#E11D48" />
-                                {/* String */}
-                                <line x1="50" y1="78" x2="50" y2="140" stroke="#666" strokeWidth="1" />
-                                {/* Shine */}
-                                <ellipse cx="40" cy="25" rx="10" ry="12" fill="rgba(255,255,255,0.3)" />
-                                {/* POP Text */}
-                                <text x="50" y="48" fontFamily="Arial, sans-serif" fontSize="20" fontWeight="bold" fill="white" textAnchor="middle" dominantBaseline="middle">POP</text>
-                            </svg>
+                    {/* Floating Balloons in Nav */}
+                    {balloons.map((balloon) => (
+                        <div key={balloon.id} style={{ position: 'fixed', left: `${balloon.x}px`, top: `${balloon.y}px`, zIndex: 50 }}>
+                            <div 
+                                className={`w-8 h-12 cursor-pointer pointer-events-auto balloon ${poppingId === balloon.id ? 'popping' : ''}`} 
+                                onClick={() => handleBalloonClick(balloon.id)}
+                            >
+                                <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                                    {/* Balloon */}
+                                    <ellipse cx="50" cy="40" rx="30" ry="38" fill="#E11D48" />
+                                    {/* String */}
+                                    <line x1="50" y1="78" x2="50" y2="140" stroke="#666" strokeWidth="1" />
+                                    {/* Shine */}
+                                    <ellipse cx="40" cy="25" rx="10" ry="12" fill="rgba(255,255,255,0.3)" />
+                                    {/* POP Text */}
+                                    <text x="50" y="48" fontFamily="Arial, sans-serif" fontSize="20" fontWeight="bold" fill="white" textAnchor="middle" dominantBaseline="middle">POP</text>
+                                </svg>
+                            </div>
                         </div>
-                    </div>
+                    ))}
                 </nav>
             );
         };
