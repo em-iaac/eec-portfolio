@@ -444,7 +444,7 @@
 
                     {/* Floating Balloon in Nav */}
                     <div style={{ position: 'fixed', left: `${balloonPos.x}px`, top: `${balloonPos.y}px`, zIndex: 50 }}>
-                        <div className={`w-12 h-16 cursor-pointer pointer-events-auto balloon ${isPopping ? 'popping' : ''}`} onClick={handleBalloonClick}>
+                        <div className={`w-8 h-12 cursor-pointer pointer-events-auto balloon ${isPopping ? 'popping' : ''}`} onClick={handleBalloonClick}>
                             <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
                                 {/* Balloon */}
                                 <ellipse cx="50" cy="40" rx="30" ry="38" fill="#E11D48" />
@@ -452,6 +452,8 @@
                                 <line x1="50" y1="78" x2="50" y2="140" stroke="#666" strokeWidth="1" />
                                 {/* Shine */}
                                 <ellipse cx="40" cy="25" rx="10" ry="12" fill="rgba(255,255,255,0.3)" />
+                                {/* POP Text */}
+                                <text x="50" y="48" fontFamily="Arial, sans-serif" fontSize="20" fontWeight="bold" fill="white" textAnchor="middle" dominantBaseline="middle">POP</text>
                             </svg>
                         </div>
                     </div>
