@@ -399,7 +399,6 @@
             const [balloons, setBalloons] = useState([
                 { id: 1, x: window.innerWidth / 2, y: 36, vx: Math.random() * 4 - 2, vy: Math.random() * 3 - 1.5 }
             ]);
-            const [nextId, setNextId] = useState(2);
             const [poppingId, setPoppingId] = useState(null);
             const balloonRadius = 16;
             const navHeight = 72; // py-4 = 16px top+bottom, + border
@@ -505,40 +504,17 @@
             }, []);
 
             const handleBalloonClick = (balloonId) => {
-                setPoppingId(balloonId); with random positions
-                    setBalloons(prevBalloons => {
-                        const filtered = prevBalloons.filter(b => b.id !== balloonId);
-                        
-                        const newBalloons = [
-                            {
-                                id: nextId,
-                                x: Math.random() * (window.innerWidth - navPadding * 2) + navPadding,
-                                y: Math.random() * (navHeight - balloonRadius * 2) + balloonRadius,
-                                vx: Math.random() * 6 - 3,
-                                vy: Math.random() * 4 - 2
-                            },
-                            {
-                                id: nextId + 1,
-                                x: Math.random() * (window.innerWidth - navPadding * 2) + navPadding,
-                                y: Math.random() * (navHeight - balloonRadius * 2) + balloonRadius
-                            {
-                                id: nextId + 1,
-                                x: (popped?.x || 100) + 20,
-                                y: (popped?.y || 15),
-                                vx: Math.random() * 6 - 3,
-                                vy: Math.random() * 4 - 2
-                            }
-                        ];
-                        setNextId(prevId => prevId + 2);
-                        return [...filtered, ...newBalloons];
-                    });
+                setPoppingId(balloonId);
+                onBalloonPop();
+                
+                setTimeout(() => {
                     setPoppingId(null);
                 }, 500);
             };
 
             return (
                 <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center overflow-hidden">
-                    <div className="flex items-center gap-3 cursor-pointer group z-10 relative" onCt border-gray-100 border-lick={() => setPage(Page.Home)}>
+                    <div className="flex items-center gap-3 cursor-pointer group z-10 relative" onClick={() => setPage(Page.Home)}>
                         <Logo className="w-10 h-10 text-black group-hover:text-red-600 transition-colors" />
                         <span className="font-semibold tracking-tighter uppercase hidden sm:inline">Emilie El Chidiac</span>
                     </div>
