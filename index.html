@@ -126,20 +126,6 @@
 
         .red-mode .bg-gray-50 {
             background-color: rgba(255, 255, 255, 0.05);
-
-        // Balloon Component
-        const Balloon = ({ onPop, isPopping }) => (
-            <div className={`fixed w-12 h-16 cursor-pointer pointer-events-auto balloon ${isPopping ? 'popping' : ''}`} onClick={onPop}>
-                <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
-                    {/* Balloon */}
-                    <ellipse cx="50" cy="40" rx="30" ry="38" fill="#E11D48" />
-                    {/* String */}
-                    <line x1="50" y1="78" x2="50" y2="140" stroke="#666" strokeWidth="1" />
-                    {/* Shine */}
-                    <ellipse cx="40" cy="25" rx="10" ry="12" fill="rgba(255,255,255,0.3)" />
-                </svg>
-            </div>
-        );
         }
 
         .red-mode .bg-black {
@@ -149,6 +135,7 @@
         .red-mode .border-black {
             border-color: white;
         }
+    </style>
     </style>
 
     <script>
@@ -367,6 +354,20 @@
             "I tried to write a script for the perfect building, but it just kept returning 'Null'."
         ];
 
+        // Balloon Component
+        const Balloon = ({ onPop, isPopping }) => (
+            <div className={`fixed w-12 h-16 cursor-pointer pointer-events-auto balloon ${isPopping ? 'popping' : ''}`} onClick={onPop}>
+                <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+                    {/* Balloon */}
+                    <ellipse cx="50" cy="40" rx="30" ry="38" fill="#E11D48" />
+                    {/* String */}
+                    <line x1="50" y1="78" x2="50" y2="140" stroke="#666" strokeWidth="1" />
+                    {/* Shine */}
+                    <ellipse cx="40" cy="25" rx="10" ry="12" fill="rgba(255,255,255,0.3)" />
+                </svg>
+            </div>
+        );
+
         // --- COMPONENTS ---
 
         const Navigation = ({ currentPage, setPage }) => {
@@ -451,15 +452,32 @@
                                             {sw}
                                         </span>
                                     ))}
-                  [redMode, setRedMode] = useState(false);
-            const [isPopping, setIsPopping] = useState(false);
-            const [balloonPos, setBalloonPos] = useState({ x: 50, y: 100 });
-            const               </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             );
+        };
+
+        // --- MAIN APP ---
+
+        const App = () => {
+            const [currentPage, setCurrentPage] = useState(Page.Home);
+            const [selectedProject, setSelectedProject] = useState(null);
+            const [activePun, setActivePun] = useState(0);
+            const [redMode, setRedMode] = useState(false);
+            const [isPopping, setIsPopping] = useState(false);
+            const [balloonPos, setBalloonPos] = useState({ x: 50, y: 100 });
+            const cursorRef = useRef(null);
+            const [isHovering, setIsHovering] = useState(false);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setActivePun((prev) => (prev + 1) % PUNS.length);
+                }, 8000);
+                return () => clearInterval(interval);
+            }, []);
 
             // Balloon movement
             useEffect(() => {
@@ -480,23 +498,6 @@
                     setBalloonPos({ x: Math.random() * (window.innerWidth - 50), y: Math.random() * (window.innerHeight - 100) });
                 }, 500);
             };
-        };
-
-        // --- MAIN APP ---
-
-        const App = () => {
-            const [currentPage, setCurrentPage] = useState(Page.Home);
-            const [selectedProject, setSelectedProject] = useState(null);
-            const [activePun, setActivePun] = useState(0);
-            const cursorRef = useRef(null);
-            const [isHovering, setIsHovering] = useState(false);
-
-            useEffect(() => {
-                const interval = setInterval(() => {
-                    setActivePun((prev) => (prev + 1) % PUNS.length);
-                }, 8000);
-                return () => clearInterval(interval);
-            }, []);
 
             // Custom Cursor Logic
             useEffect(() => {
@@ -711,25 +712,9 @@
                                 <div className="flex gap-4 pt-6">
                                     <a href="#" className="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all"><Linkedin size={20} /></a>
                                     <a href="#" className="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all"><Youtube size={20} /></a>
-                               {`${redMode ? 'red-mode' : 'bg-white'} min-h-screen text-black transition-colors duration-500`}>
-                    {/* Custom Cursor Element */}
-                    <div id="custom-cursor" ref={cursorRef} className={isHovering ? 'hovering' : ''} />
-                    
-                    {/* Red Mode Indicator */}
-                    {redMode && (
-                        <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[200]">
-                            <div className="text-white text-8xl font-black uppercase tracking-tighter animate-bounce" style={{ animation: 'bounce 1s ease-in-out' }}>
-                                RED MODE
+                                </div>
                             </div>
-                        </div>
-                    )}
-                    
-                    {/* Floating Balloon */}
-                    {!redMode && (
-                        <div style={{ position: 'fixed', left: `${balloonPos.x}px`, top: `${balloonPos.y}px`, zIndex: 50 }}>
-                            <Balloon onPop={handleBalloonPop} isPopping={isPopping} />
-                        </div>
-                    )}
+
                             <div className="bg-gray-50 p-10 flex flex-col justify-center border-l-8 border-red-600">
                                 <h3 className="text-2xl font-bold uppercase mb-4">Drafting a message?</h3>
                                 <p className="text-gray-600 mb-8 italic">
@@ -750,9 +735,25 @@
             );
 
             return (
-                <div className="bg-white min-h-screen text-black">
+                <div className={`${redMode ? 'red-mode' : 'bg-white'} min-h-screen text-black transition-colors duration-500`}>
                     {/* Custom Cursor Element */}
                     <div id="custom-cursor" ref={cursorRef} className={isHovering ? 'hovering' : ''} />
+                    
+                    {/* Red Mode Indicator */}
+                    {redMode && (
+                        <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[200]">
+                            <div className="text-white text-8xl font-black uppercase tracking-tighter animate-bounce" style={{ animation: 'bounce 1s ease-in-out' }}>
+                                RED MODE
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Floating Balloon */}
+                    {!redMode && (
+                        <div style={{ position: 'fixed', left: `${balloonPos.x}px`, top: `${balloonPos.y}px`, zIndex: 50 }}>
+                            <Balloon onPop={handleBalloonPop} isPopping={isPopping} />
+                        </div>
+                    )}
                     
                     <Navigation currentPage={currentPage} setPage={setCurrentPage} />
                     
