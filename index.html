@@ -85,55 +85,94 @@
             100% { transform: scale(0); opacity: 0; }
         }
 
+        /* Red Mode Indicator Animation */
+        @keyframes fade-in-out {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .red-mode-indicator {
+            animation: fade-in-out 2s ease-in-out forwards;
+        }
+
         /* Red Mode Styles */
         body.red-mode {
             background-color: #E11D48;
         }
 
         .red-mode {
-            background-color: #E11D48;
-            color: white;
+            background-color: #E11D48 !important;
+            color: white !important;
         }
 
-        .red-mode a, .red-mode button {
-            color: white;
+        .red-mode a {
+            color: white !important;
         }
 
         .red-mode button {
-            background-color: white;
-            color: #E11D48;
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
         }
 
         .red-mode button:hover {
-            background-color: #ffcccc;
+            background-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .red-mode h1, .red-mode h2, .red-mode h3, .red-mode h4, .red-mode h5, .red-mode h6 {
+            color: white !important;
+        }
+
+        .red-mode p, .red-mode span, .red-mode div {
+            color: white !important;
         }
 
         .red-mode .text-black {
-            color: white;
+            color: white !important;
         }
 
-        .red-mode .bg-white {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .red-mode .border-gray-100 {
-            border-color: rgba(255, 255, 255, 0.2);
+        .red-mode .text-red-600 {
+            color: #ff99b2 !important;
         }
 
         .red-mode .text-gray-400, .red-mode .text-gray-500, .red-mode .text-gray-600, .red-mode .text-gray-700 {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        .red-mode .bg-white {
+            background-color: rgba(255, 255, 255, 0.08) !important;
         }
 
         .red-mode .bg-gray-50 {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: rgba(255, 255, 255, 0.05) !important;
         }
 
         .red-mode .bg-black {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .red-mode .bg-gray-100 {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .red-mode .border-gray-100 {
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .red-mode .border-gray-200 {
+            border-color: rgba(255, 255, 255, 0.15) !important;
         }
 
         .red-mode .border-black {
-            border-color: white;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .red-mode .bg-red-50 {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .red-mode .text-red-900 {
+            color: #ffccdd !important;
         }
     </style>
     </style>
@@ -468,6 +507,7 @@
             const [activePun, setActivePun] = useState(0);
             const [redMode, setRedMode] = useState(false);
             const [isPopping, setIsPopping] = useState(false);
+            const [showRedModeText, setShowRedModeText] = useState(false);
             const [balloonPos, setBalloonPos] = useState({ x: 50, y: 100 });
             const cursorRef = useRef(null);
             const [isHovering, setIsHovering] = useState(false);
@@ -491,11 +531,15 @@
             }, []);
 
             const handleBalloonPop = () => {
-                setIsPopping(true);
-                setRedMode(true);
+                setIsPoppin!redMode);
+                setShowRedModeText(true);
                 setTimeout(() => {
                     setIsPopping(false);
-                    setBalloonPos({ x: Math.random() * (window.innerWidth - 50), y: Math.random() * (window.innerHeight - 100) });
+                    setBalloonPos({ x: Math.random() * (window.innerWidth - 50), y: Math.random() * (window.innerHeight - 50) });
+                }, 500);
+                setTimeout(() => {
+                    setShowRedModeText(false);
+                }, 20setBalloonPos({ x: Math.random() * (window.innerWidth - 50), y: Math.random() * (window.innerHeight - 100) });
                 }, 500);
             };
 
@@ -735,9 +779,9 @@
             );
 
             return (
-                <div className={`${redMode ? 'red-mode' : 'bg-white'} min-h-screen text-black transition-colors duration-500`}>
-                    {/* Custom Cursor Element */}
-                    <div id="custom-cursor" ref={cursorRef} className={isHovering ? 'hovering' : ''} />
+                <div showRedModeText && (
+                        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[200] red-mode-indicator">
+                            <div className="text-white text-6xl font-black uppercase tracking-tighter"
                     
                     {/* Red Mode Indicator */}
                     {redMode && (
