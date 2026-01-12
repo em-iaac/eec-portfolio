@@ -65,15 +65,12 @@
 
         /* Balloon Animation */
         @keyframes float-balloon {
-            0% { transform: translateX(0) translateY(0); }
-            25% { transform: translateX(100px) translateY(-50px); }
-            50% { transform: translateX(50px) translateY(-100px); }
-            75% { transform: translateX(-50px) translateY(-50px); }
-            100% { transform: translateX(0) translateY(0); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
         }
 
         .balloon {
-            animation: float-balloon 6s ease-in-out infinite;
+            animation: float-balloon 3s ease-in-out infinite;
         }
 
         .balloon.popping {
@@ -405,7 +402,7 @@
                         <span className="font-semibold tracking-tighter uppercase hidden sm:inline">Emilie El Chidiac</span>
                         {/* Red Balloon */}
                         <div 
-                            className="w-8 h-10 cursor-pointer hover:opacity-80 transition-opacity" 
+                            className="w-8 h-10 cursor-pointer hover:opacity-80 transition-opacity balloon" 
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setPoppingId(1);
