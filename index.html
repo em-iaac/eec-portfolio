@@ -415,6 +415,10 @@
                             // Apply gravity
                             vy += 0.3;
                             
+                            // Add random perturbation to prevent circular motion
+                            vx += (Math.random() - 0.5) * 0.2;
+                            vy += (Math.random() - 0.5) * 0.2;
+                            
                             // Update position
                             x += vx;
                             y += vy;
@@ -501,23 +505,22 @@
             }, []);
 
             const handleBalloonClick = (balloonId) => {
-                setPoppingId(balloonId);
-                onBalloonPop();
-                
-                setTimeout(() => {
-                    // Remove the popped balloon and add 2 new ones
+                setPoppingId(balloonId); with random positions
                     setBalloons(prevBalloons => {
-                        const popped = prevBalloons.find(b => b.id === balloonId);
                         const filtered = prevBalloons.filter(b => b.id !== balloonId);
                         
                         const newBalloons = [
                             {
                                 id: nextId,
-                                x: (popped?.x || 100) - 20,
-                                y: (popped?.y || 15),
+                                x: Math.random() * (window.innerWidth - navPadding * 2) + navPadding,
+                                y: Math.random() * (navHeight - balloonRadius * 2) + balloonRadius,
                                 vx: Math.random() * 6 - 3,
                                 vy: Math.random() * 4 - 2
                             },
+                            {
+                                id: nextId + 1,
+                                x: Math.random() * (window.innerWidth - navPadding * 2) + navPadding,
+                                y: Math.random() * (navHeight - balloonRadius * 2) + balloonRadius
                             {
                                 id: nextId + 1,
                                 x: (popped?.x || 100) + 20,
@@ -535,7 +538,7 @@
 
             return (
                 <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center overflow-hidden">
-                    <div className="flex items-center gap-3 cursor-pointer group z-10 relative" onClick={() => setPage(Page.Home)}>
+                    <div className="flex items-center gap-3 cursor-pointer group z-10 relative" onCt border-gray-100 border-lick={() => setPage(Page.Home)}>
                         <Logo className="w-10 h-10 text-black group-hover:text-red-600 transition-colors" />
                         <span className="font-semibold tracking-tighter uppercase hidden sm:inline">Emilie El Chidiac</span>
                     </div>
