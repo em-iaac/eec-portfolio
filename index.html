@@ -397,11 +397,11 @@
 
         const Navigation = ({ currentPage, setPage, onBalloonPop }) => {
             const [balloons, setBalloons] = useState([
-                { id: 1, x: 100, y: 15, vx: 2, vy: 0.5 }
+                { id: 1, x: window.innerWidth / 2, y: 36, vx: 2, vy: 0.5 }
             ]);
             const [nextId, setNextId] = useState(2);
             const [poppingId, setPoppingId] = useState(null);
-            const balloonRadius = 8;
+            const balloonRadius = 16;
             const navHeight = 72; // py-4 = 16px top+bottom, + border
             const navPadding = 24; // px-6 = 24px left+right
 
@@ -430,9 +430,9 @@
                                 x = window.innerWidth - navPadding - balloonRadius;
                                 vx = -Math.abs(vx) * 0.8;
                             }
-                            // Top boundary
-                            if (y - balloonRadius < 16) {
-                                y = 16 + balloonRadius;
+                            // Top boundary (ceiling at top of page)
+                            if (y - balloonRadius < 0) {
+                                y = balloonRadius;
                                 vy = Math.abs(vy) * 0.8;
                             }
                             // Bottom boundary
@@ -556,9 +556,9 @@
 
                     {/* Floating Balloons in Nav */}
                     {balloons.map((balloon) => (
-                        <div key={balloon.id} style={{ position: 'fixed', left: `${balloon.x}px`, top: `${balloon.y}px`, zIndex: 40, pointerEvents: 'auto' }}>
+                        <div key={balloon.id} style={{ position: 'fixed', left: `${balloon.x - 24}px`, top: `${balloon.y - 32}px`, zIndex: 40, pointerEvents: 'auto' }}>
                             <div 
-                                className={`w-8 h-12 cursor-pointer pointer-events-auto balloon ${poppingId === balloon.id ? 'popping' : ''}`} 
+                                className={`w-16 h-24 cursor-pointer pointer-events-auto balloon ${poppingId === balloon.id ? 'popping' : ''}`} 
                                 onClick={() => handleBalloonClick(balloon.id)}
                             >
                                 <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
