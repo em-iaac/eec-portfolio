@@ -52,6 +52,16 @@
           from { width: 0%; }
           to { width: 100%; }
         }
+
+        /* Grayscale Image Effect */
+        .project-image {
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
+        }
+
+        .project-image:hover {
+            filter: grayscale(0%);
+        }
     </style>
 
     <script>
@@ -154,7 +164,7 @@
                 pun: "Homage is where the heart is. And the reinforced concrete.",
                 description: "An ingenious response to rectify the disjuncture between Tripoli's historic enclave and its modern precinct. Features adaptive reuse of Oscar Niemeyer's 'Collective Housing'.",
                 softwares: ['Revit', 'Rhino', 'Illustrator', 'Premiere', 'V-Ray'],
-                imageUrl: 'https://picsum.photos/seed/homage/1200/800',
+                imageUrl: './images/pic-homage.png',
                 details: [
                     "Divided into re-adapted units, workshops, and innovative spaces.",
                     "Features the 'Transfer Box' concept: a dynamic exhibition space.",
@@ -170,7 +180,7 @@
                 pun: "I'm just rounding out the competition here.",
                 description: "A monumental sculpture and square design inspired by aircraft take-off angles and lines. Reflects the power of the Royal Air Force and cultural heritage.",
                 softwares: ['Rhino', 'Photoshop', 'Illustrator', 'Premiere', 'V-Ray'],
-                imageUrl: 'https://picsum.photos/seed/chahine/1200/800',
+                imageUrl: './images/pic-chahine.png',
                 details: [
                     "Deconstruction of aircraft hulls into axes and lines.",
                     "6 stages of conceptual development from heritage to sculpture.",
@@ -186,7 +196,7 @@
                 pun: "A recipe for success, though I still can't cook a proper souffle.",
                 description: "Rejuvenating a disused school near the Shima River into a culinary school and vibrant food market. Seamlessly blends preservation with innovation.",
                 softwares: ['Rhino', 'Photoshop', 'Illustrator', 'Enscape'],
-                imageUrl: 'https://picsum.photos/seed/culinary/1200/800',
+                imageUrl: './images/pic-culinary.png',
                 details: [
                     "Features diverse classrooms, a production area, and a library.",
                     "Collaborates with regional farmers for fresh produce.",
@@ -202,7 +212,7 @@
                 pun: "I design loops so you don't have to stay in them.",
                 description: "An interactive car booth for Ford's showroom exhibition. Thrilling fusion of innovation and automotive experience.",
                 softwares: ['Rhino', 'Grasshopper', 'V-Ray', 'Photoshop', 'Illustrator'],
-                imageUrl: 'https://picsum.photos/seed/escape/1200/800',
+                imageUrl: './images/pic-escape.png',
                 details: [
                     "Kinetic experience ensuring engagement with the public.",
                     "Unique infinity view and elevated Raptor area.",
@@ -218,7 +228,7 @@
                 pun: "High-rise buildings, high-rise expectations.",
                 description: "SOMA Architects' innovative tower design in Dubai's dynamic City Walk district. Integrates green spaces within a luxurious structure.",
                 softwares: ['Revit', 'Rhino', 'Photoshop', 'Illustrator', 'V-Ray'],
-                imageUrl: 'https://picsum.photos/seed/citywalk/1200/800',
+                imageUrl: './images/pic-citywalk.png',
                 details: [
                     "Managed BIM Revit Model during Pre-Design to Conceptual phases.",
                     "Strategic 'cut-outs' to sculpt green urban oases.",
@@ -234,7 +244,7 @@
                 pun: "Living in the clouds is finally a professional career choice.",
                 description: "A groundbreaking architectural venture nestled within the boundless expanse of the metaverse. Redefines boundaries of human experience.",
                 softwares: ['Rhino', 'Midjourney', 'Photoshop', 'Illustrator'],
-                imageUrl: 'https://picsum.photos/seed/solitude/1200/800',
+                imageUrl: './images/pic-solitude.png',
                 details: [
                     "Experimentation between emerging AI technologies and an Architect's mind.",
                     "Sanctuary for relaxation, introspection, and connection with nature.",
@@ -306,7 +316,7 @@
 
                     <div className="bg-white w-full max-w-6xl rounded-lg overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in fade-in zoom-in duration-300 relative" onClick={(e) => e.stopPropagation()}>
                         <div className="md:w-1/2 h-[300px] md:h-auto overflow-hidden bg-gray-100">
-                            <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />
+                            <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover project-image" />
                         </div>
 
                         <div className="md:w-1/2 p-8 md:p-12 overflow-y-auto max-h-[80vh]">
@@ -468,7 +478,7 @@
                                     <img 
                                         src={project.imageUrl} 
                                         alt={project.title} 
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 project-image" 
                                     />
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <span className="text-white text-xs font-bold uppercase tracking-[0.3em] border-2 border-white px-4 py-2">View Project</span>
