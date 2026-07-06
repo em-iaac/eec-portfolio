@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Notebook from './pages/Notebook'
 import About from './pages/About'
 import CV from './pages/CV'
+import SheetRoute from './pages/SheetRoute'
 
 const ExplorePage = lazy(() => import('./explore/ExplorePage'))
 
@@ -62,6 +63,7 @@ export default function App() {
         <Route path="/work" element={<WorkRedirect />} />
         <Route path="/about" element={<About />} />
         <Route path="/cv" element={<CV />} />
+        <Route path="/sheets/:sheetId" element={<SheetRoute />} />
         <Route
           path="/explore"
           element={
