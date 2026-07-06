@@ -10,8 +10,17 @@ export const LENSES: Record<Lens, { label: string; pen: string; wire: string }> 
   explorations: { label: 'Explorations', pen: 'var(--color-yellow-pen)', wire: 'var(--color-yellow-wire)' },
 }
 
-export function LensTick({ lens, size = 9 }: { lens: Lens; size?: number }) {
-  const c = LENSES[lens].pen
+export function LensTick({
+  lens,
+  size = 9,
+  variant = 'pen',
+}: {
+  lens: Lens
+  size?: number
+  /** 'pen' on light grounds (default), 'wire' on carbon (EXPLORE legend) */
+  variant?: 'pen' | 'wire'
+}) {
+  const c = LENSES[lens][variant]
   return (
     <svg width={size} height={size} viewBox="0 0 10 10" aria-hidden="true" className="inline-block shrink-0">
       {lens === 'computation' && <rect x="0.5" y="0.5" width="9" height="9" fill={c} />}
