@@ -33,7 +33,7 @@ function ChipInner({ lens }: { lens: Lens }) {
   )
 }
 
-/** Same-page anchor chip (Work) */
+/** Same-page anchor chip (Notebook filter: the hash IS the filter state) */
 export function LensChipAnchor({ lens }: { lens: Lens }) {
   return (
     <a className={CHIP_CLS} href={`#${lens}`}>
@@ -42,10 +42,10 @@ export function LensChipAnchor({ lens }: { lens: Lens }) {
   )
 }
 
-/** Cross-page router chip (Home > Work sections), client-side navigation */
+/** Cross-page router chip (into filtered Notebook views), client-side navigation */
 export function LensChipRoute({ lens }: { lens: Lens }) {
   return (
-    <Link className={CHIP_CLS} to={`/work#${lens}`}>
+    <Link className={CHIP_CLS} to={`/notebook#${lens}`}>
       <ChipInner lens={lens} />
     </Link>
   )
