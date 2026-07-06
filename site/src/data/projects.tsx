@@ -160,6 +160,40 @@ export const PRACTICE: Project[] = [
 // NOTE: Session 1 locked Design & Practice to Marsception + SOMA only.
 // Dynamic Solution appears in the CV experience list, not the Work lens.
 
+// The Home proof pair, per the Session 3 handoff (Site Home.dc.html): the
+// SAME two heroes with the condensed locked card copy of the adjusted A-000.
+// Full blurbs above remain the Notebook/archive versions.
+export const HOME_FEATURED: Project[] = [
+  {
+    slug: 'sensi',
+    title: 'Sensi',
+    lens: 'computation',
+    meta: 'MACAD AWARDS 2026 · WINNER',
+    blurb:
+      'Comfort is usually the thing we hope shows up after the design is done. Sensi makes it a design layer: a copilot that reads your floor plan and scores it across six senses (thermal, visual, acoustic, spatial, olfactory, tactile), calibrated to a person, not an average.',
+    tech: 'PYTHON · LANGGRAPH · FASTAPI · REACT',
+    links: [
+      { label: 'BLOG', href: 'https://blog.iaac.net/sensi-making-comfort-a-design-layer/' },
+      { label: 'GITHUB', href: 'https://github.com/sclebow/AIA26_Studio/tree/main/team_02' },
+    ],
+    image: { slug: 'sensi', name: 'app-shape', alt: 'Sensi interface scoring a floor plan across six senses' },
+  },
+  {
+    slug: 'neurospace',
+    title: 'NeuroSpace',
+    lens: 'computation',
+    meta: 'SOLO · LIVE APP',
+    blurb:
+      "You're sitting in a room right now, and its defaults are quietly shaping your cortisol, your circadian rhythm, your cognitive load. NeuroSpace makes those effects visible: move a slider, watch the score respond. It's BIM, reframed as Behavior Information Modeling.",
+    tech: 'GRASSHOPPER · RHINO.COMPUTE · VUE 3 · THREE.JS',
+    links: [
+      { label: 'TRY IT LIVE', href: 'https://hi-em.github.io/neurospace' },
+      { label: 'GITHUB', href: 'https://github.com/hi-em/neurospace' },
+    ],
+    image: { slug: 'neurospace', name: 'landing', alt: 'NeuroSpace landing page with parametric room and live scores' },
+  },
+]
+
 export const EXPLORATIONS: Project[] = [
   {
     slug: 'cappelletti',
@@ -185,3 +219,10 @@ export const EXPLORATIONS: Project[] = [
     links: [],
   },
 ]
+
+// Registry joins: every project addressable by slug (Notebook + sheet stubs).
+export const ALL_PROJECTS: Project[] = [...HEROES, ...PRACTICE, ...EXPLORATIONS]
+
+export const PROJECTS_BY_SLUG: Record<string, Project> = Object.fromEntries(
+  ALL_PROJECTS.map((p) => [p.slug, p]),
+)
