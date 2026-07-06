@@ -1,7 +1,12 @@
 import { useEffect, type ReactNode } from 'react'
 import TitleBlock from './TitleBlock'
 import Footer from './Footer'
-import { ExploreOverlay, liftStyle, useExploreTransition } from '../hooks/useExploreTransition'
+import {
+  ExploreExitContext,
+  ExploreOverlay,
+  liftStyle,
+  useExploreTransition,
+} from '../hooks/useExploreTransition'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 
 export default function SheetPage({
@@ -19,21 +24,23 @@ export default function SheetPage({
   }, [title])
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-redline focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-mylar"
-      >
-        Skip to content
-      </a>
-      <TitleBlock onExplore={beginExit} />
-      <div className="flex flex-1 flex-col" style={liftStyle(leaving, prm)}>
-        <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-5 outline-none sm:px-8">
-          {children}
-        </main>
-        <Footer />
+    <ExploreExitContext.Provider value={beginExit}>
+      <div className="flex min-h-dvh flex-col">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-redline focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-mylar"
+        >
+          Skip to content
+        </a>
+        <TitleBlock onExplore={beginExit} />
+        <div className="flex flex-1 flex-col" style={liftStyle(leaving, prm)}>
+          <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-5 outline-none sm:px-8">
+            {children}
+          </main>
+          <Footer />
+        </div>
+        <ExploreOverlay leaving={leaving} />
       </div>
-      <ExploreOverlay leaving={leaving} />
-    </div>
+    </ExploreExitContext.Provider>
   )
 }

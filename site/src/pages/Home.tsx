@@ -1,27 +1,34 @@
+// A-000, adjusted per the Session 3 redline memo: Em and the projects first,
+// proof before preamble, one logo per page (header only), minimal furniture.
+// Hero copy is LOCKED (content/copy-draft.md v1.0): verbatim, no em dashes.
 import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
-import LogoMark from '../components/LogoMark'
 import Kicker from '../components/Kicker'
 import RevisionWord from '../components/RevisionWord'
 import ProjectCard from '../components/ProjectCard'
-import { Legend } from '../components/Lens'
-import { HEROES } from '../data/projects'
+import BenchRoll from '../components/BenchRoll'
+import { HOME_FEATURED } from '../data/projects'
+import { ExploreExitLink } from '../hooks/useExploreTransition'
 
-// Hero copy is LOCKED (content/copy-draft.md v1.0): verbatim, no em dashes.
-const FEATURED = ['sensi', 'neurospace']
+const BASE = import.meta.env.BASE_URL
+
+const RED_LINK =
+  'text-redline underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline'
 
 export default function Home() {
   return (
     <SheetPage title="Design Technology Architect">
-      <section className="grid gap-8 pt-12 pb-10 sm:pt-16 md:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
+      <section className="grid items-center gap-10 pt-12 pb-8 md:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
         <div>
-          <h1 className="mb-6 max-w-[24ch] text-[clamp(1.75rem,4.6vw,2.9rem)] leading-[1.16] font-semibold tracking-[-0.015em] text-balance">
+          <h1 className="mb-5 max-w-[24ch] text-[clamp(1.75rem,4.6vw,2.9rem)] leading-[1.16] font-semibold tracking-[-0.015em] text-balance">
             I started asking buildings a question my software couldn't answer:{' '}
             <span className="font-serif font-medium italic tracking-normal">
-              how will this space make someone <RevisionWord>feel?</RevisionWord>
+              how will this space make someone{' '}
+              {/* Ellipse follows the header rule's arrival (700ms + beat) */}
+              <RevisionWord delayMs={900}>feel?</RevisionWord>
             </span>
           </h1>
-          <p className="mb-7 max-w-[58ch] font-serif text-[17.5px] leading-relaxed">
+          <p className="mb-6 max-w-[58ch] font-serif text-[17.5px] leading-relaxed">
             So I build the missing tools. I'm Emilie El Chidiac, Design Technology Architect.{' '}
             <span className="border border-ink/30 px-1.5 py-0.5 font-mono text-[0.72em]">NeuroSpace</span> reads a
             floor plan and scores its effect on the mind;{' '}
@@ -35,33 +42,45 @@ export default function Home() {
             note="(opens the live NeuroSpace app)"
           />
         </div>
-        <div className="hidden items-center justify-center md:flex">
-          <LogoMark size={190} animated />
-        </div>
+        <figure className="m-0">
+          <div className="group aspect-[4/5] overflow-hidden border border-ink/35">
+            <img
+              src={`${BASE}assets/brand/headshot-800.webp`}
+              srcSet={`${BASE}assets/brand/headshot-400.webp 400w, ${BASE}assets/brand/headshot-800.webp 800w`}
+              sizes="(max-width: 767px) 100vw, 300px"
+              alt="Emilie El Chidiac"
+              width={800}
+              height={1192}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="block h-full w-full object-cover grayscale transition-[filter] duration-[400ms] group-hover:grayscale-0 motion-reduce:transition-none"
+            />
+          </div>
+          <figcaption className="mt-1.5 font-mono text-[9px] tracking-[0.1em] text-anno">
+            EM · BARCELONA VIA BEIRUT
+          </figcaption>
+        </figure>
       </section>
 
-      <section aria-label="Project lenses" className="border-t border-ink/20 py-6">
-        <Legend mode="route" />
-      </section>
-
-      <section aria-labelledby="featured-heading" className="py-8">
+      <section id="work" aria-labelledby="featured-heading" className="border-t border-ink/20 pt-7 pb-8">
         <h2 id="featured-heading" className="mb-5 font-mono text-[11px] tracking-[0.12em] text-anno">
           FEATURED / THE PROOF PAIR
         </h2>
         <div className="grid gap-5 sm:grid-cols-2">
-          {HEROES.filter(p => FEATURED.includes(p.slug)).map((p, i) => (
+          {HOME_FEATURED.map((p, i) => (
             <ProjectCard key={p.slug} project={p} priority={i === 0} />
           ))}
         </div>
-        <p className="mt-6 font-mono text-[11px] tracking-[0.06em]">
-          <Link
-            to="/work"
-            className="text-redline underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline"
-          >
-            FULL DRAWING SET: WORK &gt;
+        <p className="mt-6 flex flex-wrap gap-x-7 gap-y-2 font-mono text-[11px] tracking-[0.06em]">
+          <Link to="/sheets/p-104" viewTransition className={RED_LINK}>
+            SHEET P-104: A BALLOONING MARKET &gt;
           </Link>
+          <ExploreExitLink className={RED_LINK}>OR EXPLORE THE WHOLE MIND &gt;</ExploreExitLink>
         </p>
       </section>
+
+      <BenchRoll />
     </SheetPage>
   )
 }

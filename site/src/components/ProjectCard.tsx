@@ -10,13 +10,16 @@ export default function ProjectCard({ project, priority = false }: { project: Pr
   return (
     <article className="group flex flex-col border border-ink/35 bg-mylar">
       {project.image && (
-        <div className="border-b border-ink/35">
+        // Uniform 4:3 crops sitewide (Session 3 memo). Per-image reframing via
+        // the optional `position` escape hatch on Project.image.
+        <div className="aspect-[4/3] overflow-hidden border-b border-ink/35">
           <Img
             slug={project.image.slug}
             name={project.image.name}
             alt={project.image.alt}
             priority={priority}
-            className="block h-auto w-full grayscale transition-[filter] duration-300 group-hover:grayscale-0 group-focus-within:grayscale-0 motion-reduce:transition-none"
+            style={project.image.position ? { objectPosition: project.image.position } : undefined}
+            className="block h-full w-full object-cover grayscale transition-[filter] duration-[400ms] group-hover:grayscale-0 group-focus-within:grayscale-0 motion-reduce:transition-none"
           />
         </div>
       )}

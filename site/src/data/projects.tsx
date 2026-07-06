@@ -15,7 +15,9 @@ export interface Project {
   blurb: ReactNode
   tech: string
   links: { label: string; href: string }[]
-  image?: { slug: string; name: string; alt: string }
+  // `position` = CSS object-position for the uniform 4:3 crop (escape hatch
+  // when center-crop cuts the important part of a wide screenshot).
+  image?: { slug: string; name: string; alt: string; position?: string }
   draftCopy?: boolean
 }
 

@@ -1,4 +1,5 @@
 // srcset helper over the image pipeline output (scripts/optimize-images.mjs).
+import type { CSSProperties } from 'react'
 import manifest from '../data/images.json'
 
 type Entry = {
@@ -22,6 +23,7 @@ export default function Img({
   sizes = '(max-width: 700px) 100vw, 640px',
   priority = false,
   className,
+  style,
 }: {
   slug: string
   name: string
@@ -29,6 +31,7 @@ export default function Img({
   sizes?: string
   priority?: boolean
   className?: string
+  style?: CSSProperties
 }) {
   const entry = findImage(slug, name)
   if (!entry) return null
@@ -45,6 +48,7 @@ export default function Img({
       width={largest.w}
       height={Math.round(largest.w / entry.aspect)}
       className={className}
+      style={style}
     />
   )
 }

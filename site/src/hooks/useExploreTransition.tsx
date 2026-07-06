@@ -2,8 +2,16 @@
 // fades in while the page content lifts, then we navigate to EXPLORE.
 // Reduced motion navigates immediately. The timings are shared with the
 // EXPLORE side so both directions of the toggle stay symmetric.
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent,
+  type ReactNode,
+} from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import usePrefersReducedMotion from './usePrefersReducedMotion'
 import { preloadExplore } from '../explore/preload'
 
@@ -53,4 +61,29 @@ export function liftStyle(leaving: boolean, prm: boolean) {
     transform: leaving && !prm ? 'translateY(-8px) scale(1.005)' : undefined,
     transition: prm ? undefined : `transform ${MODE_FADE_MS}ms ease`,
   }
+}
+
+// Page shells provide their beginExit so any nested link can run the same
+// ceremony instead of a bare navigation.
+export const ExploreExitContext = createContext<((e?: MouseEvent) => void) | null>(null)
+
+export function ExploreExitLink({
+  className,
+  children,
+}: {
+  className?: string
+  children: ReactNode
+}) {
+  const beginExit = useContext(ExploreExitContext)
+  return (
+    <Link
+      to="/explore"
+      onClick={beginExit ?? undefined}
+      onPointerEnter={() => preloadExplore()}
+      onFocus={() => preloadExplore()}
+      className={className}
+    >
+      {children}
+    </Link>
+  )
 }
