@@ -1,0 +1,575 @@
+{
+  "sensi": [
+    {
+      "name": "app-shape",
+      "role": "hero",
+      "aspect": 1.8757,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/app-shape-640.webp",
+          "kb": 18
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/app-shape-1024.webp",
+          "kb": 38
+        }
+      ]
+    },
+    {
+      "name": "onboarding",
+      "role": "gallery",
+      "aspect": 1.8619,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/onboarding-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/onboarding-1024.webp",
+          "kb": 16
+        }
+      ]
+    },
+    {
+      "name": "report",
+      "role": "gallery",
+      "aspect": 1.8685,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/report-640.webp",
+          "kb": 11
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/report-1024.webp",
+          "kb": 25
+        }
+      ]
+    },
+    {
+      "name": "report-detail",
+      "role": "gallery",
+      "aspect": 1.9082,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/report-detail-640.webp",
+          "kb": 14
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/report-detail-1024.webp",
+          "kb": 31
+        }
+      ]
+    }
+  ],
+  "neurospace": [
+    {
+      "name": "landing",
+      "role": "hero",
+      "aspect": 1.9192,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/neurospace/landing-640.webp",
+          "kb": 7
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/neurospace/landing-1024.webp",
+          "kb": 14
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/neurospace/landing-1600.webp",
+          "kb": 28
+        }
+      ]
+    },
+    {
+      "name": "view",
+      "role": "gallery",
+      "aspect": 1.8696,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/neurospace/view-640.webp",
+          "kb": 11
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/neurospace/view-1024.webp",
+          "kb": 20
+        }
+      ]
+    },
+    {
+      "name": "score-1",
+      "role": "gallery",
+      "aspect": 1.9104,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/neurospace/score-1-640.webp",
+          "kb": 9
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/neurospace/score-1-1024.webp",
+          "kb": 21
+        }
+      ]
+    },
+    {
+      "name": "score-2",
+      "role": "gallery",
+      "aspect": 1.8873,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/neurospace/score-2-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/neurospace/score-2-1024.webp",
+          "kb": 17
+        }
+      ]
+    }
+  ],
+  "huddle": [
+    {
+      "name": "axonometric",
+      "role": "hero",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/huddle/axonometric-640.webp",
+          "kb": 51
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/huddle/axonometric-1024.webp",
+          "kb": 112
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/huddle/axonometric-1600.webp",
+          "kb": 218
+        }
+      ]
+    },
+    {
+      "name": "perspective-1",
+      "role": "gallery",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/huddle/perspective-1-640.webp",
+          "kb": 31
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/huddle/perspective-1-1024.webp",
+          "kb": 66
+        }
+      ]
+    },
+    {
+      "name": "perspective-2",
+      "role": "gallery",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/huddle/perspective-2-640.webp",
+          "kb": 31
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/huddle/perspective-2-1024.webp",
+          "kb": 63
+        }
+      ]
+    },
+    {
+      "name": "wind-study",
+      "role": "gallery",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/huddle/wind-study-640.webp",
+          "kb": 45
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/huddle/wind-study-1024.webp",
+          "kb": 97
+        }
+      ]
+    },
+    {
+      "name": "axonometric-zoom",
+      "role": "gallery",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/huddle/axonometric-zoom-640.webp",
+          "kb": 30
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/huddle/axonometric-zoom-1024.webp",
+          "kb": 59
+        }
+      ]
+    }
+  ],
+  "lungs": [
+    {
+      "name": "tower",
+      "role": "hero",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/lungs/tower-640.webp",
+          "kb": 18
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/tower-1024.webp",
+          "kb": 46
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/lungs/tower-1600.webp",
+          "kb": 120
+        }
+      ]
+    },
+    {
+      "name": "public-interface",
+      "role": "gallery",
+      "aspect": 0.3873,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/lungs/public-interface-640.webp",
+          "kb": 42
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/public-interface-1024.webp",
+          "kb": 84
+        }
+      ]
+    },
+    {
+      "name": "control-room",
+      "role": "gallery",
+      "aspect": 1.7483,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/lungs/control-room-640.webp",
+          "kb": 3
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/control-room-1024.webp",
+          "kb": 7
+        }
+      ]
+    },
+    {
+      "name": "control-room-kpis",
+      "role": "gallery",
+      "aspect": 1.6077,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/lungs/control-room-kpis-640.webp",
+          "kb": 13
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/control-room-kpis-1024.webp",
+          "kb": 26
+        }
+      ]
+    }
+  ],
+  "legoarch": [
+    {
+      "name": "sagrada-render",
+      "role": "hero",
+      "aspect": 1,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/sagrada-render-640.webp",
+          "kb": 59
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/sagrada-render-1024.webp",
+          "kb": 92
+        }
+      ]
+    },
+    {
+      "name": "mesh-vs-lego",
+      "role": "gallery",
+      "aspect": 1.8605,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/mesh-vs-lego-640.webp",
+          "kb": 12
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/mesh-vs-lego-1024.webp",
+          "kb": 24
+        }
+      ]
+    },
+    {
+      "name": "booklet",
+      "role": "gallery",
+      "aspect": 1.8605,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/booklet-640.webp",
+          "kb": 12
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/booklet-1024.webp",
+          "kb": 25
+        }
+      ]
+    },
+    {
+      "name": "shelf",
+      "role": "gallery",
+      "aspect": 1.8605,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/shelf-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/shelf-1024.webp",
+          "kb": 19
+        }
+      ]
+    },
+    {
+      "name": "outputs",
+      "role": "gallery",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/outputs-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/outputs-1024.webp",
+          "kb": 20
+        }
+      ]
+    }
+  ],
+  "cappelletti": [
+    {
+      "name": "poster",
+      "role": "hero",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/cappelletti/poster-640.webp",
+          "kb": 44
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/cappelletti/poster-1024.webp",
+          "kb": 87
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/cappelletti/poster-1600.webp",
+          "kb": 157
+        }
+      ]
+    },
+    {
+      "name": "lattice",
+      "role": "gif",
+      "aspect": 0.9769,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/cappelletti/lattice-640.webp",
+          "kb": 172
+        }
+      ]
+    }
+  ],
+  "professional": [
+    {
+      "name": "citywalk",
+      "role": "gallery",
+      "aspect": 2.2193,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/professional/citywalk-640.webp",
+          "kb": 12
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/professional/citywalk-1024.webp",
+          "kb": 29
+        }
+      ]
+    },
+    {
+      "name": "marsception",
+      "role": "gallery",
+      "aspect": 2.1941,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/professional/marsception-640.webp",
+          "kb": 7
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/professional/marsception-1024.webp",
+          "kb": 14
+        }
+      ]
+    },
+    {
+      "name": "culinary",
+      "role": "gallery",
+      "aspect": 2.2055,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/professional/culinary-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/professional/culinary-1024.webp",
+          "kb": 21
+        }
+      ]
+    }
+  ],
+  "ballooning-market": [
+    {
+      "name": "render-1",
+      "role": "hero",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/render-1-640.webp",
+          "kb": 63
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/render-1-1024.webp",
+          "kb": 149
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/ballooning-market/render-1-1600.webp",
+          "kb": 315
+        }
+      ]
+    },
+    {
+      "name": "render-3",
+      "role": "gallery",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/render-3-640.webp",
+          "kb": 72
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/render-3-1024.webp",
+          "kb": 184
+        }
+      ]
+    },
+    {
+      "name": "render-5",
+      "role": "gallery",
+      "aspect": 1.4906,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/render-5-640.webp",
+          "kb": 74
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/render-5-1024.webp",
+          "kb": 179
+        }
+      ]
+    },
+    {
+      "name": "process",
+      "role": "gif",
+      "aspect": 2.0694,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/process-640.webp",
+          "kb": 262
+        }
+      ]
+    },
+    {
+      "name": "epic-fails",
+      "role": "gif",
+      "aspect": 2.0584,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/epic-fails-640.webp",
+          "kb": 235
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,250 @@
+@import 'tailwindcss';
+@import './styles/fonts.css';
+
+/* ============================================================
+   PEN TABLE { design tokens (Tailwind v4 CSS-first config)
+
+   GOVERNANCE RULES:
+   1. Redline = interaction and liveness. NEVER a category color.
+   2. Lens colors never appear without a shape tick + text label
+      (color-blind safety). Ticks: square=cyan/Computation,
+      diamond=magenta/Design & Practice, triangle=yellow/Explorations.
+   3. Yellow pen never sets running text.
+   4. #E11D48 only in graphic strokes/fills >= 3px, never text
+      (4.33:1, fails AA).
+   5. Mono never above 0.875rem. Serif never in UI chrome; serif is
+      for prose only.
+   6. Drawing-set furniture budget per page: title block
+      (header/footer), one legend, one leader line, ONE
+      revision-cloud flourish max.
+   7. Motion: one-shot scoped SVG/opacity/transform ceremonies only
+      (150-900ms); every animation must render final state under
+      prefers-reduced-motion; never animate root-level filters.
+   8. The n.b. marker: a redline dot or "n.b." prefix marks Emilie's
+      live annotations on sheets. Handwriting (--font-hand) sets margin
+      notes ONLY: never UI, never above 19px, five notes per sheet max.
+   9. The timeline NOW marker: redline as liveness at the live edge of
+      the record, the same sanction as the status line.
+   ============================================================ */
+@theme {
+  /* Grounds + linework */
+  --color-mylar: #f7f7f4; /* READ ground */
+  --color-ink: #16181d; /* text + linework, 16.6:1 on mylar */
+  --color-anno: #565b63; /* captions/metadata, 6.4:1 */
+  /* Rules are ink at two opacities only: ink/20 standard, ink/35 emphasized */
+
+  /* Redline: interaction + liveness only */
+  --color-redline: #be123c; /* interaction + liveness TEXT, 6.0:1 */
+  --color-redline-stroke: #e11d48; /* legacy hue: graphic strokes/fills >= 3px ONLY, never text */
+  --color-redline-wire: #ff4d6d; /* dark-ground state */
+
+  /* Lens colors (pen = light ground, wire = dark ground) */
+  --color-cyan-pen: #0e7490; /* lens: Computation & Research */
+  --color-cyan-wire: #22d3ee;
+  --color-magenta-pen: #a8186b; /* lens: Design & Practice */
+  --color-magenta-wire: #f472b6;
+  --color-yellow-pen: #7a5e00; /* lens: Explorations; pen never sets running text, ticks + small labels only */
+  --color-yellow-wire: #facc15;
+
+  /* Dark ground */
+  --color-carbon: #0b0e13; /* EXPLORE ground / dark strips */
+  --color-ink-dark: #e8eaed; /* ink on carbon, 15.9:1 */
+  --color-anno-dark: #8a919c; /* annotation on carbon */
+
+  /* Type */
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'Martian Mono', ui-monospace, monospace;
+  --font-hand: 'Caveat', cursive; /* margin notes ONLY (rule 8) */
+}
+
+body {
+  background: var(--color-mylar);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-redline) 18%, transparent);
+}
+
+/* Exactly two width tokens { no ad-hoc widths. */
+.font-expanded {
+  font-stretch: 120%;
+}
+
+.font-condensed {
+  font-stretch: 80%;
+}
+
+/* The one revision-cloud flourish (governance rule 6): a hand-wobbled
+   redline ellipse around a single word. Draws in once; final state under
+   reduced motion. Stroke is redline-stroke at 3px (legacy hue, legal). */
+.revision-word {
+  position: relative;
+  display: inline-block;
+}
+
+.revision-word svg {
+  position: absolute;
+  left: -9%;
+  top: -22%;
+  width: 118%;
+  height: 148%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.revision-word svg path {
+  fill: none;
+  stroke: var(--color-redline-stroke);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 340;
+  stroke-dashoffset: 340;
+  animation: revision-ink 0.6s var(--revision-delay, 0.5s) ease-out forwards;
+}
+
+@keyframes revision-ink {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revision-word svg path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Anchored lens sections scroll below the sticky-free header comfortably */
+section[id] {
+  scroll-margin-top: 1.5rem;
+}
+
+/* Logo plot-in ceremony: strokes draw in reading order E1 > E2 > C,
+   nodes pop last. One-shot; final state rendered under reduced motion. */
+.logo-stroke {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: logo-plot 320ms ease-out forwards;
+}
+
+.logo-node {
+  opacity: 0;
+  animation: logo-pop 200ms ease-out forwards;
+}
+
+@keyframes logo-plot {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes logo-pop {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-stroke {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .logo-node {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Header draw-in ceremony (one-shot, once per session): the title block's
+   bottom rule inks left to right while a 7px redline dot rides the leading
+   edge and fades on arrival. Reduced motion: rule complete, dot never shown. */
+.hdr-rule {
+  transform-origin: left;
+  animation: hdr-draw 700ms ease-out both;
+}
+
+.hdr-pen {
+  animation:
+    hpen-run 700ms ease-out both,
+    hpen-fade 250ms 780ms ease-out both;
+}
+
+@keyframes hdr-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes hpen-run {
+  from {
+    left: 0;
+  }
+  to {
+    left: calc(100% - 7px);
+  }
+}
+
+@keyframes hpen-fade {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hdr-rule {
+    animation: none;
+    transform: none;
+  }
+
+  .hdr-pen {
+    display: none;
+  }
+}
+
+/* The bench roll's scroller: the thin native scrollbar doubles as the
+   progress rule; the right edge fades to hint continuation. */
+.bench-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-ink) 35%, transparent)
+    transparent;
+}
+
+.bench-fade {
+  mask-image: linear-gradient(to right, black calc(100% - 3rem), transparent);
+}
+
+/* Route transitions ("next sheet", motion 04, locked at NORMAL): the
+   viewport never slides. The old sheet lifts and fades (400ms ease-in)
+   while the next, already beneath, settles from scale 0.99. Progressive
+   enhancement via the View Transitions API; browsers without it (and
+   reduced motion) get an instant swap, which the spec allows. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: sheet-lift 400ms ease-in both;
+  }
+
+  ::view-transition-new(root) {
+    animation: sheet-settle 400ms ease-out both;
+  }
+
+  @keyframes sheet-lift {
+    to {
+      opacity: 0;
+      transform: translateY(-16px);
+    }
+  }
+
+  @keyframes sheet-settle {
+    from {
+      transform: scale(0.99);
+    }
+  }
+}

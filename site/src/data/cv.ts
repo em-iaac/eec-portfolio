@@ -1,0 +1,91 @@
+// Web CV. Source: old material/Emilie El Chidiac - Résumé.pdf (Feb 2025)
+// + MaCAD year additions per PORTFOLIO-REBRAND-BRIEF.md. The downloadable
+// PDF is the Feb 2025 print issue; it gets regenerated in Session 4.
+// Date separator convention: '>' (no em dashes anywhere).
+
+export const EDUCATION = [
+  {
+    dates: '2025 > NOW',
+    title: 'Master in Advanced Computation for Architecture and Design (MaCAD)',
+    org: 'IAAC, Barcelona',
+    notes: 'Year 1, the technical year, complete. Year 2 is the thesis. MaCAD Awards 2026 winner (Sensi, Design Copilots).',
+  },
+  {
+    dates: '2018 > 2023',
+    title: 'Bachelor of Architecture (NAAB & NASAD accredited)',
+    org: 'Lebanese American University, Byblos',
+    notes: "Dean's Distinction List, GPA 3.7/4.0. Honor scholarship all consecutive terms. Design project featured in the Biennale Arte 2024.",
+  },
+]
+
+export const EXPERIENCE = [
+  {
+    dates: '2024.08 > NOW',
+    title: 'Project Architect',
+    org: 'Dynamic Solution Co., Kuwait',
+    notes:
+      'Interactive exhibition booths, stage and experiential design for major brands with Grasshopper; parametric and SubD modeling for 3D-printed products; office, retail, and showroom design.',
+  },
+  {
+    dates: '2023.08 > 2024.07',
+    title: 'Design Architect',
+    org: 'SOMA, Dubai | Beirut',
+    notes:
+      'Verve (City Walk), District O, Enara, Saria: led facade and massing studies in Rhino and Grasshopper, developed BIM models for floorplans, interiors, and masterplan documentation.',
+  },
+  {
+    dates: '2023.06 > 2023.08',
+    title: 'BIM Modeler',
+    org: 'BIM International, Beirut',
+    notes:
+      "LOD 300 BIM model for Hotel Norman's Cay Villas, Bahamas, in Revit: structural, architectural, and interior integration, specializing in wood construction and parametric families.",
+  },
+  {
+    dates: '2022.01 > NOW',
+    title: 'Design Architect',
+    org: 'Self-employed',
+    notes:
+      'Rings of Mars: Ring 4000 for Marsception (Top 50) with AI-driven workflows; ongoing workshops and research in computational design and emerging technologies.',
+  },
+  {
+    dates: '2022.01 > 2022.08',
+    title: 'Architectural Intern',
+    org: 'Jemma Chidiac Architects, Beirut',
+    notes:
+      'Pre-concept design for the Moujassam Watan (Al Khobar) and Cemetery Challenge (Anfeh) competitions; research for the Abdullatif Al Fozan Award on mosque architecture.',
+  },
+  {
+    dates: '2021.09 > 2023.01',
+    title: 'Research Assistant',
+    org: 'LAU XR Lab, Byblos',
+    notes:
+      '3D models and animations of chemical reactions for AR-based interactive learning; research on VR integration and engagement in education.',
+  },
+]
+
+export const AWARDS = [
+  { year: '2026', text: 'MaCAD Awards, Design Copilots category winner: Sensi (the only trophy of the cohort)' },
+  { year: '2026', text: 'Jury award, AIA Generative AI: lEgoarCh' },
+  { year: '2026', text: 'Studio award, BIMSC Studio: The Lungs' },
+  { year: '2025', text: 'Studio award, ACESD Studio: The Huddle' },
+  { year: '2024', text: 'Design project featured in the Biennale Arte 2024, Venice' },
+  { year: '2024', text: 'Volume Zero, Marsception: Top 50 (Rings of Mars: Ring 4000)' },
+  { year: '2023', text: 'Tamayouz Excellence Award: Top 100 graduation projects' },
+  { year: '2022', text: 'Ctrl Act Design, The Cemetery Challenge: shortlisted finalist' },
+]
+
+export const SKILLS = [
+  { group: 'COMPUTATIONAL', items: 'Grasshopper · Three.js · Kangaroo · Python · GenAI workflows' },
+  { group: 'BIM & DELIVERY', items: 'Rhino · Revit · Rhino.Inside · Speckle · Construction documents' },
+  { group: 'WEB', items: 'Vue · React · TypeScript · Tailwind' },
+  { group: 'VISUALIZATION', items: 'V-Ray · D5 Render · Lumion · Adobe Suite' },
+]
+
+export const LANGUAGES = 'Arabic (native) · English (advanced) · French (advanced)'
+
+export const CERTIFICATES = [
+  'PA: AI-Augmented Creative Workflows: Generative Techniques',
+  'PA: Taking Control 4.0: ControlNet x ComfyUI in Architecture',
+  'PA: Synthetic Vernacular using Artificial Intelligence 2.0',
+  'PA: Revit Flow 3.0 with Rhino.Inside: Dynamic Facades',
+]
