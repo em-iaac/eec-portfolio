@@ -7,7 +7,7 @@ const BASE = import.meta.env.BASE_URL
 // "trust for now", 2026-07-06). Verbatim, no em dashes.
 export default function About() {
   return (
-    <SheetPage sheet="A-201" title="About">
+    <SheetPage title="About">
       <div className="grid gap-10 pt-10 pb-8 sm:pt-14 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <div>
           <h1 className="mb-5 text-2xl font-semibold tracking-[-0.01em]">About</h1>

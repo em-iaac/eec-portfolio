@@ -1,16 +1,19 @@
 import { useEffect, type ReactNode } from 'react'
 import TitleBlock from './TitleBlock'
 import Footer from './Footer'
+import { ExploreOverlay, liftStyle, useExploreTransition } from '../hooks/useExploreTransition'
+import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 
 export default function SheetPage({
-  sheet,
   title,
   children,
 }: {
-  sheet: string
   title: string
   children: ReactNode
 }) {
+  const { leaving, beginExit } = useExploreTransition()
+  const prm = usePrefersReducedMotion()
+
   useEffect(() => {
     document.title = title ? `${title} | Emilie El Chidiac` : 'Emilie El Chidiac | Design Technology Architect'
   }, [title])
@@ -23,11 +26,14 @@ export default function SheetPage({
       >
         Skip to content
       </a>
-      <TitleBlock sheet={sheet} />
-      <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-5 outline-none sm:px-8">
-        {children}
-      </main>
-      <Footer sheet={sheet} />
+      <TitleBlock onExplore={beginExit} />
+      <div className="flex flex-1 flex-col" style={liftStyle(leaving, prm)}>
+        <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-5 outline-none sm:px-8">
+          {children}
+        </main>
+        <Footer />
+      </div>
+      <ExploreOverlay leaving={leaving} />
     </div>
   )
 }

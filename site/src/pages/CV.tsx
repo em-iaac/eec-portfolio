@@ -30,7 +30,7 @@ function Entry({ dates, title, org, notes }: { dates: string; title: string; org
 // CV header string is LOCKED: "Emilie El Chidiac | Design Technology Architect"
 export default function CV() {
   return (
-    <SheetPage sheet="C-001" title="CV">
+    <SheetPage title="CV">
       <div className="flex flex-wrap items-end justify-between gap-4 pt-10 pb-6 sm:pt-14">
         <div>
           <h1 className="text-2xl font-semibold tracking-[-0.01em]">

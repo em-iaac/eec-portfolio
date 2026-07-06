@@ -1,16 +1,15 @@
-import LogoMark from './LogoMark'
-
+// Minimal footer (Session 3 memo: one logo per page = header only, no sheet
+// number): carbon strip with the name lockup and contact links.
 const LINKS = [
   { label: 'EMAIL', href: 'mailto:chidiacemilie@gmail.com' },
   { label: 'LINKEDIN', href: 'https://www.linkedin.com/in/EmilieElChidiac' },
   { label: 'GITHUB', href: 'https://github.com/hi-em' },
 ]
 
-export default function Footer({ sheet }: { sheet: string }) {
+export default function Footer() {
   return (
     <footer className="mt-16 bg-carbon text-ink-dark">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-8 gap-y-4 px-5 py-8 sm:px-8">
-        <LogoMark size={40} tone="wire" />
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-8 gap-y-4 px-5 py-7 sm:px-8">
         <div className="flex flex-col">
           <span className="font-expanded text-xs font-semibold tracking-[0.1em]">EMILIE EL CHIDIAC</span>
           <span className="mt-0.5 font-mono text-[9px] tracking-[0.06em] text-anno-dark">
@@ -33,7 +32,6 @@ export default function Footer({ sheet }: { sheet: string }) {
               </a>
             )
           })}
-          <span className="font-mono text-[10px] text-anno-dark">SHEET {sheet}</span>
         </nav>
       </div>
     </footer>

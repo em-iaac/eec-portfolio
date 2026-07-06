@@ -12,7 +12,7 @@ const FEATURED = ['sensi', 'neurospace']
 
 export default function Home() {
   return (
-    <SheetPage sheet="A-000" title="Design Technology Architect">
+    <SheetPage title="Design Technology Architect">
       <section className="grid gap-8 pt-12 pb-10 sm:pt-16 md:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
         <div>
           <h1 className="mb-6 max-w-[24ch] text-[clamp(1.75rem,4.6vw,2.9rem)] leading-[1.16] font-semibold tracking-[-0.015em] text-balance">

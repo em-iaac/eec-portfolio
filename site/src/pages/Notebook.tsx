@@ -113,7 +113,7 @@ export default function Notebook() {
   const total = years.reduce((n, [, entries]) => n + entries.length, 0)
 
   return (
-    <SheetPage sheet="A-101" title="Notebook">
+    <SheetPage title="Notebook">
       <section className="pt-10 pb-4" aria-labelledby="notebook-heading">
         <h1 id="notebook-heading" className="mb-4 text-3xl font-semibold tracking-[-0.01em]">
           Notebook
