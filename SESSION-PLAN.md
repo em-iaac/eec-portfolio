@@ -62,6 +62,7 @@ professionally fine meanwhile.
 | # | Session | Target | Emilie present? |
 |---|---------|--------|-----------------|
 | 4 | Guardrails + Honesty | Registry safe to churn; live embarrassments dead | sign-offs only |
+| 4.2 | The Recruiter Calibration | One positioning dossier every content session reads | yes, fully |
 | 5 | The Develop Pass | Develop ceremony + motion bundle + living placeholders | phone check |
 | 6 | The Notebook Field Guide | Log markers, collapse rule, row hierarchy, de-numbered nav | glyph set |
 | 7 | Attribution Day | Credits, claims, numbers, repo mirror + LINKEDIN.md | yes, fully |
@@ -87,6 +88,12 @@ layout lands in 12 where graph.ts is open anyway; until an append exists, the
 Session 4 snapshot test fully protects the frozen 21. CV stays late (15) because
 the axis echoes the final roll grammar and Session 4's interim PDF removes the
 urgency; LINKEDIN.md does NOT wait: it ships in 7.
+Session 4.2 (inserted 2026-07-07 at Emilie's proposal, Session 4 return): recruiter
+calibration is captured ONCE, before any content session encodes positioning;
+Sessions 5-6 are design/mechanical and consume none of it, so it slots before 5
+without resequencing. Its dossier feeds 7 (which extends, not rebuilds, the claims
+inventory), 8-14 (sheet copy), 15 (CV), 16 (LinkedIn-adjacent share layer), and 13
+as a read-only 10-second-scan checklist.
 
 ---
 
@@ -149,6 +156,55 @@ locally, showing the failure, and reverting. Run /code-review before finishing.
 Do NOT run any git write commands; end your final message with (1) a proposed
 commit summary I can paste into git, (2) the changed/created file list,
 (3) everything needing my sign-off.
+```
+
+## Session 4.2 · The Recruiter Calibration (Emilie present)
+
+*(Inserted 2026-07-07 at Emilie's proposal after Session 4 shipped.)*
+
+**Goal:** One calibration dossier that every content session from 7 onward reads,
+so positioning is decided once instead of guessed per session.
+
+**Scope:** (a) SOLO PREP first: build a claims inventory from the repos, cv.ts,
+projects.tsx, registry.ts, and content/blog-catalog.json: claim, evidence,
+defensibility grade. Optionally deep-research current EU R&D / design-technology
+screening signals (titles, keywords, ATS realities) so the quiz asks sharp
+questions, not generic ones. (b) THE QUIZ: interview Emilie in AskUserQuestion
+batches: goals and timeline (incl. the thesis-year constraint); role types ranked
+(research vs design-technology vs software-leaning); industries and company
+sizes; geographies + work rights + relocation/remote stance; non-negotiables and
+red lines (claims she will not make); evidence gaps still fillable cheaply;
+keyword bank she is comfortable owning. (c) SYNTHESIZE:
+`content/RECRUITER-CALIBRATION.md`: target-role matrix, keyword bank, graded
+claim inventory, decision log, and a ROUTING section stating which finding feeds
+which future session (7 · 8-14 · 15 · 16, plus 13 as a read-only 10-second-scan
+checklist for the landing hero).
+
+**Constraints:** council-locked copy (brand spine, hero line, OPEN TO R&D status)
+is read-only input; if calibration argues for reopening any of it, that returns
+to the director + council as an explicit decision, never a silent edit. No site
+code changes: the diff is one markdown dossier.
+
+**Sign-offs:** the dossier, section by section; the routing decisions.
+
+**Draft kickoff prompt:**
+
+```
+You are a senior technical recruiter and career strategist who places
+computational-design and R&D candidates in Europe, working on eec-portfolio.
+Start in plan mode: read SESSION-PLAN.md (Session 4.2 + Standing rules),
+PORTFOLIO-REBRAND-BRIEF.md, content/copy-draft.md (locked spine: read-only),
+site/src/data/cv.ts, site/src/data/projects.tsx, site/src/data/registry.ts,
+content/blog-catalog.json. Work SOLO first: build a graded claims inventory
+from those sources, and use deep-research for current EU R&D screening signals
+if needed. THEN quiz me in AskUserQuestion batches per the session scope
+(goals, roles ranked, industries, geographies + work rights, red lines,
+evidence gaps, keyword bank). Synthesize content/RECRUITER-CALIBRATION.md with
+a routing section mapping findings to Sessions 7, 8-14, 15, 16, and 13
+(read-only checklist). Locked copy is a constraint, not a target. No site code
+changes. Do NOT run any git write commands; end your final message with (1) a
+proposed commit summary I can paste into git, (2) the changed/created file
+list, (3) everything needing my sign-off.
 ```
 
 ## Session 5 · The Develop Pass
@@ -237,9 +293,11 @@ proposed commit summary I can paste into git, (2) the changed/created file list,
 **Goal:** Every honesty and credit question is decided once, live, before any
 sheet copy exists; LinkedIn ships the same day.
 
-**Scope:** Solo first phase: mine quantified-outcome candidates (parameters
-scored, solver bodies, round-trip latency, model counts) from the repos, IAAC
-blog posts, and content/blog-catalog.json into a dossier. Then, with Emilie via
+**Scope:** Solo first phase: start from the graded claims inventory in
+`content/RECRUITER-CALIBRATION.md` (Session 4.2) and EXTEND it with quantified-
+outcome candidates (parameters scored, solver bodies, round-trip latency, model
+counts) from the repos, IAAC blog posts, and content/blog-catalog.json: do not
+rebuild it. Then, with Emilie via
 AskUserQuestion batches: course-code reframing ("MACAD STUDIO · TEAM OF 4" style),
 MY PART one-liners for every group project, mirroring the Sensi repo to
 github.com/hi-em (checklist deliverable; README credits teammates), the P-104
@@ -254,10 +312,12 @@ about, featured items, banner spec from the locked brand spine, paste-ready).
 ```
 You are a hybrid technical-recruiter and UX-copy specialist on eec-portfolio.
 Start in plan mode: read SESSION-PLAN.md (Session 7 + Standing rules),
-PORTFOLIO-REBRAND-BRIEF.md (sections 6 and 8), content/blog-catalog.json,
-site/src/data/projects.tsx, site/src/sheets/P104.tsx. First work SOLO: mine
-defensible quantified-outcome candidates per project from the repos and blog
-posts into a dossier. Then interview me in AskUserQuestion batches: course-code
+PORTFOLIO-REBRAND-BRIEF.md (sections 6 and 8), content/RECRUITER-CALIBRATION.md
+(the Session 4.2 dossier: your positioning ground truth), content/
+blog-catalog.json, site/src/data/projects.tsx, site/src/sheets/P104.tsx. First
+work SOLO: extend the dossier's graded claims inventory with defensible
+quantified-outcome candidates per project from the repos and blog posts. Then
+interview me in AskUserQuestion batches: course-code
 reframing, MY PART lines, the Sensi repo mirror, the P-104 meta joke, one number
 per project. Apply my answers (draftCopy flagged), produce MIRRORING.md and
 LINKEDIN.md (paste-ready, from the locked Behavior Information Modeling spine;
