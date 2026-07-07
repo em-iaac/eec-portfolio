@@ -8,10 +8,11 @@ import { Link, NavLink } from 'react-router-dom'
 import LogoMark from './LogoMark'
 import { preloadExplore } from '../explore/preload'
 
+// De-numbered Session 6: titles only, no 01/02/03 indices.
 const NAV = [
-  { n: '01', label: 'NOTEBOOK', to: '/notebook' },
-  { n: '02', label: 'ABOUT', to: '/about' },
-  { n: '03', label: 'CV', to: '/cv' },
+  { label: 'NOTEBOOK', to: '/notebook' },
+  { label: 'ABOUT', to: '/about' },
+  { label: 'CV', to: '/cv' },
 ]
 
 // Once per session (handoff: one-shot, on load); client-side navigations
@@ -62,7 +63,6 @@ export default function TitleBlock({ onExplore }: { onExplore?: () => void }) {
                 }`
               }
             >
-              <span className="mr-1 text-anno">{item.n}</span>
               {item.label}
             </NavLink>
           ))}

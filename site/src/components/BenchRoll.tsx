@@ -1,9 +1,11 @@
 // THE NOTEBOOK bench roll: the research record as a horizontal drawing roll.
 // A year axis runs the length of the strip; the redline NOW marker sits at
-// the live (left) edge and history unrolls to the right. Entry kinds are
-// told apart by shape + type, never color (rule 2 analog): sheets/projects
-// are bordered cards above the axis, thoughts hang below in serif italic,
-// milestones and awards are mono log lines with distinct axis markers.
+// the live (left) edge and history unrolls to the right. Entry kinds carry
+// the field-guide mark next to the date (KindMark, Session 6): projects are
+// bordered cards above the axis (no mark: the card is self-evident),
+// thoughts hang below in serif italic, milestones and awards are mono log
+// lines. Same-month sheet issues collapse into one column/feed row at the
+// render layer (collapseSheetIssues).
 // Motion tier: WHISPER · no entry ceremonies; card images run the shared
 // develop-once ceremony (Session 5) as they scroll into view.
 // Below md the same record renders as a vertical feed.
@@ -16,9 +18,11 @@ import {
 } from 'react'
 import { Link } from 'react-router-dom'
 import Img from './Img'
+import KindMark, { LOG_KINDS } from './KindMark'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 import { timelineEntries, type RegistryEntry } from '../data/registry'
 import { PROJECTS_BY_SLUG } from '../data/projects'
+import { collapseSheetIssues, type LogItem } from '../lib/collapseSheets'
 
 const RED_LINK =
   'text-redline underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline'
@@ -26,20 +30,18 @@ const RED_LINK =
 // Above-axis zone height; every column shares it so the axis stays straight.
 const ABOVE = 'h-56'
 
-type RollItem =
-  | { type: 'entry'; entry: RegistryEntry }
-  | { type: 'year'; year: string }
+type RollItem = LogItem | { type: 'year'; year: string }
 
-function buildItems(entries: RegistryEntry[]): RollItem[] {
+function buildItems(logItems: LogItem[]): RollItem[] {
   const items: RollItem[] = []
   let year: string | null = null
-  for (const e of entries) {
-    const y = e.date.slice(0, 4)
+  for (const it of logItems) {
+    const y = (it.type === 'entry' ? it.e.date : it.date).slice(0, 4)
     if (y !== year) {
       items.push({ type: 'year', year: y })
       year = y
     }
-    items.push({ type: 'entry', entry: e })
+    items.push(it)
   }
   return items
 }
@@ -54,17 +56,20 @@ function entryTarget(e: RegistryEntry): { to?: string; href?: string } {
 
 function DateLabel({ e }: { e: RegistryEntry }) {
   return (
-    <span className="font-mono text-[8.5px] tracking-[0.08em] text-anno">{e.date}</span>
+    <span className="font-mono text-[8.5px] tracking-[0.08em] text-anno">
+      {e.kind !== 'project' && (
+        <>
+          <KindMark kind={e.kind} />{' '}
+        </>
+      )}
+      {e.date}
+    </span>
   )
 }
 
-function AxisTick({ kind }: { kind: RegistryEntry['kind'] }) {
-  if (kind === 'milestone') {
-    return <span aria-hidden="true" className="-mt-[2px] block size-[5px] bg-ink" />
-  }
-  if (kind === 'award' || kind === 'talk' || kind === 'press') {
-    return <span aria-hidden="true" className="-mt-[3px] block size-[7px] rounded-full border border-ink bg-mylar" />
-  }
+// One axis grammar (Session 6): the hairline tick for every entry column;
+// kind lives in the date-gutter mark now. The NOW dot keeps its redline.
+function AxisTick() {
   return <span aria-hidden="true" className="block h-2 w-px bg-ink/50" />
 }
 
@@ -133,11 +138,11 @@ function RollColumn({ e }: { e: RegistryEntry }) {
       </p>
     )
   } else if (!isThought) {
-    const prefix = e.kind.toUpperCase()
+    // Award/press/talk log lines: the date-gutter mark names the kind
+    // (text prefixes retired, Session 6).
     above = (
-      <p className="line-clamp-3 font-mono text-[9px] leading-relaxed tracking-[0.08em]">
-        <span className="font-medium text-ink">{prefix} · </span>
-        <span className="text-anno">{e.title.toUpperCase()}</span>
+      <p className="line-clamp-3 font-mono text-[9px] leading-relaxed tracking-[0.08em] text-anno">
+        {e.title.toUpperCase()}
       </p>
     )
   }
@@ -146,7 +151,7 @@ function RollColumn({ e }: { e: RegistryEntry }) {
     <li className={`flex ${width} shrink-0 snap-start flex-col`}>
       <div className={`flex ${ABOVE} flex-col justify-end pb-3`}>{above}</div>
       <div className="flex flex-col items-start">
-        <AxisTick kind={e.kind} />
+        <AxisTick />
         <div className="pt-1.5">
           <DateLabel e={e} />
           {isThought && (
@@ -154,6 +159,48 @@ function RollColumn({ e }: { e: RegistryEntry }) {
               {e.title}
             </p>
           )}
+        </div>
+      </div>
+    </li>
+  )
+}
+
+// The collapse column (Session 6): same-month sheet issues read as one line,
+// redline as liveness (issue events), each number its own link into its sheet.
+function SheetsIssuedLine({ sheets }: { sheets: RegistryEntry[] }) {
+  return (
+    <p className="font-mono text-[9px] leading-relaxed tracking-[0.08em] text-redline">
+      SHEETS{' '}
+      {sheets.map((s, i) => (
+        <span key={s.id}>
+          {i > 0 && ', '}
+          {/* Vertical-only hit growth: adjacent number links share the line. */}
+          <Link
+            to={s.sheet!.route}
+            viewTransition
+            className="-my-2 -mx-1 px-1 py-2 underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline"
+          >
+            {s.sheet!.number}
+          </Link>
+        </span>
+      ))}{' '}
+      ISSUED &gt;
+    </p>
+  )
+}
+
+function SheetGroupColumn({ date, sheets }: { date: string; sheets: RegistryEntry[] }) {
+  return (
+    <li className="flex w-52 shrink-0 snap-start flex-col">
+      <div className={`flex ${ABOVE} flex-col justify-end pb-3`}>
+        <SheetsIssuedLine sheets={sheets} />
+      </div>
+      <div className="flex flex-col items-start">
+        <AxisTick />
+        <div className="pt-1.5">
+          <span className="font-mono text-[8.5px] tracking-[0.08em] text-anno">
+            <KindMark kind="sheet" /> {date}
+          </span>
         </div>
       </div>
     </li>
@@ -204,9 +251,9 @@ function FeedRow({ e }: { e: RegistryEntry }) {
       </p>
     )
   } else {
+    // Log lines: the mark next to the date names the kind (Session 6).
     body = (
       <p className="font-mono text-[9px] leading-relaxed tracking-[0.08em]">
-        {e.kind !== 'milestone' && <span className="font-medium text-ink">{e.kind.toUpperCase()} · </span>}
         <span className={e.kind === 'milestone' ? 'font-medium text-ink' : 'text-anno'}>
           {e.title.toUpperCase()}
         </span>
@@ -214,10 +261,31 @@ function FeedRow({ e }: { e: RegistryEntry }) {
     )
   }
   return (
+    <li
+      className={`relative border-l border-ink/35 pl-5 ${LOG_KINDS.has(e.kind) ? 'pb-4' : 'pb-6'}`}
+    >
+      <span aria-hidden="true" className="absolute top-1 -left-px block h-px w-3 bg-ink/50" />
+      <p className="mb-1.5 font-mono text-[8.5px] tracking-[0.08em] text-anno">
+        {e.kind !== 'project' && (
+          <>
+            <KindMark kind={e.kind} />{' '}
+          </>
+        )}
+        {e.date}
+      </p>
+      {body}
+    </li>
+  )
+}
+
+function FeedSheetsRow({ date, sheets }: { date: string; sheets: RegistryEntry[] }) {
+  return (
     <li className="relative border-l border-ink/35 pb-6 pl-5">
       <span aria-hidden="true" className="absolute top-1 -left-px block h-px w-3 bg-ink/50" />
-      <p className="mb-1.5 font-mono text-[8.5px] tracking-[0.08em] text-anno">{e.date}</p>
-      {body}
+      <p className="mb-1.5 font-mono text-[8.5px] tracking-[0.08em] text-anno">
+        <KindMark kind="sheet" /> {date}
+      </p>
+      <SheetsIssuedLine sheets={sheets} />
     </li>
   )
 }
@@ -230,7 +298,8 @@ export default function BenchRoll() {
   const drag = useRef({ active: false, startX: 0, startLeft: 0, moved: false })
 
   const entries = timelineEntries()
-  const items = buildItems(entries)
+  const logItems = collapseSheetIssues(entries)
+  const items = buildItems(logItems)
   const newestYear = entries[0]?.date.slice(0, 4)
 
   function onPointerDown(e: PointerEvent) {
@@ -320,19 +389,26 @@ export default function BenchRoll() {
               .map((it) =>
                 it.type === 'year' ? (
                   <YearColumn key={`y-${it.year}`} year={it.year} />
+                ) : it.type === 'sheetGroup' ? (
+                  <SheetGroupColumn key={`sheets-${it.date}`} date={it.date} sheets={it.sheets} />
                 ) : (
-                  <RollColumn key={it.entry.id} e={it.entry} />
+                  <RollColumn key={it.e.id} e={it.e} />
                 ),
               )}
           </ul>
         </div>
       </div>
 
-      {/* Mobile: the same record as a vertical feed (most recent first) */}
+      {/* Mobile: the same record as a vertical feed (most recent first);
+          a collapsed sheet month costs one feed slot */}
       <ul className="m-0 list-none p-0 md:hidden">
-        {entries.slice(0, 6).map((e) => (
-          <FeedRow key={e.id} e={e} />
-        ))}
+        {logItems.slice(0, 6).map((it) =>
+          it.type === 'entry' ? (
+            <FeedRow key={it.e.id} e={it.e} />
+          ) : (
+            <FeedSheetsRow key={`sheets-${it.date}`} date={it.date} sheets={it.sheets} />
+          ),
+        )}
         <li className="border-l border-ink/35 pl-5 font-mono text-[10px] tracking-[0.06em]">
           <Link to="/notebook" viewTransition className={RED_LINK}>
             FULL NOTEBOOK &gt;

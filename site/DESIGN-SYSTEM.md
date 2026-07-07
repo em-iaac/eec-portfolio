@@ -20,7 +20,7 @@ Props: `sheet` (A-000 | A-101 | A-201 | C-001), `title`, `children`.
 Sheet registry: Home A-000, Work A-101, About A-201, CV C-001 (Now N-001 arrives Session 16).
 
 ### TitleBlock
-The drawing-set header. Cells: mark (static, always; no plot-in ceremony exists), name + role (role, MaCAD; NO status line since Session 5), keynote nav, mode toggle.
+The drawing-set header. Cells: mark (static, always; no plot-in ceremony exists), name + role (role, MaCAD; NO status line since Session 5), keynote nav (de-numbered Session 6: titles only, no 01/02/03 indices), mode toggle.
 States: current page = redline underline + `aria-current="page"`.
 Mobile: nav and mode toggle each wrap to their own row; name cell flexes.
 A11y: `<header>` + `<nav aria-label="Primary">`; nav links carry `-m-3 p-3` so hit areas reach ~40px.
@@ -52,6 +52,23 @@ The enriched IN PREPARATION placeholder (Session 5): rendered by SheetRoute for 
 
 ### Footer
 Title-block lockup (mark + name + role), contact links (email, LinkedIn, GitHub), sheet number cell, tiny "issued from Barcelona/Beirut" line omitted: location stays honest and unlisted.
+
+### The Notebook field guide (Session 6)
+The record reads by eye. Every TEXT row (Notebook rows, mobile feed, bench-roll text columns) carries a mono kind-mark in its date gutter; `KindMark` is the single source of the grammar:
+
+- filled ink square = project (a CSS block, not a font glyph)
+- `#` = sheet issue: REDLINE, the one sanctioned mark color (issue events are liveness, rule 1)
+- `~` = thought · `+` = milestone · `*` = award · `¶` = press · `"` = talk (reserved, none live yet)
+
+Marks are ink except the sheet `#`. Each mark pairs an aria-hidden glyph with an sr-only kind name; the old visible prefixes (`AWARD ·`, `MILESTONE ·`) are retired (the marks carry the meaning, no added text labels). Project IMAGE CARDS (bench roll, mobile feed) carry no mark: the card is self-evident.
+
+**Hierarchy:** project and sheet-issue rows keep full weight; thought/milestone/award/press/talk rows tighten (reduced padding, dotted ink/25 rule, slight indent). Milestones stay ink (the spine); awards/press/talk read annotation-grade.
+
+**Collapse rule (render layer only, `lib/collapseSheets.ts`):** same-month sheet issues aggregate into one Notebook row, one bench-roll column, and one mobile feed row reading "SHEETS P-101, P-102 ISSUED >", the line redline as liveness, each number its own link. The registry stays one entry per issue; a single-issue month keeps the full "SHEET P-104 ISSUED: TITLE >" wording.
+
+**Spine rule:** unlensed entries (milestones, unlensed awards/press) survive every lens filter in the Notebook; only lensed entries filter.
+
+**Axis ticks (bench roll):** one hairline tick for every entry column since Session 6 (kind lives in the gutter mark; the milestone square and award ring retired). The NOW dot keeps its redline liveness.
 
 ## Motion vocabulary
 
