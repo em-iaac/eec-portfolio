@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'react'
 import manifest from '../data/images.json'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
+import useDevelopOnce from '../hooks/useDevelopOnce'
 
 type Variant = { w: number; file: string; kb: number }
 
@@ -27,6 +28,7 @@ export default function Img({
   alt,
   sizes = '(max-width: 700px) 100vw, 640px',
   priority = false,
+  develop = false,
   className,
   style,
 }: {
@@ -35,10 +37,14 @@ export default function Img({
   alt: string
   sizes?: string
   priority?: boolean
+  /** Run the grayscale -> color develop ceremony on first viewport entry
+   *  (Session 5). Owns the filter classes so the caller passes layout only. */
+  develop?: boolean
   className?: string
   style?: CSSProperties
 }) {
   const prm = usePrefersReducedMotion()
+  const { ref, developed } = useDevelopOnce(`${slug}/${name}`, develop)
   const entry = findImage(slug, name)
   if (!entry) return null
   // Reduced motion: animated webps render their static first frame instead
@@ -47,8 +53,17 @@ export default function Img({
     entry.animated && prm && entry.static?.length ? entry.static : entry.variants
   const largest = variants[variants.length - 1]
   if (!largest) return null
+  // Develop owns the filter transition; hover no longer colorizes (retired
+  // once developed, per the standing rule). Element-level filter only, never
+  // root-level (governance rule 7).
+  const developCls = develop
+    ? `transition-[filter] duration-[500ms] ease-out motion-reduce:transition-none ${
+        developed ? 'grayscale-0' : 'grayscale'
+      }`
+    : ''
   return (
     <img
+      ref={develop ? ref : undefined}
       src={BASE + largest.file}
       srcSet={variants.map(v => `${BASE}${v.file} ${v.w}w`).join(', ')}
       sizes={sizes}
@@ -58,7 +73,7 @@ export default function Img({
       decoding="async"
       width={largest.w}
       height={Math.round(largest.w / entry.aspect)}
-      className={className}
+      className={develop ? `${className ?? ''} ${developCls}`.trim() : className}
       style={style}
     />
   )

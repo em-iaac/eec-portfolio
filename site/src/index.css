@@ -24,7 +24,8 @@
       live annotations on sheets. Handwriting (--font-hand) sets margin
       notes ONLY: never UI, never above 19px, five notes per sheet max.
    9. The timeline NOW marker: redline as liveness at the live edge of
-      the record, the same sanction as the status line.
+      the record, the same liveness sanction as the ISSUED FOR stamp. (The
+      public open-to status line retired in Session 5, FLAG-01.)
    ============================================================ */
 @theme {
   /* Grounds + linework */
@@ -170,6 +171,80 @@ section[id] {
 
   .hdr-pen {
     display: none;
+  }
+}
+
+/* EXPLORE info-card entrance (Session 5 bundle): the focused word's card
+   fades and rises 8px, ~280ms. Keyed per focused node in ExplorePage so
+   switching words replays it. Reduced motion: final state, no motion. */
+.infocard-enter {
+  animation: infocard-in 280ms ease-out both;
+}
+
+@keyframes infocard-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Notebook lens filter (Session 5 bundle): the filtered results fade in
+   ~180ms when the lens changes ONLY (keyed by lens; initial mount is not
+   keyed, so first paint is still). Reduced motion: final state. */
+.nb-fade {
+  animation: nb-fade-in 180ms ease-out both;
+}
+
+@keyframes nb-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Kicker leader-line draw-in (Session 5 bundle): the SVG line inks in, then
+   the dot and arrowhead arrive, one-shot. Sequenced after the header rule via
+   --kicker-delay. Reduced motion: final state, nothing animates. */
+.kicker-draw .k-line {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: kicker-line 420ms var(--kicker-delay, 900ms) ease-out forwards;
+}
+
+.kicker-draw .k-dot,
+.kicker-draw .k-head {
+  opacity: 0;
+  animation: kicker-mark 200ms calc(var(--kicker-delay, 900ms) + 320ms)
+    ease-out forwards;
+}
+
+@keyframes kicker-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes kicker-mark {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .infocard-enter,
+  .nb-fade,
+  .kicker-draw .k-line,
+  .kicker-draw .k-dot,
+  .kicker-draw .k-head {
+    animation: none;
+  }
+
+  .kicker-draw .k-line {
+    stroke-dashoffset: 0;
+  }
+
+  .kicker-draw .k-dot,
+  .kicker-draw .k-head {
+    opacity: 1;
   }
 }
 

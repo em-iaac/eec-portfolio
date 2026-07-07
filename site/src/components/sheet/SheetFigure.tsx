@@ -1,5 +1,6 @@
 // Sheet figure: uniform 4:3 crop (memo requirement), emphasized border,
-// mono caption. Animated webps ride the same manifest pipeline.
+// mono caption. Animated webps ride the same manifest pipeline. Figures
+// develop grayscale -> color once on first viewport entry (Session 5).
 import Img from '../Img'
 
 export default function SheetFigure({
@@ -23,6 +24,7 @@ export default function SheetFigure({
           name={name}
           alt={alt}
           sizes="(max-width: 700px) 100vw, 380px"
+          develop
           style={position ? { objectPosition: position } : undefined}
           className="block h-full w-full object-cover"
         />

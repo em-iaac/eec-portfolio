@@ -89,17 +89,27 @@ export default function ExplorePage() {
   }, [focusedIdx, navigateFocus])
 
   // EXPLORE -> READ: the light table switches back on. Mylar floods the
-  // scene over the shared mode timing, then we navigate home.
+  // scene over the shared mode timing, then we navigate. The info card's
+  // OPEN SHEET link routes through here too (Session 5 bundle), so leaving a
+  // focused word for its sheet uses the same ceremony, never the root view
+  // transition.
+  const leaveTo = useCallback(
+    (target: string) => {
+      if (prm) {
+        navigate(target)
+        return
+      }
+      if (leaving) return
+      setLeaving(true)
+      sceneRef.current?.setControlsEnabled(false)
+      leaveTimer.current = window.setTimeout(() => navigate(target), MODE_NAVIGATE_MS)
+    },
+    [prm, leaving, navigate],
+  )
+
   function leaveToRead(e: MouseEvent) {
     e.preventDefault()
-    if (prm) {
-      navigate('/')
-      return
-    }
-    if (leaving) return
-    setLeaving(true)
-    sceneRef.current?.setControlsEnabled(false)
-    leaveTimer.current = window.setTimeout(() => navigate('/'), MODE_NAVIGATE_MS)
+    leaveTo('/')
   }
 
   if (!webgl) return <ExploreFallback />
@@ -145,7 +155,9 @@ export default function ExplorePage() {
         <span>MONO CAPS = PROJECT · SERIF ITALIC = THOUGHT</span>
       </div>
 
-      {focusedIdx >= 0 && entryDone && <InfoCard index={focusedIdx} />}
+      {focusedIdx >= 0 && entryDone && (
+        <InfoCard key={focusedIdx} index={focusedIdx} onOpenSheet={leaveTo} />
+      )}
 
       {/* Screen-reader alternative to the WebGL scene */}
       <nav aria-label="All projects and thoughts" className="sr-only">

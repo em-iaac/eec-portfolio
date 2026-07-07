@@ -4,6 +4,7 @@
 // Entry kinds render distinctly: projects as titled rows with prose, thoughts
 // as serif italic, milestones/awards as mono log lines (shape + label, never
 // color alone).
+import { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import { Legend, LensTick, LENSES, type Lens } from '../components/Lens'
@@ -36,6 +37,7 @@ function RowBody({ e }: { e: RegistryEntry }) {
           {e.sheet ? (
             <Link
               to={e.sheet.route}
+              viewTransition
               className="text-ink no-underline hover:underline hover:decoration-redline hover:underline-offset-4"
             >
               {e.title}
@@ -80,6 +82,7 @@ function RowBody({ e }: { e: RegistryEntry }) {
       <p className="font-mono text-[10px] tracking-[0.1em]">
         <Link
           to={e.sheet!.route}
+          viewTransition
           className="-m-2 p-2 text-redline underline underline-offset-4"
         >
           SHEET {e.sheet!.number} ISSUED: {e.title.toUpperCase()} &gt;
@@ -112,6 +115,14 @@ export default function Notebook() {
 
   const total = years.reduce((n, [, entries]) => n + entries.length, 0)
 
+  // Filter fade (Session 5 bundle): the results fade in ~180ms when the lens
+  // changes only. The first paint is not keyed, so landing on the page (or a
+  // shared filtered URL) is still; every later lens switch replays the fade.
+  const mounted = useRef(false)
+  useEffect(() => {
+    mounted.current = true
+  }, [])
+
   return (
     <SheetPage title="Notebook">
       <section className="pt-10 pb-4" aria-labelledby="notebook-heading">
@@ -132,6 +143,8 @@ export default function Notebook() {
           {activeLens && (
             <>
               {' · '}
+              {/* Filter-clear, not a page nav: the lens fade handles it, no
+                  root view transition (would double up with nb-fade). */}
               <Link to="/notebook" className="-m-2 p-2 text-redline underline underline-offset-4">
                 SHOW ALL
               </Link>
@@ -140,6 +153,7 @@ export default function Notebook() {
         </p>
       </section>
 
+      <div key={activeLens ?? 'all'} className={mounted.current ? 'nb-fade' : undefined}>
       {years.map(([year, entries]) => (
         <section key={year} aria-label={`Entries from ${year}`} className="pb-6">
           <h2 className="border-t border-ink/35 pt-3 pb-1 font-mono text-xs font-medium tracking-[0.12em]">
@@ -163,6 +177,7 @@ export default function Notebook() {
           </ul>
         </section>
       ))}
+      </div>
     </SheetPage>
   )
 }

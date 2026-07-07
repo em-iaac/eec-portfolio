@@ -1,7 +1,8 @@
 // Minimal title block (Session 3 memo: furniture reduced): logo cell, name +
-// status cell, keynote nav, and the mode toggle as a plain mono redline link.
-// The sheet-number cell and ISSUED-FOR stamp are removed. The bottom rule
-// draws in once per session with the red pen dot riding its leading edge.
+// role cell, keynote nav, and the mode toggle as a plain mono redline link.
+// The public open-to status line retired in Session 5 (FLAG-01): the search is
+// private, so the header carries no redline at all now. The bottom rule draws
+// in once per session with the red pen dot riding its leading edge.
 import { useRef } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import LogoMark from './LogoMark'
@@ -30,6 +31,7 @@ export default function TitleBlock({ onExplore }: { onExplore?: () => void }) {
       <div className="flex flex-wrap items-stretch">
         <Link
           to="/"
+          viewTransition
           aria-label="Home"
           className="flex min-w-16 items-center justify-center border-r border-ink/35 px-3.5 py-2.5 focus-visible:outline-2 focus-visible:outline-redline"
         >
@@ -42,7 +44,7 @@ export default function TitleBlock({ onExplore }: { onExplore?: () => void }) {
           <span className="mt-0.5 font-mono text-[9px] leading-relaxed tracking-[0.06em] text-anno">
             DESIGN TECHNOLOGY ARCHITECT
             <br />
-            MACAD @ IAAC · <span className="text-redline">OPEN TO R&D ROLES IN EUROPE</span>
+            MACAD @ IAAC
           </span>
         </div>
         <nav

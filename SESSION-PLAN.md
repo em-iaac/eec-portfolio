@@ -187,6 +187,16 @@ code changes: the diff is one markdown dossier.
 
 **Sign-offs:** the dossier, section by section; the routing decisions.
 
+**SHIPPED 2026-07-07.** Director rulings on its flags (Emilie confirmed):
+the dossier is LOCAL-ONLY (git-ignored, never pushed; sessions read it from
+disk at content/RECRUITER-CALIBRATION.md); FLAG-01 executes in Session 5 (the
+public open-to status retires sitewide; LinkedIn recruiters-only setting is the
+single standing signal; Session 13's hero spec updated accordingly); FLAG-02's
+Home figcaption gets non-location replacement drafts in Session 5; FLAG-03 is
+an evidence action (Session 7 offers to draft the award announcement post; if
+AWD-01 still lacks a public anchor when Session 13 ships the hero, say so at
+the gate).
+
 **Draft kickoff prompt:**
 
 ```
@@ -224,11 +234,20 @@ links, Kicker leader-line one-shot draw-in sequenced after the header rule.
 route: blurb from projects.tsx, available figures from images.json, external
 links, tags, an /explore/:id deep link; SheetRoute renders it wherever status is
 in-preparation. (d) DESIGN-SYSTEM.md motion vocabulary updated (develop rule +
-five bundle entries). Internal cut order: develop > MiniSheet > bundle, so a
-truncated sitting still leaves a coherent commit.
+five bundle entries). (e) FLAG-01 execution (director ruling 2026-07-07,
+reopening confirmed by Emilie): remove the redline OPEN TO R&D status line from
+TitleBlock and the CV page; soften the About availability sentence to an
+invitation without a status (the "let's talk" energy stays; drafted in her
+voice, draftCopy); update DESIGN-SYSTEM's sanctioned-redline list (the ISSUED
+FOR stamp remains the header's one redline text). (f) FLAG-02: replace the Home
+figcaption "EM · BARCELONA VIA BEIRUT" with 2-3 non-location alternatives in
+her voice (draftCopy; lean on MaCAD/IAAC or the notebook conceit, never a
+location claim she cannot defend). Internal cut order: develop > MiniSheet >
+FLAG-01/02 > bundle, so a truncated sitting still leaves a coherent commit.
 
 **Sign-offs:** develop timing/feel checked on Emilie's phone; MiniSheet layout;
-any new placeholder microcopy (draftCopy).
+any new placeholder microcopy (draftCopy); the softened About sentence; the
+figcaption pick.
 
 **Draft kickoff prompt:**
 
@@ -239,11 +258,14 @@ develop-once rule and motion scopes), site/DESIGN-SYSTEM.md, site/src/index.css
 governance, site/src/components/Img.tsx, ProjectCard.tsx,
 explore/InfoCard.tsx, hooks/useExploreTransition.tsx, pages/SheetRoute.tsx.
 Implement Session 5: The Develop Pass (useDevelopOnce + the five-motion bundle +
-the MiniSheet enriched placeholder replacing every bare stub). Every ceremony:
-one-shot, 150-900ms, final state under reduced motion. Use the preview tools
-throughout (console, mobile viewport, PRM walk of every new motion, all 10
-in-prep routes render respectable MiniSheets). Use design:design-critique on the
-MiniSheet before finishing, and /code-review at the end. Do NOT run any git
+the MiniSheet enriched placeholder replacing every bare stub + the FLAG-01/02
+copy work per the session spec: retire the OPEN TO R&D status line sitewide,
+soften the About availability sentence, draft non-location figcaption
+alternatives, all draftCopy). Every ceremony: one-shot, 150-900ms, final state
+under reduced motion. Use the preview tools throughout (console, mobile
+viewport, PRM walk of every new motion, all 10 in-prep routes render
+respectable MiniSheets). Use design:design-critique on the MiniSheet before
+finishing, and /code-review at the end. Do NOT run any git
 write commands; end your final message with (1) a proposed commit summary I can
 paste into git, (2) the changed/created file list, (3) everything needing my
 sign-off.
@@ -514,9 +536,11 @@ commit summary I can paste into git, (2) the changed/created file list,
 **Goal:** Home is rebuilt around the network hero. One reviewable commit Emilie
 can hold or revert.
 
-**Scope:** Compose the landing: ExploreSurface hero with the locked hero line and
-the redline OPEN TO R&D status overlaid (wording untouched: council-locked);
-WRITTEN depth-level spec as a deliverable (how landing > focus > full EXPLORE
+**Scope:** Compose the landing: ExploreSurface hero with the locked hero line
+overlaid (NO open-to status: FLAG-01 retired it sitewide in Session 5; verify
+against the ten-second checklist in content/RECRUITER-CALIBRATION.md section 7,
+and if the award claim still lacks a public anchor, surface FLAG-03 at the
+gate); WRITTEN depth-level spec as a deliverable (how landing > focus > full EXPLORE
 replaces the READ/EXPLORE toggle; what the header shows now); proof pair one
 scroll down; capped roll (~12 newest, all kinds) ending in the OPEN THE ARCHIVE
 card; Kicker relocation + its one-shot draw-in; footer; final de-numbered nav.
@@ -533,10 +557,13 @@ You are a design-director-grade front-end engineer on eec-portfolio. Start in
 plan mode: read SESSION-PLAN.md (Session 13 + Standing rules + perf budgets),
 the Session 12 ExploreSurface and depth-level council findings,
 site/DESIGN-SYSTEM.md, site/src/pages/Home.tsx, components/BenchRoll.tsx,
-components/TitleBlock.tsx. Rebuild Home per L2: network hero + locked hero line
-+ OPEN TO R&D overlaid (copy verbatim, it is council-locked), written
-depth-level spec as a deliverable file, proof pair, capped ~12-entry roll +
-archive card, Kicker + draw-in, final nav. Verify perf budgets on poster AND
+components/TitleBlock.tsx, and the ten-second hero checklist in
+content/RECRUITER-CALIBRATION.md section 7 (local git-ignored file, read-only).
+Rebuild Home per L2: network hero + locked hero line overlaid (copy verbatim,
+council-locked; NO open-to status anywhere per FLAG-01, retired in Session 5),
+written depth-level spec as a deliverable file, proof pair, capped ~12-entry
+roll + archive card, Kicker + draw-in, final nav. If the MaCAD award claim
+still lacks a public anchor (dossier FLAG-03), say so in your sign-off list. Verify perf budgets on poster AND
 WebGL paths (Lighthouse mobile preset), console, mobile, full PRM walk. Use
 design:design-critique and design:accessibility-review on the composed landing,
 then /code-review. Deliver the Home swap as ONE coherent commit proposal.

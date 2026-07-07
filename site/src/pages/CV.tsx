@@ -36,12 +36,11 @@ export default function CV() {
     <SheetPage title="CV">
       <div className="flex flex-wrap items-end justify-between gap-4 pt-10 pb-6 sm:pt-14">
         <div>
+          {/* Open-to status retired Session 5 (FLAG-01): the search is private;
+              the LinkedIn recruiters-only setting is the one standing signal. */}
           <h1 className="text-2xl font-semibold tracking-[-0.01em]">
             Emilie El Chidiac <span className="font-normal text-anno">| Design Technology Architect</span>
           </h1>
-          <p className="mt-2 font-mono text-[10.5px] tracking-[0.06em] text-redline">
-            OPEN TO R&D AND DESIGN-TECHNOLOGY ROLES IN EUROPE
-          </p>
         </div>
         <a
           href={`${BASE}assets/cv-emilie-el-chidiac.pdf`}

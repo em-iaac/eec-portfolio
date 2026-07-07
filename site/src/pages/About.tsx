@@ -3,8 +3,10 @@ import SheetPage from '../components/SheetPage'
 
 const BASE = import.meta.env.BASE_URL
 
-// Opening paragraph + availability line: approved copy (content/copy-draft.md,
-// "trust for now", 2026-07-06). Verbatim, no em dashes.
+// Opening paragraph: approved copy (content/copy-draft.md, "trust for now",
+// 2026-07-06), verbatim, no em dashes. The closing availability line was
+// softened in Session 5 (FLAG-01): it retires the public open-to STATUS and
+// keeps only the invitation, still in Emilie's voice. draftCopy until sign-off.
 export default function About() {
   return (
     <SheetPage title="About">
@@ -33,9 +35,11 @@ export default function About() {
             </Link>
           </p>
 
+          {/* draftCopy (FLAG-01): invitation without a status. */}
           <p className="max-w-[62ch] font-serif text-[17px] leading-relaxed">
-            I'm open to R&D and design-technology roles in Europe, and to consultancy on computational workflows. If
-            your team is trying to make buildings answer harder questions,{' '}
+            This is the kind of problem I want to spend the next decade on. If your team is trying to make buildings
+            answer harder questions, whether that means a role, a research collaboration, or a hand with a computational
+            workflow,{' '}
             <a
               href="mailto:chidiacemilie@gmail.com"
               className="text-redline underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline"

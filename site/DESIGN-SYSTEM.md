@@ -20,10 +20,11 @@ Props: `sheet` (A-000 | A-101 | A-201 | C-001), `title`, `children`.
 Sheet registry: Home A-000, Work A-101, About A-201, CV C-001 (Now N-001 arrives Session 16).
 
 ### TitleBlock
-The drawing-set header. Cells: mark (static, always; no plot-in ceremony exists), name + status (recruiter block: role, MaCAD, OPEN TO R&D ROLES IN EUROPE), keynote nav, sheet number, ISSUED FOR stamp.
-States: current page = redline underline + `aria-current="page"`. The EXPLORE side of the stamp sits in anno with an sr-only "(EXPLORE mode plots in Session 3)".
-Mobile: stamp and nav each wrap to their own row; name cell flexes.
-A11y: `<header>` + `<nav aria-label="Primary">`; nav links carry `-m-3 p-3` so hit areas reach ~40px. Two sanctioned redline texts live here as LIVENESS, not category: the OPEN TO R&D status line and the ISSUED FOR stamp.
+The drawing-set header. Cells: mark (static, always; no plot-in ceremony exists), name + role (role, MaCAD; NO status line since Session 5), keynote nav, mode toggle.
+States: current page = redline underline + `aria-current="page"`.
+Mobile: nav and mode toggle each wrap to their own row; name cell flexes.
+A11y: `<header>` + `<nav aria-label="Primary">`; nav links carry `-m-3 p-3` so hit areas reach ~40px.
+Sanctioned redline (Session 5, FLAG-01): the public OPEN TO R&D status line is RETIRED sitewide (the search is private; LinkedIn's recruiters-only setting is the one standing signal). The remaining header redline is interaction only: the current-page underline and the `MODE: READ / EXPLORE >` toggle. The ISSUED FOR stamp stays the one sanctioned LIVENESS redline text in the drawing-set chrome (it lives in the EXPLORE header, `ISSUED FOR: READ >`), alongside the timeline NOW marker (rule 9).
 
 ### LensTick + Legend
 `LensTick lens=computation|practice|explorations` renders the shape only (square cyan / diamond magenta / triangle yellow) and is `aria-hidden`; the API forces a paired visible label via the chip components. GOVERNANCE: never color without shape + label.
@@ -38,15 +39,34 @@ The hand-wobbled redline ellipse around one word (`redline-stroke`, 3px, dashoff
 
 ### ProjectCard
 Image-optional single component (no variant prop): with image = feature card; without = compact text card (podcast, XR Lab).
-Anatomy: image (grayscale at rest, color on hover/focus-within: color = data arriving), mono meta row (tick + lens label + course + award), Archivo title, serif blurb max 62ch (locked copy verbatim for heroes), mono tech string, links row (mono, redline, `-m-2.5 p-2.5` hit areas, sr-only "(opens in new tab)").
-States: hover/focus-visible = image colors + title underline redline; card is not one big link (title link + discrete action links for a11y).
+Anatomy: image (runs the develop ceremony: grayscale to color once on first viewport entry, then stays color), mono meta row (tick + lens label + course + award), Archivo title, serif blurb max 62ch (locked copy verbatim for heroes), mono tech string, links row (mono, redline, `-m-2.5 p-2.5` hit areas, sr-only "(opens in new tab)").
+States: hover/focus-visible = title underline redline; card is not one big link (title link + discrete action links for a11y). Image color is owned by develop-once, not hover (Session 5).
 Awards render as mono text in INK with medium weight (status is a category; redline never categorizes), never emoji.
 
 ### Img
 `srcset` helper reading `src/data/images.json` (webp ladder from the pipeline). Lazy by default, `fetchpriority="high"` opt-in for the first hero. Animated variants render `<img>` with the animated webp; under prefers-reduced-motion they render the static first-frame ladder the pipeline emits alongside (Session 4).
+`develop` prop (Session 5): Img owns the grayscale-to-color develop ceremony (see Motion) via `useDevelopOnce`; the caller passes layout classes only. Set on ProjectCard, SheetFigure, MiniSheet figures, and the bench-roll minis. Raw brand headshots (Home/About) stay outside Img and keep hover-colorize until their Session 13/16 rework.
+
+### MiniSheet
+The enriched IN PREPARATION placeholder (Session 5): rendered by SheetRoute for any in-prep sheet, inside the SheetLayout frame (no new furniture). Carries the dashed ink IN PREPARATION stamp, lens+course+award meta row, the project blurb, a draftCopy "still on the drawing board" line, the figures already in the pipeline (develop-once; shared-slug folders like `professional` show only the entry's own figure), tag chips, every working external link, an `/explore/:id` deep link, and BACK TO THE NOTEBOOK. Governance: mono <= 0.875rem, LensTick never without its label. Retires per project as its full sheet issues (Sessions 8-14).
 
 ### Footer
 Title-block lockup (mark + name + role), contact links (email, LinkedIn, GitHub), sheet number cell, tiny "issued from Barcelona/Beirut" line omitted: location stays honest and unlisted.
+
+## Motion vocabulary
+
+Every ceremony is one-shot, 150-900ms, element-level (never a root-level filter), and renders its final state under `prefers-reduced-motion` (governance rule 7). Timings live in `src/index.css`.
+
+**The develop rule (standing, Session 5).** An image develops grayscale to color once, <= 500ms, the first time it enters the viewport, on ALL devices (the ceremony is FOR phones, where there is no hover). `useDevelopOnce` (IntersectionObserver) fires once per image identity; the developed state persists across route returns within a visit (a fresh load restarts the visit). Hover-colorize is retired: once developed, the image stays in color. Reduced motion = full color immediately. Wired through Img's `develop` prop.
+
+**The five-motion bundle (Session 5).**
+1. EXPLORE InfoCard entrance: fade + 8px rise, ~280ms, keyed per focused node so switching words replays it (`.infocard-enter`).
+2. InfoCard exit: OPEN SHEET leaves through the mylar mode ceremony (the light table switching back on), not the root view transition, because EXPLORE to a sheet is a mode change.
+3. Notebook filter fade: the filtered results fade in ~180ms on lens change only (keyed by lens); initial mount and shared filtered URLs paint still (`.nb-fade`).
+4. View transitions on internal page-to-page links: every react-router `Link`/`NavLink` that navigates between pages carries `viewTransition` (the "next sheet" lift/settle). Excluded: the READ<->EXPLORE mode links (they run the carbon/mylar ceremony) and the Notebook filter-clear (it uses nb-fade).
+5. Kicker leader-line draw-in: the SVG line inks in, then the dot and arrowhead arrive, one-shot, sequenced after the header rule via `--kicker-delay` (`.kicker-draw`; Home only, ~950ms).
+
+**Prior ceremonies (unchanged):** header rule draw-in (<= 900ms, once per session), RevisionWord ellipse (one flourish per page max), the READ<->EXPLORE mode toggle (carbon/mylar flood over MODE_FADE_MS/MODE_NAVIGATE_MS), and the root "next sheet" view transition (lift + settle, 400ms).
 
 ## Do / Don't
 - Do put every number in mono. Don't set mono above 0.875rem.

@@ -4,7 +4,8 @@
 // told apart by shape + type, never color (rule 2 analog): sheets/projects
 // are bordered cards above the axis, thoughts hang below in serif italic,
 // milestones and awards are mono log lines with distinct axis markers.
-// Motion tier: WHISPER · no entry ceremonies, only image color-in on hover.
+// Motion tier: WHISPER · no entry ceremonies; card images run the shared
+// develop-once ceremony (Session 5) as they scroll into view.
 // Below md the same record renders as a vertical feed.
 import {
   useRef,
@@ -78,7 +79,8 @@ function ProjectCardMini({ e }: { e: RegistryEntry }) {
             name={e.image.name}
             alt={e.image.alt}
             sizes="224px"
-            className="block h-full w-full object-cover grayscale transition-[filter] duration-[400ms] group-hover:grayscale-0 group-focus-visible:grayscale-0 motion-reduce:transition-none"
+            develop
+            className="block h-full w-full object-cover"
           />
         </div>
       )}
@@ -95,7 +97,7 @@ function ProjectCardMini({ e }: { e: RegistryEntry }) {
   const cls =
     'group block w-56 border border-ink/35 bg-mylar no-underline focus-visible:outline-2 focus-visible:outline-redline'
   return target.to ? (
-    <Link to={target.to} className={cls}>
+    <Link to={target.to} viewTransition className={cls}>
       {inner}
     </Link>
   ) : (
@@ -117,7 +119,7 @@ function RollColumn({ e }: { e: RegistryEntry }) {
   } else if (e.kind === 'sheet') {
     above = (
       <p className="font-mono text-[9px] leading-relaxed tracking-[0.08em]">
-        <Link to={e.sheet!.route} className={`-m-2 p-2 ${RED_LINK}`}>
+        <Link to={e.sheet!.route} viewTransition className={`-m-2 p-2 ${RED_LINK}`}>
           SHEET {e.sheet!.number} ISSUED &gt;
         </Link>
         <br />
@@ -196,7 +198,7 @@ function FeedRow({ e }: { e: RegistryEntry }) {
   } else if (e.kind === 'sheet') {
     body = (
       <p className="font-mono text-[9px] tracking-[0.08em]">
-        <Link to={e.sheet!.route} className={`-m-2 p-2 ${RED_LINK}`}>
+        <Link to={e.sheet!.route} viewTransition className={`-m-2 p-2 ${RED_LINK}`}>
           SHEET {e.sheet!.number} ISSUED: {e.title.toUpperCase()} &gt;
         </Link>
       </p>

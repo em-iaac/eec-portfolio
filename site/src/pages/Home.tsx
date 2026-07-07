@@ -37,11 +37,14 @@ export default function Home() {
           </p>
           {/* Session 4: '{' retired from running prose; lead now ends in ':'
               (punctuation-only change to locked copy, pending sign-off). */}
+          {/* draw-in sequenced after the header rule (650ms) + a beat */}
           <Kicker
             lead="i call where this is going:"
             linkText="Behavior Information Modeling"
             href="https://hi-em.github.io/neurospace"
             note="(opens the live NeuroSpace app)"
+            draw
+            drawDelayMs={950}
           />
         </div>
         <figure className="m-0">
@@ -59,8 +62,11 @@ export default function Home() {
               className="block h-full w-full object-cover grayscale transition-[filter] duration-[400ms] group-hover:grayscale-0 motion-reduce:transition-none"
             />
           </div>
+          {/* draftCopy (FLAG-02): non-location caption. Shipped default below;
+              alternatives for Emilie's pick: "FIG. 00 · THE AUTHOR" (notebook
+              conceit) or "EM · THE ONE ASKING THE QUESTIONS" (ties to the H1). */}
           <figcaption className="mt-1.5 font-mono text-[9px] tracking-[0.1em] text-anno">
-            EM · BARCELONA VIA BEIRUT
+            EM · MACAD @ IAAC
           </figcaption>
         </figure>
       </section>

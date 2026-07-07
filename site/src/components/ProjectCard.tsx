@@ -3,8 +3,9 @@ import { LensTick, LENSES } from './Lens'
 import Img from './Img'
 
 // Card is NOT one big link: title links to the primary href, action links are
-// discrete (a11y). Image rests grayscale and colors on hover/focus-within:
-// color arriving = data speaking (the old site's one piece of real equity).
+// discrete (a11y). The image develops grayscale -> color once on first
+// viewport entry (Session 5): color arriving = data speaking (the old site's
+// one piece of real equity), now on phones too. Hover-colorize is retired.
 export default function ProjectCard({ project, priority = false }: { project: Project; priority?: boolean }) {
   const primary = project.links[0]
   return (
@@ -18,8 +19,9 @@ export default function ProjectCard({ project, priority = false }: { project: Pr
             name={project.image.name}
             alt={project.image.alt}
             priority={priority}
+            develop
             style={project.image.position ? { objectPosition: project.image.position } : undefined}
-            className="block h-full w-full object-cover grayscale transition-[filter] duration-[400ms] group-hover:grayscale-0 group-focus-within:grayscale-0 motion-reduce:transition-none"
+            className="block h-full w-full object-cover"
           />
         </div>
       )}
