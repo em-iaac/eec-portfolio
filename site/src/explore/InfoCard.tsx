@@ -1,5 +1,5 @@
 // Focused-word card, bottom-right: lens, name in redline wire, kind, thread
-// (its neighbors), and the sheet line { a real link when the sheet is
+// (its neighbors), and the sheet line: a real link when the sheet is
 // issued, the honest IN PREPARATION otherwise.
 import { Link } from 'react-router-dom'
 import { GRAPH, neighbors } from './graph'
@@ -11,6 +11,7 @@ export default function InfoCard({ index }: { index: number }) {
   const nb = [...neighbors(GRAPH, index)]
   const reg = EXPLORE_NODES[index]
   const sheet = reg?.sheet
+  if (!n) return null
 
   return (
     <div
@@ -25,7 +26,7 @@ export default function InfoCard({ index }: { index: number }) {
       </div>
       <div>
         <span className="text-anno-dark">THREAD </span>
-        {nb.map((j) => GRAPH.nodes[j].label).join(' · ')}
+        {nb.map((j) => GRAPH.nodes[j]!.label).join(' · ')}
       </div>
       {sheet && sheet.status === 'issued' ? (
         <div>

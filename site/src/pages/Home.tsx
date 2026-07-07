@@ -24,7 +24,7 @@ export default function Home() {
             I started asking buildings a question my software couldn't answer:{' '}
             <span className="font-serif font-medium italic tracking-normal">
               how will this space make someone{' '}
-              {/* Ellipse follows the header rule's arrival (700ms + beat) */}
+              {/* Ellipse follows the header rule's arrival (650ms rule + beat) */}
               <RevisionWord delayMs={900}>feel?</RevisionWord>
             </span>
           </h1>
@@ -35,8 +35,10 @@ export default function Home() {
             <span className="border border-ink/30 px-1.5 py-0.5 font-mono text-[0.72em]">Sensi</span>, winner at the
             MaCAD Awards 2026, makes comfort a design layer.
           </p>
+          {/* Session 4: '{' retired from running prose; lead now ends in ':'
+              (punctuation-only change to locked copy, pending sign-off). */}
           <Kicker
-            lead="i call where this is going {"
+            lead="i call where this is going:"
             linkText="Behavior Information Modeling"
             href="https://hi-em.github.io/neurospace"
             note="(opens the live NeuroSpace app)"

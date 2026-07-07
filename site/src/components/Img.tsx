@@ -1,13 +1,18 @@
 // srcset helper over the image pipeline output (scripts/optimize-images.mjs).
 import type { CSSProperties } from 'react'
 import manifest from '../data/images.json'
+import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
+
+type Variant = { w: number; file: string; kb: number }
 
 type Entry = {
   name: string
   role: string
   aspect: number
   animated?: boolean
-  variants: { w: number; file: string; kb: number }[]
+  variants: Variant[]
+  /** first-frame ladder emitted alongside every animated webp */
+  static?: Variant[]
 }
 
 const BASE = import.meta.env.BASE_URL
@@ -33,13 +38,19 @@ export default function Img({
   className?: string
   style?: CSSProperties
 }) {
+  const prm = usePrefersReducedMotion()
   const entry = findImage(slug, name)
   if (!entry) return null
-  const largest = entry.variants[entry.variants.length - 1]
+  // Reduced motion: animated webps render their static first frame instead
+  // of looping (governance rule 7 applies to figures too).
+  const variants =
+    entry.animated && prm && entry.static?.length ? entry.static : entry.variants
+  const largest = variants[variants.length - 1]
+  if (!largest) return null
   return (
     <img
       src={BASE + largest.file}
-      srcSet={entry.variants.map(v => `${BASE}${v.file} ${v.w}w`).join(', ')}
+      srcSet={variants.map(v => `${BASE}${v.file} ${v.w}w`).join(', ')}
       sizes={sizes}
       alt={alt}
       loading={priority ? 'eager' : 'lazy'}

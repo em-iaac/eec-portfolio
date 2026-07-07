@@ -1,6 +1,6 @@
 // EXPLORE mode: the dark network of projects and thoughts; itself a
 // portfolio piece. Full-viewport carbon surface with its own furniture (HUD,
-// legend, toggle, info card) { deliberately not SheetPage. The URL is the
+// legend, toggle, info card) · deliberately not SheetPage. The URL is the
 // source of truth for focus: /explore/:nodeId focuses that word; the scene
 // only ever reports intent. Entry ceremony (the sanctioned SHOWCASE moment)
 // plays once per arrival; reduced motion renders final states instantly.

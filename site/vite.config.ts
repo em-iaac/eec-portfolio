@@ -15,7 +15,7 @@ function ghPagesSpaFallback(): Plugin {
   }
 }
 
-// GitHub Pages project site: https://em-iaac.github.io/eec-portfolio/
+// GitHub Pages project site: https://hi-em.github.io/eec-portfolio/
 // Base applies to builds only (dev serves at /); switch to '/' when a
 // custom domain lands.
 export default defineConfig(({ command }) => ({

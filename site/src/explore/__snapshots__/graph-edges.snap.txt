@@ -1,0 +1,43 @@
+sensi - podcast w3
+sensi - bim w2
+sensi - neuroaes w2
+sensi - comfort w2
+sensi - respond w2
+neurospace - huddle w2
+neurospace - lungs w2
+neurospace - ballooning w2
+neurospace - cappelletti w2
+neurospace - bim w2
+neurospace - solvers w2
+neurospace - comfort w2
+neurospace - respond w2
+huddle - ballooning w2
+huddle - cappelletti w2
+huddle - solvers w2
+legoarch - ballooning w2
+legoarch - cappelletti w2
+legoarch - genai w2
+ballooning - soma w2
+ballooning - cappelletti w3
+ballooning - solvers w2
+podcast - mars w2
+podcast - bim w3
+podcast - neuroaes w2
+podcast - genai w2
+podcast - respond w2
+soma - heritage w2
+mars - genai w2
+cappelletti - xr w2
+cappelletti - solvers w2
+xr - xreal w2
+bim - neuroaes w2
+bim - comfort w2
+bim - respond w3
+comfort - respond w3
+lungs - huddle w1 implied
+xreal - podcast w1 implied
+drawiface - neurospace w1 implied
+drawiface - lungs w1 implied
+evosearch - sensi w1 implied
+evosearch - neurospace w1 implied
+heritage - ballooning w1 implied

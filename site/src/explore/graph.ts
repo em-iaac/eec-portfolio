@@ -1,9 +1,9 @@
-// Port of design_handoff_eec_portfolio/explore/data.js { the graph content
+// Port of design_handoff_eec_portfolio/explore/data.js: the graph content
 // and its DETERMINISTIC layout. The node list derives from the registry
 // (EXPLORE_NODES, sorted by the frozen `order`); the seeded simulation
 // (mulberry32(20260706)) consumes nodes in order, so node order and tags are
 // layout INVARIANTS: any reorder/insert/tag edit moves every word. The
-// algorithm below must stay semantically identical to data.js { same
+// algorithm below must stay semantically identical to data.js: same
 // floating-point operations in the same order.
 // Pure module: no three.js, no DOM (Node-testable).
 import { EXPLORE_NODES } from '../data/registry'
@@ -30,7 +30,7 @@ export interface GraphEdge {
 }
 
 // The RAW id order from data.js, frozen. If this throws, someone reordered
-// or renamed registry explore entries { fix the registry, not this string.
+// or renamed registry explore entries: fix the registry, not this string.
 const EXPECTED_ID_ORDER =
   'sensi|neurospace|huddle|lungs|legoarch|ballooning|podcast|soma|mars|cappelletti|xr|' +
   'bim|neuroaes|solvers|genai|xreal|comfort|drawiface|evosearch|heritage|respond'
@@ -80,12 +80,14 @@ export function makeGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
   const key = (a: string, b: string) => (a < b ? a + '|' + b : b + '|' + a)
   const seen = new Set<string>()
   const edges: GraphEdge[] = []
+  // Index assertions (!) below: every i/j/e.a/e.b is in range by
+  // construction. Compile-time only; the FP math is byte-identical.
   for (let i = 0; i < nodes.length; i++) {
     for (let j = i + 1; j < nodes.length; j++) {
-      const w = overlap(nodes[i], nodes[j])
+      const w = overlap(nodes[i]!, nodes[j]!)
       if (w >= 2) {
         edges.push({ a: i, b: j, w, implied: false })
-        seen.add(key(nodes[i].id, nodes[j].id))
+        seen.add(key(nodes[i]!.id, nodes[j]!.id))
       }
     }
   }
@@ -98,13 +100,13 @@ export function makeGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
     if (deg[i] < 2) {
       const cands = nodes
         .map((m, j) => ({ j, w: i === j ? -1 : overlap(n, m) }))
-        .filter((c) => c.w >= 1 && !seen.has(key(n.id, nodes[c.j].id)))
+        .filter((c) => c.w >= 1 && !seen.has(key(n.id, nodes[c.j]!.id)))
         .sort((a, b) => b.w - a.w)
       for (let k = 0; k < cands.length && deg[i] < 2; k++) {
-        edges.push({ a: i, b: cands[k].j, w: 1, implied: true })
-        seen.add(key(n.id, nodes[cands[k].j].id))
+        edges.push({ a: i, b: cands[k]!.j, w: 1, implied: true })
+        seen.add(key(n.id, nodes[cands[k]!.j]!.id))
         deg[i]++
-        deg[cands[k].j]++
+        deg[cands[k]!.j]++
       }
     }
   })
@@ -112,8 +114,8 @@ export function makeGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
   for (let it = 0; it < 280; it++) {
     for (let i = 0; i < nodes.length; i++) {
       for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i],
-          b = nodes[j]
+        const a = nodes[i]!,
+          b = nodes[j]!
         const dx = b.x - a.x,
           dy = b.y - a.y,
           dz = b.z - a.z
@@ -129,8 +131,8 @@ export function makeGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
       }
     }
     for (const e of edges) {
-      const a = nodes[e.a],
-        b = nodes[e.b]
+      const a = nodes[e.a]!,
+        b = nodes[e.b]!
       const dx = b.x - a.x,
         dy = b.y - a.y,
         dz = b.z - a.z

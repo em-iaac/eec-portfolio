@@ -4,6 +4,9 @@ import { EDUCATION, EXPERIENCE, AWARDS, SKILLS, LANGUAGES, CERTIFICATES } from '
 
 const BASE = import.meta.env.BASE_URL
 
+const CV_LINK =
+  '-m-2 p-2 text-redline underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline'
+
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section aria-label={title} className="border-t border-ink/20 py-6">
@@ -48,6 +51,28 @@ export default function CV() {
           DOWNLOAD PDF
         </a>
       </div>
+
+      {/* Contact row (Session 4): the career page carries plain reach-me
+          facts; the footer keeps its lockup. */}
+      <p className="flex flex-wrap items-center gap-x-6 gap-y-2 pb-6 font-mono text-[10.5px] tracking-[0.06em]">
+        <a href="mailto:chidiacemilie@gmail.com" className={CV_LINK}>
+          chidiacemilie@gmail.com
+        </a>
+        <a
+          href="https://www.linkedin.com/in/EmilieElChidiac"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={CV_LINK}
+        >
+          LINKEDIN
+          <span className="sr-only"> (opens in new tab)</span>
+        </a>
+        <a href="https://github.com/hi-em" target="_blank" rel="noopener noreferrer" className={CV_LINK}>
+          GITHUB
+          <span className="sr-only"> (opens in new tab)</span>
+        </a>
+        <span className="text-anno">BARCELONA | BEIRUT</span>
+      </p>
 
       <Section title="EDUCATION">
         {EDUCATION.map(e => (

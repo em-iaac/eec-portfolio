@@ -1,8 +1,11 @@
 // incoming/<slug>/... (git-ignored staging) -> public/assets/projects/<slug>/
-// Responsive webp ladder per role + animated webp for gifs.
+// Responsive webp ladder per role + animated webp for gifs, PLUS a static
+// first-frame ladder for every animated image (reduced-motion rendering).
 // Emits src/data/images.json for srcset building in components.
+// Optional slug args (`npm run images -- cappelletti`) process only those
+// slugs and MERGE into the existing manifest; no args = full regeneration.
 import sharp from 'sharp'
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { MANIFEST, SIZES } from './image-manifest.mjs'
@@ -12,10 +15,12 @@ const INCOMING = join(here, '..', '..', 'incoming')
 const OUT = join(here, '..', 'public', 'assets', 'projects')
 const DATA = join(here, '..', 'src', 'data')
 
-const results = {}
+const only = process.argv.slice(2)
+const results = only.length ? JSON.parse(readFileSync(join(DATA, 'images.json'), 'utf8')) : {}
 let totalBytes = 0
 
 for (const [slug, items] of Object.entries(MANIFEST)) {
+  if (only.length && !only.includes(slug)) continue
   const outDir = join(OUT, slug)
   mkdirSync(outDir, { recursive: true })
   results[slug] = []
@@ -39,12 +44,31 @@ for (const [slug, items] of Object.entries(MANIFEST)) {
       totalBytes += r.size
       variants.push({ w, file: `assets/projects/${slug}/${name}`, kb: Math.round(r.size / 1024) })
     }
+
+    // Static first frame for animated images: prefers-reduced-motion renders
+    // this ladder instead of the looping webp (Img.tsx picks it).
+    let statics
+    if (isGif) {
+      statics = []
+      for (const w of widths) {
+        const name = `${item.name}-static-${w}.webp`
+        const out = join(outDir, name)
+        const r = await sharp(src) // omitting the animated option reads frame one only
+          .resize(w, null, { withoutEnlargement: true })
+          .webp({ quality: 80, effort: 4 })
+          .toFile(out)
+        totalBytes += r.size
+        statics.push({ w, file: `assets/projects/${slug}/${name}`, kb: Math.round(r.size / 1024) })
+      }
+    }
+
     results[slug].push({
       name: item.name,
       role: item.role,
       aspect: +(meta.width / (isGif ? meta.pageHeight ?? meta.height : meta.height)).toFixed(4),
       animated: isGif || undefined,
       variants,
+      ...(statics ? { static: statics } : {}),
     })
     console.log(slug, item.name, variants.map(v => `${v.w}w:${v.kb}KB`).join(' '))
   }

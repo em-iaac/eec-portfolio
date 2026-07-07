@@ -1,5 +1,5 @@
 // No-WebGL alternative: the same 21 words as a plain list on carbon. Per the
-// brief, READ mode is the real fallback { every path leads back there.
+// brief, READ mode is the real fallback: every path leads back there.
 import { Link } from 'react-router-dom'
 import { GRAPH } from './graph'
 import { LENSES } from './palette'

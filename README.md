@@ -1,7 +1,7 @@
 # eec-portfolio
 
 Emilie El Chidiac | Design Technology Architect. Live at
-[em-iaac.github.io/eec-portfolio](https://em-iaac.github.io/eec-portfolio/).
+[hi-em.github.io/eec-portfolio](https://hi-em.github.io/eec-portfolio/).
 
 The site lives in [`site/`](site/) (React + Vite + Tailwind v4) and deploys to
 GitHub Pages via `.github/workflows/deploy.yml` on every push to `main`.

@@ -1,2 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# File snapshots are generated with \n and compared byte-for-byte by vitest;
+# force LF in the working tree so Windows checkouts do not break the tests.
+*.snap.json eol=lf
+*.snap.txt eol=lf

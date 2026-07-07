@@ -190,7 +190,7 @@ export class ExploreScene {
             s = Math.sqrt(1 - uu * uu)
           scatter.set([s * Math.cos(th) * m, uu * m, s * Math.sin(th) * m], q * 3)
           pos.set(
-            [fx + scatter[q * 3], fy + scatter[q * 3 + 1], fz + scatter[q * 3 + 2]],
+            [fx + scatter[q * 3]!, fy + scatter[q * 3 + 1]!, fz + scatter[q * 3 + 2]!],
             q * 3,
           )
         }
@@ -254,7 +254,7 @@ export class ExploreScene {
     const prm = this.opts.prm
     const z0 = this.camera.zoom,
       t0 = this.controls.target.clone()
-    const np = this.sprites[i].position.clone()
+    const np = this.sprites[i]!.position.clone()
     this.tw(prm ? 1 : 800, (e) => {
       this.camera.zoom = z0 + (2.9 - z0) * e
       this.camera.updateProjectionMatrix()
@@ -358,9 +358,9 @@ export class ExploreScene {
     this.setPtr(ev)
     this.ray.setFromCamera(this.ptr, this.camera)
     const hit = this.ray.intersectObjects(this.sprites)
-    const idx = hit.length ? ((hit[0].object.userData as SpriteData).i as number) : -1
+    const idx = hit.length ? ((hit[0]!.object.userData as SpriteData).i as number) : -1
     if (idx >= 0) {
-      this.opts.onRequestFocus(this.focused === idx ? null : GRAPH.nodes[idx].id)
+      this.opts.onRequestFocus(this.focused === idx ? null : GRAPH.nodes[idx]!.id)
     } else if (this.focused >= 0) {
       this.opts.onRequestFocus(null)
     }
@@ -400,7 +400,7 @@ export class ExploreScene {
   private runTweens() {
     const now = performance.now()
     for (let i = this.tweens.length - 1; i >= 0; i--) {
-      const t = this.tweens[i]
+      const t = this.tweens[i]!
       const k = Math.min(1, (now - t.t0) / t.dur)
       const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2
       t.step(e)
@@ -422,13 +422,13 @@ export class ExploreScene {
     let c = 0
     GRAPH.edges.forEach((e) => {
       if (e.a === i || e.b === i) {
-        const a = this.sprites[e.a].position,
-          b = this.sprites[e.b].position
+        const a = this.sprites[e.a]!.position,
+          b = this.sprites[e.b]!.position
         this.hipos.set([a.x, a.y, a.z, b.x, b.y, b.z], c * 6)
         c++
       }
     })
-    this.hiGeo.attributes.position.needsUpdate = true
+    this.hiGeo.attributes.position!.needsUpdate = true
     this.hiGeo.setDrawRange(0, c * 2)
   }
 
@@ -445,11 +445,11 @@ export class ExploreScene {
       const c = u.cloud
       for (let q = 0; q < c.count; q++) {
         const q3 = q * 3
-        c.pos[q3] = c.fx + c.scatter[q3] * (1 - e)
-        c.pos[q3 + 1] = c.fy + c.scatter[q3 + 1] * (1 - e)
-        c.pos[q3 + 2] = c.fz + c.scatter[q3 + 2] * (1 - e)
+        c.pos[q3] = c.fx + c.scatter[q3]! * (1 - e)
+        c.pos[q3 + 1] = c.fy + c.scatter[q3 + 1]! * (1 - e)
+        c.pos[q3 + 2] = c.fz + c.scatter[q3 + 2]! * (1 - e)
       }
-      c.cg.attributes.position.needsUpdate = true
+      c.cg.attributes.position!.needsUpdate = true
       c.cm.opacity = 0.85 * (1 - e * e)
       ;(sp.material as THREE.SpriteMaterial).opacity =
         u.baseOpacity * Math.max(0, (t - 0.35) / 0.65)
@@ -498,18 +498,18 @@ export class ExploreScene {
     if (this.entryDone) {
       this.ray.setFromCamera(this.ptr, this.camera)
       const hit = this.ray.intersectObjects(this.sprites)
-      const nh = hit.length ? ((hit[0].object.userData as SpriteData).i as number) : -1
+      const nh = hit.length ? ((hit[0]!.object.userData as SpriteData).i as number) : -1
       if (nh !== this.hovered) {
         if (this.hovered >= 0) {
-          const u = this.sprites[this.hovered].userData as SpriteData
-          ;(this.sprites[this.hovered].material as THREE.SpriteMaterial).map = u.norm
+          const u = this.sprites[this.hovered]!.userData as SpriteData
+          ;(this.sprites[this.hovered]!.material as THREE.SpriteMaterial).map = u.norm
         }
         this.hovered = nh
         this.hovStart = now
         document.body.style.cursor = this.hovered >= 0 ? 'pointer' : 'default'
         if (this.hovered >= 0) {
-          const u = this.sprites[this.hovered].userData as SpriteData
-          ;(this.sprites[this.hovered].material as THREE.SpriteMaterial).map = u.hot
+          const u = this.sprites[this.hovered]!.userData as SpriteData
+          ;(this.sprites[this.hovered]!.material as THREE.SpriteMaterial).map = u.hot
           if (this.focused < 0) {
             this.setHiEdges(this.hovered)
             this.edgesTo(0.35, 250)
@@ -522,9 +522,15 @@ export class ExploreScene {
       this.sprites.forEach((s, j) => {
         const u = s.userData as SpriteData
         const target = j === this.hovered ? 1.16 : 1
-        u.v += (target - u.s) * 0.16
-        u.v *= 0.8
-        u.s += u.v
+        if (prm) {
+          // Reduced motion: hover feedback is an instant state change.
+          u.v = 0
+          u.s = target
+        } else {
+          u.v += (target - u.s) * 0.16
+          u.v *= 0.8
+          u.s += u.v
+        }
         s.scale.set(u.baseScale.x * u.s, u.baseScale.y * u.s, 1)
         if (!prm && this.focused < 0) {
           s.position.y = u.baseY + Math.sin(t * 0.7 + u.phase) * 1.4
@@ -534,10 +540,10 @@ export class ExploreScene {
 
     this.lctx.clearRect(0, 0, this.width, this.height)
     if (this.hovered >= 0 && this.entryDone) {
-      const sp = this.screenPos(this.sprites[this.hovered])
-      const n = GRAPH.nodes[this.hovered]
+      const sp = this.screenPos(this.sprites[this.hovered]!)
+      const n = GRAPH.nodes[this.hovered]!
       const halfW =
-        (this.sprites[this.hovered].scale.x / (2 * F * this.aspect)) *
+        (this.sprites[this.hovered]!.scale.x / (2 * F * this.aspect)) *
         this.width *
         this.camera.zoom
       const p = prm ? 1 : Math.min(1, (now - this.hovStart) / 450)

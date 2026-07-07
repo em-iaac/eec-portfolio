@@ -1,5 +1,5 @@
+import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
-import { SKILLS, LANGUAGES } from '../data/cv'
 
 const BASE = import.meta.env.BASE_URL
 
@@ -21,21 +21,17 @@ export default function About() {
             be first in line.
           </p>
 
-          <section aria-labelledby="skills-heading" className="mb-8 border-y border-ink/20 py-5">
-            <h2 id="skills-heading" className="sr-only">
-              Skills
-            </h2>
-            {SKILLS.map(s => (
-              <div key={s.group} className="mb-2 flex flex-wrap gap-x-3 font-mono text-[10.5px] leading-relaxed last:mb-0">
-                <span className="min-w-32 tracking-[0.1em] text-anno">{s.group}</span>
-                <span className="text-ink">{s.items}</span>
-              </div>
-            ))}
-            <div className="mt-2 flex flex-wrap gap-x-3 font-mono text-[10.5px]">
-              <span className="min-w-32 tracking-[0.1em] text-anno">LANGUAGES</span>
-              <span className="text-ink">{LANGUAGES}</span>
-            </div>
-          </section>
+          {/* Skills are CV-only since Session 4 (the block was a verbatim
+              duplicate). draftCopy: pointer wording pending Emilie's sign-off. */}
+          <p className="mb-8 border-y border-ink/20 py-4 font-mono text-[10.5px] tracking-[0.08em]">
+            <Link
+              to="/cv"
+              viewTransition
+              className="-m-2 p-2 text-redline underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline"
+            >
+              THE FULL TOOLKIT LIVES ON THE CV &gt;
+            </Link>
+          </p>
 
           <p className="max-w-[62ch] font-serif text-[17px] leading-relaxed">
             I'm open to R&D and design-technology roles in Europe, and to consultancy on computational workflows. If

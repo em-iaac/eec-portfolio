@@ -1,5 +1,5 @@
 // The full research record (replaces the Work drawing set): every registry
-// entry, newest first, grouped by year { the archive behind the Home bench
+// entry, newest first, grouped by year: the archive behind the Home bench
 // roll. Lens chips filter via the URL hash so filtered views stay shareable.
 // Entry kinds render distinctly: projects as titled rows with prose, thoughts
 // as serif italic, milestones/awards as mono log lines (shape + label, never

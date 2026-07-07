@@ -1,4 +1,4 @@
-// THE NOTEBOOK REGISTRY { single source of truth for the research record.
+// THE NOTEBOOK REGISTRY · single source of truth for the research record.
 // Every dated thing Emilie ships or thinks is ONE entry here; the Home bench
 // roll, the Notebook archive, the sheet routes, and the EXPLORE graph all
 // read from this file. Adding a project = one entry + assets + (later) a

@@ -2,7 +2,7 @@
 @import './styles/fonts.css';
 
 /* ============================================================
-   PEN TABLE { design tokens (Tailwind v4 CSS-first config)
+   PEN TABLE · design tokens (Tailwind v4 CSS-first config)
 
    GOVERNANCE RULES:
    1. Redline = interaction and liveness. NEVER a category color.
@@ -68,7 +68,7 @@ body {
   background: color-mix(in srgb, var(--color-redline) 18%, transparent);
 }
 
-/* Exactly two width tokens { no ad-hoc widths. */
+/* Exactly two width tokens: no ad-hoc widths. */
 .font-expanded {
   font-stretch: 120%;
 }
@@ -123,55 +123,19 @@ section[id] {
   scroll-margin-top: 1.5rem;
 }
 
-/* Logo plot-in ceremony: strokes draw in reading order E1 > E2 > C,
-   nodes pop last. One-shot; final state rendered under reduced motion. */
-.logo-stroke {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: logo-plot 320ms ease-out forwards;
-}
-
-.logo-node {
-  opacity: 0;
-  animation: logo-pop 200ms ease-out forwards;
-}
-
-@keyframes logo-plot {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes logo-pop {
-  to {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .logo-stroke {
-    animation: none;
-    stroke-dashoffset: 0;
-  }
-
-  .logo-node {
-    animation: none;
-    opacity: 1;
-  }
-}
-
 /* Header draw-in ceremony (one-shot, once per session): the title block's
    bottom rule inks left to right while a 7px redline dot rides the leading
-   edge and fades on arrival. Reduced motion: rule complete, dot never shown. */
+   edge and fades on arrival. Composite <= 900ms (650 run + 250 fade).
+   Reduced motion: rule complete, dot never shown. */
 .hdr-rule {
   transform-origin: left;
-  animation: hdr-draw 700ms ease-out both;
+  animation: hdr-draw 650ms ease-out both;
 }
 
 .hdr-pen {
   animation:
-    hpen-run 700ms ease-out both,
-    hpen-fade 250ms 780ms ease-out both;
+    hpen-run 650ms ease-out both,
+    hpen-fade 250ms 650ms ease-out both;
 }
 
 @keyframes hdr-draw {
@@ -246,5 +210,16 @@ section[id] {
     from {
       transform: scale(0.99);
     }
+  }
+}
+
+/* Reduced motion: without this, the UA's DEFAULT view-transition cross-fade
+   still runs even though the custom animations above are gated. The
+   documented behavior is an instant swap. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

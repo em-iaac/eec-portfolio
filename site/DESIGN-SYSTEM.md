@@ -17,10 +17,10 @@ Tokens live in `src/index.css` (`@theme`); governance rules are commented there 
 ### SheetPage
 Page chrome: skip link, TitleBlock header, `<main>`, Footer. Sets `document.title` and the sheet number.
 Props: `sheet` (A-000 | A-101 | A-201 | C-001), `title`, `children`.
-Sheet registry: Home A-000, Work A-101, About A-201, CV C-001 (Lab L-001 and Now N-001 arrive Session 4).
+Sheet registry: Home A-000, Work A-101, About A-201, CV C-001 (Now N-001 arrives Session 16).
 
 ### TitleBlock
-The drawing-set header. Cells: mark (static; the plot-in ceremony belongs to the Home hero cube only), name + status (recruiter block: role, MaCAD, OPEN TO R&D ROLES IN EUROPE), keynote nav, sheet number, ISSUED FOR stamp.
+The drawing-set header. Cells: mark (static, always; no plot-in ceremony exists), name + status (recruiter block: role, MaCAD, OPEN TO R&D ROLES IN EUROPE), keynote nav, sheet number, ISSUED FOR stamp.
 States: current page = redline underline + `aria-current="page"`. The EXPLORE side of the stamp sits in anno with an sr-only "(EXPLORE mode plots in Session 3)".
 Mobile: stamp and nav each wrap to their own row; name cell flexes.
 A11y: `<header>` + `<nav aria-label="Primary">`; nav links carry `-m-3 p-3` so hit areas reach ~40px. Two sanctioned redline texts live here as LIVENESS, not category: the OPEN TO R&D status line and the ISSUED FOR stamp.
@@ -43,7 +43,7 @@ States: hover/focus-visible = image colors + title underline redline; card is no
 Awards render as mono text in INK with medium weight (status is a category; redline never categorizes), never emoji.
 
 ### Img
-`srcset` helper reading `src/data/images.json` (webp ladder from the pipeline). Lazy by default, `fetchpriority="high"` opt-in for the first hero. Animated variants render `<img>` with the animated webp.
+`srcset` helper reading `src/data/images.json` (webp ladder from the pipeline). Lazy by default, `fetchpriority="high"` opt-in for the first hero. Animated variants render `<img>` with the animated webp; under prefers-reduced-motion they render the static first-frame ladder the pipeline emits alongside (Session 4).
 
 ### Footer
 Title-block lockup (mark + name + role), contact links (email, LinkedIn, GitHub), sheet number cell, tiny "issued from Barcelona/Beirut" line omitted: location stays honest and unlisted.
@@ -51,9 +51,9 @@ Title-block lockup (mark + name + role), contact links (email, LinkedIn, GitHub)
 ## Do / Don't
 - Do put every number in mono. Don't set mono above 0.875rem.
 - Do use redline for links, stamps, live values. Don't use it to categorize (awards are ink).
-- Do keep one flourish per page (RevisionWord OR stamp wobble, not both animating). The header mark never animates; Home's hero cube owns the plot-in ceremony.
+- Do keep one flourish per page (RevisionWord OR stamp wobble, not both animating). The header mark never animates.
 - Don't introduce new furniture (clouds, north arrows, scale bars) without removing something.
 - Rules/hairlines: ink/20 standard, ink/35 emphasized. No third weight, no dedicated hairline token.
 - Authored asides in section header rows are prose and may be serif italic; UI labels may not.
-- framer-motion is parked in dependencies for Session 3 EXPLORE transitions; it ships zero bytes today.
-- Known risk on hold: The Lungs LIVE APP link is a free-tier Railway deploy that can sleep; a demo-video fallback exists in incoming/lungs/ and gets wired in Session 3/4.
+- Known risk, mitigated: The Lungs LIVE APP link is a free-tier Railway deploy that can sleep; the link label discloses the cold start (Session 4). The demo-video fallback in incoming/lungs/ becomes the primary proof in Session 10.
+- Analytics (decided 2026-07-07): GoatCounter, cookieless page counting; no cookies, no consent banner, no personal data. Script in index.html + SPA route counting in App.tsx. Localhost is never counted.

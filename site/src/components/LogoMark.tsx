@@ -4,7 +4,8 @@
 // Letter anatomy (Emilie's canonical mapping): E1 = left face (spine is the
 // implied left edge), E2 = top face, C = right face. The implied edge
 // between center and right corner is shared: E2's bottom bar + C's top arm.
-// Draw-in order follows reading order: E1 > E2 > C, nodes last.
+// The mark is always static (the plot-in ceremony was retired in Session 4:
+// no caller ever animated it).
 
 const s = 100
 const ux = 86.6
@@ -37,8 +38,6 @@ export interface LogoMarkProps {
   nodes?: boolean
   /** the redline vertex where the three letters meet */
   redNode?: boolean
-  /** one-shot plot-in ceremony (reduced-motion safe via CSS) */
-  animated?: boolean
   className?: string
 }
 
@@ -47,7 +46,6 @@ export default function LogoMark({
   tone = 'ink',
   nodes = true,
   redNode = true,
-  animated = false,
   className,
 }: LogoMarkProps) {
   const ink = tone === 'ink' ? 'var(--color-ink)' : 'var(--color-ink-dark)'
@@ -62,17 +60,10 @@ export default function LogoMark({
       role="img"
       aria-label="EEC"
       className={className}
-      data-animated={animated || undefined}
     >
       <g stroke={ink} strokeWidth={8} strokeLinecap="round" fill="none">
         {STROKES.map(([a, b], i) => (
-          <line
-            key={i}
-            x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]}
-            className={animated ? 'logo-stroke' : undefined}
-            style={animated ? { animationDelay: `${i * 90}ms` } : undefined}
-            pathLength={100}
-          />
+          <line key={i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} pathLength={100} />
         ))}
       </g>
       {nodes &&
@@ -84,8 +75,6 @@ export default function LogoMark({
               cx={p[0]} cy={p[1]}
               r={isRed ? r * 1.15 : r}
               fill={isRed ? red : ink}
-              className={animated ? 'logo-node' : undefined}
-              style={animated ? { animationDelay: `${720 + i * 40}ms` } : undefined}
             />
           )
         })}

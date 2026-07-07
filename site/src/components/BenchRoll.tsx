@@ -4,7 +4,7 @@
 // told apart by shape + type, never color (rule 2 analog): sheets/projects
 // are bordered cards above the axis, thoughts hang below in serif italic,
 // milestones and awards are mono log lines with distinct axis markers.
-// Motion tier: WHISPER { no entry ceremonies, only image color-in on hover.
+// Motion tier: WHISPER · no entry ceremonies, only image color-in on hover.
 // Below md the same record renders as a vertical feed.
 import {
   useRef,

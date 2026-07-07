@@ -432,6 +432,13 @@
           "file": "assets/projects/cappelletti/lattice-640.webp",
           "kb": 172
         }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/cappelletti/lattice-static-640.webp",
+          "kb": 25
+        }
       ]
     }
   ],
@@ -556,6 +563,13 @@
           "file": "assets/projects/ballooning-market/process-640.webp",
           "kb": 262
         }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/process-static-640.webp",
+          "kb": 17
+        }
       ]
     },
     {
@@ -568,6 +582,13 @@
           "w": 640,
           "file": "assets/projects/ballooning-market/epic-fails-640.webp",
           "kb": 235
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/epic-fails-static-640.webp",
+          "kb": 15
         }
       ]
     }

@@ -1,4 +1,4 @@
-// SHEET P-104 { A Ballooning Market. Copy is verbatim from the Session 3
+// SHEET P-104 · A Ballooning Market. Copy is verbatim from the Session 3
 // design of record (Site P-104.dc.html). The n.b. notes and margin notes
 // are DRAFTS in Emilie's voice, pending her sign-off (memo QUESTION item).
 // The epic fail (Fig. 2) is filed as method, on purpose.

@@ -1,6 +1,7 @@
 // Hero-card copy is LOCKED (content/copy-draft.md, approved 2026-07-06):
-// verbatim, no em dashes, defensible verbs only. The '{' separators are the
-// approved em-dash replacements from the Session 1 scrub.
+// verbatim, no em dashes, defensible verbs only. Session 4 retired the '{'
+// em-dash stand-ins from the Session 1 scrub: running prose now uses ':' or
+// '·' (punctuation-only change, words untouched; pending Emilie's sign-off).
 // Design & Practice + Explorations blurbs are Session 2 DRAFTS in her voice,
 // pending Emilie's sign-off (flagged in the session wrap-up).
 import type { ReactNode } from 'react'
@@ -43,7 +44,7 @@ export const HEROES: Project[] = [
     lens: 'computation',
     meta: 'CLOUD DATA MGMT · SOLO · LIVE APP',
     blurb:
-      "You're sitting in a room right now, and its defaults are quietly shaping your cortisol, your circadian rhythm, your cognitive load. NeuroSpace makes those effects visible: move a slider, watch the score respond { Rhino.Compute geometry on the server, behavioral scoring live in the browser. It's BIM, reframed as Behavior Information Modeling.",
+      "You're sitting in a room right now, and its defaults are quietly shaping your cortisol, your circadian rhythm, your cognitive load. NeuroSpace makes those effects visible: move a slider, watch the score respond · Rhino.Compute geometry on the server, behavioral scoring live in the browser. It's BIM, reframed as Behavior Information Modeling.",
     tech: 'GRASSHOPPER · RHINO.COMPUTE · VUE 3 · THREE.JS',
     links: [
       { label: 'TRY IT LIVE', href: 'https://hi-em.github.io/neurospace' },
@@ -78,8 +79,11 @@ export const HEROES: Project[] = [
       </>
     ),
     tech: 'VUE 3 · VITE · TAILWIND · SPECKLE',
+    // draftCopy covers the honest cold-start label only (Session 4); the
+    // blurb above stays locked. Free-tier Railway sleeps; the label says so.
+    draftCopy: true,
     links: [
-      { label: 'LIVE APP', href: 'https://bimscstudiohb1-production.up.railway.app/' },
+      { label: 'LIVE APP · WAKES IN ~30S', href: 'https://bimscstudiohb1-production.up.railway.app/' },
       { label: 'BLOG', href: 'https://blog.iaac.net/building-the-nervous-system-how-we-turned-a-hyper-building-studio-into-a-web-app/' },
     ],
     image: { slug: 'lungs', name: 'tower', alt: 'The Lungs hyperbuilding tower over Santiago' },
@@ -91,7 +95,7 @@ export const HEROES: Project[] = [
     meta: 'AIA GENERATIVE AI · WITH CHARLES ABI CHAHINE',
     award: 'JURY AWARD',
     blurb:
-      'A render is a promise, not a product: you cannot snap a JPEG together on your living-room floor. lEgoarCh takes a text prompt and returns a LEGO set that actually builds { AI imagines it, deterministic code makes it buildable, brick by brick.',
+      'A render is a promise, not a product: you cannot snap a JPEG together on your living-room floor. lEgoarCh takes a text prompt and returns a LEGO set that actually builds: AI imagines it, deterministic code makes it buildable, brick by brick.',
     tech: 'FLUX.2 KLEIN · TRELLIS-2 · LORA · LDRAW',
     links: [
       { label: 'GITHUB', href: 'https://github.com/hi-em/genai-legoarch' },
@@ -204,7 +208,7 @@ export const EXPLORATIONS: Project[] = [
     meta: 'STRUCTURAL OPTIMIZATION · WITH AHMAD BALTAJI',
     draftCopy: true,
     blurb:
-      'Look closely at a piece of pasta: the curves and hollows are structural engineering in miniature. We scaled up dinner { evolutionary optimization and finite element analysis in Grasshopper brought a cappelletti shell to human scale at roughly 160 kg of material.',
+      'Look closely at a piece of pasta: the curves and hollows are structural engineering in miniature. We scaled up dinner: evolutionary optimization and finite element analysis in Grasshopper brought a cappelletti shell to human scale at roughly 160 kg of material.',
     tech: 'GRASSHOPPER · GALAPAGOS · CRYSTALLON · ALPACA4D',
     links: [{ label: 'BLOG', href: 'https://blog.iaac.net/how-a-pasta-shape-became-a-pavilion-cappelletti/' }],
     image: { slug: 'cappelletti', name: 'poster', alt: 'Cappelletti Pavilion poster with pasta-derived shell structure' },

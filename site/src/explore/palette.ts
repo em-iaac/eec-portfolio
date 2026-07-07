@@ -1,6 +1,6 @@
 // EXPLORE token mirror. three.js materials and canvas textures cannot read
 // CSS custom properties, so the dark-ground tokens from src/index.css @theme
-// are mirrored here as literals { this file is the ONLY sanctioned place for
+// are mirrored here as literals: this file is the ONLY sanctioned place for
 // these hex values outside @theme. If a token changes there, change it here.
 import type { Lens } from '../components/Lens'
 

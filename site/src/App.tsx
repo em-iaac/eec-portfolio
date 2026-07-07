@@ -5,6 +5,7 @@ import Notebook from './pages/Notebook'
 import About from './pages/About'
 import CV from './pages/CV'
 import SheetRoute from './pages/SheetRoute'
+import ExploreErrorBoundary from './components/ExploreErrorBoundary'
 
 const ExplorePage = lazy(() => import('./explore/ExplorePage'))
 
@@ -12,6 +13,19 @@ const ExplorePage = lazy(() => import('./explore/ExplorePage'))
 // overlay, the loading state, and the scene read as one continuous dark table.
 function CarbonScreen() {
   return <div className="fixed inset-0 bg-carbon" aria-hidden="true" />
+}
+
+// Boundary OUTSIDE Suspense: a chunk-eval throw (e.g. the graph layout
+// invariant) rejects the lazy import and must land on the message, not
+// blank the app.
+function ExploreRoute() {
+  return (
+    <ExploreErrorBoundary>
+      <Suspense fallback={<CarbonScreen />}>
+        <ExplorePage />
+      </Suspense>
+    </ExploreErrorBoundary>
+  )
 }
 
 // /work carried the old drawing-set archive; the Notebook replaced it.
@@ -53,10 +67,32 @@ function ScrollToTop() {
   return null
 }
 
+// Cookieless page counting (GoatCounter, opted in 2026-07-07): count.js
+// counts the initial load on its own; this counts client-side route changes
+// only (first render skipped so the landing is not double-counted).
+// count.js records the FULL location incl. the GH Pages base, while
+// react-router strips the basename from pathname; re-prefix so every view
+// of a page lands on one dashboard row. No-op in dev (BASE_URL = '/').
+const COUNT_BASE = import.meta.env.BASE_URL.replace(/\/$/, '')
+
+function PageCount() {
+  const { pathname } = useLocation()
+  const first = useRef(true)
+  useEffect(() => {
+    if (first.current) {
+      first.current = false
+      return
+    }
+    window.goatcounter?.count?.({ path: COUNT_BASE + pathname })
+  }, [pathname])
+  return null
+}
+
 export default function App() {
   return (
     <>
       <ScrollToTop />
+      <PageCount />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/notebook" element={<Notebook />} />
@@ -64,22 +100,8 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/cv" element={<CV />} />
         <Route path="/sheets/:sheetId" element={<SheetRoute />} />
-        <Route
-          path="/explore"
-          element={
-            <Suspense fallback={<CarbonScreen />}>
-              <ExplorePage />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/explore/:nodeId"
-          element={
-            <Suspense fallback={<CarbonScreen />}>
-              <ExplorePage />
-            </Suspense>
-          }
-        />
+        <Route path="/explore" element={<ExploreRoute />} />
+        <Route path="/explore/:nodeId" element={<ExploreRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
