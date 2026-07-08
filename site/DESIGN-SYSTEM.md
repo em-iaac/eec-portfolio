@@ -121,6 +121,29 @@ Derived from the cinematic system above as the LIGHTER DEFAULT for the eight fou
 
 **Perf.** A `still` plate registers no scroll listener and writes no per-frame CSS vars, so a plate-spec sheet costs nothing beyond its images (which carry the develop-once IntersectionObserver already). The >= 30fps-at-4x-throttle bar is a flagship concern; foundry sheets clear it by construction.
 
+## The showcase surface (Session 12 addendum · signed 2026-07-08)
+
+**Showcase = the network surface wherever it appears.** The EXPLORE word network is the site's one sanctioned SHOWCASE moment. Session 12 made it an embeddable component (`explore/ExploreSurface.tsx`), so the same surface is the full-page `/explore` route today and the landing hero (Session 13) tomorrow. The sanction travels with the surface, not the route: idle float + slow camera drift are legal wherever the network is shown, and nowhere else does the site float, drift, or loop (motion unlock b, 2026-07-07). PRM / no-WebGL / save-data always get the static poster, final state (below). Page chrome around the surface stays with the consumer, so `/explore` keeps behaving identically.
+
+**The poster contract.** The landing / first-paint poster (`public/assets/explore-poster.webp`) is GENERATED at build time from makeGraph() output by `scripts/generate-poster.mjs`: esbuild bundles the pure graph module under Node, the frozen coordinates are projected with the scene's resting orthographic camera (same `x*1.12, y*0.72, z*1.12` world scaling, same eye/target), and sharp rasterizes the SVG with the repo brand fonts (a throwaway fontconfig config points pango at `src/assets/fonts/`). It regenerates on EVERY build (wired into `npm run build` before `vite build`), so an appended node can never stale it, and it is never hand-exported. It is legend-free and hero-text-free BY RULE: the hero line composites as live DOM in Session 13, never baked into the image, so search, screen readers, translation, and link-unfurls keep the four recruiter facts.
+
+**The fallback matrix.** ExploreSurface paints the poster as the pre-WebGL first paint (the LCP image) and resolves EVERY non-WebGL condition to it as a designed FINAL STATE, never an error state:
+
+| Condition | Detected by | Renders |
+|---|---|---|
+| WebGL + motion OK | default | live scene over the poster; entry ceremony plays once |
+| No WebGL | `getContext('webgl2'\|'webgl')` fails | poster, final state |
+| Reduced motion | `prefers-reduced-motion: reduce` | poster, final state |
+| Save-data | `navigator.connection.saveData` | poster, final state |
+| Low-power | `deviceMemory <= 1` or `hardwareConcurrency <= 2` | poster, final state |
+| Failed / lost context | `webglcontextlost` at runtime | poster, final state |
+
+The screen-reader `<nav>` (every project and thought with its issued-sheet or drafted-note link) travels with the surface in ALL modes, so the network is fully navigable without GL. Chrome that assumes interaction (the HUD's DRAG ORBIT / CLICK line) drops to a static line in poster-only mode, so the fallback never reads as broken.
+
+**The two-pass layout (append safety).** `graph.ts` freezes the 21 shipped coordinates + their edges as constants (`frozen-layout.generated.ts`, emitted by `scripts/freeze-explore-layout.mjs`). Pass 1 reads that frozen field back verbatim; pass 2 places each appended node (next `order`) from its own seed and relaxes it against the frozen field with a ONE-SIDED force pass: appendees move, the frozen 21 never do. `EXPECTED_ID_ORDER` is now a PREFIX check, so a legal append no longer throws; only a reorder / rename / tag-edit of the shipped prefix does. `standalone: true` on an appended explore entry exempts it from the implied-edge correction, so a future thought can float unconnected instead of being force-wired to degree 2 (real >= 2-tag edges still form). The snapshot test proves an append leaves all 21 frozen positions byte-identical.
+
+**Perf.** The poster is the LCP on every path (a static webp; three.js stays a separate lazy chunk, deferred until after the poster paints), so the landing poster-path budget (LCP <= 2.5s, CLS <= 0.1) holds by construction. The live scene keeps the standing network budget (>= 30fps sustained at 4x CPU throttle); any device that cannot has already been routed to the poster by the matrix above. `touch-action: none` on the canvas keeps orbit drags from hijacking page scroll when the surface is embedded (Session 13 Home).
+
 ## Do / Don't
 - Do put every number in mono. Don't set mono above 0.875rem.
 - Do use redline for links, stamps, live values. Don't use it to categorize (awards are ink).

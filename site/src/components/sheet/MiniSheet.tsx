@@ -160,6 +160,7 @@ export default function MiniSheet({ entry }: { entry: RegistryEntry }) {
           <Link
             to={`/explore/${entry.id}`}
             onPointerEnter={() => preloadExplore()}
+            onTouchStart={() => preloadExplore()}
             onFocus={() => preloadExplore()}
             className={`-m-2 p-2 ${RED_LINK}`}
           >

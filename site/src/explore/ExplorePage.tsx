@@ -1,30 +1,23 @@
-// EXPLORE mode: the dark network of projects and thoughts; itself a
-// portfolio piece. Full-viewport carbon surface with its own furniture (HUD,
-// legend, toggle, info card) · deliberately not SheetPage. The URL is the
-// source of truth for focus: /explore/:nodeId focuses that word; the scene
-// only ever reports intent. Entry ceremony (the sanctioned SHOWCASE moment)
-// plays once per arrival; reduced motion renders final states instantly.
+// EXPLORE mode: the dark network of projects and thoughts; itself a portfolio
+// piece. Full-viewport carbon surface with its own furniture (HUD, legend,
+// toggle, info card) · deliberately not SheetPage. The URL is the source of
+// truth for focus: /explore/:nodeId focuses that word; the scene only ever
+// reports intent. Entry ceremony (the sanctioned SHOWCASE moment) plays once per
+// arrival; reduced motion and every other fallback render the static poster.
+//
+// Session 12: the network itself now lives in ExploreSurface (poster first
+// paint, fallback matrix, live scene, SR nav). This page is its first consumer
+// and keeps behaving identically; it owns only the page chrome around it.
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import ExploreCanvas from './ExploreCanvas'
+import ExploreSurface, { fallbackReason } from './ExploreSurface'
 import InfoCard from './InfoCard'
-import ExploreFallback from './ExploreFallback'
 import { GRAPH } from './graph'
 import { assertPaletteMatchesTheme, LENSES } from './palette'
-import { EXPLORE_NODES } from '../data/registry'
 import { LensTick } from '../components/Lens'
 import type { ExploreScene } from './scene'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 import { MODE_FADE_MS, MODE_NAVIGATE_MS } from '../hooks/useExploreTransition'
-
-function webglAvailable(): boolean {
-  try {
-    const c = document.createElement('canvas')
-    return !!(c.getContext('webgl2') || c.getContext('webgl'))
-  } catch {
-    return false
-  }
-}
 
 const LENS_KEYS = ['c', 'p', 'e'] as const
 const LENS_TO_REPO = { c: 'computation', p: 'practice', e: 'explorations' } as const
@@ -33,10 +26,12 @@ export default function ExplorePage() {
   const { nodeId } = useParams()
   const navigate = useNavigate()
   const prm = usePrefersReducedMotion()
-  const webgl = useMemo(webglAvailable, [])
   const sceneRef = useRef<ExploreScene | null>(null)
   const [entryDone, setEntryDone] = useState(false)
   const [leaving, setLeaving] = useState(false)
+  // Poster-only (no live scene): the HUD drops the drag/click hints. Seeded from
+  // the same pure decision the surface makes, then kept in sync (runtime loss).
+  const [posterOnly, setPosterOnly] = useState(() => fallbackReason(prm) !== null)
   const leaveTimer = useRef<number | undefined>(undefined)
 
   const focusedIdx = useMemo(
@@ -61,7 +56,8 @@ export default function ExplorePage() {
     if (nodeId && focusedIdx < 0) navigate('/explore', { replace: true })
   }, [nodeId, focusedIdx, navigate])
 
-  // URL -> scene. Deep links wait for the ceremony (entryDone).
+  // URL -> scene. Deep links wait for the ceremony (entryDone). No-op in
+  // poster-only mode (no scene to drive; the InfoCard still renders).
   useEffect(() => {
     const s = sceneRef.current
     if (!s || !entryDone) return
@@ -69,9 +65,8 @@ export default function ExplorePage() {
     else s.unfocus()
   }, [focusedIdx, entryDone])
 
-  // Scene -> URL. Push when focusing from unfocused (Back = unfocus);
-  // replace when switching or clearing so browsing words does not pile up
-  // history.
+  // Scene -> URL. Push when focusing from unfocused (Back = unfocus); replace
+  // when switching or clearing so browsing words does not pile up history.
   const navigateFocus = useCallback(
     (id: string | null) => {
       if (id) navigate(`/explore/${id}`, { replace: focusedIdx >= 0 })
@@ -88,11 +83,10 @@ export default function ExplorePage() {
     return () => window.removeEventListener('keydown', onKey)
   }, [focusedIdx, navigateFocus])
 
-  // EXPLORE -> READ: the light table switches back on. Mylar floods the
-  // scene over the shared mode timing, then we navigate. The info card's
-  // OPEN SHEET link routes through here too (Session 5 bundle), so leaving a
-  // focused word for its sheet uses the same ceremony, never the root view
-  // transition.
+  // EXPLORE -> READ: the light table switches back on. Mylar floods the scene
+  // over the shared mode timing, then we navigate. The info card's OPEN SHEET
+  // link routes through here too (Session 5 bundle), so leaving a focused word
+  // for its sheet uses the same ceremony, never the root view transition.
   const leaveTo = useCallback(
     (target: string) => {
       if (prm) {
@@ -112,17 +106,17 @@ export default function ExplorePage() {
     leaveTo('/')
   }
 
-  if (!webgl) return <ExploreFallback />
-
   const chromeCls = entryDone || prm ? 'opacity-100' : 'opacity-0'
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-carbon text-ink-dark" id="main" tabIndex={-1}>
-      <ExploreCanvas
+      <ExploreSurface
         onRequestFocus={navigateFocus}
         onEntryDone={() => setEntryDone(true)}
+        onModeResolved={setPosterOnly}
         sceneRef={sceneRef}
         dimmed={leaving}
+        posterPriority
       />
 
       <div
@@ -132,7 +126,9 @@ export default function ExplorePage() {
         <br />
         PROJECTS AND THOUGHTS, CONNECTED BY THEME · EDGES APPEAR WHILE YOU ASK
         <br />
-        DRAG ORBIT · CLICK A WORD TO FOLLOW IT · ESC RETURNS
+        {posterOnly
+          ? 'A STILL OF THE FIELD ON THIS DEVICE · READ HOLDS THE FULL INDEX'
+          : 'DRAG ORBIT · CLICK A WORD TO FOLLOW IT · ESC RETURNS'}
       </div>
 
       <Link
@@ -158,26 +154,6 @@ export default function ExplorePage() {
       {focusedIdx >= 0 && entryDone && (
         <InfoCard key={focusedIdx} index={focusedIdx} onOpenSheet={leaveTo} />
       )}
-
-      {/* Screen-reader alternative to the WebGL scene */}
-      <nav aria-label="All projects and thoughts" className="sr-only">
-        <ul>
-          {GRAPH.nodes.map((n, i) => {
-            const reg = EXPLORE_NODES[i]
-            const sheet = reg?.sheet
-            const note = reg?.note
-            return (
-              <li key={n.id}>
-                {n.label} ({n.kind}, {LENSES[n.lens].label}){' '}
-                {sheet && sheet.status === 'issued' && (
-                  <Link to={sheet.route}>Open sheet {sheet.number}</Link>
-                )}
-                {note && note.status === 'drafted' && <Link to={note.route}>Open note</Link>}
-              </li>
-            )
-          })}
-        </ul>
-      </nav>
 
       {/* Mylar overlay: the light table switching back on */}
       <div

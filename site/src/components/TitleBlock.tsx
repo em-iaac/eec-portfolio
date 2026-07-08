@@ -72,6 +72,7 @@ export default function TitleBlock({ onExplore }: { onExplore?: () => void }) {
             to="/explore"
             onClick={onExplore}
             onPointerEnter={() => preloadExplore()}
+            onTouchStart={() => preloadExplore()}
             onFocus={() => preloadExplore()}
             className="-m-2.5 p-2.5 font-mono text-[10px] tracking-[0.12em] whitespace-nowrap text-redline underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline"
           >

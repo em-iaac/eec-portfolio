@@ -80,6 +80,7 @@ export function ExploreExitLink({
       to="/explore"
       onClick={beginExit ?? undefined}
       onPointerEnter={() => preloadExplore()}
+      onTouchStart={() => preloadExplore()}
       onFocus={() => preloadExplore()}
       className={className}
     >

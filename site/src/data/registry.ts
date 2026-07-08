@@ -53,6 +53,11 @@ export interface ExploreRef {
   label: string
   nodeKind: 'project' | 'thought'
   order: number
+  // Session 12: an APPENDED node (order past the frozen 21) opts out of the
+  // implied-edge correction, so it can float unconnected instead of being
+  // force-wired to degree 2. Ignored for the frozen prefix (their edges are
+  // baked into frozen-layout.generated.ts).
+  standalone?: boolean
 }
 
 export interface RegistryEntry {
@@ -550,6 +555,7 @@ export interface ExploreNode {
   lens: Lens
   tags: string[]
   order: number
+  standalone?: boolean
   sheet?: SheetRef
   note?: NoteRef
 }
@@ -565,6 +571,7 @@ export const EXPLORE_NODES: ExploreNode[] = ENTRIES.filter(
     lens: e.lens,
     tags: e.tags,
     order: e.explore.order,
+    standalone: e.explore.standalone,
     sheet: e.sheet,
     note: e.note,
   }))

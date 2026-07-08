@@ -8,26 +8,27 @@ import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 export default function ExploreCanvas({
   onRequestFocus,
   onEntryDone,
+  onContextLost,
   sceneRef,
-  dimmed,
 }: {
   onRequestFocus: (id: string | null) => void
   onEntryDone: () => void
+  onContextLost?: () => void
   sceneRef: MutableRefObject<ExploreScene | null>
-  dimmed: boolean
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const leaderRef = useRef<HTMLCanvasElement>(null)
   const lblRef = useRef<HTMLDivElement>(null)
   const prm = usePrefersReducedMotion()
-  const cb = useRef({ onRequestFocus, onEntryDone })
-  cb.current = { onRequestFocus, onEntryDone }
+  const cb = useRef({ onRequestFocus, onEntryDone, onContextLost })
+  cb.current = { onRequestFocus, onEntryDone, onContextLost }
 
   useEffect(() => {
     const scene = new ExploreScene(containerRef.current!, leaderRef.current!, lblRef.current!, {
       prm,
       onRequestFocus: (id) => cb.current.onRequestFocus(id),
       onEntryDone: () => cb.current.onEntryDone(),
+      onContextLost: () => cb.current.onContextLost?.(),
     })
     sceneRef.current = scene
     void scene.init()
@@ -39,14 +40,7 @@ export default function ExploreCanvas({
   }, [])
 
   return (
-    <div
-      aria-hidden="true"
-      className="absolute inset-0"
-      style={{
-        opacity: dimmed ? 0.85 : 1,
-        transition: prm ? 'none' : 'opacity 550ms ease',
-      }}
-    >
+    <div aria-hidden="true" className="absolute inset-0">
       <div ref={containerRef} className="absolute inset-0" />
       <canvas ref={leaderRef} className="pointer-events-none absolute inset-0" />
       <div

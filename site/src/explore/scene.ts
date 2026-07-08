@@ -57,6 +57,10 @@ export interface ExploreSceneOptions {
   prm: boolean
   onRequestFocus: (id: string | null) => void
   onEntryDone: () => void
+  // Fallback matrix (Session 12): if the GL context is lost at runtime (a
+  // low-power device reclaiming it, a driver hiccup), the surface swaps to the
+  // static poster instead of showing a dead canvas.
+  onContextLost?: () => void
 }
 
 export class ExploreScene {
@@ -125,6 +129,11 @@ export class ExploreScene {
     this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
     this.renderer.setSize(this.width, this.height)
     this.renderer.setClearColor(CARBON)
+    // Orbit dragging must own the gesture, not the page: without this a vertical
+    // drag on a phone scrolls the embedding page (Session 13 Home) and the scene
+    // reads as broken. On the full-page route the layout is fixed anyway.
+    this.renderer.domElement.style.touchAction = 'none'
+    this.renderer.domElement.addEventListener('webglcontextlost', this.onContextLost)
     this.container.appendChild(this.renderer.domElement)
 
     this.camera = new THREE.OrthographicCamera(
@@ -308,6 +317,7 @@ export class ExploreScene {
       dom.removeEventListener('pointermove', this.onPointerMove)
       dom.removeEventListener('pointerdown', this.onPointerDown)
       dom.removeEventListener('pointerup', this.onPointerUp)
+      dom.removeEventListener('webglcontextlost', this.onContextLost)
     }
     this.controls?.removeEventListener('start', this.onControlsStart)
     this.controls?.dispose()
@@ -340,6 +350,14 @@ export class ExploreScene {
 
   private onControlsStart = () => {
     this.lastInteract = performance.now()
+  }
+
+  private onContextLost = (ev: Event) => {
+    // Keep the browser from trying to auto-restore a context we are abandoning;
+    // the surface will render the poster instead.
+    ev.preventDefault()
+    cancelAnimationFrame(this.rafId)
+    this.opts.onContextLost?.()
   }
 
   private onPointerMove = (ev: PointerEvent) => {
