@@ -110,9 +110,21 @@ function RowBody({ e }: { e: RegistryEntry }) {
     )
   }
   if (e.kind === 'thought') {
+    // A drafted note turns the title into a link into its leaf; the ~ gutter
+    // mark still names the kind. An absent note renders as before.
     return (
       <p className="font-serif text-[15px] italic leading-relaxed text-anno">
-        {e.title}
+        {e.note?.status === 'drafted' ? (
+          <Link
+            to={e.note.route}
+            viewTransition
+            className="text-anno no-underline hover:text-ink hover:underline hover:decoration-redline hover:underline-offset-4"
+          >
+            {e.title}
+          </Link>
+        ) : (
+          e.title
+        )}
       </p>
     )
   }

@@ -37,6 +37,18 @@ export interface SheetRef {
   route: string
 }
 
+// A thought's written note, analogous to a sheet (Session 11). `drafted` = a
+// leaf exists at /thoughts/:id and every surface links to it; `absent` = the
+// thought carries no note yet (renders as before, no link). The T-series
+// number (Emilie's ruling 2026-07-08) rides the leaf's number cell.
+export type NoteStatus = 'drafted' | 'absent'
+
+export interface NoteRef {
+  number?: string
+  status: NoteStatus
+  route: string
+}
+
 export interface ExploreRef {
   label: string
   nodeKind: 'project' | 'thought'
@@ -52,6 +64,7 @@ export interface RegistryEntry {
   lens?: Lens
   tags: string[]
   sheet?: SheetRef
+  note?: NoteRef // thought notes (Session 11): the written leaf at /thoughts/:id
   project?: string // slug join into projects.tsx for card data
   image?: { slug: string; name: string; alt: string }
   links?: { label: string; href: string }[]
@@ -63,6 +76,14 @@ const sheet = (number: string, status: SheetStatus): SheetRef => ({
   number,
   status,
   route: `/sheets/${number.toLowerCase()}`,
+})
+
+// The route is derived from the thought id (matches EXPLORE/data.js RAW ids),
+// so a note ref never drifts from its /thoughts/:id leaf.
+const note = (id: string, number: string, status: NoteStatus = 'drafted'): NoteRef => ({
+  number,
+  status,
+  route: `/thoughts/${id}`,
 })
 
 export const ENTRIES: RegistryEntry[] = [
@@ -257,6 +278,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'behavior information modeling',
     lens: 'computation',
     tags: ['neuro', 'data', 'research', 'future'],
+    note: note('bim', 'T-101'),
     explore: { label: 'behavior information modeling', nodeKind: 'thought', order: 11 },
   },
   {
@@ -268,6 +290,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'neuroaesthetics',
     lens: 'computation',
     tags: ['neuro', 'research'],
+    note: note('neuroaes', 'T-102'),
     explore: { label: 'neuroaesthetics', nodeKind: 'thought', order: 12 },
   },
   {
@@ -279,6 +302,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'physics solvers',
     lens: 'explorations',
     tags: ['simulation', 'geometry'],
+    note: note('solvers', 'T-103'),
     explore: { label: 'physics solvers', nodeKind: 'thought', order: 13 },
   },
   {
@@ -290,6 +314,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'generative ai',
     lens: 'computation',
     tags: ['ai', 'play', 'future'],
+    note: note('genai', 'T-104'),
     explore: { label: 'generative ai', nodeKind: 'thought', order: 14 },
   },
   {
@@ -301,6 +326,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'extended reality',
     lens: 'explorations',
     tags: ['xr', 'education', 'future'],
+    note: note('xreal', 'T-105'),
     explore: { label: 'extended reality', nodeKind: 'thought', order: 15 },
   },
   {
@@ -312,6 +338,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'comfort as data',
     lens: 'computation',
     tags: ['comfort', 'neuro', 'data'],
+    note: note('comfort', 'T-106'),
     explore: { label: 'comfort as data', nodeKind: 'thought', order: 16 },
   },
   {
@@ -323,6 +350,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'drawing as interface',
     lens: 'practice',
     tags: ['play', 'practice', 'web'],
+    note: note('drawiface', 'T-107'),
     explore: { label: 'drawing as interface', nodeKind: 'thought', order: 17 },
   },
   {
@@ -334,6 +362,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'evolutionary search',
     lens: 'explorations',
     tags: ['simulation', 'ai'],
+    note: note('evosearch', 'T-108'),
     explore: { label: 'evolutionary search', nodeKind: 'thought', order: 18 },
   },
   {
@@ -345,6 +374,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'heritage meets new tech',
     lens: 'practice',
     tags: ['heritage', 'practice'],
+    note: note('heritage', 'T-109'),
     explore: { label: 'heritage meets new tech', nodeKind: 'thought', order: 19 },
   },
   {
@@ -356,6 +386,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'buildings that respond',
     lens: 'computation',
     tags: ['neuro', 'future', 'data', 'comfort'],
+    note: note('respond', 'T-110'),
     explore: { label: 'buildings that respond', nodeKind: 'thought', order: 20 },
   },
 
@@ -520,6 +551,7 @@ export interface ExploreNode {
   tags: string[]
   order: number
   sheet?: SheetRef
+  note?: NoteRef
 }
 
 export const EXPLORE_NODES: ExploreNode[] = ENTRIES.filter(
@@ -534,5 +566,6 @@ export const EXPLORE_NODES: ExploreNode[] = ENTRIES.filter(
     tags: e.tags,
     order: e.explore.order,
     sheet: e.sheet,
+    note: e.note,
   }))
   .sort((a, b) => a.order - b.order)

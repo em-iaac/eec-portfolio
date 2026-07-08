@@ -54,5 +54,34 @@
         }
       ]
     }
+  ],
+  "neurospace": [
+    {
+      "name": "slider-tour",
+      "aspect": 1.8659,
+      "duration": 75,
+      "audio": false,
+      "sources": [
+        {
+          "file": "assets/projects/neurospace/slider-tour-1280.mp4",
+          "type": "video/mp4",
+          "w": 1280,
+          "h": 686,
+          "kb": 5007
+        }
+      ],
+      "poster": [
+        {
+          "w": 640,
+          "file": "assets/projects/neurospace/slider-tour-poster-640.webp",
+          "kb": 11
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/neurospace/slider-tour-poster-1024.webp",
+          "kb": 20
+        }
+      ]
+    }
   ]
 }

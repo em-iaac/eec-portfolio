@@ -163,13 +163,16 @@ export default function ExplorePage() {
       <nav aria-label="All projects and thoughts" className="sr-only">
         <ul>
           {GRAPH.nodes.map((n, i) => {
-            const sheet = EXPLORE_NODES[i]?.sheet
+            const reg = EXPLORE_NODES[i]
+            const sheet = reg?.sheet
+            const note = reg?.note
             return (
               <li key={n.id}>
                 {n.label} ({n.kind}, {LENSES[n.lens].label}){' '}
                 {sheet && sheet.status === 'issued' && (
                   <Link to={sheet.route}>Open sheet {sheet.number}</Link>
                 )}
+                {note && note.status === 'drafted' && <Link to={note.route}>Open note</Link>}
               </li>
             )
           })}

@@ -8,6 +8,14 @@ import SheetRoute from './pages/SheetRoute'
 import ExploreErrorBoundary from './components/ExploreErrorBoundary'
 
 const ExplorePage = lazy(() => import('./explore/ExplorePage'))
+// Thought-note leaves (Session 11): split out of the landing chunk; the note
+// prose only loads when someone opens /thoughts/:id.
+const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
+
+// Mylar hold while a lazy READ-mode chunk resolves (matches SheetRoute).
+function MylarScreen() {
+  return <div className="min-h-dvh bg-mylar" aria-hidden="true" />
+}
 
 // Bare carbon field while the EXPLORE chunk loads, so the mode toggle's
 // overlay, the loading state, and the scene read as one continuous dark table.
@@ -100,6 +108,14 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/cv" element={<CV />} />
         <Route path="/sheets/:sheetId" element={<SheetRoute />} />
+        <Route
+          path="/thoughts/:id"
+          element={
+            <Suspense fallback={<MylarScreen />}>
+              <ThoughtRoute />
+            </Suspense>
+          }
+        />
         <Route path="/explore" element={<ExploreRoute />} />
         <Route path="/explore/:nodeId" element={<ExploreRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />

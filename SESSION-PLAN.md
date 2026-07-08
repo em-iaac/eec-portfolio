@@ -519,6 +519,15 @@ Graph order/tags untouched.
 
 **Sign-offs:** T-series decision; all 10 notes listed individually.
 
+**Preamble (added 2026-07-08):** (a) if incoming/neurospace/ holds the
+slider-tour capture, encode it via the video pipeline and insert the pending
+P-102 video plate (Session 9 tail); (b) rolling sign-off batch #1: the small
+accumulated microcopy flags from Sessions 4-6 (error-boundary wording, About
+toolkit pointer, Lungs label, softened About sentence, figcaption pick,
+MiniSheet note, collapse wording, nav labels, prefix removal, axis
+normalization, asterisk look) walked in one AskUserQuestion batch, approved
+flags removed. Dates, crops, and full sheet copy stay with later batches.
+
 **Draft kickoff prompt:**
 
 ```

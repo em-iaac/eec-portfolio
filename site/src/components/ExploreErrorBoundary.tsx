@@ -24,7 +24,7 @@ export default class ExploreErrorBoundary extends Component<
 
   render() {
     if (!this.state.error) return this.props.children
-    // draftCopy: fallback wording pending Emilie's sign-off
+    // Fallback wording approved Session 11 (rolling batch #1).
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-carbon px-6">
         <div

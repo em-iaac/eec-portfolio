@@ -156,7 +156,17 @@ function RollColumn({ e }: { e: RegistryEntry }) {
           <DateLabel e={e} />
           {isThought && (
             <p className="mt-1 max-w-full font-serif text-[14px] italic leading-snug text-anno">
-              {e.title}
+              {e.note?.status === 'drafted' ? (
+                <Link
+                  to={e.note.route}
+                  viewTransition
+                  className="text-anno no-underline hover:text-ink hover:underline hover:decoration-redline hover:underline-offset-4"
+                >
+                  {e.title}
+                </Link>
+              ) : (
+                e.title
+              )}
             </p>
           )}
         </div>
@@ -241,7 +251,20 @@ function FeedRow({ e }: { e: RegistryEntry }) {
   if (e.kind === 'project') {
     body = <ProjectCardMini e={e} />
   } else if (e.kind === 'thought') {
-    body = <p className="font-serif text-[15px] italic leading-snug text-anno">{e.title}</p>
+    body =
+      e.note?.status === 'drafted' ? (
+        <p className="font-serif text-[15px] italic leading-snug text-anno">
+          <Link
+            to={e.note.route}
+            viewTransition
+            className="text-anno no-underline hover:text-ink hover:underline hover:decoration-redline hover:underline-offset-4"
+          >
+            {e.title}
+          </Link>
+        </p>
+      ) : (
+        <p className="font-serif text-[15px] italic leading-snug text-anno">{e.title}</p>
+      )
   } else if (e.kind === 'sheet') {
     body = (
       <p className="font-mono text-[9px] tracking-[0.08em]">

@@ -106,7 +106,8 @@ export default function MiniSheet({ entry }: { entry: RegistryEntry }) {
         <p className="mb-5 max-w-[62ch] font-serif text-[15.5px] leading-[1.65]">{p.blurb}</p>
       )}
 
-      {/* draftCopy: the honest "still being written" line, Emilie's voice. */}
+      {/* The honest "still being written" line, Emilie's voice. Approved
+          Session 11 (rolling batch #1). */}
       <p className="mb-6 max-w-[62ch] font-serif text-[14px] leading-relaxed text-anno italic">
         The full sheet is still on the drawing board. Until it is issued, here is
         the short version: the figures so far, and every link that already works.

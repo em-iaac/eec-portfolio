@@ -19,6 +19,7 @@ import SheetLayout, { SheetLabel } from '../components/sheet/SheetLayout'
 import NBDot from '../components/sheet/NBDot'
 import MarginNotes from '../components/sheet/MarginNotes'
 import CinemaPlate from '../components/sheet/CinemaPlate'
+import SheetVideo from '../components/sheet/SheetVideo'
 import { LensTick, LENSES } from '../components/Lens'
 
 const PROSE = 'font-serif text-[15.5px] leading-[1.65] max-w-[62ch]'
@@ -158,11 +159,19 @@ export default function P102() {
         caption="PLATE 2 · THE PARAMETRIC ROOM, DRAWN IN THE BROWSER"
       />
 
-      {/* The slider-tour video plate drops in here after the encode lands
-          (npm run videos -- neurospace). It is the motion beat: drag a
-          slider, watch the score answer. Left out of source until the asset
-          exists so the "sheet video ref resolves in videos.json" test can
-          never fail on a promise the repo has not kept. */}
+      {/* The slider-tour: the motion beat this sheet was waiting on (Session 9
+          tail, encoded Session 11). Silent screen capture; SheetVideo marks it
+          so and runs it as a muted loop where motion is allowed, poster +
+          controls under reduced motion. Direct SheetVideo (no riding note)
+          keeps the rule-8 count at 4 of 5. */}
+      <SheetVideo
+        slug="neurospace"
+        name="slider-tour"
+        ariaLabel="NeuroSpace screen capture: dragging the room parameters while the behavioral score updates in real time"
+        caption="PLATE 3 · DRAG A SLIDER, THE SCORE ANSWERS"
+      />
+
+      <div className="mb-[26px]" />
 
       <SheetLabel>THE HONEST PART</SheetLabel>
       <p className={`mb-[26px] ${PROSE}`}>
@@ -182,7 +191,7 @@ export default function P102() {
           name: 'score-1',
           alt: 'A NeuroSpace score read out per dimension, each with its own reasoning',
         }}
-        caption="PLATE 3 · ONE SCORE, BROKEN DOWN BY SENSE"
+        caption="PLATE 4 · ONE SCORE, BROKEN DOWN BY SENSE"
         flow
       />
 
@@ -193,7 +202,7 @@ export default function P102() {
           name: 'score-2',
           alt: 'The NeuroSpace score after a parameter change, showing how the dimensions shift',
         }}
-        caption="PLATE 4 · CHANGE ONE SLIDER, WATCH IT MOVE"
+        caption="PLATE 5 · CHANGE ONE SLIDER, WATCH IT MOVE"
         note="the score is a hypothesis with its receipts attached. argue with it."
         flow
       />

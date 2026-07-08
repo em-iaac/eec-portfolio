@@ -106,9 +106,10 @@ export const HEROES: Project[] = [
       </>
     ),
     tech: 'VUE 3 · VITE · TAILWIND · SPECKLE',
-    // draftCopy covers the honest cold-start label (Session 4) and the
-    // myPart line (Session 7); the blurb above stays locked. Free-tier
-    // Railway sleeps; the label says so.
+    // The cold-start label "LIVE APP · WAKES IN ~30S" is APPROVED (Session 11,
+    // batch #1); free-tier Railway sleeps and the label says so. draftCopy
+    // stays because it still guards the myPart line (Session 7, unsigned);
+    // the blurb above stays locked.
     draftCopy: true,
     links: [
       { label: 'LIVE APP · WAKES IN ~30S', href: 'https://bimscstudiohb1-production.up.railway.app/' },

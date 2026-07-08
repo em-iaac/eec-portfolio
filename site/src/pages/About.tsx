@@ -6,7 +6,8 @@ const BASE = import.meta.env.BASE_URL
 // Opening paragraph: approved copy (content/copy-draft.md, "trust for now",
 // 2026-07-06), verbatim, no em dashes. The closing availability line was
 // softened in Session 5 (FLAG-01): it retires the public open-to STATUS and
-// keeps only the invitation, still in Emilie's voice. draftCopy until sign-off.
+// keeps only the invitation, still in Emilie's voice. Emilie signed off on the
+// softened invitation and the CV pointer in Session 11 (rolling batch #1).
 export default function About() {
   return (
     <SheetPage title="About">
@@ -24,7 +25,7 @@ export default function About() {
           </p>
 
           {/* Skills are CV-only since Session 4 (the block was a verbatim
-              duplicate). draftCopy: pointer wording pending Emilie's sign-off. */}
+              duplicate). Pointer wording approved Session 11 (batch #1). */}
           <p className="mb-8 border-y border-ink/20 py-4 font-mono text-[10.5px] tracking-[0.08em]">
             <Link
               to="/cv"
@@ -35,7 +36,7 @@ export default function About() {
             </Link>
           </p>
 
-          {/* draftCopy (FLAG-01): invitation without a status. */}
+          {/* FLAG-01: invitation without a status. Approved Session 11 (batch #1). */}
           <p className="max-w-[62ch] font-serif text-[17px] leading-relaxed">
             This is the kind of problem I want to spend the next decade on. If your team is trying to make buildings
             answer harder questions, whether that means a role, a research collaboration, or a hand with a computational

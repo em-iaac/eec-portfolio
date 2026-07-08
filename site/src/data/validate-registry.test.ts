@@ -9,6 +9,7 @@ import { expect, test } from 'vitest'
 import { ENTRIES, EXPLORE_NODES } from './registry'
 import { PROJECTS_BY_SLUG } from './projects'
 import { SHEETS } from '../sheets'
+import { THOUGHT_NOTES } from '../thoughts/notes'
 import images from './images.json'
 import videos from './videos.json'
 
@@ -37,6 +38,22 @@ test('every image ref exists in images.json', () => {
   for (const p of Object.values(PROJECTS_BY_SLUG))
     if (p.image && !hasImage(p.image.slug, p.image.name))
       broken.push(`project ${p.slug} -> ${p.image.slug}/${p.image.name}`)
+  expect(broken).toEqual([])
+})
+
+// Thought notes (Session 11) resolve like sheets: a drafted note must belong
+// to a thought, point at its own /thoughts/:id leaf, and have a body to render.
+test('every note ref is a thought pointing at its own leaf', () => {
+  const broken = ENTRIES.filter(
+    e => e.note && (e.kind !== 'thought' || e.note.route !== `/thoughts/${e.id}`),
+  ).map(e => `${e.id} -> ${e.note?.route}`)
+  expect(broken).toEqual([])
+})
+
+test('every drafted note has its THOUGHT_NOTES body', () => {
+  const broken = ENTRIES.filter(
+    e => e.note?.status === 'drafted' && !THOUGHT_NOTES[e.id],
+  ).map(e => e.id)
   expect(broken).toEqual([])
 })
 

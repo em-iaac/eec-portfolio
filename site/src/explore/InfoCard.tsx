@@ -20,6 +20,7 @@ export default function InfoCard({
   const nb = [...neighbors(GRAPH, index)]
   const reg = EXPLORE_NODES[index]
   const sheet = reg?.sheet
+  const note = reg?.note
   if (!n) return null
 
   return (
@@ -54,9 +55,28 @@ export default function InfoCard({
             OPEN SHEET {sheet.number} &gt;
           </Link>
         </div>
-      ) : (
+      ) : note && note.status === 'drafted' ? (
+        // A thought's written leaf; leaves EXPLORE through the same mylar mode
+        // ceremony as OPEN SHEET (onOpenSheet), never the root transition.
+        <div>
+          <Link
+            to={note.route}
+            onClick={
+              onOpenSheet
+                ? (e) => {
+                    e.preventDefault()
+                    onOpenSheet(note.route)
+                  }
+                : undefined
+            }
+            className="text-redline-wire underline underline-offset-[3px] focus-visible:outline-2 focus-visible:outline-redline-wire"
+          >
+            OPEN NOTE &gt;
+          </Link>
+        </div>
+      ) : sheet ? (
         <div className="text-anno-dark">SHEET: IN PREPARATION</div>
-      )}
+      ) : null}
       <div className="text-anno-dark">ESC OR CLICK BACKGROUND TO RETURN</div>
     </div>
   )

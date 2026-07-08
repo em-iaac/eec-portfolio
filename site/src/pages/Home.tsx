@@ -47,27 +47,25 @@ export default function Home() {
             drawDelayMs={950}
           />
         </div>
-        <figure className="m-0">
-          <div className="group aspect-[4/5] overflow-hidden border border-ink/35">
+        {/* FLAG-02 resolved (Session 11, batch #1): Emilie's call, no caption,
+            the headshot framed as a circle. Raw brand headshot keeps
+            hover-colorize until the Session 13/16 hero rework; the circular
+            crop position is flagged for her eye. */}
+        <figure className="m-0 flex justify-center md:justify-end">
+          <div className="group aspect-square w-full max-w-[240px] overflow-hidden rounded-full border border-ink/35">
             <img
               src={`${BASE}assets/brand/headshot-800.webp`}
               srcSet={`${BASE}assets/brand/headshot-400.webp 400w, ${BASE}assets/brand/headshot-800.webp 800w`}
-              sizes="(max-width: 767px) 100vw, 300px"
+              sizes="240px"
               alt="Emilie El Chidiac"
               width={800}
               height={1192}
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="block h-full w-full object-cover grayscale transition-[filter] duration-[400ms] group-hover:grayscale-0 motion-reduce:transition-none"
+              className="block h-full w-full object-cover object-[center_30%] grayscale transition-[filter] duration-[400ms] group-hover:grayscale-0 motion-reduce:transition-none"
             />
           </div>
-          {/* draftCopy (FLAG-02): non-location caption. Shipped default below;
-              alternatives for Emilie's pick: "FIG. 00 · THE AUTHOR" (notebook
-              conceit) or "EM · THE ONE ASKING THE QUESTIONS" (ties to the H1). */}
-          <figcaption className="mt-1.5 font-mono text-[9px] tracking-[0.1em] text-anno">
-            EM · MACAD @ IAAC
-          </figcaption>
         </figure>
       </section>
 
