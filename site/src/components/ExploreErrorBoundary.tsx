@@ -9,7 +9,11 @@ const WIRE_LINK =
   '-m-2 p-2 text-redline-wire underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline-wire'
 
 export default class ExploreErrorBoundary extends Component<
-  { children: ReactNode },
+  // `fallback` (Session 13): when the surface is EMBEDDED (the landing hero), a
+  // chunk-load or scene throw must degrade to the static poster underneath, not
+  // the full-screen carbon message. The full-page /explore route omits it and
+  // keeps the message.
+  { children: ReactNode; fallback?: ReactNode },
   { error: Error | null }
 > {
   state = { error: null as Error | null }
@@ -24,6 +28,7 @@ export default class ExploreErrorBoundary extends Component<
 
   render() {
     if (!this.state.error) return this.props.children
+    if (this.props.fallback !== undefined) return this.props.fallback
     // Fallback wording approved Session 11 (rolling batch #1).
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-carbon px-6">

@@ -10,11 +10,13 @@ export default function ExploreCanvas({
   onEntryDone,
   onContextLost,
   sceneRef,
+  embedded = false,
 }: {
   onRequestFocus: (id: string | null) => void
   onEntryDone: () => void
   onContextLost?: () => void
   sceneRef: MutableRefObject<ExploreScene | null>
+  embedded?: boolean
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const leaderRef = useRef<HTMLCanvasElement>(null)
@@ -26,6 +28,7 @@ export default function ExploreCanvas({
   useEffect(() => {
     const scene = new ExploreScene(containerRef.current!, leaderRef.current!, lblRef.current!, {
       prm,
+      embedded,
       onRequestFocus: (id) => cb.current.onRequestFocus(id),
       onEntryDone: () => cb.current.onEntryDone(),
       onContextLost: () => cb.current.onContextLost?.(),

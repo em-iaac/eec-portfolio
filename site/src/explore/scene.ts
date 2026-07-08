@@ -61,6 +61,11 @@ export interface ExploreSceneOptions {
   // low-power device reclaiming it, a driver hiccup), the surface swaps to the
   // static poster instead of showing a dead canvas.
   onContextLost?: () => void
+  // Embedded on the landing hero (Session 13): disable wheel-zoom and pan so a
+  // desktop wheel scrolls the PAGE past the hero instead of zooming the scene
+  // (OrbitControls lets the wheel bubble when enableZoom is false). Rotate + the
+  // idle showcase drift stay. The full-page /explore route omits this.
+  embedded?: boolean
 }
 
 export class ExploreScene {
@@ -149,6 +154,11 @@ export class ExploreScene {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
     this.controls.enableDamping = true
     this.controls.dampingFactor = 0.06
+    if (this.opts.embedded) {
+      // Let the page own the wheel and keep the hero from panning off-frame.
+      this.controls.enableZoom = false
+      this.controls.enablePan = false
+    }
     this.controls.addEventListener('start', this.onControlsStart)
 
     {

@@ -20,11 +20,11 @@ Props: `sheet` (A-000 | A-101 | A-201 | C-001), `title`, `children`.
 Sheet registry: Home A-000, Work A-101, About A-201, CV C-001 (Now N-001 arrives Session 16).
 
 ### TitleBlock
-The drawing-set header. Cells: mark (static, always; no plot-in ceremony exists), name + role (role, MaCAD; NO status line since Session 5), keynote nav (de-numbered Session 6: titles only, no 01/02/03 indices), mode toggle.
+The drawing-set header. Cells: mark (static, always; no plot-in ceremony exists), name + role (role, MaCAD; NO status line since Session 5), keynote nav (de-numbered Session 6: titles only, no 01/02/03 indices), EXPLORE link.
 States: current page = redline underline + `aria-current="page"`.
-Mobile: nav and mode toggle each wrap to their own row; name cell flexes.
+Mobile: nav and the EXPLORE cell each wrap to their own row; name cell flexes.
 A11y: `<header>` + `<nav aria-label="Primary">`; nav links carry `-m-3 p-3` so hit areas reach ~40px.
-Sanctioned redline (Session 5, FLAG-01): the public OPEN TO R&D status line is RETIRED sitewide (the search is private; LinkedIn's recruiters-only setting is the one standing signal). The remaining header redline is interaction only: the current-page underline and the `MODE: READ / EXPLORE >` toggle. The ISSUED FOR stamp stays the one sanctioned LIVENESS redline text in the drawing-set chrome (it lives in the EXPLORE header, `ISSUED FOR: READ >`), alongside the timeline NOW marker (rule 9).
+Sanctioned redline (Session 5, FLAG-01): the public OPEN TO R&D status line is RETIRED sitewide (the search is private; LinkedIn's recruiters-only setting is the one standing signal). The remaining header redline is interaction only: the current-page underline and the `EXPLORE THE NETWORK >` link (Session 13: the old `MODE: READ / EXPLORE >` toggle framing retired with the depth-level model below; the cell is now a plain wayfinding link into the deep level, running the same carbon-flood ceremony). The ISSUED FOR stamp stays the one sanctioned LIVENESS redline text in the drawing-set chrome (it lives in the EXPLORE header, `ISSUED FOR: READ >`), alongside the timeline NOW marker (rule 9).
 
 ### LensTick + Legend
 `LensTick lens=computation|practice|explorations` renders the shape only (square cyan / diamond magenta / triangle yellow) and is `aria-hidden`; the API forces a paired visible label via the chip components. GOVERNANCE: never color without shape + label.
@@ -143,6 +143,56 @@ The screen-reader `<nav>` (every project and thought with its issued-sheet or dr
 **The two-pass layout (append safety).** `graph.ts` freezes the 21 shipped coordinates + their edges as constants (`frozen-layout.generated.ts`, emitted by `scripts/freeze-explore-layout.mjs`). Pass 1 reads that frozen field back verbatim; pass 2 places each appended node (next `order`) from its own seed and relaxes it against the frozen field with a ONE-SIDED force pass: appendees move, the frozen 21 never do. `EXPECTED_ID_ORDER` is now a PREFIX check, so a legal append no longer throws; only a reorder / rename / tag-edit of the shipped prefix does. `standalone: true` on an appended explore entry exempts it from the implied-edge correction, so a future thought can float unconnected instead of being force-wired to degree 2 (real >= 2-tag edges still form). The snapshot test proves an append leaves all 21 frozen positions byte-identical.
 
 **Perf.** The poster is the LCP on every path (a static webp; three.js stays a separate lazy chunk, deferred until after the poster paints), so the landing poster-path budget (LCP <= 2.5s, CLS <= 0.1) holds by construction. The live scene keeps the standing network budget (>= 30fps sustained at 4x CPU throttle); any device that cannot has already been routed to the poster by the matrix above. `touch-action: none` on the canvas keeps orbit drags from hijacking page scroll when the surface is embedded (Session 13 Home).
+
+## The depth-level model (Session 13 addendum · the landing replaces the toggle)
+
+The READ<->EXPLORE toggle framed the site as two modes. Session 13 makes the
+network the landing, so the site now reads as ONE surface a visitor descends into
+by degrees. Three levels, each a real URL:
+
+1. **The landing (`/`) · the surface at rest.** `ExploreSurface` is the hero
+   panel: the sanctioned showcase idle (float + camera drift) over the poster
+   ground, with the locked hero line and the four recruiter facts layered on top
+   as real DOM (never baked into the poster). This is the first level: a recruiter
+   reads the facts without descending at all; the poster path reads the same,
+   designed. The rest of the landing (proof pair, capped roll, footer) is READ
+   content below the hero.
+2. **A focused word (`/explore/:id`) · one word, its thread, its sheet.** Tapping
+   a node on the landing dives here through the carbon-flood ceremony (the same
+   `useExploreTransition` beginExit, now targetable: `beginExit(e, '/explore/'+id)`).
+   The word is centered, its neighbors lit, its `InfoCard` open with the OPEN
+   SHEET / OPEN NOTE link. This is the middle level: proof is one gesture from the
+   hero.
+3. **The full network (`/explore`) · the whole mind.** The immersive carbon route,
+   unchanged. Reached from the hero's `EXPLORE THE WHOLE MIND >` affordance or the
+   header's `EXPLORE THE NETWORK >` link. `/explore` remains a first-class working
+   route (it is `ExploreSurface`'s other consumer); nothing about it changed.
+
+**Getting back.** From a focused word: Esc, browser Back, or clicking the
+background clears focus (level 2 -> 3 stays inside EXPLORE; Back from a pushed
+focus returns to the landing). From anywhere in EXPLORE: `ISSUED FOR: READ >`
+runs the mylar ceremony back to READ. The header EXPLORE cell and the logo
+(Home) are always-present wayfinding.
+
+**The header MODE cell.** The old `MODE: READ / EXPLORE >` toggle is retired: it
+named a binary that no longer exists. The cell is now `EXPLORE THE NETWORK >`, a
+plain de-numbered link into level 3, kept on every READ page as standing
+wayfinding (the landing also carries its own in-hero affordance; the header link
+is chrome, the hero link is content, so both stand). It still preloads the chunk
+on hover/touch/focus and runs the carbon-flood ceremony.
+
+**Poster path.** On poster-only devices (PRM / no-WebGL / save-data / low-power),
+the landing paints the poster as the designed hero and the facts still layer over
+it as DOM; the HUD swaps its interaction hint for the poster-only line so the
+level never reads as broken. Descending still works: the header/hero EXPLORE
+links reach `/explore`, which resolves to its own poster with the full
+screen-reader `<nav>`. Every word stays reachable with no GL at every level.
+
+**Perf.** The landing defers three.js: the poster is the LCP (a static webp), the
+scene chunk loads one frame after paint and only on the WebGL path (poster-only
+devices never download it). Budgets: poster-path LCP <= 2.5s, CLS <= 0.1;
+landing initial JS <= 150KB gz; live scene >= 30fps at 4x CPU throttle (any
+device that cannot has already been routed to the poster).
 
 ## Do / Don't
 - Do put every number in mono. Don't set mono above 0.875rem.

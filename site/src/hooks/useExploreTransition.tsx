@@ -26,16 +26,19 @@ export function useExploreTransition() {
 
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
-  function beginExit(e?: MouseEvent) {
+  // target defaults to the unfocused network; the landing hero (Session 13)
+  // passes /explore/:id so clicking a word dives straight to that focused word
+  // through the same carbon-flood ceremony (landing > focused word > EXPLORE).
+  function beginExit(e?: MouseEvent, target = '/explore') {
     e?.preventDefault()
     preloadExplore()
     if (prm) {
-      navigate('/explore')
+      navigate(target)
       return
     }
     if (leaving) return
     setLeaving(true)
-    timer.current = window.setTimeout(() => navigate('/explore'), MODE_NAVIGATE_MS)
+    timer.current = window.setTimeout(() => navigate(target), MODE_NAVIGATE_MS)
   }
 
   return { leaving, beginExit }
@@ -65,7 +68,9 @@ export function liftStyle(leaving: boolean, prm: boolean) {
 
 // Page shells provide their beginExit so any nested link can run the same
 // ceremony instead of a bare navigation.
-export const ExploreExitContext = createContext<((e?: MouseEvent) => void) | null>(null)
+export const ExploreExitContext = createContext<
+  ((e?: MouseEvent, target?: string) => void) | null
+>(null)
 
 export function ExploreExitLink({
   className,

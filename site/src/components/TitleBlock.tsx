@@ -1,8 +1,11 @@
 // Minimal title block (Session 3 memo: furniture reduced): logo cell, name +
-// role cell, keynote nav, and the mode toggle as a plain mono redline link.
+// role cell, keynote nav, and the EXPLORE wayfinding link.
 // The public open-to status line retired in Session 5 (FLAG-01): the search is
 // private, so the header carries no redline at all now. The bottom rule draws
 // in once per session with the red pen dot riding its leading edge.
+// Session 13 depth-level model: the landing IS the network surface now, so the
+// old "MODE: READ / EXPLORE" toggle framing retired. The cell is a plain link
+// into the deep level (/explore), running the same carbon-flood ceremony.
 import { useRef } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import LogoMark from './LogoMark'
@@ -76,7 +79,7 @@ export default function TitleBlock({ onExplore }: { onExplore?: () => void }) {
             onFocus={() => preloadExplore()}
             className="-m-2.5 p-2.5 font-mono text-[10px] tracking-[0.12em] whitespace-nowrap text-redline underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline"
           >
-            MODE: <b className="font-medium">READ</b> / EXPLORE &gt;
+            EXPLORE THE NETWORK &gt;
           </Link>
         </div>
       </div>

@@ -30,6 +30,12 @@ const RED_LINK =
 // Above-axis zone height; every column shares it so the axis stays straight.
 const ABOVE = 'h-56'
 
+// The Home roll shows the newest slice and hands off to the full archive
+// (Session 13): the landing is a front door, not the whole record. The cap
+// counts collapsed log items (a same-month sheet group is one), so a busy month
+// never crowds out older kinds. The Notebook route carries everything.
+const ROLL_CAP = 12
+
 type RollItem = LogItem | { type: 'year'; year: string }
 
 function buildItems(logItems: LogItem[]): RollItem[] {
@@ -244,6 +250,32 @@ function NowColumn() {
   )
 }
 
+// The roll's terminal card (Session 13): the newest slice ends here and hands
+// off to the full record. Reads as a drawing-roll continuation, not a dead end.
+function ArchiveColumn({ hidden }: { hidden: number }) {
+  return (
+    <li className="flex w-52 shrink-0 snap-start flex-col">
+      <div className={`flex ${ABOVE} flex-col justify-end pb-3`}>
+        <Link
+          to="/notebook"
+          viewTransition
+          className="group block border border-ink/35 bg-mylar px-3 py-3 no-underline focus-visible:outline-2 focus-visible:outline-redline"
+        >
+          <span className={`font-mono text-[11px] tracking-[0.08em] ${RED_LINK}`}>
+            OPEN THE ARCHIVE &gt;
+          </span>
+          <span className="mt-1.5 block font-mono text-[8.5px] leading-relaxed tracking-[0.08em] text-anno">
+            {hidden > 0 ? `${hidden} MORE ENTRIES · ` : ''}2021 &gt; NOW
+          </span>
+        </Link>
+      </div>
+      <div className="flex flex-col items-start">
+        <AxisTick />
+      </div>
+    </li>
+  )
+}
+
 // ---- Mobile feed (same record, vertical) -----------------------------------
 
 function FeedRow({ e }: { e: RegistryEntry }) {
@@ -322,7 +354,10 @@ export default function BenchRoll() {
 
   const entries = timelineEntries()
   const logItems = collapseSheetIssues(entries)
-  const items = buildItems(logItems)
+  // Desktop roll: newest slice only, then the OPEN THE ARCHIVE card (Session 13).
+  const capped = logItems.slice(0, ROLL_CAP)
+  const hidden = logItems.length - capped.length
+  const items = buildItems(capped)
   const newestYear = entries[0]?.date.slice(0, 4)
 
   function onPointerDown(e: PointerEvent) {
@@ -418,6 +453,7 @@ export default function BenchRoll() {
                   <RollColumn key={it.e.id} e={it.e} />
                 ),
               )}
+            <ArchiveColumn hidden={hidden} />
           </ul>
         </div>
       </div>

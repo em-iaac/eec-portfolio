@@ -12,47 +12,17 @@
 // Page chrome (HUD, mode link, legend, InfoCard, the mylar leave ceremony) stays
 // with the consumer, so /explore keeps behaving identically.
 import { useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
-import { Link } from 'react-router-dom'
 import ExploreCanvas from './ExploreCanvas'
-import { GRAPH } from './graph'
-import { LENSES } from './palette'
-import { EXPLORE_NODES } from '../data/registry'
+import NetworkSrNav from './NetworkSrNav'
+import { POSTER_ALT, POSTER_SRC, fallbackReason } from './poster'
 import type { ExploreScene } from './scene'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 
-// public/assets/explore-poster.webp, regenerated every build from makeGraph()
-// output by scripts/generate-poster.mjs (the standing poster contract).
-export const POSTER_SRC = `${import.meta.env.BASE_URL}assets/explore-poster.webp`
-
-const POSTER_ALT =
-  'A dark constellation of Emilie El Chidiac’s projects and thoughts, connected by shared themes.'
-
-export function webglAvailable(): boolean {
-  try {
-    const c = document.createElement('canvas')
-    return !!(c.getContext('webgl2') || c.getContext('webgl'))
-  } catch {
-    return false
-  }
-}
-
-export type FallbackReason = 'no-webgl' | 'reduced-motion' | 'save-data' | 'low-power' | null
-
-// Pre-emptive fallback signals (failed-context is handled at runtime below).
-// Conservative on low-power so capable phones still get the scene: only genuine
-// signals (save-data, tiny RAM, <=2 cores) route to the poster.
-export function fallbackReason(prm: boolean): FallbackReason {
-  if (prm) return 'reduced-motion'
-  if (!webglAvailable()) return 'no-webgl'
-  const nav = navigator as Navigator & {
-    connection?: { saveData?: boolean }
-    deviceMemory?: number
-  }
-  if (nav.connection?.saveData) return 'save-data'
-  if ((nav.deviceMemory && nav.deviceMemory <= 1) || navigator.hardwareConcurrency <= 2)
-    return 'low-power'
-  return null
-}
+// Session 13: the poster src/alt and the fallback decision moved to the
+// three-free poster.ts so the landing can use them without loading three.js.
+// Re-exported here so /explore (ExplorePage) keeps its import surface unchanged.
+export { POSTER_SRC, POSTER_ALT, webglAvailable, fallbackReason } from './poster'
+export type { FallbackReason } from './poster'
 
 export default function ExploreSurface({
   onRequestFocus,
@@ -61,6 +31,7 @@ export default function ExploreSurface({
   sceneRef,
   dimmed = false,
   posterPriority = false,
+  embedded = false,
 }: {
   onRequestFocus: (id: string | null) => void
   onEntryDone: () => void
@@ -71,6 +42,8 @@ export default function ExploreSurface({
   dimmed?: boolean
   /** First hero on the page: hint the poster as the LCP image. */
   posterPriority?: boolean
+  /** Embedded on the landing hero: disable wheel-zoom/pan so the page scrolls. */
+  embedded?: boolean
 }) {
   const prm = usePrefersReducedMotion()
   // Decided once per mount so the poster/scene choice never flips mid-session.
@@ -123,28 +96,12 @@ export default function ExploreSurface({
           onEntryDone={onEntryDone}
           onContextLost={() => setContextLost(true)}
           sceneRef={sceneRef}
+          embedded={embedded}
         />
       )}
 
       {/* Screen-reader alternative to the network, travelling with the surface. */}
-      <nav aria-label="All projects and thoughts" className="sr-only">
-        <ul>
-          {GRAPH.nodes.map((n, i) => {
-            const reg = EXPLORE_NODES[i]
-            const sheet = reg?.sheet
-            const note = reg?.note
-            return (
-              <li key={n.id}>
-                {n.label} ({n.kind}, {LENSES[n.lens].label}){' '}
-                {sheet && sheet.status === 'issued' && (
-                  <Link to={sheet.route}>Open sheet {sheet.number}</Link>
-                )}
-                {note && note.status === 'drafted' && <Link to={note.route}>Open note</Link>}
-              </li>
-            )
-          })}
-        </ul>
-      </nav>
+      <NetworkSrNav />
     </div>
   )
 }
