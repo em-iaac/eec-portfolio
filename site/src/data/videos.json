@@ -1,0 +1,58 @@
+{
+  "sensi": [
+    {
+      "name": "demo",
+      "aspect": 1.7778,
+      "duration": 44,
+      "audio": true,
+      "sources": [
+        {
+          "file": "assets/projects/sensi/demo-1280.mp4",
+          "type": "video/mp4",
+          "w": 1280,
+          "h": 720,
+          "kb": 3416
+        }
+      ],
+      "poster": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/demo-poster-640.webp",
+          "kb": 9
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/demo-poster-1024.webp",
+          "kb": 18
+        }
+      ]
+    },
+    {
+      "name": "flow-report",
+      "aspect": 1.8713,
+      "duration": 45,
+      "audio": false,
+      "sources": [
+        {
+          "file": "assets/projects/sensi/flow-report-1280.mp4",
+          "type": "video/mp4",
+          "w": 1280,
+          "h": 684,
+          "kb": 1993
+        }
+      ],
+      "poster": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/flow-report-poster-640.webp",
+          "kb": 15
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/flow-report-poster-1024.webp",
+          "kb": 31
+        }
+      ]
+    }
+  ]
+}

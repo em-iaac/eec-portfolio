@@ -81,6 +81,9 @@ export default function Home() {
           ))}
         </div>
         <p className="mt-6 flex flex-wrap gap-x-7 gap-y-2 font-mono text-[11px] tracking-[0.06em]">
+          <Link to="/sheets/p-101" viewTransition className={RED_LINK}>
+            SHEET P-101: SENSI &gt;
+          </Link>
           <Link to="/sheets/p-104" viewTransition className={RED_LINK}>
             SHEET P-104: A BALLOONING MARKET &gt;
           </Link>

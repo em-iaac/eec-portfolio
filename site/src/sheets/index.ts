@@ -4,5 +4,6 @@
 import { lazy, type ComponentType, type LazyExoticComponent } from 'react'
 
 export const SHEETS: Record<string, LazyExoticComponent<ComponentType>> = {
+  'p-101': lazy(() => import('./P101')),
   'p-104': lazy(() => import('./P104')),
 }

@@ -67,6 +67,20 @@ const sheet = (number: string, status: SheetStatus): SheetRef => ({
 
 export const ENTRIES: RegistryEntry[] = [
   // ---- Sheet issues (the lab log's publication events) -------------------
+  // P-101 sits ABOVE P-104 on purpose: the collapse rule preserves ENTRIES
+  // order for same-month issues, so this renders "SHEETS P-101, P-104
+  // ISSUED >" in numeric order.
+  {
+    id: 'p101-issued',
+    kind: 'sheet',
+    date: '2026-07',
+    title: 'Sensi',
+    lens: 'computation',
+    tags: ['neuro', 'comfort', 'ai', 'research'],
+    sheet: sheet('P-101', 'issued'),
+    project: 'sensi',
+    draftCopy: true, // the P-101 sheet's copy is drafts pending sign-off
+  },
   {
     id: 'p104-issued',
     kind: 'sheet',
@@ -86,7 +100,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Sensi',
     lens: 'computation',
     tags: ['neuro', 'comfort', 'ai', 'research'],
-    sheet: sheet('P-101', 'in-preparation'),
+    sheet: sheet('P-101', 'issued'),
     project: 'sensi',
     image: { slug: 'sensi', name: 'app-shape', alt: 'Sensi interface scoring a floor plan across six senses' },
     explore: { label: 'SENSI', nodeKind: 'project', order: 0 },

@@ -59,27 +59,30 @@ via Actions.
   (1) a proposed commit summary, (2) the changed-file list, (3) items needing
   Emilie's sign-off.
 
-Optional add-on (any time): custom domain. If wanted, exercise it BEFORE Session
-15 (PDF) and Session 16 (OG cards) mint absolute URLs. GitHub URL is
-professionally fine meanwhile.
+Custom domain: DECIDED 2026-07-08, staying on hi-em.github.io (calibration found
+no screening penalty; zero maintenance). Reopening later means a one-time
+LinkedIn re-edit + OG/PDF URL refresh; that cost is accepted.
 
 ## Overview table
 
-| # | Session | Target | Emilie present? |
-|---|---------|--------|-----------------|
-| 4 | Guardrails + Honesty | Registry safe to churn; live embarrassments dead | sign-offs only |
-| 4.2 | The Recruiter Calibration | One positioning dossier every content session reads | yes, fully |
-| 5 | The Develop Pass | Develop ceremony + motion bundle + living placeholders | phone check |
-| 6 | The Notebook Field Guide | Log markers, collapse rule, row hierarchy, de-numbered nav | glyph set |
-| 7 | Attribution Day | Credits, claims, numbers, repo mirror + LINKEDIN.md | yes, fully |
-| 7.5 | The History Audit | Public repo's entire history + surfaces leak nothing; prevention guards | rulings + force-push |
-| 8 | Sheet Cinema I | Scroll-cinema governance addendum + template proven on P-101 Sensi | direction gate |
+Session numbers are STABLE identifiers; the table below is in EXECUTION ORDER
+(landing-first reorder, Emilie 2026-07-08). Shipped sessions listed first.
+
+| # | Session | Target | Status / Emilie present? |
+|---|---------|--------|--------------------------|
+| 4 | Guardrails + Honesty | Registry safe to churn; live embarrassments dead | SHIPPED 07-07 |
+| 4.2 | The Recruiter Calibration | One positioning dossier every content session reads | SHIPPED 07-07 |
+| 5 | The Develop Pass | Develop ceremony + motion bundle + living placeholders | SHIPPED 07-07 |
+| 6 | The Notebook Field Guide | Log markers, collapse rule, row hierarchy, de-numbered nav | SHIPPED 07-07 |
+| 7 | Attribution Day | Credits, claims, numbers, repo mirror + LINKEDIN.md | SHIPPED 07-08 |
+| 7.5 | The History Audit | Public history + surfaces leak nothing; prevention guards | SHIPPED 07-08 |
+| 8 | Sheet Cinema I | Scroll-cinema governance addendum + template proven on P-101 Sensi | NEXT · direction gate |
 | 9 | Sheet Cinema II | P-102 NeuroSpace + plate spec + P-104 retrofit | plate spec |
-| 10 | Plate Foundry I | P-103 Huddle, P-105 Lungs (video), P-106 lEgoarCh, P-107 podcast | copy sign-off |
 | 11 | Thought Notes | 10 words-only notes at /thoughts/:id, T-series decision | 10 notes |
 | 12 | Landing I: The Surface | llm-council gate; embeddable network, poster pipeline, fallback matrix, touch pass, two-pass layout | council verdict |
 | 13 | Landing II: The Mind is the Landing | Hero composition, depth-level spec, proof pair, capped roll, one reviewable Home swap | hero on phone |
-| 14 | Plate Foundry II | P-108 SOMA, P-109 Ring 4000, P-110 Cappelletti, P-111 XR | copy sign-off |
+| 10 | Plate Foundry I | P-103 Huddle, P-105 Lungs (video), P-106 lEgoarCh, P-107 podcast | copy sign-off |
+| 14 | Plate Foundry II | P-108 SOMA, P-109 Ring 4000, P-110 Cappelletti, P-111 XR (+ ML addendum when assets land) | copy sign-off |
 | 15 | The Career Commit Graph | CV rethink, registry/cv.ts unification, never-stale ATS-safe PDF | axis design |
 | 16 | Persona + The Postcard | About/NOW/shelf + OG cards + per-route share meta + favicon | headshot, copy |
 | 17 | The Hardening Audit | /code-review high, a11y, perf vs budgets, cross-browser | no |
@@ -101,6 +104,14 @@ Sessions 5-6 are design/mechanical and consume none of it, so it slots before 5
 without resequencing. Its dossier feeds 7 (which extends, not rebuilds, the claims
 inventory), 8-14 (sheet copy), 15 (CV), 16 (LinkedIn-adjacent share layer), and 13
 as a read-only 10-second-scan checklist.
+LANDING-FIRST REORDER (Emilie, 2026-07-08): with the award post + LinkedIn pastes
+about to drive her traffic peak, the landing jumps the plate foundries: execution
+order is 8, 9, 11, 12, 13, then 10, 14. Every network word still resolves at
+landing launch (flagship sheets by 9, thought notes by 11, honest mini-sheets for
+the rest); the foundry sheets follow behind the new front door. Session numbers
+stay stable; only the order changed. Rolling sign-off batches: each Emilie-present
+sitting may close a short batch from the accumulated draft-flag ledger so Session
+18 shrinks; the director tracks the ledger and injects batches into kickoff prompts.
 
 ---
 

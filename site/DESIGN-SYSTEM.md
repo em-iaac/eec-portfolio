@@ -50,6 +50,14 @@ Awards render as mono text in INK with medium weight (status is a category; redl
 ### MiniSheet
 The enriched IN PREPARATION placeholder (Session 5): rendered by SheetRoute for any in-prep sheet, inside the SheetLayout frame (no new furniture). Carries the dashed ink IN PREPARATION stamp, lens+course+award meta row, the project blurb, a draftCopy "still on the drawing board" line, the figures already in the pipeline (develop-once; shared-slug folders like `professional` show only the entry's own figure), tag chips, every working external link, an `/explore/:id` deep link, and BACK TO THE NOTEBOOK. Governance: mono <= 0.875rem, LensTick never without its label. Retires per project as its full sheet issues (Sessions 8-14).
 
+### CinemaPlate (Session 8)
+A cinema plate is a FIGURE, not new furniture (rule 6): a full-width figure or video block inside an ISSUED sheet's main column that pins (native `position: sticky` only) while scroll develops it. Props: `media` (image or video manifest ref), `caption` (SheetFigure mono grammar), `note?` (ONE riding margin note in handwriting; it counts toward rule 8's five-per-sheet cap TOGETHER with the MarginNotes aside), `height?` (160/180/200 svh, default 180), `bleed?` (lg only: the plate extends under the aside track; authoring rule: bleed plates sit below the aside's vertical extent, which holds by construction because riding notes live inside the plate), `flow?` (no pin on any breakpoint; the develop still scrubs with viewport traversal). Cinematic mode drives `--p` (raw progress) and `--dev` (ratcheted develop) through the shared scrub manager; static mode (reduced motion, save-data, low-power) renders the SheetFigure pattern with the standing one-shot develop, final states, no listeners. Sanctioned by motion unlock (a) and the Sheet cinema addendum below; illegal anywhere outside an issued sheet's plates.
+
+**Authoring rules (Session 8 critique, binding for Sessions 9-14):** a pin must EARN ITS HOLD: pin only plates whose media rewards staring; demote the rest to `flow`. The pin is a desktop dramaturgy: below lg every plate flows unpinned with the traversal scrub and full-bleed media (a wide capture pinned in a phone-height stage reads as a stamp floating in empty mylar). Caption and riding-note opacity ride the ratcheted develop, never raw progress, so read content never fades back out on an upward scroll.
+
+### SheetVideo (Session 8)
+Self-hosted video figure reading `src/data/videos.json` (emitted by `scripts/optimize-videos.mjs`: H.264 mp4 + webp poster ladder; the sources array keeps a webm slot open, mp4-only shipped by Emilie's call 2026-07-08). Native `controls` ALWAYS (WCAG 2.2.2), `playsInline`, poster attr, mono caption in SheetFigure grammar, layout reserved from the manifest aspect. Without reduced motion: silent clips run as muted loops whose play/pause follows viewport visibility; `preload="metadata"` (`none` under save-data). Under reduced motion: poster + controls, no autoplay, no loop. Sound NEVER autoplays. Silent captures say so in the caption. Works standalone in the prose flow or as CinemaPlate media (video is never filter-scrubbed; develop applies to stills only).
+
 ### Footer
 Title-block lockup (mark + name + role), contact links (email, LinkedIn, GitHub), sheet number cell, tiny "issued from Barcelona/Beirut" line omitted: location stays honest and unlisted.
 
@@ -74,7 +82,7 @@ Marks are ink except the sheet `#`. Each mark pairs an aria-hidden glyph with an
 
 Every ceremony is one-shot, 150-900ms, element-level (never a root-level filter), and renders its final state under `prefers-reduced-motion` (governance rule 7). Timings live in `src/index.css`.
 
-**The develop rule (standing, Session 5).** An image develops grayscale to color once, <= 500ms, the first time it enters the viewport, on ALL devices (the ceremony is FOR phones, where there is no hover). `useDevelopOnce` (IntersectionObserver) fires once per image identity; the developed state persists across route returns within a visit (a fresh load restarts the visit). Hover-colorize is retired: once developed, the image stays in color. Reduced motion = full color immediately. Wired through Img's `develop` prop.
+**The develop rule (standing, Session 5).** An image develops grayscale to color once, <= 500ms, the first time it enters the viewport, on ALL devices (the ceremony is FOR phones, where there is no hover). `useDevelopOnce` (IntersectionObserver) fires once per image identity; the developed state persists across route returns within a visit (a fresh load restarts the visit). Hover-colorize is retired: once developed, the image stays in color. Reduced motion = full color immediately. Wired through Img's `develop` prop. *Plate variant (Session 8, motion unlock a):* inside a cinema plate the develop is scroll-scrubbed instead of time-driven; it RATCHETS (scroll can only advance it, never regress it below its high-water mark) and a fully developed plate persists for the visit exactly like the one-shot develop. Everywhere outside plates, the one-shot rule stands unchanged.
 
 **The five-motion bundle (Session 5).**
 1. EXPLORE InfoCard entrance: fade + 8px rise, ~280ms, keyed per focused node so switching words replays it (`.infocard-enter`).
@@ -84,6 +92,20 @@ Every ceremony is one-shot, 150-900ms, element-level (never a root-level filter)
 5. Kicker leader-line draw-in: the SVG line inks in, then the dot and arrowhead arrive, one-shot, sequenced after the header rule via `--kicker-delay` (`.kicker-draw`; Home only, ~950ms).
 
 **Prior ceremonies (unchanged):** header rule draw-in (<= 900ms, once per session), RevisionWord ellipse (one flourish per page max), the READ<->EXPLORE mode toggle (carbon/mylar flood over MODE_FADE_MS/MODE_NAVIGATE_MS), and the root "next sheet" view transition (lift + settle, 400ms).
+
+## Sheet cinema (Session 8 addendum · signed 2026-07-08)
+
+**Scope.** Scroll-driven motion is legal INSIDE sheet plates only, nowhere else. A plate is a full-width figure or video block inside an ISSUED sheet's main column. Sheet chrome (header, title block, meta rows, footer), running prose, cards, the Notebook, EXPLORE, Home, About, CV: none of it may be scroll-linked, ever. New motion outside this scope remains an explicit Emilie decision, never a silent add.
+
+**Framing.** Cinematic pacing reads as leafing through Em's notebook. Plates are notebook pages: the pin is the moment a page holds your attention; the develop is the print developing while you look at it; margin notes ride along like handwriting in the gutter; the instructive fail is filed as method with the same care as the wins. A cinematic sheet must never read as a product page: no feature grids, no marketing bands, no CTA blocks, no autoplaying sound, no numbers set as hero type.
+
+**Motion grammar.** Inside a plate, motion is position-driven, not time-driven: scroll position maps to element-level transform / opacity / filter only (rule 7's element-level clause binds here; root-level effects stay illegal). Pinning uses native `position: sticky` only. The scrubbed develop RATCHETS: scroll can only develop a plate further, never back below its high-water mark, and a fully developed plate stays developed for the visit (develop-once persistence extends to scrubbed develops). Captions and margin notes may ride with progress; handwriting stays inside rule 8's caps.
+
+**Fallback.** Reduced-motion, save-data, and low-power devices get the static sheet: no pinning, no scroll linkage; plates render as plain figures with at most the standing one-shot develop, final states always. The static sheet is a first-class design, not a degraded one: every plate must read complete without motion.
+
+**Perf bar.** Scrolling a cinematic sheet holds >= 30fps at 4x CPU throttle on a mid-range mobile profile. A plate that cannot hold the bar loses its motion, not the sheet its content.
+
+**A11y floor.** No pinned section may trap keyboard scrolling: the document scrolls natively at all times (no wheel, touch, or key interception, no JS scroll-jacking, no forced snap points). All content is reachable and readable without JS. Videos never autoplay with sound; a muted loop runs only where reduced motion allows it, and controls are always present.
 
 ## Do / Don't
 - Do put every number in mono. Don't set mono above 0.875rem.

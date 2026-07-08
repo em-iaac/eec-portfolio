@@ -10,30 +10,31 @@
 // it, the other renders in color on its next mount.
 //
 // Reduced motion: full color immediately, no observer, final state (rule 7).
+// The developed Set lives in lib/develop.ts since Session 8, shared with the
+// scroll-scrubbed plate develop (same identity keys, same persistence).
 import { useEffect, useRef, useState } from 'react'
 import usePrefersReducedMotion from './usePrefersReducedMotion'
-
-const developed = new Set<string>()
+import { hasDeveloped, markDeveloped } from '../lib/develop'
 
 export default function useDevelopOnce(key: string, enabled = true) {
   const prm = usePrefersReducedMotion()
   const ref = useRef<HTMLImageElement | null>(null)
-  const [isDeveloped, setIsDeveloped] = useState(() => prm || developed.has(key))
+  const [isDeveloped, setIsDeveloped] = useState(() => prm || hasDeveloped(key))
 
   useEffect(() => {
     // Disabled callers never touch the shared set (so they can't suppress the
     // ceremony for a develop-enabled instance sharing the same key).
     if (!enabled) return
     // Reduced motion or already-developed (route return): color, no ceremony.
-    if (prm || developed.has(key)) {
-      developed.add(key)
+    if (prm || hasDeveloped(key)) {
+      markDeveloped(key)
       setIsDeveloped(true)
       return
     }
     const el = ref.current
     // No element or no observer support: skip straight to the final state.
     if (!el || typeof IntersectionObserver === 'undefined') {
-      developed.add(key)
+      markDeveloped(key)
       setIsDeveloped(true)
       return
     }
@@ -41,7 +42,7 @@ export default function useDevelopOnce(key: string, enabled = true) {
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            developed.add(key)
+            markDeveloped(key)
             setIsDeveloped(true)
             io.disconnect()
             return
