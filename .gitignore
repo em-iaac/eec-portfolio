@@ -1,3 +1,7 @@
+# Local calibration notes: working material, not repo content.
+# LOCAL-ONLY per the Session 4.2 director ruling: never commit, never push.
+content/RECRUITER-CALIBRATION.md
+
 # Raw asset staging — never publish to GitHub Pages
 incoming/
 

@@ -66,7 +66,9 @@ export const EXPERIENCE = [
 ]
 
 export const AWARDS = [
-  { year: '2026', text: 'MaCAD Awards, Design Copilots category winner: Sensi (the only trophy of the cohort)' },
+  // Superlative retired Session 7 (dossier AWD-02: true per Emilie but not
+  // documentable; neutral phrasing carries the claim).
+  { year: '2026', text: 'MaCAD Awards, Design Copilots category winner: Sensi' },
   { year: '2026', text: 'Jury award, AIA Generative AI: lEgoarCh' },
   { year: '2026', text: 'Studio award, BIMSC Studio: The Lungs' },
   { year: '2025', text: 'Studio award, ACESD Studio: The Huddle' },

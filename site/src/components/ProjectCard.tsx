@@ -57,6 +57,11 @@ export default function ProjectCard({ project, priority = false }: { project: Pr
         </h3>
         <p className="mb-3 max-w-[62ch] flex-1 font-serif text-[15px] leading-relaxed text-ink">{project.blurb}</p>
         <div className="mb-3 font-mono text-[9px] tracking-[0.04em] text-anno">{project.tech}</div>
+        {/* The card's one defensible number (Session 7): evidence is status,
+            not interaction, so it stays anno ink like the tech row. */}
+        {project.stat && (
+          <div className="mb-3 -mt-1.5 font-mono text-[9px] tracking-[0.06em] text-anno">{project.stat}</div>
+        )}
         {project.links.length > 0 && (
           <div className="flex flex-wrap gap-4">
             {project.links.map(l => (

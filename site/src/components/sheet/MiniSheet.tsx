@@ -92,6 +92,13 @@ export default function MiniSheet({ entry }: { entry: RegistryEntry }) {
               <span className="font-medium text-ink">{p.award}</span>
             </>
           )}
+          {p?.stat && (
+            <>
+              <span aria-hidden="true">·</span>
+              {/* The one defensible number (Session 7): status, anno ink. */}
+              <span>{p.stat}</span>
+            </>
+          )}
         </div>
       )}
 

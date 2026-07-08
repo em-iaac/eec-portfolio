@@ -2,6 +2,8 @@
 // design of record (Site P-104.dc.html). The n.b. notes and margin notes
 // are DRAFTS in Emilie's voice, pending her sign-off (memo QUESTION item).
 // The epic fail (Fig. 2) is filed as method, on purpose.
+// Session 7 (2026-07-07, approved live): course code retired from metaLeft;
+// metaRight joke reworked to one beat (SIGNED: EVENTUALLY, her pick).
 import SheetLayout, { SheetLabel } from '../components/sheet/SheetLayout'
 import NBDot from '../components/sheet/NBDot'
 import MarginNotes from '../components/sheet/MarginNotes'
@@ -15,8 +17,8 @@ export default function P104() {
       sheetNo="P-104"
       title="Pneumatic parasitism: packing a settled balloon roof into a historic steel frame"
       navLabel="EMILIE EL CHIDIAC · WORK / A BALLOONING MARKET · SHEET P-104"
-      metaLeft="EL CHIDIAC, E. · COMPLEX FORMING · P-104"
-      metaRight="RECEIVED: LATE, ACCEPTED: EVENTUALLY"
+      metaLeft="EL CHIDIAC, E. · MACAD · P-104"
+      metaRight="SIGNED: EVENTUALLY"
       footerLeft="GRASSHOPPER · KANGAROO · DENDRO · D5"
       footerRight="P-104 · 1 OF 1"
       aside={
