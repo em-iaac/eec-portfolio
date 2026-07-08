@@ -67,9 +67,9 @@ const sheet = (number: string, status: SheetStatus): SheetRef => ({
 
 export const ENTRIES: RegistryEntry[] = [
   // ---- Sheet issues (the lab log's publication events) -------------------
-  // P-101 sits ABOVE P-104 on purpose: the collapse rule preserves ENTRIES
-  // order for same-month issues, so this renders "SHEETS P-101, P-104
-  // ISSUED >" in numeric order.
+  // These sit in NUMERIC order on purpose: the collapse rule preserves
+  // ENTRIES order for same-month issues, so this renders "SHEETS P-101,
+  // P-102, P-104 ISSUED >" in numeric order (all three issued 2026-07).
   {
     id: 'p101-issued',
     kind: 'sheet',
@@ -80,6 +80,17 @@ export const ENTRIES: RegistryEntry[] = [
     sheet: sheet('P-101', 'issued'),
     project: 'sensi',
     draftCopy: true, // the P-101 sheet's copy is drafts pending sign-off
+  },
+  {
+    id: 'p102-issued',
+    kind: 'sheet',
+    date: '2026-07',
+    title: 'NeuroSpace',
+    lens: 'computation',
+    tags: ['neuro', 'geometry', 'simulation', 'data', 'web'],
+    sheet: sheet('P-102', 'issued'),
+    project: 'neurospace',
+    draftCopy: true, // the P-102 sheet's copy is drafts pending sign-off
   },
   {
     id: 'p104-issued',
@@ -113,7 +124,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'NeuroSpace',
     lens: 'computation',
     tags: ['neuro', 'geometry', 'simulation', 'data', 'web'],
-    sheet: sheet('P-102', 'in-preparation'),
+    sheet: sheet('P-102', 'issued'),
     project: 'neurospace',
     image: { slug: 'neurospace', name: 'landing', alt: 'NeuroSpace landing page with parametric room and live scores' },
     explore: { label: 'NEUROSPACE', nodeKind: 'project', order: 1 },

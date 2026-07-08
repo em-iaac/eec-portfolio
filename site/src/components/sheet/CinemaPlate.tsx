@@ -22,6 +22,16 @@
 // drops the pin): a wide capture pinned in a phone-height stage reads as a
 // stamp floating in empty mylar, so phones read the develop as they scroll
 // past instead (the manager switches to traversal geometry automatically).
+//
+// THE PLATE SPEC (Session 9; the foundry default, DESIGN-SYSTEM.md): `still`
+// forces the full-bleed ONE-SHOT plate on every device: develop-once (the
+// standing ceremony, never scrubbed), no pin, no scroll listener. It is the
+// lighter default for the eight foundry sheets (P-103, P-105..P-111) + the
+// P-104 retrofit; the scrubbed/pinned cinema above stays reserved for the
+// two flagships (P-101, P-102) where motion carries. `still` full-bleeds the
+// media the same way the cinematic branch does; a cinematic plate's PRM/
+// low-power fallback stays contained (it is a degraded flagship, not a plate
+// spec plate).
 import { useRef, type CSSProperties } from 'react'
 import Img, { findImage } from '../Img'
 import SheetVideo, { findVideo } from './SheetVideo'
@@ -46,6 +56,7 @@ export default function CinemaPlate({
   height = 180,
   bleed = false,
   flow = false,
+  still = false,
 }: {
   media: PlateMedia
   caption: string
@@ -53,8 +64,12 @@ export default function CinemaPlate({
   height?: 160 | 180 | 200
   bleed?: boolean
   flow?: boolean
+  still?: boolean
 }) {
   const cinematic = useCinematicMode()
+  // The plate spec opts out of the scrub entirely: `still` is static on every
+  // device, so a cinematic-capable phone still gets the one-shot develop.
+  const scrub = cinematic && !still
   const ref = useRef<HTMLElement | null>(null)
   const isImage = media.kind === 'image'
   const key = `${media.slug}/${media.name}`
@@ -74,7 +89,7 @@ export default function CinemaPlate({
         if (d >= 1 && isImage) markDeveloped(key)
       }
     },
-    cinematic,
+    scrub,
   )
 
   const entry = isImage
@@ -91,7 +106,7 @@ export default function CinemaPlate({
       name={media.name}
       alt={media.alt}
       sizes="(max-width: 700px) 100vw, 900px"
-      develop={!cinematic}
+      develop={!scrub}
       style={media.position ? { objectPosition: media.position } : undefined}
       className="block h-full w-full object-cover"
     />
@@ -107,7 +122,7 @@ export default function CinemaPlate({
   const noteEl = note ? (
     <span
       role="note"
-      className={`${cinematic ? 'plate-note ' : ''}mt-2.5 ml-auto block max-w-[250px] font-hand text-lg leading-[1.3] text-anno`}
+      className={`${scrub ? 'plate-note ' : ''}mt-2.5 ml-auto block max-w-[250px] font-hand text-lg leading-[1.3] text-anno`}
     >
       <span className="text-redline">n.b.</span> {note}
     </span>
@@ -115,13 +130,17 @@ export default function CinemaPlate({
 
   const bleedCls = bleed ? ' lg:mr-[calc(-235px-2.25rem)]' : ''
 
-  if (!cinematic) {
+  // Static render: the plate spec (`still`) and every cinematic plate's PRM/
+  // low-power fallback. `still` full-bleeds the media to the screen edges
+  // below lg (the print IS the page on a phone); the flagship fallback stays
+  // contained inside the paper margin.
+  if (!scrub) {
+    const staticMediaCls = still
+      ? '-mx-5 overflow-hidden border border-ink/35 sm:-mx-12 lg:mx-0'
+      : 'overflow-hidden border border-ink/35'
     return (
       <figure className={`m-0 mb-[26px]${bleedCls}`}>
-        <div
-          className="overflow-hidden border border-ink/35"
-          style={{ aspectRatio: entry.aspect }}
-        >
+        <div className={staticMediaCls} style={{ aspectRatio: entry.aspect }}>
           {mediaEl}
         </div>
         <figcaption className={CAPTION_CLS}>{caption}</figcaption>

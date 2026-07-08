@@ -4,10 +4,15 @@
 // The epic fail (Fig. 2) is filed as method, on purpose.
 // Session 7 (2026-07-07, approved live): course code retired from metaLeft;
 // metaRight joke reworked to one beat (SIGNED: EVENTUALLY, her pick).
+// Session 9 (2026-07-08, Emilie's ruling): RETROFIT to the plate spec. The
+// 2-col SheetFigure grid becomes four full-bleed one-shot plates
+// (<CinemaPlate still>): LAYOUT ONLY, every caption and note verbatim. The
+// instructive fail (Fig. 2) gets its full-bleed moment. P-104 is now the
+// first exemplar of the foundry default (DESIGN-SYSTEM.md, the plate spec).
 import SheetLayout, { SheetLabel } from '../components/sheet/SheetLayout'
 import NBDot from '../components/sheet/NBDot'
 import MarginNotes from '../components/sheet/MarginNotes'
-import SheetFigure from '../components/sheet/SheetFigure'
+import CinemaPlate from '../components/sheet/CinemaPlate'
 
 const PROSE = 'font-serif text-[15.5px] leading-[1.65] max-w-[62ch]'
 
@@ -67,32 +72,46 @@ export default function P104() {
 solver.settle(goals)`}
       </pre>
 
-      <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2">
-        <SheetFigure
-          slug="ballooning-market"
-          name="render-1"
-          alt="Settled balloon cluster in the steel frame"
-          caption="FIG. 1 SETTLED CLUSTER, D5"
-        />
-        <SheetFigure
-          slug="ballooning-market"
-          name="epic-fails"
-          alt="Balloons ghosting through each other in the first run"
-          caption="FIG. 2 THE INSTRUCTIVE FAIL"
-        />
-        <SheetFigure
-          slug="ballooning-market"
-          name="process"
-          alt="Kangaroo negotiation process"
-          caption="FIG. 3 NEGOTIATION, ANIMATED"
-        />
-        <SheetFigure
-          slug="ballooning-market"
-          name="render-3"
-          alt="Membrane detail with daylight"
-          caption="FIG. 4 MEMBRANE + DAYLIGHT"
-        />
-      </div>
+      <CinemaPlate
+        still
+        media={{
+          kind: 'image',
+          slug: 'ballooning-market',
+          name: 'render-1',
+          alt: 'Settled balloon cluster in the steel frame',
+        }}
+        caption="FIG. 1 SETTLED CLUSTER, D5"
+      />
+      <CinemaPlate
+        still
+        media={{
+          kind: 'image',
+          slug: 'ballooning-market',
+          name: 'epic-fails',
+          alt: 'Balloons ghosting through each other in the first run',
+        }}
+        caption="FIG. 2 THE INSTRUCTIVE FAIL"
+      />
+      <CinemaPlate
+        still
+        media={{
+          kind: 'image',
+          slug: 'ballooning-market',
+          name: 'process',
+          alt: 'Kangaroo negotiation process',
+        }}
+        caption="FIG. 3 NEGOTIATION, ANIMATED"
+      />
+      <CinemaPlate
+        still
+        media={{
+          kind: 'image',
+          slug: 'ballooning-market',
+          name: 'render-3',
+          alt: 'Membrane detail with daylight',
+        }}
+        caption="FIG. 4 MEMBRANE + DAYLIGHT"
+      />
     </SheetLayout>
   )
 }
