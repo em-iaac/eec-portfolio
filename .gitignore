@@ -2,6 +2,9 @@
 # LOCAL-ONLY per the Session 4.2 director ruling: never commit, never push.
 content/RECRUITER-CALIBRATION.md
 
+# Local-only working files (Session 7.5 ruling): never commit, never push.
+content/*.local.*
+
 # Raw asset staging — never publish to GitHub Pages
 incoming/
 

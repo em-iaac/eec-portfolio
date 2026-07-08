@@ -47,6 +47,12 @@ via Actions.
   ever. '{' appears only inside LISTING code blocks, never in running prose.
   Everything drafted in her voice is flagged `draftCopy: true` until she signs off;
   unconfirmed months stay `dateDraft: true`.
+- Attribution rule (Session 7, binding for 8-14): NO labeled attribution line
+  anywhere, ever. The approved wordings live as `myPart` data (projects.tsx +
+  the dossier's MYPART- series) and are woven into sheet prose as ordinary
+  sentences, in the modest shared-credit register Emilie chose. The dossier's
+  live-rulings block binds all sheet copy; its anti-claims (e.g. lEgoarCh's
+  "93% supported" describes the instructive failure) are never mined as results.
 - Definition of done, always: `npm run build` green (includes validator + snapshot
   test from Session 4 on); preview-verified (console clean, mobile viewport,
   reduced motion); NO git commit/push (Emilie commits manually); end with
@@ -66,6 +72,7 @@ professionally fine meanwhile.
 | 5 | The Develop Pass | Develop ceremony + motion bundle + living placeholders | phone check |
 | 6 | The Notebook Field Guide | Log markers, collapse rule, row hierarchy, de-numbered nav | glyph set |
 | 7 | Attribution Day | Credits, claims, numbers, repo mirror + LINKEDIN.md | yes, fully |
+| 7.5 | The History Audit | Public repo's entire history + surfaces leak nothing; prevention guards | rulings + force-push |
 | 8 | Sheet Cinema I | Scroll-cinema governance addendum + template proven on P-101 Sensi | direction gate |
 | 9 | Sheet Cinema II | P-102 NeuroSpace + plate spec + P-104 retrofit | plate spec |
 | 10 | Plate Foundry I | P-103 Huddle, P-105 Lungs (video), P-106 lEgoarCh, P-107 podcast | copy sign-off |
@@ -79,8 +86,8 @@ professionally fine meanwhile.
 | 18 | The Sweep | Every dateDraft/draftCopy retired; the notebook is signed | yes, fully |
 
 Sequencing logic, recorded so future edits respect it: Attribution (7) precedes
-sheet mass-production so MY PART lines and quantified outcomes flow into all 11
-sheets once. The cinematic template is proven on ONE flagship (8) behind an
+sheet mass-production so attribution wordings and quantified outcomes flow into
+all 11 sheets once. The cinematic template is proven on ONE flagship (8) behind an
 explicit gate before it spreads (9) and derives the plate spec for the foundries
 (10, 14). The landing (12-13) waits until every tappable word resolves to a real
 page: placeholders by 5, flagships by 9, thought notes by 11. The two-pass append
@@ -350,6 +357,36 @@ paste into git, (2) the changed/created file list, (3) everything needing my
 sign-off.
 ```
 
+## Session 7.5 · The History Audit (solo, before Session 8)
+
+*(Inserted 2026-07-08 at the Session 7 return: forward cleanups cannot reach
+already-pushed history; a one-time full-history hygiene pass lands before
+LINKEDIN.md's featured links start sending recruiters to the repo.)*
+
+**Goal:** The public repo's ENTIRE surface (every commit, blob, deployed page,
+workflow artifact, and any orphaned public remnant such as the old em-iaac
+repo/host) leaks no PII or credentials.
+
+**Scope:** (a) Automated sweep of full pushed history (gitleaks/trufflehog plus
+a targeted PII term list built live with Emilie and NEVER committed). (b)
+Findings walked in AskUserQuestion batches: accept / edit-forward / rewrite,
+per item. (c) Approved rewrite via git filter-repo + force-push with lease
+(Emilie runs or authorizes the push live; note filter-repo drops the origin
+remote, restore it); then GitHub hygiene: fork check, GitHub Support cached-view
+purge request or temporary private toggle, old em-iaac repo/host verification
+(gh CLI is authenticated), Actions artifact retention check, fresh-clone
+re-verification of every scrubbed term. (d) Prevention: local pre-push hook +
+CI guard whose term list stays OUT of the repo (a committed leak-list is itself
+the leak; a repo secret or local-only file can carry it).
+
+**Known findings to seed:** maintained in the local-only audit note, never in
+this file.
+
+**Sign-offs:** the term list; per-finding rulings; the force-push itself, live.
+
+**Draft kickoff prompt:** issued at dispatch (this session runs against live
+git history; the prompt is calibrated to the repo state on the day it runs).
+
 ## Session 8 · Sheet Cinema I: the template + P-101 Sensi
 
 **Goal:** The scroll-cinema system exists, governed in writing as leafing through
@@ -363,7 +400,8 @@ system (pinned plate sections, scroll-driven develops, margin notes riding
 along), the SheetVideo component (self-hosted mp4/webm, poster, controls, muted
 loop only where reduced motion allows, mono caption), and P-101 Sensi at full
 depth: abstract, method, real LISTING from the repo, 4-8 plates, video where
-motion carries, MY PART line from Session 7, n.b. dots + margin notes (drafts).
+motion carries, attribution woven into the prose per the Session 7 rule (myPart
+data; no labeled line), n.b. dots + margin notes (drafts).
 Registry flips P-101 to issued + dated issue entry. END GATE: Emilie reviews the
 result and explicitly approves the direction; her verdict binds Sessions 9-14.
 
@@ -379,8 +417,8 @@ site/DESIGN-SYSTEM.md, site/src/sheets/P104.tsx and the sheet components,
 content/blog-catalog.json for Sensi source material. Step one, before code:
 draft the scroll-cinema governance addendum and get my sign-off via
 AskUserQuestion. Then build the cinematic sheet system + SheetVideo + the full
-P-101 Sensi sheet (copy in my voice, draftCopy; MY PART from Session 7; real
-code listing). The whole thing must read as leafing through my notebook, never a
+P-101 Sensi sheet (copy in my voice, draftCopy; attribution woven into prose
+per the Session 7 rule, never a labeled line; real code listing). The whole thing must read as leafing through my notebook, never a
 product page. Verify with preview tools: console, mobile, the FULL
 reduced-motion walk proving static plates, and scroll performance on a throttled
 profile. Use design:design-critique on the finished sheet, /llm-council if the
@@ -430,7 +468,8 @@ screen-capture video is the primary proof; the Railway link demotes to TRY IT
 with an honest cold-start note. P-106 lEgoarCh: max 8 figures from the 45-file
 booklet; resist the gallery urge. P-107 podcast: audio-first variant: Spotify
 embed/link + pull-quotes from the Cleo Valentine conversation (the BIM origin
-story) instead of METHOD/LISTING. MY PART lines throughout (from Session 7).
+story) instead of METHOD/LISTING. Attribution woven into prose throughout per
+the Session 7 rule (myPart data; no labeled lines).
 Registry flips x4; the Notebook collapse rule earns its keep.
 
 **Sign-offs:** four sheets' copy.
@@ -445,7 +484,8 @@ content/blog-catalog.json. Write plate sheets for P-103 The Huddle, P-105 The
 Lungs (self-hosted demo video primary, Railway demoted to TRY IT with an honest
 note), P-106 lEgoarCh (max 8 figures), and P-107 Optimizing for the Mind
 (audio-first: pull-quotes + Spotify, no METHOD/LISTING). Copy in my voice,
-draftCopy, MY PART lines included. Flip the four registry statuses + dated issue
+draftCopy, attribution woven into prose per the Session 7 rule (no labeled
+lines). Flip the four registry statuses + dated issue
 entries; verify the same-month collapse renders correctly. Preview-verify
 (console, mobile, PRM) and /code-review. Do NOT run any git write commands; end
 your final message with (1) a proposed commit summary I can paste into git,
@@ -578,7 +618,8 @@ commit summary I can paste into git, (2) the changed/created file list,
 
 **Scope:** P-108 Towers at SOMA and P-109 Ring 4000 (practice lock: SOMA +
 Marsception professional reframing only), P-110 Cappelletti, P-111 XR (text-plate
-if assets are thin). Plate spec, MY PART lines, registry flips x4. After this
+if assets are thin). Plate spec, attribution woven per the Session 7 rule,
+registry flips x4. After this
 session no MiniSheet renders anywhere (they remain as the pattern for FUTURE
 projects).
 

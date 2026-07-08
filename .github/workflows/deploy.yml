@@ -19,6 +19,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # PII guard (Session 7.5): the term list lives ONLY in the PII_TERMS
+      # repo secret (one case-insensitive extended regex per line), never in
+      # the repo. On a hit it prints matching file PATHS only, never content.
+      - name: PII guard
+        env:
+          PII_TERMS: ${{ secrets.PII_TERMS }}
+        run: |
+          if [ -z "$PII_TERMS" ]; then
+            echo "PII guard: PII_TERMS secret is unset; failing closed." >&2
+            exit 1
+          fi
+          printf '%s\n' "$PII_TERMS" > "$RUNNER_TEMP/pii-terms.txt"
+          if grep -rIliE -f "$RUNNER_TEMP/pii-terms.txt" . --exclude-dir=.git; then
+            echo "::error::PII guard: a listed term appears in the files above."
+            exit 1
+          fi
+          echo "PII guard clean."
       - uses: actions/setup-node@v4
         with:
           node-version: 22
