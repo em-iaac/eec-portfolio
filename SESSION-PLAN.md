@@ -65,6 +65,21 @@ LinkedIn re-edit + OG/PDF URL refresh; that cost is accepted.
 
 ## Overview table
 
+**PLAN SUSPENDED 2026-07-08 (Emilie's directive, post-Session 13):** the unshipped
+sessions below (10, 14-18) are SCRATCHED as scheduled. A design-first phase takes
+over: **THE REDESIGN STUDIO** session reviews the whole site A to Z (flow, the
+gallery question, per-project template consistency, chrome grammar), explores the
+commit-graph incorporation (Emilie likes the LITERAL graph; candidates: CV toggle
+view, the Notebook's form itself, or another home), designs the A4-portrait CV +
+the A4-landscape portfolio book (DECIDED: curated ~6 spreads + full index + CV
+tail, build-time print-route pipeline, never stale), through four lenses
+(long-term, recruiter, design craft, concept/brand), with inspiration research,
+quizzes, and in-chat visual options BEFORE any implementation. Its deliverable is
+REDESIGN-SPEC.md + a new implementation session plan that replaces the scratched
+tail. Content of the scratched sessions (foundry sheets, thought-note assets,
+About/NOW/shelf, share layer, hardening, sweep) survives as INPUT to that plan,
+not as scheduled work. Design first; assets, facts, and words after.
+
 Session numbers are STABLE identifiers; the table below is in EXECUTION ORDER
 (landing-first reorder, Emilie 2026-07-08). Shipped sessions listed first.
 
