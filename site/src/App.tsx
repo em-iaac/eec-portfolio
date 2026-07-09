@@ -6,20 +6,15 @@ import About from './pages/About'
 import CV from './pages/CV'
 import SheetRoute from './pages/SheetRoute'
 
-// Thought-note leaves (Session 11): split out of the landing chunk; the note
-// prose only loads when someone opens /thoughts/:id.
+// Split out of the landing chunk so the perf-budgeted cover stays lean: the
+// gallery (with its overlay + video code) and the note prose only load when
+// someone actually opens /work or /thoughts/:id.
+const Work = lazy(() => import('./pages/Work'))
 const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
 
 // Mylar hold while a lazy READ-mode chunk resolves (matches SheetRoute).
 function MylarScreen() {
   return <div className="min-h-dvh bg-mylar" aria-hidden="true" />
-}
-
-// /work carried the old drawing-set archive; the Notebook replaced it.
-// Preserve lens deep links (#computation etc.) through the redirect.
-function WorkRedirect() {
-  const { hash } = useLocation()
-  return <Navigate to={{ pathname: '/notebook', hash }} replace />
 }
 
 // On PUSH navigation: scroll to top (or hash target) and move focus to the
@@ -30,12 +25,21 @@ function ScrollToTop() {
   const { pathname, hash } = useLocation()
   const navType = useNavigationType()
   const firstMount = useRef(true)
+  const prevPath = useRef(pathname)
   useEffect(() => {
+    const prev = prevPath.current
+    prevPath.current = pathname
     if (firstMount.current) {
       firstMount.current = false
       if (hash) document.getElementById(hash.slice(1))?.scrollIntoView()
       return
     }
+    // The WORK card-on-top is an in-page modal addressed at /work/:id: toggling
+    // it must not scroll the grid or steal focus from the dialog. Skip when the
+    // change stays inside the /work family (entering /work from elsewhere still
+    // resets as normal).
+    const inWork = (p: string) => p === '/work' || p.startsWith('/work/')
+    if (inWork(prev) && inWork(pathname)) return
     if (navType === 'POP') return
     if (hash) {
       document.getElementById(hash.slice(1))?.scrollIntoView()
@@ -76,8 +80,26 @@ export default function App() {
       <PageCount />
       <Routes>
         <Route path="/" element={<Home />} />
+        {/* THE GALLERY (R2). /work/:id opens a card as a preview on top of the
+            grid; a shared card link deep-links straight to it. Old /work#lens
+            deep links now land on the gallery pre-filtered to that lens. */}
+        <Route
+          path="/work"
+          element={
+            <Suspense fallback={<MylarScreen />}>
+              <Work />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/work/:id"
+          element={
+            <Suspense fallback={<MylarScreen />}>
+              <Work />
+            </Suspense>
+          }
+        />
         <Route path="/notebook" element={<Notebook />} />
-        <Route path="/work" element={<WorkRedirect />} />
         <Route path="/about" element={<About />} />
         <Route path="/cv" element={<CV />} />
         <Route path="/sheets/:sheetId" element={<SheetRoute />} />

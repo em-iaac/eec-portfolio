@@ -9,6 +9,7 @@ import { expect, test } from 'vitest'
 import { AWARD_WINNER_IDS, ENTRIES, EXPLORE_NODES } from './registry'
 import { buildMindGraph } from '../landing/mindGraph'
 import { PROJECTS_BY_SLUG } from './projects'
+import { WORK_ENTRIES } from './work'
 import { SHEETS } from '../sheets'
 import { THOUGHT_NOTES } from '../thoughts/notes'
 import images from './images.json'
@@ -78,6 +79,41 @@ test('every explore node has mind-graph geometry (coverage)', () => {
 test('every award refId resolves to a project entry', () => {
   const projectIds = new Set(ENTRIES.filter(e => e.kind === 'project').map(e => e.id))
   const broken = [...AWARD_WINNER_IDS].filter(id => !projectIds.has(id))
+  expect(broken).toEqual([])
+})
+
+// THE WORK RENDITION (Session R2). The gallery + the book index reuse
+// WORK_ENTRIES; these clauses keep that rendition honest, the same way the
+// sheet/note renditions are guarded above (Section 11: every rendition gets a
+// validator clause).
+
+// Coverage: every project entry must render as a card, which requires a dek.
+// A project whose dek is missing is dropped by the selector and caught here
+// (before it ships a gap in the grid).
+test('every project entry renders as a WorkEntry with a dek', () => {
+  const projectEntries = ENTRIES.filter(e => e.kind === 'project')
+  expect(WORK_ENTRIES.length).toBe(projectEntries.length)
+  const missingDek = WORK_ENTRIES.filter(w => !w.dek?.trim()).map(w => w.id)
+  expect(missingDek).toEqual([])
+})
+
+// Recognition never drifts from the record: a card shows a recognition line
+// exactly when the project is an award winner (the star's single source).
+test('a WorkEntry shows a recognition line iff it is an award winner', () => {
+  const broken = WORK_ENTRIES.filter(
+    w => Boolean(w.recognition) !== AWARD_WINNER_IDS.has(w.id),
+  ).map(w => `${w.id}: recognition=${Boolean(w.recognition)} winner=${AWARD_WINNER_IDS.has(w.id)}`)
+  expect(broken).toEqual([])
+})
+
+// The full-page link is offered only where a real page exists (an issued
+// sheet), so OPEN THE FULL PAGE can never dead-end into a placeholder.
+test('a WorkEntry links to a full page iff its sheet is issued', () => {
+  const broken = WORK_ENTRIES.filter(
+    w =>
+      w.hasFullPage !== (w.status === 'issued') ||
+      Boolean(w.fullPageRoute) !== w.hasFullPage,
+  ).map(w => w.id)
   expect(broken).toEqual([])
 })
 

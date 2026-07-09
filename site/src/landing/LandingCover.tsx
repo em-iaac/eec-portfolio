@@ -24,9 +24,9 @@ const VOICE = 'I work with design, technology and minds.'
 const WINK = 'this whole mess is my head. touch a piece of it.'
 
 // Top-page doors. WORK is the emphasized proof path (the recruiter's one clear
-// route into the work); it redirects to the notebook until the R2 gallery ships.
-// THOUGHTS points at the notebook (the running record that lists the notes) until
-// a dedicated /thoughts index ships as its own session.
+// route into the work): it opens the R2 gallery at /work. THOUGHTS points at the
+// notebook (the running record that lists the notes) until a dedicated /thoughts
+// index ships as its own session.
 const DOORS: { label: string; to: string; primary?: boolean }[] = [
   { label: 'WORK', to: '/work', primary: true },
   { label: 'THOUGHTS', to: '/notebook' },

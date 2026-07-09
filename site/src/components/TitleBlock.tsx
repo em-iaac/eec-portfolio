@@ -11,7 +11,11 @@ import { Link, NavLink } from 'react-router-dom'
 import LogoMark from './LogoMark'
 
 // De-numbered Session 6: titles only, no 01/02/03 indices.
-const NAV = [
+// WORK is the emphasised proof path (R2): the same red-pen underline the
+// landing gives its WORK door, so the gallery reads as the primary route into
+// the work from every interior page.
+const NAV: { label: string; to: string; primary?: boolean }[] = [
+  { label: 'WORK', to: '/work', primary: true },
   { label: 'NOTEBOOK', to: '/notebook' },
   { label: 'ABOUT', to: '/about' },
   { label: 'CV', to: '/cv' },
@@ -54,20 +58,31 @@ export default function TitleBlock({ onExplore }: { onExplore?: () => void }) {
           aria-label="Primary"
           className="order-last flex min-w-full flex-1 items-center gap-5 border-t border-ink/20 px-3.5 py-2.5 font-mono text-[10px] tracking-[0.1em] sm:order-none sm:min-w-0 sm:border-t-0"
         >
-          {NAV.map(item => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              viewTransition
-              className={({ isActive }) =>
-                `-m-3 p-3 text-ink no-underline hover:text-redline focus-visible:outline-2 focus-visible:outline-redline ${
-                  isActive ? 'text-redline underline underline-offset-4' : ''
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
+          {NAV.map(item =>
+            item.primary ? (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                viewTransition
+                className="-m-3 p-3 font-semibold text-ink underline decoration-redline decoration-2 underline-offset-4 hover:decoration-[3px] focus-visible:outline-2 focus-visible:outline-redline"
+              >
+                {item.label}
+              </NavLink>
+            ) : (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                viewTransition
+                className={({ isActive }) =>
+                  `-m-3 p-3 text-ink no-underline hover:text-redline focus-visible:outline-2 focus-visible:outline-redline ${
+                    isActive ? 'text-redline underline underline-offset-4' : ''
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ),
+          )}
         </nav>
         <div className="flex w-full items-center px-3.5 pb-2.5 sm:w-auto sm:pb-0">
           <Link

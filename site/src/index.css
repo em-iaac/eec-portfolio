@@ -590,3 +590,73 @@ section[id] {
     animation: none;
   }
 }
+
+/* ============================================================
+   THE WORK CARD-ON-TOP (Session R2). The gallery's preview overlay, built on
+   the native <dialog> element (focus trap, Escape, inert background, focus
+   return all free + correct). Centered card on desktop, bottom sheet on phones.
+   The rise is one-shot and PRM-gated; reduced motion shows the final state with
+   no motion (the honest-fallback floor). Native dialog is display:none until
+   open, so the flex column only needs to apply while [open].
+   ============================================================ */
+.work-dialog {
+  width: 100%;
+  max-width: 44rem;
+  max-height: min(88vh, 60rem);
+  margin: auto;
+  padding: 0;
+  border: 0.5px solid color-mix(in srgb, var(--color-ink) 50%, transparent);
+  background: var(--color-mylar);
+  color: var(--color-ink);
+  overflow: hidden;
+}
+.work-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.work-dialog::backdrop {
+  background: rgba(11, 14, 19, 0.55);
+}
+
+/* Phones: dock to the bottom as a sheet, full width, rounded top only. */
+@media (max-width: 40rem) {
+  .work-dialog {
+    max-width: none;
+    max-height: 90vh;
+    margin: auto auto 0;
+    border-inline: 0;
+    border-block-end: 0;
+    border-start-start-radius: 1rem;
+    border-start-end-radius: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .work-dialog[open] {
+    animation: work-rise 260ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  }
+  .work-dialog[open]::backdrop {
+    animation: work-fade 260ms ease both;
+  }
+  @media (max-width: 40rem) {
+    .work-dialog[open] {
+      animation: work-sheet 300ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+    }
+  }
+}
+@keyframes work-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@keyframes work-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes work-sheet {
+  from {
+    transform: translateY(100%);
+  }
+}
