@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEC — Notebook · Level 3 · The Artwork</title>
+<link rel="stylesheet" href="./pen-table.css">
+<style>
+  /* ---------- page ---------- */
+  body { overflow-x: hidden; }
+  .chrome { position: sticky; top: 0; z-index: 80; }
+  #plotwrap { position: relative; }
+  #graph { display: block; width: 100%; height: auto; }
+  #graph text { user-select: none; pointer-events: none; }
+
+  /* ---------- ink ---------- */
+  .lane { fill: none; stroke: var(--ink); stroke-width: 1.75; stroke-linecap: round; }
+  .branch[data-b="main"] .lane { stroke-width: 2; }
+  .branch.on .lane { stroke-width: 2.5; }
+  .tip { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 2 6; stroke-linecap: round; }
+  .tip.red { stroke: var(--redline); }
+  .opentip { fill: var(--mylar); stroke: var(--redline); stroke-width: 1.75; }
+  .term { fill: var(--redline); }
+
+  /* ---------- lettering ---------- */
+  .el { font-family: var(--mono); font-size: 9px; letter-spacing: .12em; fill: var(--anno); }
+  .el .red, .el.red { fill: var(--redline); }
+  .tt { font-family: var(--mono); font-size: 9px; letter-spacing: .14em; fill: var(--anno); }
+  .tt.ink { fill: var(--ink); font-size: 10px; }
+  .gl { font-family: var(--display); font-size: 48px; font-weight: 700; fill: var(--ink); opacity: .05; letter-spacing: .03em; }
+  .yline { stroke: var(--ink); opacity: .06; stroke-dasharray: 2 6; }
+  .sheetline { fill: none; stroke: var(--ink); opacity: .18; }
+
+  /* ---------- commit dots ---------- */
+  .dot { cursor: pointer; outline: none; }
+  .dot .vis { fill: var(--ink); }
+  .dot .vis.red { fill: var(--redline); }
+  .dot .hit { fill: transparent; stroke: none; pointer-events: all; }
+  .dot:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+  /* ---------- worrydream focus mode ---------- */
+  #graph.dim .branch { opacity: .2; }
+  #graph.dim .dot { opacity: .2; }
+  #graph.dim .branch.on, #graph.dim .dot.on { opacity: 1; }
+  .branch.on .el { fill: var(--ink); }
+  .branch.on .el .red { fill: var(--redline); }
+
+  /* ---------- legend ---------- */
+  .legend { position: fixed; left: 12px; bottom: 10px; z-index: 70; background: var(--mylar);
+    border: 1px solid var(--hairline); padding: 6px 10px; color: var(--anno); }
+  .legend .red { color: var(--redline); }
+
+  /* ---------- field card ---------- */
+  #card { position: fixed; top: 50%; right: 24px; width: 320px; transform: translateY(-50%);
+    background: #fff; border: 1px solid var(--ink); box-shadow: 0 14px 40px rgba(11,14,19,.16);
+    padding: 18px 20px 14px; z-index: 90; opacity: 0; visibility: hidden; }
+  #card.show { opacity: 1; visibility: visible; }
+  .c-top { display: flex; justify-content: space-between; gap: 12px; }
+  #c-date { color: var(--anno); }
+  #c-kind { color: var(--ink); }
+  #c-kind.red { color: var(--redline); }
+  #c-title { font-family: var(--display); font-weight: 600; font-size: 17px; line-height: 1.3;
+    letter-spacing: -.005em; margin: 10px 0 8px; }
+  #c-title.thought { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 18px; }
+  #c-blurb { font-family: var(--serif); font-size: 13.5px; line-height: 1.6; color: var(--ink); }
+  #c-links { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+  #c-links:empty { display: none; margin: 0; }
+  #c-links a { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; }
+  #c-links a:focus-visible { outline: 2px solid var(--redline); outline-offset: 2px; }
+  #c-links .note { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--anno); }
+  .c-foot { display: flex; justify-content: space-between; gap: 12px; margin-top: 14px;
+    padding-top: 10px; border-top: 1px solid rgba(22,24,29,.2); }
+
+  /* ---------- motion (one-shot draw-in + slides), reduced-motion safe ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    #graph .lane { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .9s cubic-bezier(.5,.05,.3,1) forwards; }
+    .branch[data-b="self"]  .lane { animation-delay: .08s; }
+    .branch[data-b="bim"]   .lane { animation-delay: .16s; }
+    .branch[data-b="soma"]  .lane { animation-delay: .22s; }
+    .branch[data-b="dyn"]   .lane { animation-delay: .28s; }
+    .branch[data-b="macad"] .lane { animation-delay: .34s; }
+    #graph .el, #graph .tt, #graph .gl, #graph .yline, #graph .tip,
+    #graph .opentip, #graph .term, #graph .dot { animation: fadein .5s ease .55s backwards; }
+    .branch, .dot { transition: opacity .18s ease; }
+    .lane { transition: stroke-width .15s ease; }
+    .dot .vis { transition: r .16s ease; }
+    #card { transform: translateY(-50%) translateX(18px);
+      transition: opacity .18s ease, transform .22s cubic-bezier(.2,.7,.3,1), visibility 0s linear .22s; }
+    #card.show { transform: translateY(-50%) translateX(0);
+      transition: opacity .18s ease, transform .22s cubic-bezier(.2,.7,.3,1); }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes fadein { from { opacity: 0; } }
+  }
+
+  /* ---------- small screens: just don't break ---------- */
+  @media (max-width: 900px) {
+    #plotwrap { overflow-x: auto; }
+    #graph { min-width: 980px; }
+    .chrome { flex-wrap: wrap; gap: 10px 16px; }
+    #card, #card.show { top: auto; bottom: 56px; left: 12px; right: 12px; width: auto; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="chrome"><div class="mark">EEC</div><div><div style="font-weight:600;font-size:12px;letter-spacing:.1em;">EMILIE EL CHIDIAC</div><div class="mono-s anno">DESIGN TECHNOLOGY ARCHITECT · MACAD @ IAAC</div></div><nav><a href="#">WORK</a><a href="#" aria-current="page">NOTEBOOK</a><a href="#">ABOUT</a><a href="#">CV</a></nav><a class="door" href="#" style="color:var(--redline)">EXPLORE THE NETWORK &gt;</a></header>
+
+<main id="plotwrap">
+<svg id="graph" viewBox="0 0 1360 1680" role="group" aria-label="Career commit graph, drawn in ink. Time runs upward from 2018 at the bottom to now at the top. Tab through the commit dots in chronological order.">
+
+  <!-- sheet border -->
+  <rect class="sheetline" x="18.5" y="18.5" width="1323" height="1643"/>
+
+  <!-- title block -->
+  <text class="tt ink" x="36" y="52">EEC · NOTEBOOK</text>
+  <text class="tt" x="36" y="68">ONE CAREER, DRAWN AS A COMMIT GRAPH · INK ON MYLAR</text>
+  <text class="tt" x="36" y="84">HOVER ANY COMMIT · OR TAB THROUGH TIME</text>
+
+  <!-- ghosted year ticks -->
+  <g aria-hidden="true">
+    <line class="yline" x1="130" y1="726"  x2="980" y2="726"/>
+    <line class="yline" x1="130" y1="889"  x2="980" y2="889"/>
+    <line class="yline" x1="130" y1="1094" x2="980" y2="1094"/>
+    <line class="yline" x1="130" y1="1321" x2="980" y2="1321"/>
+    <line class="yline" x1="130" y1="1460" x2="980" y2="1460"/>
+    <line class="yline" x1="130" y1="1580" x2="980" y2="1580"/>
+    <text class="gl" x="36" y="742">2026</text>
+    <text class="gl" x="36" y="905">2025</text>
+    <text class="gl" x="36" y="1110">2024</text>
+    <text class="gl" x="36" y="1337">2023</text>
+    <text class="gl" x="36" y="1476">2022</text>
+    <text class="gl" x="36" y="1596">2018</text>
+  </g>
+  <text class="tt" x="36" y="1642">TIME RUNS UPWARD · THE PAST COMPRESSES · NONLINEAR SCALE</text>
+
+  <!-- MAIN LINE -->
+  <g class="branch" data-b="main">
+    <path class="lane" pathLength="1" d="M470 1580 L470 104"/>
+    <circle class="term" cx="470" cy="97" r="5.5"/>
+    <text class="el red" x="470" y="80" text-anchor="middle">NOW</text>
+    <text class="el" x="452" y="1500" text-anchor="middle" transform="rotate(-90 452 1500)">B.ARCH · LAU · 2018 → 2023 · DEAN'S LIST</text>
+  </g>
+
+  <!-- SELF-EMPLOYED (open, red tip — the one live redline) -->
+  <g class="branch" data-b="self">
+    <path class="lane" pathLength="1" d="M470 1460 C396 1456 270 1448 270 1392 L270 148"/>
+    <path class="tip red" d="M270 144 L270 114"/>
+    <circle class="opentip" cx="270" cy="102" r="4.5"/>
+    <text class="el red" x="270" y="80" text-anchor="middle">OPEN</text>
+    <text class="el" x="252" y="900" text-anchor="middle" transform="rotate(-90 252 900)">SELF-EMPLOYED PRACTICE · 2022 → <tspan class="red">NOW · OPEN</tspan></text>
+  </g>
+
+  <!-- BIM INTERNATIONAL (short stub, merges back) -->
+  <g class="branch" data-b="bim">
+    <path class="lane" pathLength="1" d="M470 1270 C556 1268 620 1252 620 1231 C620 1210 556 1194 470 1192"/>
+    <text class="el" x="634" y="1234">BIM INTERNATIONAL · 2023.06 → 2023.08</text>
+  </g>
+
+  <!-- SOMA DUBAI (merges back 2024.07) -->
+  <g class="branch" data-b="soma">
+    <path class="lane" pathLength="1" d="M470 1180 C636 1178 780 1162 780 1106 L780 1062 C780 1006 636 992 470 990"/>
+    <text class="el" x="806" y="1086" text-anchor="middle" transform="rotate(-90 806 1086)">SOMA · DUBAI · 2023.08 → 2024.07</text>
+  </g>
+
+  <!-- DYNAMIC SOLUTION (still open, ink tip) -->
+  <g class="branch" data-b="dyn">
+    <path class="lane" pathLength="1" d="M470 950 C636 948 800 932 800 872 L800 150"/>
+    <path class="tip" d="M800 146 L800 112"/>
+    <text class="el" x="818" y="512" text-anchor="middle" transform="rotate(-90 818 512)">DYNAMIC SOLUTION CO. · KUWAIT · 2024.08 → NOW</text>
+  </g>
+
+  <!-- MACAD (open; everything recent commits here) -->
+  <g class="branch" data-b="macad">
+    <path class="lane" pathLength="1" d="M470 780 C546 778 640 766 640 714 L640 148"/>
+    <path class="tip" d="M640 144 L640 110"/>
+    <text class="el" x="616" y="452" text-anchor="middle" transform="rotate(-90 616 452)">MACAD @ IAAC · BARCELONA · 2025 → NOW</text>
+  </g>
+
+  <!-- commit dots: appended by script in chronological order (= tab order) -->
+  <g id="dots"></g>
+</svg>
+</main>
+
+<div class="legend mono-s">■ PROJECT · ~ THOUGHT · + MILESTONE · * AWARD · <span class="red">RED = STILL OPEN</span></div>
+
+<aside id="card" tabindex="-1" aria-label="Field card">
+  <div class="c-top"><span id="c-date" class="mono-s"></span><span id="c-kind" class="mono-s"></span></div>
+  <h2 id="c-title"></h2>
+  <p id="c-blurb"></p>
+  <div id="c-links"></div>
+  <div class="c-foot"><span id="c-branch" class="mono-s anno"></span><span id="c-count" class="mono-s anno"></span></div>
+</aside>
+
+<div class="mockup-note">MOCKUP · NOT PRODUCTION</div>
+
+<script>
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+  var svg = document.getElementById("graph");
+  var layer = document.getElementById("dots");
+  var card = document.getElementById("card");
+  function $(id) { return document.getElementById(id); }
+
+  var KIND = { "■": "PROJECT", "~": "THOUGHT", "+": "MILESTONE", "*": "AWARD", "#": "SHEET ISSUE" };
+  var BR = { main: "MAIN LINE", self: "SELF-EMPLOYED PRACTICE", soma: "SOMA · DUBAI", dyn: "DYNAMIC SOLUTION CO.", macad: "MACAD @ IAAC" };
+
+  /* chronological, oldest first — this is also the tab order */
+  var E = [
+    { d: "2018-09", k: "+", t: "B.Arch · Lebanese American University", b: "main", x: 470, y: 1580,
+      blurb: "Five years of architecture school in Beirut, Dean's List. Everything above this dot is drawn with what LAU taught me." },
+    { d: "2022-01", k: "+", t: "Self-employed practice opens", b: "main", also: "self", x: 470, y: 1460,
+      blurb: "The personal line departs here and never merges back. Competitions, Mars, and everything too curious to bill a client for." },
+    { d: "2022-06", k: "■", t: "Ring 4000", b: "self", x: 270, y: 1358,
+      blurb: "Rings of Mars, Top 50: AI-driven workflows for a Martian ring city." },
+    { d: "2023-05", k: "*", t: "Biennale Arte 2024 · Project featured", b: "self", x: 270, y: 1300,
+      blurb: "The Mars work travels to Venice. Proof that the open line pays in ways invoices don't measure." },
+    { d: "2023-06", k: "■", t: "Towers at SOMA", b: "soma", x: 780, y: 1082,
+      blurb: "Facade and massing studies in Rhino and Grasshopper across four Dubai towers." },
+    { d: "2023-08", k: "+", t: "Design Architect · SOMA, Dubai", b: "main", also: "soma", x: 470, y: 1180,
+      blurb: "Tower-scale facade logic in Dubai — the year Grasshopper stopped being a hobby and became the job. Merges back 2024.07." },
+    { d: "2024-08", k: "+", t: "Project Architect · Dynamic Solution Co.", b: "main", also: "dyn", x: 470, y: 950,
+      blurb: "Kuwait. Delivery, coordination, and the quiet discipline of drawings that actually get built. The line is still open." },
+    { d: "2025-10", k: "+", t: "MaCAD @ IAAC · Year 1 begins", b: "main", also: "macad", x: 470, y: 780,
+      blurb: "The technical year begins in Barcelona. Every sheet, thought, and award above this fork commits to this branch." },
+    { d: "2026-03", k: "■", t: "NeuroSpace", b: "macad", x: 640, y: 690, tag: "SOLO", links: ["P-102"],
+      blurb: "Move a slider, watch the score respond. It's BIM, reframed as Behavior Information Modeling." },
+    { d: "2026-04", k: "~", t: "physics solvers", b: "macad", x: 640, y: 632,
+      blurb: "A words-only note, filed the month the balloons fought back." },
+    { d: "2026-04", k: "■", t: "A Ballooning Market", b: "macad", x: 640, y: 584, links: ["P-104"],
+      blurb: "I decided to fill a historic Cairo market with balloons, and I almost failed." },
+    { d: "2026-05", k: "*", t: "Jury Award · AIA Generative AI", b: "macad", x: 640, y: 524,
+      blurb: "For lEgoarCh — a buildable LEGO set walks into an architecture jury and wins." },
+    { d: "2026-05", k: "~", t: "comfort as data", b: "macad", x: 640, y: 478,
+      blurb: "A words-only note. The sentence that became Sensi's spine." },
+    { d: "2026-05", k: "■", t: "lEgoarCh", b: "macad", x: 640, y: 430, note: "P-106 · IN PREPARATION",
+      blurb: "A render is a promise, not a product: lEgoarCh takes a text prompt and returns a buildable LEGO set." },
+    { d: "2026-06", k: "*", t: "MaCAD Awards · Design Copilots · Winner", b: "macad", x: 640, y: 366,
+      blurb: "Won with Sensi. The committee agreed: comfort is a design layer, not an afterthought." },
+    { d: "2026-06", k: "+", t: "MaCAD Year 1 complete · The technical year", b: "macad", x: 640, y: 318,
+      blurb: "The technical year closes: computation, machine learning, and a working definition of Behavior Information Modeling." },
+    { d: "2026-06", k: "~", t: "buildings that respond", b: "macad", x: 640, y: 268,
+      blurb: "A words-only note. Where the whole network keeps pointing." },
+    { d: "2026-06", k: "■", t: "Sensi", b: "macad", x: 640, y: 218, links: ["P-101"],
+      blurb: "Comfort is usually the thing we hope shows up after the design is done. Sensi makes it a design layer." },
+    { d: "2026-07", k: "#", t: "Sheets P-101 · P-102 · P-104 issued", b: "macad", x: 640, y: 156, red: true, links: ["P-101", "P-102", "P-104"],
+      blurb: "Three sheets move from studio to record: Sensi, NeuroSpace, and the Cairo balloons — drawn, titled, and issued." }
+  ];
+
+  var hideT = null, lastG = null;
+  function cancelHide() { clearTimeout(hideT); }
+  function scheduleHide() { clearTimeout(hideT); hideT = setTimeout(hide, 260); }
+
+  function show(e, g, i) {
+    cancelHide();
+    lastG = g;
+    svg.classList.add("dim");
+    var act = [e.b].concat(e.also ? [e.also] : []);
+    svg.querySelectorAll(".branch").forEach(function (b) {
+      b.classList.toggle("on", act.indexOf(b.getAttribute("data-b")) > -1);
+    });
+    svg.querySelectorAll(".dot").forEach(function (d) {
+      var bb = [d.getAttribute("data-b")].concat(d.getAttribute("data-also") ? [d.getAttribute("data-also")] : []);
+      d.classList.toggle("on", bb.some(function (x) { return act.indexOf(x) > -1; }));
+      d.classList.remove("here");
+      d.querySelector(".vis").setAttribute("r", 5);
+    });
+    g.classList.add("here");
+    g.querySelector(".vis").setAttribute("r", 10);
+
+    $("c-date").textContent = e.d;
+    var kEl = $("c-kind");
+    kEl.textContent = e.k + " " + KIND[e.k] + (e.tag ? " · " + e.tag : "");
+    kEl.classList.toggle("red", e.k === "#");
+    var tEl = $("c-title");
+    tEl.textContent = e.t;
+    tEl.classList.toggle("thought", e.k === "~");
+    $("c-blurb").textContent = e.blurb;
+    var L = $("c-links");
+    L.innerHTML = "";
+    (e.links || []).forEach(function (p) {
+      var a = document.createElement("a");
+      a.href = "#";
+      a.className = "sheetlink";
+      a.textContent = "OPEN SHEET " + p + " >";
+      L.appendChild(a);
+    });
+    if (e.note) {
+      var s = document.createElement("span");
+      s.className = "note";
+      s.textContent = e.note;
+      L.appendChild(s);
+    }
+    $("c-branch").textContent = "BRANCH · " + BR[e.b];
+    $("c-count").textContent = "COMMIT " + String(i + 1).padStart(2, "0") + " / " + E.length;
+    card.classList.add("show");
+  }
+
+  function hide() {
+    cancelHide();
+    card.classList.remove("show");
+    svg.classList.remove("dim");
+    svg.querySelectorAll(".branch.on").forEach(function (b) { b.classList.remove("on"); });
+    svg.querySelectorAll(".dot").forEach(function (d) {
+      d.classList.remove("on", "here");
+      d.querySelector(".vis").setAttribute("r", 5);
+    });
+  }
+
+  E.forEach(function (e, i) {
+    var g = document.createElementNS(NS, "g");
+    g.setAttribute("class", "dot");
+    g.setAttribute("data-b", e.b);
+    if (e.also) g.setAttribute("data-also", e.also);
+    g.setAttribute("tabindex", "0");
+    g.setAttribute("role", "button");
+    g.setAttribute("aria-label", e.t + ". " + e.d + ". " + KIND[e.k] + "." +
+      ((e.links && e.links.length) ? " Press Enter to open the field card links." : ""));
+    var hit = document.createElementNS(NS, "circle");
+    hit.setAttribute("cx", e.x); hit.setAttribute("cy", e.y);
+    hit.setAttribute("r", "16"); hit.setAttribute("class", "hit");
+    var vis = document.createElementNS(NS, "circle");
+    vis.setAttribute("cx", e.x); vis.setAttribute("cy", e.y);
+    vis.setAttribute("r", "5"); vis.setAttribute("class", "vis" + (e.red ? " red" : ""));
+    g.appendChild(hit); g.appendChild(vis);
+
+    g.addEventListener("mouseenter", function () { show(e, g, i); });
+    g.addEventListener("mouseleave", scheduleHide);
+    g.addEventListener("focus", function () { show(e, g, i); });
+    g.addEventListener("focusout", function (ev) {
+      if (!card.contains(ev.relatedTarget)) scheduleHide();
+    });
+    g.addEventListener("click", function () { show(e, g, i); });
+    g.addEventListener("keydown", function (ev) {
+      if ((ev.key === "Enter" || ev.key === " ") && card.classList.contains("show")) {
+        ev.preventDefault();
+        var f = card.querySelector("a");
+        (f || card).focus();
+      }
+    });
+    layer.appendChild(g);
+  });
+
+  card.addEventListener("mouseenter", cancelHide);
+  card.addEventListener("mouseleave", scheduleHide);
+  card.addEventListener("focusin", cancelHide);
+  card.addEventListener("focusout", function (ev) {
+    if (!card.contains(ev.relatedTarget)) scheduleHide();
+  });
+  card.addEventListener("click", function (ev) {
+    var a = ev.target.closest ? ev.target.closest("a") : null;
+    if (a) ev.preventDefault(); /* mockup: sheets not wired */
+  });
+
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape" && card.classList.contains("show")) {
+      var inCard = card.contains(document.activeElement);
+      hide();
+      if (inCard && lastG) lastG.focus();
+    }
+  });
+})();
+</script>
+<a href="./index.html" style="position:fixed;bottom:10px;left:12px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--redline);background:var(--mylar);border:1px solid var(--redline);padding:4px 9px;text-decoration:none;z-index:999;">&lt; STUDIO INDEX</a></body>
+</html>

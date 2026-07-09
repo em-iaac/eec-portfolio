@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LANDING A · THE NETWORK PANEL — EEC mockup</title>
+<link rel="stylesheet" href="./pen-table.css">
+<style>
+  /* ————— LANDING A · THE NETWORK PANEL ————— */
+
+  body { overflow-x: hidden; }
+
+  /* ——— hero: 44% mylar / 56% carbon, fills viewport below chrome ——— */
+  .hero {
+    display: flex;
+    min-height: calc(100vh - 55px);
+    align-items: stretch;
+  }
+
+  .hero-left {
+    width: 44%;
+    padding: 56px;
+    display: flex;
+    flex-direction: column;
+    background: var(--mylar);
+  }
+
+  .hero-left h1 {
+    font-size: clamp(28px, 2.2vw + 12px, 40px);
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: -0.012em;
+    max-width: 18em;
+    margin-bottom: 30px;
+  }
+  .hero-left h1 .q {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 460;
+    letter-spacing: 0;
+  }
+
+  /* hand-wobbled redline ellipse around “feel?” */
+  .circled { position: relative; display: inline-block; white-space: nowrap; }
+  .circled svg {
+    position: absolute;
+    left: -14%; top: -26%;
+    width: 130%; height: 156%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .hero-lede {
+    font-family: var(--serif);
+    font-size: 16.5px;
+    line-height: 1.62;
+    max-width: 44ch;
+    color: var(--ink);
+    margin-bottom: 34px;
+  }
+
+  .hero-facts {
+    color: var(--anno);
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  .kicker {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.9;
+    max-width: 42em;
+    color: var(--ink);
+  }
+  .kicker .lead { flex: none; transform: translateY(-1px); }
+  .kicker a { color: var(--redline); }
+
+  .hero-cta {
+    margin-top: auto;
+    padding-top: 40px;
+  }
+  .hero-cta a {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--redline);
+  }
+
+  /* ——— right: the carbon network panel ——— */
+  .hero-right {
+    width: 56%;
+    position: relative;
+    background: var(--carbon);
+    overflow: hidden;
+  }
+
+  .net { position: absolute; inset: 0; }
+
+  .edges { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .edges line {
+    stroke: #E8EAED;
+    stroke-opacity: 0.12;
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    transition: stroke-opacity 0.35s ease;
+  }
+  .edges line.lit { stroke-opacity: 0.5; }
+
+  /* nodes: 24px hit area around a 4–5px dot */
+  .node {
+    position: absolute;
+    width: 24px; height: 24px;
+    margin: -12px 0 0 -12px;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .node .dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--anno-dark);
+  }
+  .node.p .dot { width: 5px; height: 5px; }
+  .node.c .dot { background: var(--cyan-wire); }
+  .node.m .dot { background: var(--magenta-wire); }
+  .node.y .dot { background: var(--yellow-wire); }
+
+  .node .lbl {
+    position: absolute;
+    left: 22px; top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .node.flip .lbl { left: auto; right: 22px; }
+
+  .node.p .lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .node.p.c .lbl { color: var(--cyan-wire); }
+  .node.p.m .lbl { color: var(--magenta-wire); }
+  .node.p.y .lbl { color: var(--yellow-wire); }
+
+  .node.t .lbl {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13.5px;
+    letter-spacing: 0.01em;
+    color: var(--anno-dark);
+  }
+
+  .node.show .lbl,
+  .node:hover .lbl,
+  .node:focus-visible .lbl { opacity: 1; }
+
+  .node:focus-visible {
+    outline: 1px dashed var(--anno-dark);
+    outline-offset: 3px;
+  }
+
+  .hud {
+    position: absolute;
+    left: 0; right: 0; bottom: 18px;
+    text-align: center;
+    color: var(--anno-dark);
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  /* slow drift — tiny amplitudes, long periods, motion-safe only */
+  @media (prefers-reduced-motion: no-preference) {
+    .node.d1 { animation: drift1 26s ease-in-out infinite alternate; }
+    .node.d2 { animation: drift2 34s ease-in-out infinite alternate; }
+    .node.d3 { animation: drift3 22s ease-in-out infinite alternate; }
+    .node.d4 { animation: drift4 38s ease-in-out infinite alternate; }
+    @keyframes drift1 { from { transform: translate(0, 0); }    to { transform: translate(5px, -4px); } }
+    @keyframes drift2 { from { transform: translate(0, 0); }    to { transform: translate(-4px, 5px); } }
+    @keyframes drift3 { from { transform: translate(0, 0); }    to { transform: translate(-5px, -3px); } }
+    @keyframes drift4 { from { transform: translate(0, 0); }    to { transform: translate(4px, 5px); } }
+  }
+
+  /* ——— peek of the next section, cut at the fold ——— */
+  .peek {
+    border-top: 1px solid rgba(22, 24, 29, 0.2);
+    padding: 28px 56px 0;
+    background: var(--mylar);
+  }
+  .peek-label {
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .peek-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .peek-card {
+    height: 80px;               /* only the top of the card shows */
+    overflow: hidden;
+    border: 1px solid rgba(22, 24, 29, 0.2);
+    background: var(--mylar);
+  }
+  .peek-card figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(22, 24, 29, 0.2);
+    text-transform: uppercase;
+  }
+  .peek-card img {
+    display: block;
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  /* ——— <900px: stack, stay readable, nothing heroic ——— */
+  @media (max-width: 899px) {
+    .chrome { flex-wrap: wrap; row-gap: 10px; }
+    .hero { flex-direction: column; min-height: 0; }
+    .hero-left { width: 100%; padding: 40px 24px 48px; }
+    .hero-cta { padding-top: 32px; }
+    .hero-right { width: 100%; height: 60vh; }
+    .peek { padding: 24px 24px 0; }
+    .peek-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="chrome">
+  <div class="mark">EEC</div>
+  <div>
+    <div style="font-weight:600;font-size:12px;letter-spacing:.1em;">EMILIE EL CHIDIAC</div>
+    <div class="mono-s anno">DESIGN TECHNOLOGY ARCHITECT · MACAD @ IAAC</div>
+  </div>
+  <nav>
+    <a href="#">WORK</a>
+    <a href="#">NOTEBOOK</a>
+    <a href="#">ABOUT</a>
+    <a href="#">CV</a>
+  </nav>
+  <a class="door" href="#" style="color:var(--redline)">EXPLORE THE NETWORK &gt;</a>
+</header>
+
+<main class="hero">
+
+  <!-- ——— left: mylar column ——— -->
+  <div class="hero-left">
+    <h1>
+      I started asking buildings a question my software couldn&rsquo;t answer:
+      <em class="q">how will this space make someone
+        <span class="circled">feel?<svg viewBox="0 0 132 58" aria-hidden="true" focusable="false">
+          <path d="M11 31 C 8 15, 44 5, 72 6.5 C 103 8, 125 16, 122.5 31 C 120 47, 85 55.5, 52 52.5 C 23 50, 5.5 41.5, 9 27.5 C 11.5 17.5, 27 10.5, 44 9"
+                fill="none" stroke="var(--redline)" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
+        </svg></span>
+      </em>
+    </h1>
+
+    <p class="hero-lede">
+      So I build the missing tools. I&rsquo;m Emilie El Chidiac, Design Technology
+      Architect. NeuroSpace reads a floor plan and scores its effect on the mind;
+      Sensi, winner at the MaCAD Awards 2026, makes comfort a design layer.
+    </p>
+
+    <div class="mono hero-facts">COMPUTATIONAL DESIGN · DESIGN TECHNOLOGY · MACAD @ IAAC</div>
+
+    <p class="kicker">
+      <svg class="lead" width="40" height="10" viewBox="0 0 40 10" aria-hidden="true" focusable="false">
+        <circle cx="4" cy="5" r="2.5" fill="var(--redline)"/>
+        <path d="M8 5 H 40" stroke="rgba(22,24,29,.35)" stroke-width="1"/>
+      </svg>
+      <span>I call where this is going:
+        <a href="#">Behavior Information Modeling</a>
+        (opens the live NeuroSpace app)</span>
+    </p>
+
+    <div class="hero-cta">
+      <a href="#">EXPLORE THE WHOLE MIND &gt;</a>
+    </div>
+  </div>
+
+  <!-- ——— right: carbon network panel ——— -->
+  <div class="hero-right">
+    <div class="net" aria-label="A quiet network of projects and thoughts. Hover or tab to a dot to read its word.">
+
+      <svg class="edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <line data-n="sensi comfort"        x1="30" y1="32" x2="68" y2="62"/>
+        <line data-n="sensi daylight"       x1="30" y1="32" x2="12" y2="40"/>
+        <line data-n="sensi bim"            x1="30" y1="32" x2="48" y2="22"/>
+        <line data-n="sensi graph"          x1="30" y1="32" x2="38" y2="50"/>
+        <line data-n="neurospace bim"       x1="62" y1="46" x2="48" y2="22"/>
+        <line data-n="neurospace cogload"   x1="62" y1="46" x2="56" y2="34"/>
+        <line data-n="neurospace score"     x1="62" y1="46" x2="50" y2="60"/>
+        <line data-n="neurospace wayfind"   x1="62" y1="46" x2="74" y2="40"/>
+        <line data-n="neurospace comfort"   x1="62" y1="46" x2="68" y2="62"/>
+        <line data-n="bim preocc"           x1="48" y1="22" x2="22" y2="20"/>
+        <line data-n="bim memory"           x1="48" y1="22" x2="34" y2="12"/>
+        <line data-n="bim cogload"          x1="48" y1="22" x2="56" y2="34"/>
+        <line data-n="comfort plate"        x1="68" y1="62" x2="88" y2="56"/>
+        <line data-n="comfort epicfails"    x1="68" y1="62" x2="76" y2="74"/>
+        <line data-n="legoarch graph"       x1="44" y1="72" x2="38" y2="50"/>
+        <line data-n="legoarch proxemics"   x1="44" y1="72" x2="28" y2="84"/>
+        <line data-n="legoarch threshold"   x1="44" y1="72" x2="58" y2="84"/>
+        <line data-n="huddle proxemics"     x1="18" y1="58" x2="28" y2="84"/>
+        <line data-n="huddle daylight"      x1="18" y1="58" x2="12" y2="40"/>
+        <line data-n="huddle softdata"      x1="18" y1="58" x2="14" y2="72"/>
+        <line data-n="graph score"          x1="38" y1="50" x2="50" y2="60"/>
+        <line data-n="wayfind plate"        x1="74" y1="40" x2="88" y2="56"/>
+        <line data-n="wayfind section"      x1="74" y1="40" x2="70" y2="14"/>
+        <line data-n="process section"      x1="84" y1="28" x2="70" y2="14"/>
+        <line data-n="process plate"        x1="84" y1="28" x2="88" y2="56"/>
+        <line data-n="epicfails attention"  x1="76" y1="74" x2="88" y2="86"/>
+        <line data-n="epicfails threshold"  x1="76" y1="74" x2="58" y2="84"/>
+        <line data-n="memory section"       x1="34" y1="12" x2="70" y2="14"/>
+        <line data-n="preocc daylight"      x1="22" y1="20" x2="12" y2="40"/>
+      </svg>
+
+      <!-- projects: lens-coded wire dots -->
+      <a class="node p m show d1" href="#" data-id="sensi"      tabindex="0" style="left:30%;top:32%"><span class="dot"></span><span class="lbl">SENSI</span></a>
+      <a class="node p c show d2" href="#" data-id="neurospace" tabindex="0" style="left:62%;top:46%"><span class="dot"></span><span class="lbl">NEUROSPACE</span></a>
+      <a class="node p y show d3" href="#" data-id="legoarch"   tabindex="0" style="left:44%;top:72%"><span class="dot"></span><span class="lbl">LEGOARCH</span></a>
+      <a class="node p m d4"      href="#" data-id="huddle"     tabindex="0" style="left:18%;top:58%"><span class="dot"></span><span class="lbl">HUDDLE</span></a>
+      <a class="node p y flip d2" href="#" data-id="epicfails"  tabindex="0" style="left:76%;top:74%"><span class="dot"></span><span class="lbl">EPIC FAILS</span></a>
+      <a class="node p c flip d3" href="#" data-id="process"    tabindex="0" style="left:84%;top:28%"><span class="dot"></span><span class="lbl">PROCESS REEL</span></a>
+
+      <!-- thoughts: anno-dark dots, serif italic words -->
+      <a class="node t show d4" href="#" data-id="bim"       tabindex="0" style="left:48%;top:22%"><span class="dot"></span><span class="lbl">behavior information modeling</span></a>
+      <a class="node t show d1" href="#" data-id="comfort"   tabindex="0" style="left:68%;top:62%"><span class="dot"></span><span class="lbl">comfort as data</span></a>
+      <a class="node t d2"      href="#" data-id="preocc"    tabindex="0" style="left:22%;top:20%"><span class="dot"></span><span class="lbl">pre-occupancy</span></a>
+      <a class="node t d3"      href="#" data-id="graph"     tabindex="0" style="left:38%;top:50%"><span class="dot"></span><span class="lbl">a graph of rooms</span></a>
+      <a class="node t d4"      href="#" data-id="daylight"  tabindex="0" style="left:12%;top:40%"><span class="dot"></span><span class="lbl">daylight as input</span></a>
+      <a class="node t d1"      href="#" data-id="cogload"   tabindex="0" style="left:56%;top:34%"><span class="dot"></span><span class="lbl">cognitive load</span></a>
+      <a class="node t flip d2" href="#" data-id="wayfind"   tabindex="0" style="left:74%;top:40%"><span class="dot"></span><span class="lbl">wayfinding</span></a>
+      <a class="node t d3"      href="#" data-id="proxemics" tabindex="0" style="left:28%;top:84%"><span class="dot"></span><span class="lbl">proxemics</span></a>
+      <a class="node t d4"      href="#" data-id="threshold" tabindex="0" style="left:58%;top:84%"><span class="dot"></span><span class="lbl">thresholds</span></a>
+      <a class="node t flip d1" href="#" data-id="plate"     tabindex="0" style="left:88%;top:56%"><span class="dot"></span><span class="lbl">the plate</span></a>
+      <a class="node t d2"      href="#" data-id="score"     tabindex="0" style="left:50%;top:60%"><span class="dot"></span><span class="lbl">score the plan</span></a>
+      <a class="node t d3"      href="#" data-id="softdata"  tabindex="0" style="left:14%;top:72%"><span class="dot"></span><span class="lbl">soft data</span></a>
+      <a class="node t d4"      href="#" data-id="memory"    tabindex="0" style="left:34%;top:12%"><span class="dot"></span><span class="lbl">memory of place</span></a>
+      <a class="node t flip d1" href="#" data-id="section"   tabindex="0" style="left:70%;top:14%"><span class="dot"></span><span class="lbl">the section speaks</span></a>
+      <a class="node t flip d2" href="#" data-id="attention" tabindex="0" style="left:88%;top:86%"><span class="dot"></span><span class="lbl">attention maps</span></a>
+    </div>
+
+    <div class="mono-s hud">DRAG TO ORBIT · TAP A WORD TO FOLLOW IT</div>
+  </div>
+
+</main>
+
+<!-- ——— peek: next section cut at the fold ——— -->
+<section class="peek">
+  <div class="mono anno peek-label">FEATURED / THE PROOF PAIR</div>
+  <div class="peek-grid">
+    <figure class="peek-card">
+      <figcaption>
+        <span class="mono-s">P-101 · SENSI</span>
+        <span class="mono-s anno">MACAD AWARDS 2026 · WINNER</span>
+      </figcaption>
+      <img src="./assets/img/sensi.webp" alt="Sensi — comfort as a design layer (card cut at the fold)">
+    </figure>
+    <figure class="peek-card">
+      <figcaption>
+        <span class="mono-s">P-102 · NEUROSPACE</span>
+        <span class="mono-s anno">LIVE APP</span>
+      </figcaption>
+      <img src="./assets/img/neurospace.webp" alt="NeuroSpace — a floor plan scored for the mind (card cut at the fold)">
+    </figure>
+  </div>
+</section>
+
+<div class="mockup-note">MOCKUP · NOT PRODUCTION</div>
+
+<script>
+  (function () {
+    var lines = Array.prototype.slice.call(document.querySelectorAll('.edges line'));
+    var nodes = document.querySelectorAll('a.node');
+
+    Array.prototype.forEach.call(nodes, function (node) {
+      var id = node.getAttribute('data-id');
+      var mine = lines.filter(function (l) {
+        return l.getAttribute('data-n').split(' ').indexOf(id) !== -1;
+      });
+      function on()  { mine.forEach(function (l) { l.classList.add('lit'); }); }
+      function off() { mine.forEach(function (l) { l.classList.remove('lit'); }); }
+
+      node.addEventListener('mouseenter', on);
+      node.addEventListener('mouseleave', off);
+      node.addEventListener('focus', on);
+      node.addEventListener('blur', off);
+      node.addEventListener('click', function (e) { e.preventDefault(); }); // mockup: nowhere to go
+    });
+  })();
+</script>
+
+<a href="./index.html" style="position:fixed;bottom:10px;left:12px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--redline);background:var(--mylar);border:1px solid var(--redline);padding:4px 9px;text-decoration:none;z-index:999;">&lt; STUDIO INDEX</a></body>
+</html>

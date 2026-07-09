@@ -1,7 +1,9 @@
-// The mode toggle: "the light table switches off." A fixed carbon overlay
-// fades in while the page content lifts, then we navigate to EXPLORE.
-// Reduced motion navigates immediately. The timings are shared with the
-// EXPLORE side so both directions of the toggle stay symmetric.
+// "The light table switches off": a fixed carbon overlay fades in while the page
+// content lifts, then we navigate to the landing (the all-dark mind graph). Read
+// pages use this to cross into the dark cover; reduced motion navigates
+// immediately. R1: the target is now `/` (the landing IS the network; the
+// separate /explore surface retired). Naming kept for now — a rename to the
+// neutral "cover"/"dark" vocabulary is queued for the R10 hygiene sweep.
 import {
   createContext,
   useContext,
@@ -13,7 +15,6 @@ import {
 } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import usePrefersReducedMotion from './usePrefersReducedMotion'
-import { preloadExplore } from '../explore/preload'
 
 export const MODE_FADE_MS = 550
 export const MODE_NAVIGATE_MS = 650
@@ -26,12 +27,10 @@ export function useExploreTransition() {
 
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
-  // target defaults to the unfocused network; the landing hero (Session 13)
-  // passes /explore/:id so clicking a word dives straight to that focused word
-  // through the same carbon-flood ceremony (landing > focused word > EXPLORE).
-  function beginExit(e?: MouseEvent, target = '/explore') {
+  // Target defaults to the landing (the mind graph). Callers may still pass a
+  // specific route to run the same carbon-flood ceremony into it.
+  function beginExit(e?: MouseEvent, target = '/') {
     e?.preventDefault()
-    preloadExplore()
     if (prm) {
       navigate(target)
       return
@@ -81,14 +80,7 @@ export function ExploreExitLink({
 }) {
   const beginExit = useContext(ExploreExitContext)
   return (
-    <Link
-      to="/explore"
-      onClick={beginExit ?? undefined}
-      onPointerEnter={() => preloadExplore()}
-      onTouchStart={() => preloadExplore()}
-      onFocus={() => preloadExplore()}
-      className={className}
-    >
+    <Link to="/" onClick={beginExit ?? undefined} className={className}>
       {children}
     </Link>
   )

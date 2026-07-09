@@ -1,7 +1,7 @@
 // The enriched IN PREPARATION placeholder (Session 5). Every sheet route whose
 // status is in-preparation renders this instead of a bare stamp: the project
 // blurb, the figures already in the pipeline, its tags, every working link,
-// and a deep link into the same word in EXPLORE. It reuses the sheet frame
+// and a link to the mind graph (the landing). It reuses the sheet frame
 // (SheetLayout) and adds no furniture beyond it; mono stays <= 0.875rem and no
 // lens tick ever shows without its label (governance rules 2, 5, 6).
 import { Link } from 'react-router-dom'
@@ -11,7 +11,6 @@ import { LensTick, LENSES } from '../Lens'
 import { ENTRIES, type RegistryEntry } from '../../data/registry'
 import { PROJECTS_BY_SLUG } from '../../data/projects'
 import manifest from '../../data/images.json'
-import { preloadExplore } from '../../explore/preload'
 
 type ImgEntry = { name: string; role: string }
 
@@ -157,14 +156,8 @@ export default function MiniSheet({ entry }: { entry: RegistryEntry }) {
           </a>
         ))}
         {entry.explore && (
-          <Link
-            to={`/explore/${entry.id}`}
-            onPointerEnter={() => preloadExplore()}
-            onTouchStart={() => preloadExplore()}
-            onFocus={() => preloadExplore()}
-            className={`-m-2 p-2 ${RED_LINK}`}
-          >
-            SEE IT IN EXPLORE &gt;
+          <Link to="/" className={`-m-2 p-2 ${RED_LINK}`}>
+            SEE IT IN THE MIND &gt;
           </Link>
         )}
         <Link to="/notebook" viewTransition className={`-m-2 p-2 ${RED_LINK}`}>

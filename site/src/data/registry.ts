@@ -71,6 +71,7 @@ export interface RegistryEntry {
   sheet?: SheetRef
   note?: NoteRef // thought notes (Session 11): the written leaf at /thoughts/:id
   project?: string // slug join into projects.tsx for card data
+  refId?: string // an award/press event points back at the project id it recognises (R1: drives the mind-graph award star from this single source; also the FLAG-03 anchor hook)
   image?: { slug: string; name: string; alt: string }
   links?: { label: string; href: string }[]
   draftCopy?: boolean
@@ -452,6 +453,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'MaCAD Awards · Design Copilots · winner (Sensi)',
     lens: 'computation',
     tags: ['ai', 'research'],
+    refId: 'sensi',
   },
   {
     id: 'legoarch-jury',
@@ -461,6 +463,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Jury award · AIA Generative AI (lEgoarCh)',
     lens: 'computation',
     tags: ['ai'],
+    refId: 'legoarch',
   },
   {
     id: 'lungs-award',
@@ -470,6 +473,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Studio award · BIMSC (The Lungs)',
     lens: 'computation',
     tags: ['data'],
+    refId: 'lungs',
   },
   {
     id: 'huddle-award',
@@ -479,6 +483,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Studio award · ACESD (The Huddle)',
     lens: 'computation',
     tags: ['simulation'],
+    refId: 'huddle',
   },
   {
     id: 'biennale',
@@ -496,6 +501,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Top 50 · Marsception (Ring 4000)',
     lens: 'practice',
     tags: ['ai', 'future'],
+    refId: 'mars',
   },
   {
     id: 'tamayouz',
@@ -576,3 +582,11 @@ export const EXPLORE_NODES: ExploreNode[] = ENTRIES.filter(
     note: e.note,
   }))
   .sort((a, b) => a.order - b.order)
+
+// The set of explore-node ids that carry a recognition (R1). Derived from the
+// award entries' refId so the mind-graph's award star has ONE source of truth
+// (the awards already live here) and can never drift from the record. Awards
+// read as recognition, never a stamp (REDESIGN-SPEC section 1).
+export const AWARD_WINNER_IDS: ReadonlySet<string> = new Set(
+  ENTRIES.filter((e) => e.kind === 'award' && e.refId).map((e) => e.refId!),
+)

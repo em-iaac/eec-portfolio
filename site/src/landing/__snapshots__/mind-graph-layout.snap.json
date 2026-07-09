@@ -1,0 +1,240 @@
+[
+  {
+    "id": "sensi",
+    "kind": "project",
+    "lens": "c",
+    "award": true,
+    "threads": [
+      "AI",
+      "COMFORT",
+      "NEURO"
+    ],
+    "x": 560,
+    "y": 300
+  },
+  {
+    "id": "neurospace",
+    "kind": "project",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "AI",
+      "DATA"
+    ],
+    "x": 820,
+    "y": 430
+  },
+  {
+    "id": "huddle",
+    "kind": "project",
+    "lens": "c",
+    "award": true,
+    "threads": [
+      "DATA",
+      "GEOMETRY"
+    ],
+    "x": 1085,
+    "y": 510
+  },
+  {
+    "id": "lungs",
+    "kind": "project",
+    "lens": "c",
+    "award": true,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 1030,
+    "y": 545
+  },
+  {
+    "id": "legoarch",
+    "kind": "project",
+    "lens": "c",
+    "award": true,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 705,
+    "y": 540
+  },
+  {
+    "id": "ballooning",
+    "kind": "project",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "COMFORT",
+      "GEOMETRY"
+    ],
+    "x": 655,
+    "y": 592
+  },
+  {
+    "id": "podcast",
+    "kind": "project",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "AI",
+      "NEURO"
+    ],
+    "x": 1120,
+    "y": 250
+  },
+  {
+    "id": "soma",
+    "kind": "project",
+    "lens": "p",
+    "award": false,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 560,
+    "y": 748
+  },
+  {
+    "id": "mars",
+    "kind": "project",
+    "lens": "p",
+    "award": true,
+    "threads": [
+      "AI",
+      "GEOMETRY"
+    ],
+    "x": 980,
+    "y": 596
+  },
+  {
+    "id": "cappelletti",
+    "kind": "project",
+    "lens": "e",
+    "award": false,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 1300,
+    "y": 600
+  },
+  {
+    "id": "xr",
+    "kind": "project",
+    "lens": "e",
+    "award": false,
+    "threads": [
+      "XR"
+    ],
+    "x": 1000,
+    "y": 140
+  },
+  {
+    "id": "bim",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "DATA"
+    ],
+    "x": 1300,
+    "y": 388
+  },
+  {
+    "id": "neuroaes",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "NEURO"
+    ],
+    "x": 720,
+    "y": 330
+  },
+  {
+    "id": "solvers",
+    "kind": "thought",
+    "lens": "e",
+    "award": false,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 740,
+    "y": 624
+  },
+  {
+    "id": "genai",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "AI"
+    ],
+    "x": 705,
+    "y": 398
+  },
+  {
+    "id": "xreal",
+    "kind": "thought",
+    "lens": "e",
+    "award": false,
+    "threads": [
+      "XR"
+    ],
+    "x": 720,
+    "y": 166
+  },
+  {
+    "id": "comfort",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "COMFORT"
+    ],
+    "x": 670,
+    "y": 455
+  },
+  {
+    "id": "drawiface",
+    "kind": "thought",
+    "lens": "p",
+    "award": false,
+    "threads": [
+      "XR"
+    ],
+    "x": 1240,
+    "y": 120
+  },
+  {
+    "id": "evosearch",
+    "kind": "thought",
+    "lens": "e",
+    "award": false,
+    "threads": [
+      "AI"
+    ],
+    "x": 1300,
+    "y": 470
+  },
+  {
+    "id": "heritage",
+    "kind": "thought",
+    "lens": "p",
+    "award": false,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 1136,
+    "y": 519
+  },
+  {
+    "id": "respond",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "COMFORT"
+    ],
+    "x": 625,
+    "y": 720
+  }
+]

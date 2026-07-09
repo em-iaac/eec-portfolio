@@ -6,12 +6,11 @@
   "scripts": {
     "dev": "vite",
     "test": "vitest run",
-    "build": "vitest run && tsc -b && node scripts/generate-poster.mjs && vite build",
+    "build": "vitest run && tsc -b && node scripts/generate-landing-fallback.mjs && vite build",
     "preview": "vite preview",
     "images": "node scripts/optimize-images.mjs",
     "videos": "node scripts/optimize-videos.mjs",
-    "poster": "node scripts/generate-poster.mjs",
-    "freeze-explore": "node scripts/freeze-explore-layout.mjs"
+    "landing-fallback": "node scripts/generate-landing-fallback.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",

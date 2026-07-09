@@ -1,7 +1,9 @@
-// EXPLORE token mirror. three.js materials and canvas textures cannot read
-// CSS custom properties, so the dark-ground tokens from src/index.css @theme
-// are mirrored here as literals: this file is the ONLY sanctioned place for
-// these hex values outside @theme. If a token changes there, change it here.
+// Lens token mirror for the landing mind-graph (moved here from explore/ in R1
+// when the three.js /explore surface retired). The mind-graph is SVG and CAN
+// read CSS custom properties, but the fallback generator renders under Node
+// (no CSS), so the dark-ground tokens from src/index.css @theme are mirrored
+// here as literals: this file is the ONLY sanctioned place for these hex values
+// outside @theme. If a token changes there, change it here.
 import type { Lens } from '../components/Lens'
 
 export const CARBON = '#0B0E13' // --color-carbon
@@ -39,7 +41,7 @@ export function assertPaletteMatchesTheme() {
   for (const [name, mirror] of pairs) {
     const themed = cs.getPropertyValue(name).trim().toLowerCase()
     if (themed && themed !== mirror.toLowerCase()) {
-      console.warn(`explore/palette.ts drift: ${name} is ${themed} in @theme but ${mirror} in the mirror`)
+      console.warn(`landing/palette.ts drift: ${name} is ${themed} in @theme but ${mirror} in the mirror`)
     }
   }
 }

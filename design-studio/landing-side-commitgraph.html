@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LANDING B · THE CAREER GRAPH PANEL — mockup</title>
+<link rel="stylesheet" href="./pen-table.css">
+<style>
+  /* ============================================================
+     LANDING B · THE CAREER GRAPH PANEL (mockup, not production)
+     Left 44%: mylar column — locked hero line, subhead, fact line,
+     kicker, EXPLORE THE WHOLE MIND > (identical to LANDING A).
+     Right 56%: carbon panel — the career commit graph as artwork.
+     ============================================================ */
+
+  a:focus-visible { outline: 2px solid var(--redline); outline-offset: 2px; }
+
+  /* ---------- hero split ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 44fr 56fr;
+    height: calc(100svh - 55px);
+    min-height: 620px;
+    max-height: 920px;
+  }
+
+  /* ---------- left column (mylar) — same as LANDING A ---------- */
+  .hero-copy {
+    display: flex; flex-direction: column; justify-content: center;
+    gap: 22px; padding: 48px 56px 44px 64px;
+  }
+  .hero-copy h1 {
+    max-width: 24ch;
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(1.6rem, 2.5vw, 2.15rem);
+    line-height: 1.18; letter-spacing: -0.015em;
+    color: var(--ink); text-wrap: balance;
+  }
+  .h1-serif { font-family: var(--serif); font-style: italic; font-weight: 500; letter-spacing: 0; }
+
+  /* the one red revision ellipse (governance: one per page) */
+  .revision { position: relative; display: inline-block; }
+  .revision svg {
+    position: absolute; left: -12%; top: -16%;
+    width: 124%; height: 132%;
+    overflow: visible; pointer-events: none;
+  }
+  .revision path {
+    fill: none; stroke: var(--redline-stroke);
+    stroke-width: 3.5; stroke-linecap: round;
+  }
+
+  .hero-copy .sub {
+    max-width: 54ch; font-family: var(--serif);
+    font-size: 16.5px; line-height: 1.65; color: var(--ink);
+  }
+  .chipword {
+    border: 1px solid rgba(22,24,29,.3); padding: 0 6px 1px;
+    font-family: var(--mono); font-size: .72em; letter-spacing: .02em;
+    white-space: nowrap;
+  }
+  .factline { letter-spacing: .12em; color: var(--anno); }
+
+  /* kicker: dot > leader > arrowhead > note (one per page) */
+  .kicker { display: flex; align-items: flex-start; gap: 10px;
+            font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--anno); }
+  .kicker svg { flex: none; margin-top: 2px; }
+  .kicker a { font-weight: 500; }
+  .explore-link { align-self: flex-start; margin-top: 4px; }
+
+  /* ---------- right panel (carbon): the career commit graph ---------- */
+  .hero-panel {
+    position: relative; overflow: hidden;
+    background: radial-gradient(90% 70% at 62% 38%, #0E1220 0%, var(--carbon) 72%);
+    display: flex; flex-direction: column;
+  }
+  .graph { flex: 1; min-height: 0; width: 100%; padding: 14px 10px 0; }
+  .graph svg { width: 100%; height: 100%; display: block; }
+
+  .branch {
+    fill: none; stroke: var(--ink-dark); stroke-width: 1.5;
+    stroke-linecap: round; opacity: .55;
+    transition: opacity 200ms ease;
+  }
+  .branch.lit { opacity: 1; }
+
+  .glabel {
+    font-family: var(--mono); font-size: 8px; letter-spacing: .12em;
+    fill: var(--anno-dark);
+  }
+  .glabel.now { fill: var(--redline-wire); }
+
+  .commit { cursor: default; outline: none; }
+  .commit .hit { fill: transparent; pointer-events: all; }
+  .commit .dot { fill: var(--ink-dark); opacity: .92; transition: opacity 150ms ease; }
+  .commit .dot.red { fill: var(--redline-wire); }
+  .commit .ring { fill: none; stroke: var(--ink-dark); stroke-width: 1; opacity: 0; }
+  .commit:focus .ring, .commit:focus-visible .ring { opacity: .85; }
+  .commit.active .dot { opacity: 1; }
+  .junction { fill: var(--ink-dark); opacity: .5; }
+  .tipdot { fill: var(--ink-dark); opacity: .9; }
+  .tipdot.red { fill: var(--redline-wire); }
+
+  /* tooltip chip */
+  .chip {
+    position: absolute; z-index: 5; pointer-events: none;
+    background: var(--carbon); border: 1px solid rgba(232,234,237,.32);
+    color: var(--ink-dark);
+    font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
+    padding: 6px 9px; white-space: nowrap;
+    box-shadow: 0 2px 14px rgba(0,0,0,.55);
+    opacity: 0; visibility: hidden;
+    transition: opacity 120ms ease, visibility 120ms;
+  }
+  .chip.show { opacity: 1; visibility: visible; }
+  .chip .g { margin-right: 7px; }
+  .chip .g.red { color: var(--redline-wire); }
+
+  .hud {
+    position: relative; z-index: 2;
+    padding: 0 26px 18px; color: var(--anno-dark);
+  }
+
+  /* ---------- motion: draw-in once + gentle float, PRM-gated.
+       Final state without animation is identical (base rules above
+       already ARE the final state). ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .branch {
+      stroke-dasharray: 1; stroke-dashoffset: 1;   /* pathLength=1 on every path */
+      animation: ink 1200ms cubic-bezier(.45,0,.2,1) var(--bd, 0ms) forwards;
+    }
+    @keyframes ink { to { stroke-dashoffset: 0; } }
+
+    .commit, .tipdot, .junction {
+      opacity: 0;
+      animation: arrive 500ms ease-out var(--d, 1200ms) forwards;
+    }
+    /* commits then drift ±2.5px along their (vertical) lines, 15–30s */
+    .commit {
+      animation: arrive 500ms ease-out var(--d, 1200ms) forwards,
+                 drift var(--fd, 21s) ease-in-out 2.6s infinite alternate;
+    }
+    @keyframes arrive { to { opacity: 1; } }
+    @keyframes drift { from { transform: translateY(0); } to { transform: translateY(-2.5px); } }
+
+    .glabel { opacity: 0; animation: arrive 600ms ease-out var(--d, 1400ms) forwards; }
+
+    /* red revision ellipse inks itself in after the line settles */
+    .revision path {
+      stroke-dasharray: 1; stroke-dashoffset: 1;   /* pathLength=1 */
+      animation: ink 700ms ease-out 900ms forwards;
+    }
+    /* kicker: leader line draws, then dot + arrowhead arrive */
+    .kicker .k-line { stroke-dasharray: 50; stroke-dashoffset: 50; animation: kick 500ms ease-out 950ms forwards; }
+    @keyframes kick { to { stroke-dashoffset: 0; } }
+    .kicker .k-dot, .kicker .k-head { opacity: 0; animation: arrive 300ms ease-out 1350ms forwards; }
+  }
+
+  /* ---------- below-fold peek: the proof pair ---------- */
+  .peek { padding: 44px 64px 96px; border-top: 1px solid rgba(22,24,29,.2); }
+  .peek h2 { font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+             font-weight: 400; color: var(--anno); margin-bottom: 22px; }
+  .peek .pair { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 26px; max-width: 1080px; }
+  .card { border: 1px solid rgba(22,24,29,.2); background: var(--mylar); }
+  .card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block;
+              border-bottom: 1px solid rgba(22,24,29,.2); }
+  .card-body { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+  .card-body h3 { font-family: var(--display); font-weight: 600; font-size: 16px; letter-spacing: -0.01em; }
+  .card-body .blurb { font-family: var(--serif); font-size: 13.5px; line-height: 1.6; color: var(--anno); max-width: 46ch; }
+  .sheetlinks { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 12px 30px;
+                font-family: var(--mono); font-size: 11px; letter-spacing: .06em; }
+
+  /* ---------- <900px: stack simply, stay readable ---------- */
+  @media (max-width: 899px) {
+    .chrome { flex-wrap: wrap; }
+    .hero { grid-template-columns: 1fr; height: auto; min-height: 0; max-height: none; }
+    .hero-copy { padding: 40px 24px 36px; }
+    .hero-panel { height: 560px; }
+    .peek { padding: 36px 24px 90px; }
+    .peek .pair { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="chrome">
+  <div class="mark">EEC</div>
+  <div>
+    <div style="font-weight:600;font-size:12px;letter-spacing:.1em;">EMILIE EL CHIDIAC</div>
+    <div class="mono-s anno">DESIGN TECHNOLOGY ARCHITECT · MACAD @ IAAC</div>
+  </div>
+  <nav>
+    <a href="#">WORK</a>
+    <a href="#">NOTEBOOK</a>
+    <a href="#">ABOUT</a>
+    <a href="#">CV</a>
+  </nav>
+  <a class="door" href="#" style="color:var(--redline)">EXPLORE THE NETWORK &gt;</a>
+</header>
+
+<main>
+  <section class="hero">
+
+    <!-- LEFT · mylar column (identical to LANDING A) -->
+    <div class="hero-copy">
+      <h1>
+        I started asking buildings a question my software couldn&rsquo;t answer:
+        <span class="h1-serif">how will this space make someone
+          <span class="revision">feel?<svg viewBox="0 0 120 60" aria-hidden="true"><path pathLength="1" d="M 8 34 C 2 16, 30 4, 62 6 C 96 8, 118 18, 114 34 C 110 50, 78 58, 48 55 C 20 52, 6 46, 10 30"/></svg></span>
+        </span>
+      </h1>
+
+      <p class="sub">
+        So I build the missing tools. I&rsquo;m Emilie El Chidiac, Design Technology Architect.
+        <span class="chipword">NeuroSpace</span> reads a floor plan and scores its effect on the mind;
+        <span class="chipword">Sensi</span>, winner at the MaCAD Awards 2026, makes comfort a design layer.
+      </p>
+
+      <p class="mono factline">COMPUTATIONAL DESIGN · DESIGN TECHNOLOGY · MACAD @ IAAC</p>
+
+      <div class="kicker">
+        <svg width="46" height="22" viewBox="0 0 46 22" aria-hidden="true">
+          <circle class="k-dot" cx="3" cy="3" r="2.5" fill="var(--redline)"/>
+          <path class="k-line" d="M 3 6 L 3 18 L 40 18" stroke="var(--redline)" stroke-width="1.2" fill="none"/>
+          <path class="k-head" d="M 40 15 L 45 18 L 40 21 z" fill="var(--redline)"/>
+        </svg>
+        <span>i call where this is going:
+          <a href="#">Behavior Information Modeling</a>
+          <span class="anno">(opens the live NeuroSpace app)</span>
+        </span>
+      </div>
+
+      <a class="mono explore-link" href="#">EXPLORE THE WHOLE MIND &gt;</a>
+    </div>
+
+    <!-- RIGHT · carbon panel: THE CAREER COMMIT GRAPH -->
+    <div class="hero-panel" id="panel">
+      <div class="graph">
+        <!-- Time flows bottom (2018) to top (NOW). One vertical main line;
+             branches depart and merge git-style. Every dot is a real entry. -->
+        <svg viewBox="0 0 720 900" preserveAspectRatio="xMidYMid meet" role="group"
+             aria-label="Career commit graph, 2018 to now: the main line with five branches — SOMA, BIM International, Dynamic Solution, self-employed practice, and MaCAD">
+
+          <!-- ===== branches (draw order = stagger order) ===== -->
+          <path class="branch" data-branchline="main" style="--bd:0ms"    pathLength="1" d="M 330 852 L 330 70"/>
+          <path class="branch" data-branchline="self" style="--bd:250ms"  pathLength="1" d="M 330 730 C 330 700, 520 708, 520 676 L 520 88"/>
+          <path class="branch" data-branchline="bim"  style="--bd:450ms"  pathLength="1" d="M 330 645 C 330 636, 390 641, 390 632 L 390 628 C 390 619, 330 624, 330 615"/>
+          <path class="branch" data-branchline="soma" style="--bd:600ms"  pathLength="1" d="M 330 615 C 330 594, 225 604, 225 583 L 225 577 C 225 556, 330 566, 330 545"/>
+          <path class="branch" data-branchline="dyn"  style="--bd:750ms"  pathLength="1" d="M 330 520 C 330 494, 455 500, 455 474 L 455 104"/>
+          <path class="branch" data-branchline="macad" style="--bd:900ms" pathLength="1" d="M 330 430 C 330 404, 185 410, 185 384 L 185 96"/>
+
+          <!-- ===== junctions + open tips ===== -->
+          <circle class="junction" style="--d:1000ms" cx="330" cy="645" r="2"/>  <!-- bim departs -->
+          <circle class="junction" style="--d:1200ms" cx="330" cy="545" r="2"/>  <!-- soma merges -->
+          <circle class="tipdot"      style="--d:1900ms" cx="455" cy="104" r="3"/>              <!-- dynamic · open -->
+          <circle class="tipdot"      style="--d:2000ms" cx="185" cy="96"  r="3"/>              <!-- macad · open -->
+          <circle class="tipdot red"  style="--d:1500ms" cx="520" cy="88"  r="4"/>              <!-- self-employed · open, live -->
+          <circle class="tipdot red"  style="--d:1500ms" cx="330" cy="70"  r="4.5"/>            <!-- NOW terminus -->
+
+          <!-- ===== era labels at departures ===== -->
+          <text class="glabel"     style="--d:500ms"  x="344" y="849" text-anchor="start">B.ARCH · LAU · 2018</text>
+          <text class="glabel"     style="--d:1200ms" x="213" y="586" text-anchor="end">SOMA · DUBAI · 2023 &gt; 2024</text>
+          <text class="glabel"     style="--d:1100ms" x="402" y="633" text-anchor="start">BIM INTERNATIONAL · 2023</text>
+          <text class="glabel"     style="--d:1300ms" x="467" y="508" text-anchor="start">DYNAMIC SOLUTION · 2024 &gt; NOW</text>
+          <text class="glabel"     style="--d:1600ms" x="171" y="392" text-anchor="end">MACAD @ IAAC · 2025 &gt; NOW</text>
+          <text class="glabel"     style="--d:1500ms" x="520" y="72"  text-anchor="middle">SELF-EMPLOYED · OPEN</text>
+          <text class="glabel now" style="--d:1500ms" x="344" y="74"  text-anchor="start">NOW</text>
+
+          <!-- ===== commits · MAIN line (bottom to top) ===== -->
+          <g class="commit" tabindex="0" role="img" data-branch="main" style="--d:400ms;--fd:24s"
+             data-glyph="+" data-kind="milestone" data-title="B.ARCH · LEBANESE AMERICAN UNIVERSITY · 2018-09"
+             aria-label="Milestone: Bachelor of Architecture begins, Lebanese American University, September 2018, main line">
+            <circle class="hit" cx="330" cy="852" r="11"/><circle class="ring" cx="330" cy="852" r="8"/><circle class="dot" cx="330" cy="852" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="main" style="--d:600ms;--fd:18s"
+             data-glyph="+" data-kind="milestone" data-title="SELF-EMPLOYED PRACTICE OPENS · 2022-01"
+             aria-label="Milestone: self-employed practice opens, January 2022, still open">
+            <circle class="hit" cx="330" cy="730" r="11"/><circle class="ring" cx="330" cy="730" r="8"/><circle class="dot" cx="330" cy="730" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="main" style="--d:800ms;--fd:27s"
+             data-glyph="+" data-kind="milestone" data-title="DESIGN ARCHITECT · SOMA, DUBAI · 2023-08"
+             aria-label="Milestone: Design Architect at SOMA, Dubai, August 2023, branch departs and merges back July 2024">
+            <circle class="hit" cx="330" cy="615" r="11"/><circle class="ring" cx="330" cy="615" r="8"/><circle class="dot" cx="330" cy="615" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="main" style="--d:900ms;--fd:20s"
+             data-glyph="+" data-kind="milestone" data-title="PROJECT ARCHITECT · DYNAMIC SOLUTION CO. · 2024-08"
+             aria-label="Milestone: Project Architect at Dynamic Solution Company, Kuwait, August 2024, branch still open">
+            <circle class="hit" cx="330" cy="520" r="11"/><circle class="ring" cx="330" cy="520" r="8"/><circle class="dot" cx="330" cy="520" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="main" style="--d:1000ms;--fd:23s"
+             data-glyph="+" data-kind="milestone" data-title="MACAD @ IAAC · YEAR 1 BEGINS · 2025-10"
+             aria-label="Milestone: MaCAD at IAAC, year one begins, October 2025, branch still open">
+            <circle class="hit" cx="330" cy="430" r="11"/><circle class="ring" cx="330" cy="430" r="8"/><circle class="dot" cx="330" cy="430" r="3.5"/>
+          </g>
+
+          <!-- ===== commits · SELF-EMPLOYED branch ===== -->
+          <g class="commit" tabindex="0" role="img" data-branch="self" style="--d:800ms;--fd:26s"
+             data-glyph="■" data-kind="project" data-title="RING 4000 · RINGS OF MARS · TOP 50 · 2022-06"
+             aria-label="Project: Ring 4000, Rings of Mars competition top 50, AI-driven workflows for a Martian ring city, June 2022, self-employed branch">
+            <circle class="hit" cx="520" cy="662" r="11"/><circle class="ring" cx="520" cy="662" r="8"/><circle class="dot" cx="520" cy="662" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="self" style="--d:950ms;--fd:17s"
+             data-glyph="*" data-kind="award" data-title="BIENNALE ARTE 2024 · PROJECT FEATURED · 2023-05"
+             aria-label="Award: project featured at Biennale Arte 2024, May 2023, self-employed branch">
+            <circle class="hit" cx="520" cy="618" r="11"/><circle class="ring" cx="520" cy="618" r="8"/><circle class="dot" cx="520" cy="618" r="3.5"/>
+          </g>
+
+          <!-- ===== commits · SOMA branch ===== -->
+          <g class="commit" tabindex="0" role="img" data-branch="soma" style="--d:1300ms;--fd:22s"
+             data-glyph="■" data-kind="project" data-title="TOWERS AT SOMA · RHINO + GRASSHOPPER · 2023"
+             aria-label="Project: Towers at SOMA, facade and massing studies in Rhino and Grasshopper across four Dubai towers, 2023, SOMA branch">
+            <circle class="hit" cx="225" cy="580" r="11"/><circle class="ring" cx="225" cy="580" r="8"/><circle class="dot" cx="225" cy="580" r="3.5"/>
+          </g>
+
+          <!-- ===== commits · MACAD branch (bottom to top) ===== -->
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:1500ms;--fd:19s"
+             data-glyph="■" data-kind="project" data-title="NEUROSPACE · P-102 · SOLO · 2026-03"
+             aria-label="Project: NeuroSpace, sheet P-102, solo build. Move a slider, watch the score respond. March 2026, MaCAD branch">
+            <circle class="hit" cx="185" cy="376" r="11"/><circle class="ring" cx="185" cy="376" r="8"/><circle class="dot" cx="185" cy="376" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:1560ms;--fd:25s"
+             data-glyph="~" data-kind="thought" data-title="PHYSICS SOLVERS · THOUGHT · 2026-04"
+             aria-label="Thought note: physics solvers, April 2026, MaCAD branch">
+            <circle class="hit" cx="185" cy="348" r="11"/><circle class="ring" cx="185" cy="348" r="8"/><circle class="dot" cx="185" cy="348" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:1620ms;--fd:16s"
+             data-glyph="■" data-kind="project" data-title="A BALLOONING MARKET · P-104 · 2026-04"
+             aria-label="Project: A Ballooning Market, sheet P-104, filling a historic Cairo market with balloons, April 2026, MaCAD branch">
+            <circle class="hit" cx="185" cy="324" r="11"/><circle class="ring" cx="185" cy="324" r="8"/><circle class="dot" cx="185" cy="324" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:1680ms;--fd:28s"
+             data-glyph="*" data-kind="award" data-title="JURY AWARD · AIA GENERATIVE AI · LEGOARCH · 2026-05"
+             aria-label="Award: jury award, AIA generative AI, for LegoArch, May 2026, MaCAD branch">
+            <circle class="hit" cx="185" cy="294" r="11"/><circle class="ring" cx="185" cy="294" r="8"/><circle class="dot" cx="185" cy="294" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:1740ms;--fd:21s"
+             data-glyph="~" data-kind="thought" data-title="COMFORT AS DATA · THOUGHT · 2026-05"
+             aria-label="Thought note: comfort as data, May 2026, MaCAD branch">
+            <circle class="hit" cx="185" cy="270" r="11"/><circle class="ring" cx="185" cy="270" r="8"/><circle class="dot" cx="185" cy="270" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:1800ms;--fd:24s"
+             data-glyph="■" data-kind="project" data-title="LEGOARCH · P-106 · IN PREPARATION · 2026-05"
+             aria-label="Project: LegoArch, sheet P-106 in preparation, a text prompt returns a buildable LEGO set, May 2026, MaCAD branch">
+            <circle class="hit" cx="185" cy="246" r="11"/><circle class="ring" cx="185" cy="246" r="8"/><circle class="dot" cx="185" cy="246" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:1860ms;--fd:18s"
+             data-glyph="*" data-kind="award" data-title="MACAD AWARDS · DESIGN COPILOTS · WINNER · SENSI · 2026-06"
+             aria-label="Award: MaCAD Awards, Design Copilots category, winner, for Sensi, June 2026, MaCAD branch">
+            <circle class="hit" cx="185" cy="214" r="11"/><circle class="ring" cx="185" cy="214" r="8"/><circle class="dot" cx="185" cy="214" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:1920ms;--fd:26s"
+             data-glyph="+" data-kind="milestone" data-title="MACAD YEAR 1 COMPLETE · THE TECHNICAL YEAR · 2026-06"
+             aria-label="Milestone: MaCAD year one complete, the technical year, June 2026, MaCAD branch">
+            <circle class="hit" cx="185" cy="190" r="11"/><circle class="ring" cx="185" cy="190" r="8"/><circle class="dot" cx="185" cy="190" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:1980ms;--fd:20s"
+             data-glyph="~" data-kind="thought" data-title="BUILDINGS THAT RESPOND · THOUGHT · 2026-06"
+             aria-label="Thought note: buildings that respond, June 2026, MaCAD branch">
+            <circle class="hit" cx="185" cy="166" r="11"/><circle class="ring" cx="185" cy="166" r="8"/><circle class="dot" cx="185" cy="166" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:2040ms;--fd:23s"
+             data-glyph="■" data-kind="project" data-title="SENSI · P-101 · 2026-06"
+             aria-label="Project: Sensi, sheet P-101, comfort as a design layer, June 2026, MaCAD branch">
+            <circle class="hit" cx="185" cy="142" r="11"/><circle class="ring" cx="185" cy="142" r="8"/><circle class="dot" cx="185" cy="142" r="3.5"/>
+          </g>
+          <g class="commit" tabindex="0" role="img" data-branch="macad" style="--d:2100ms;--fd:17s"
+             data-glyph="#" data-kind="sheet" data-title="SHEETS P-101, P-102, P-104 ISSUED · 2026-07"
+             aria-label="Sheet issue: sheets P-101, P-102 and P-104 issued, July 2026, MaCAD branch, live">
+            <circle class="hit" cx="185" cy="112" r="11"/><circle class="ring" cx="185" cy="112" r="8"/><circle class="dot red" cx="185" cy="112" r="3.5"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- tooltip chip (presentational; the dots carry aria-labels) -->
+      <div class="chip" id="chip" aria-hidden="true"><span class="g" id="chip-g"></span><span id="chip-t"></span></div>
+
+      <div class="hud mono-s">THE CAREER, STILL COMMITTING · FOLLOW A BRANCH</div>
+    </div>
+  </section>
+
+  <!-- below-fold peek: identical to LANDING A -->
+  <section class="peek" aria-labelledby="featured-h">
+    <h2 id="featured-h">FEATURED / THE PROOF PAIR</h2>
+    <div class="pair">
+      <article class="card">
+        <img src="./assets/img/sensi.webp" alt="Sensi — the comfort copilot interface over a scored scene">
+        <div class="card-body">
+          <div class="mono-s anno">P-101 · MACAD STUDIO · TEAM OF 4 · 2026</div>
+          <h3>Sensi</h3>
+          <p class="blurb">Comfort is usually the thing we hope shows up after the design is done. Sensi makes it a design layer.</p>
+        </div>
+      </article>
+      <article class="card">
+        <img src="./assets/img/neurospace.webp" alt="NeuroSpace — a floor plan scored live in the browser">
+        <div class="card-body">
+          <div class="mono-s anno">P-102 · SOLO BUILD · 2026</div>
+          <h3>NeuroSpace</h3>
+          <p class="blurb">Move a slider, watch the score respond. It&rsquo;s BIM, reframed as Behavior Information Modeling.</p>
+        </div>
+      </article>
+    </div>
+    <p class="sheetlinks">
+      <a href="#">SHEET P-101: SENSI &gt;</a>
+      <a href="#">SHEET P-102: NEUROSPACE &gt;</a>
+    </p>
+  </section>
+</main>
+
+<div class="mockup-note">MOCKUP · NOT PRODUCTION</div>
+
+<script>
+(function () {
+  'use strict';
+  var panel = document.getElementById('panel');
+  var chip = document.getElementById('chip');
+  var chipG = document.getElementById('chip-g');
+  var chipT = document.getElementById('chip-t');
+  var active = null;
+
+  function branchOf(g) {
+    return panel.querySelector('[data-branchline="' + g.getAttribute('data-branch') + '"]');
+  }
+
+  function show(g) {
+    hide();
+    active = g;
+    g.classList.add('active');
+    var line = branchOf(g);
+    if (line) line.classList.add('lit');
+
+    chipG.textContent = g.getAttribute('data-glyph');
+    chipG.classList.toggle('red', g.getAttribute('data-kind') === 'sheet');
+    chipT.textContent = g.getAttribute('data-title');
+
+    // position beside the dot (float transform included in the rect)
+    var dot = g.querySelector('.dot');
+    var r = dot.getBoundingClientRect();
+    var pr = panel.getBoundingClientRect();
+    var w = chip.offsetWidth, h = chip.offsetHeight;
+    var ax = r.left + r.width / 2 - pr.left;
+    var ay = r.top + r.height / 2 - pr.top;
+    var left = ax + 14;
+    if (left + w > pr.width - 10) left = ax - 14 - w;
+    if (left < 10) left = 10;
+    var top = Math.min(Math.max(ay - h / 2, 8), pr.height - h - 8);
+    chip.style.left = left + 'px';
+    chip.style.top = top + 'px';
+    chip.classList.add('show');
+  }
+
+  function hide() {
+    if (!active) return;
+    active.classList.remove('active');
+    var line = branchOf(active);
+    if (line) line.classList.remove('lit');
+    active = null;
+    chip.classList.remove('show');
+  }
+
+  var commits = panel.querySelectorAll('.commit');
+  for (var i = 0; i < commits.length; i++) {
+    (function (g) {
+      g.addEventListener('pointerenter', function () { show(g); });
+      g.addEventListener('pointerleave', function () { if (document.activeElement !== g) hide(); });
+      g.addEventListener('focus', function () { show(g); });
+      g.addEventListener('blur', function () { hide(); });
+    })(commits[i]);
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if (active && document.activeElement === active) active.blur();
+      hide();
+    }
+  });
+  window.addEventListener('resize', hide);
+  window.addEventListener('scroll', hide, { passive: true });
+})();
+</script>
+
+<a href="./index.html" style="position:fixed;bottom:10px;left:12px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--redline);background:var(--mylar);border:1px solid var(--redline);padding:4px 9px;text-decoration:none;z-index:999;">&lt; STUDIO INDEX</a></body>
+</html>

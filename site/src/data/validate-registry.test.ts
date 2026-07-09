@@ -6,7 +6,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
-import { ENTRIES, EXPLORE_NODES } from './registry'
+import { AWARD_WINNER_IDS, ENTRIES, EXPLORE_NODES } from './registry'
+import { buildMindGraph } from '../landing/mindGraph'
 import { PROJECTS_BY_SLUG } from './projects'
 import { SHEETS } from '../sheets'
 import { THOUGHT_NOTES } from '../thoughts/notes'
@@ -60,6 +61,24 @@ test('every drafted note has its THOUGHT_NOTES body', () => {
 test('explore orders are unique and contiguous from 0', () => {
   const orders = EXPLORE_NODES.map(n => n.order).sort((a, b) => a - b)
   expect(orders).toEqual(orders.map((_, i) => i))
+})
+
+// The mind-graph layout must COVER the registry: every explore node needs a
+// geometry entry in landing/mindGraph.ts, and every node's threads must exist
+// (buildMindGraph throws otherwise). An append that forgets its coords fails the
+// build here, before it ships a node floating at the origin.
+test('every explore node has mind-graph geometry (coverage)', () => {
+  const build = () => buildMindGraph()
+  expect(build).not.toThrow()
+  expect(build().nodes.length).toBe(EXPLORE_NODES.length)
+})
+
+// The award star derives from award entries' refId, so each refId must resolve
+// to a real project entry (else the star points at nothing / drifts).
+test('every award refId resolves to a project entry', () => {
+  const projectIds = new Set(ENTRIES.filter(e => e.kind === 'project').map(e => e.id))
+  const broken = [...AWARD_WINNER_IDS].filter(id => !projectIds.has(id))
+  expect(broken).toEqual([])
 })
 
 // Video binaries are committed by hand (the pipeline runs locally, never in

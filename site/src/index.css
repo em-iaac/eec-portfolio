@@ -50,6 +50,8 @@
   /* Dark ground */
   --color-carbon: #0b0e13; /* EXPLORE ground / dark strips */
   --color-ink-dark: #e8eaed; /* ink on carbon, 15.9:1 */
+  --color-ink-bright: #c7cbd1; /* landing type ramp: adjective line (between ink-dark and anno, AA on carbon) */
+  --color-prose-dark: #b4bac2; /* landing type ramp: serif voice line (brighter than anno so prose is not a ghost) */
   --color-anno-dark: #8a919c; /* annotation on carbon */
 
   /* Type */
@@ -377,6 +379,194 @@ section[id] {
     transform: none;
     filter: none;
     opacity: 1;
+  }
+}
+
+/* ============================================================
+   THE LANDING MIND-GRAPH (Session R1). The all-dark cover's artwork:
+   idea threads + project/thought marks over carbon. Ported from the proven
+   mock design-studio/cover-dark-threads.html with the council fixes. All
+   ceremonies are one-shot and render their final state under reduced motion
+   (governance rule 7 / the honest-fallback floor). Colours come from @theme;
+   the JS only toggles state classes.
+   ============================================================ */
+.mg-thread {
+  fill: none;
+  stroke: var(--color-ink-dark);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  opacity: 0.28;
+  transition: opacity 0.35s ease, stroke-width 0.35s ease, stroke 0.35s ease;
+}
+.mg-thread.active {
+  opacity: 0.92;
+  stroke-width: 1.6;
+}
+.mg-stage.is-focus .mg-thread:not(.active) {
+  opacity: 0.08;
+}
+
+.mg-node {
+  cursor: pointer;
+  outline: none;
+}
+.mg-core {
+  transition: opacity 0.3s ease, fill 0.3s ease, stroke 0.3s ease;
+}
+.mg-core.p {
+  fill: var(--color-ink-dark);
+  stroke: none;
+}
+.mg-core.t {
+  fill: none;
+  stroke: var(--color-ink-dark);
+  stroke-width: 1.4;
+}
+.mg-hit {
+  fill: transparent;
+  stroke: none;
+  pointer-events: all;
+}
+.mg-lbl {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.mg-lbl.p {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  fill: var(--color-ink-dark);
+}
+.mg-lbl.t {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 9.5px;
+  fill: var(--color-anno-dark);
+}
+.mg-node.rest .mg-lbl,
+.mg-node.active .mg-lbl,
+.mg-node.member .mg-lbl,
+.mg-node.lit .mg-lbl {
+  opacity: 1;
+}
+.mg-stage.is-focus .mg-node:not(.active):not(.member):not(.lit) .mg-core {
+  opacity: 0.2;
+}
+.mg-stage.is-focus .mg-node.rest:not(.active):not(.member):not(.lit) .mg-lbl {
+  opacity: 0;
+}
+.mg-node:focus-visible .mg-core {
+  stroke: var(--color-redline-wire);
+  stroke-width: 2;
+}
+
+.mg-edge-lbl {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  fill: var(--color-anno-dark);
+  cursor: pointer;
+  outline: none;
+  transition: opacity 0.3s ease, fill 0.3s ease;
+}
+.mg-edge-lbl.active {
+  fill: var(--color-ink-dark);
+}
+.mg-stage.is-focus .mg-edge-lbl:not(.active) {
+  opacity: 0.22;
+}
+.mg-edge-lbl:focus-visible {
+  fill: var(--color-redline-wire);
+}
+
+/* award glow: a soft radial halo that breathes behind each sparkle. In-place
+   (transform-box + centre origin) so it NEVER moves the mark off its thread.
+   Hidden at rest by default (opacity 0); only the PRM-gated pulse below shows
+   it, and only while the field is neither introducing nor focused, so it never
+   fights the draw-in or the hover-dim. */
+.mg-glow {
+  opacity: 0;
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* draw-in (PRM-gated): threads sweep, marks pop, labels fade. The award glow is
+   the only looping motion and is also PRM-gated. */
+@media (prefers-reduced-motion: no-preference) {
+  .mg-intro .mg-thread {
+    animation: mg-thread-draw 900ms cubic-bezier(0.25, 0.7, 0.3, 1) both;
+  }
+  .mg-intro .mg-core {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: mg-dot-in 340ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  }
+  .mg-intro .mg-node.rest .mg-lbl,
+  .mg-intro .mg-edge-lbl {
+    animation: mg-fade-in 560ms ease-out 2.7s both;
+  }
+  .mg-stage:not(.is-focus):not(.mg-intro) .mg-glow {
+    animation: mg-glow 4.2s ease-in-out infinite;
+  }
+  /* the sparkle itself breathes in place on the same clock as its halo (no
+     translate, so it never leaves its thread). Phase-locked to the halo via the
+     inline animation-delay set per award node. */
+  .mg-stage:not(.is-focus):not(.mg-intro) .mg-award {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: mg-twinkle 4.2s ease-in-out infinite;
+  }
+}
+/* Reduced motion: no pulse, but awards still carry a faint static halo so the
+   recognition still reads. */
+@media (prefers-reduced-motion: reduce) {
+  .mg-stage:not(.is-focus):not(.mg-intro) .mg-glow {
+    opacity: 0.3;
+  }
+}
+@keyframes mg-thread-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes mg-dot-in {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes mg-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes mg-glow {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.42;
+    transform: scale(1.08);
+  }
+}
+@keyframes mg-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.86;
+    transform: scale(1.05);
   }
 }
 

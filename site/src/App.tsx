@@ -5,9 +5,7 @@ import Notebook from './pages/Notebook'
 import About from './pages/About'
 import CV from './pages/CV'
 import SheetRoute from './pages/SheetRoute'
-import ExploreErrorBoundary from './components/ExploreErrorBoundary'
 
-const ExplorePage = lazy(() => import('./explore/ExplorePage'))
 // Thought-note leaves (Session 11): split out of the landing chunk; the note
 // prose only loads when someone opens /thoughts/:id.
 const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
@@ -15,25 +13,6 @@ const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
 // Mylar hold while a lazy READ-mode chunk resolves (matches SheetRoute).
 function MylarScreen() {
   return <div className="min-h-dvh bg-mylar" aria-hidden="true" />
-}
-
-// Bare carbon field while the EXPLORE chunk loads, so the mode toggle's
-// overlay, the loading state, and the scene read as one continuous dark table.
-function CarbonScreen() {
-  return <div className="fixed inset-0 bg-carbon" aria-hidden="true" />
-}
-
-// Boundary OUTSIDE Suspense: a chunk-eval throw (e.g. the graph layout
-// invariant) rejects the lazy import and must land on the message, not
-// blank the app.
-function ExploreRoute() {
-  return (
-    <ExploreErrorBoundary>
-      <Suspense fallback={<CarbonScreen />}>
-        <ExplorePage />
-      </Suspense>
-    </ExploreErrorBoundary>
-  )
 }
 
 // /work carried the old drawing-set archive; the Notebook replaced it.
@@ -51,19 +30,13 @@ function ScrollToTop() {
   const { pathname, hash } = useLocation()
   const navType = useNavigationType()
   const firstMount = useRef(true)
-  const prevPath = useRef(pathname)
   useEffect(() => {
-    const cameFrom = prevPath.current
-    prevPath.current = pathname
     if (firstMount.current) {
       firstMount.current = false
       if (hash) document.getElementById(hash.slice(1))?.scrollIntoView()
       return
     }
     if (navType === 'POP') return
-    // Intra-EXPLORE param changes (focusing words) must not fight the scene
-    // with scroll/focus churn.
-    if (pathname.startsWith('/explore') && cameFrom.startsWith('/explore')) return
     if (hash) {
       document.getElementById(hash.slice(1))?.scrollIntoView()
     } else {
@@ -116,8 +89,10 @@ export default function App() {
             </Suspense>
           }
         />
-        <Route path="/explore" element={<ExploreRoute />} />
-        <Route path="/explore/:nodeId" element={<ExploreRoute />} />
+        {/* EXPLORE retired (R1): the landing IS the mind graph now. These URLs
+            are shared and citable, so they redirect to the landing, never 404. */}
+        <Route path="/explore" element={<Navigate to="/" replace />} />
+        <Route path="/explore/:nodeId" element={<Navigate to="/" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

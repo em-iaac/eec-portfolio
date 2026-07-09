@@ -3,13 +3,12 @@
 // The public open-to status line retired in Session 5 (FLAG-01): the search is
 // private, so the header carries no redline at all now. The bottom rule draws
 // in once per session with the red pen dot riding its leading edge.
-// Session 13 depth-level model: the landing IS the network surface now, so the
-// old "MODE: READ / EXPLORE" toggle framing retired. The cell is a plain link
-// into the deep level (/explore), running the same carbon-flood ceremony.
+// The landing IS the network surface (R1): the wayfinding cell is a plain link
+// to the landing (`/`), running the same carbon-flood ceremony. The old
+// "MODE: READ / EXPLORE" toggle framing retired in Session 13.
 import { useRef } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import LogoMark from './LogoMark'
-import { preloadExplore } from '../explore/preload'
 
 // De-numbered Session 6: titles only, no 01/02/03 indices.
 const NAV = [
@@ -72,11 +71,8 @@ export default function TitleBlock({ onExplore }: { onExplore?: () => void }) {
         </nav>
         <div className="flex w-full items-center px-3.5 pb-2.5 sm:w-auto sm:pb-0">
           <Link
-            to="/explore"
+            to="/"
             onClick={onExplore}
-            onPointerEnter={() => preloadExplore()}
-            onTouchStart={() => preloadExplore()}
-            onFocus={() => preloadExplore()}
             className="-m-2.5 p-2.5 font-mono text-[10px] tracking-[0.12em] whitespace-nowrap text-redline underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline"
           >
             EXPLORE THE NETWORK &gt;

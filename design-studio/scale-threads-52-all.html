@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMILIE EL CHIDIAC — cover · scale test: everything, all 52 (mockup)</title>
+<link rel="stylesheet" href="./pen-table.css">
+<style>
+  /* ---------- shell: full-bleed, non-scrolling cover ---------- */
+  html, body { height: 100%; }
+  body {
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    background: var(--mylar);
+  }
+
+  /* ---------- left column (42%, mylar) ---------- */
+  .left {
+    width: 42%;
+    height: 100%;
+    padding: 56px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .name {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: .02em;
+    color: var(--ink);
+  }
+  .subtitle {
+    margin-top: 12px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.45;
+    color: var(--anno);
+    max-width: 34ch;
+  }
+  .fact {
+    margin-top: 22px;
+    color: var(--anno);
+    line-height: 1.9;
+    max-width: 100%;
+  }
+
+  .nav-links {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .18em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links a .arw {
+    color: var(--anno);
+    margin-left: 10px;
+    transition: color .2s ease;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible {
+    text-decoration: underline;
+    text-decoration-color: var(--redline);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 6px;
+    outline: none;
+  }
+  .nav-links a:hover .arw, .nav-links a:focus-visible .arw { color: var(--redline); }
+
+  /* ---------- the pill (subordinate) ---------- */
+  .ask { margin-top: 36px; }
+  .ask input {
+    width: 260px;
+    height: 36px;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: transparent;
+    padding: 0 16px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .1em;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .ask input::placeholder { color: var(--anno); opacity: 1; }
+  .ask input:focus { outline: none; border-color: var(--redline); }
+  .chips {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  .ask:focus-within .chips { opacity: 1; pointer-events: auto; }
+  .chips button {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: .12em;
+    color: var(--anno);
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 6px 11px;
+    cursor: pointer;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .chips button:hover, .chips button:focus-visible {
+    color: var(--ink); border-color: var(--ink); outline: none;
+  }
+
+  /* ---------- handwritten aside ---------- */
+  .aside {
+    margin-top: auto;
+    max-width: 300px;
+    font-family: var(--hand);
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.35;
+    color: var(--anno);
+    transform: rotate(-2deg);
+    transform-origin: left bottom;
+  }
+  .aside .nb { color: var(--redline); }
+
+  /* ---------- right panel (58%, carbon) ---------- */
+  .panel {
+    width: 58%;
+    height: 100%;
+    position: relative;
+    background: var(--carbon);
+    -webkit-font-smoothing: antialiased;
+  }
+  .panel svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hud {
+    position: absolute;
+    right: 26px;
+    bottom: 40px;
+    color: var(--anno-dark);
+    letter-spacing: .14em;
+    text-align: right;
+  }
+  .hud .sub { display: block; margin-top: 6px; opacity: .72; }
+
+  /* ---------- variant corner tag ---------- */
+  .tag {
+    position: absolute;
+    left: 26px;
+    top: 24px;
+    color: var(--anno-dark);
+    letter-spacing: .14em;
+  }
+
+  /* ---------- handwritten note inside the panel (bottom-left) ---------- */
+  .panel-note {
+    position: absolute;
+    left: 26px;
+    bottom: 32px;
+    max-width: 235px;
+    font-family: var(--hand);
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.3;
+    color: var(--anno-dark);
+    transform: rotate(-2deg);
+    transform-origin: left bottom;
+    pointer-events: none;
+  }
+
+  /* ---------- fixed studio index return link ---------- */
+  .studio-index {
+    position: fixed;
+    right: 18px;
+    top: 16px;
+    z-index: 20;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .16em;
+    color: var(--anno);
+    text-decoration: none;
+  }
+  .studio-index .arw { margin-right: 8px; color: var(--anno); }
+  .studio-index:hover, .studio-index:focus-visible {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--redline);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 5px;
+    outline: none;
+  }
+  .studio-index:hover .arw, .studio-index:focus-visible .arw { color: var(--redline); }
+
+  /* ---------- graph: threads ---------- */
+  .thread {
+    fill: none;
+    stroke: var(--ink-dark);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    opacity: .35;
+    transition: opacity .35s ease, stroke-width .35s ease;
+  }
+  .thread.active { opacity: .8; stroke-width: 1.5; }
+  .panel.is-focus .thread:not(.active) { opacity: .07; }
+
+  /* ---------- graph: leader ticks (thin line from dot to its offset label) ---------- */
+  .leader {
+    stroke: var(--anno-dark);
+    stroke-width: .6;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  .node.active .leader, .node.lit .leader, .node.rest .leader { opacity: .4; }
+  .panel.is-focus .node.rest:not(.active):not(.member):not(.lit) .leader { opacity: 0; }
+
+  /* ---------- graph: nodes ---------- */
+  .node { cursor: pointer; outline: none; }
+  .node .core {
+    transition: opacity .3s ease, fill .3s ease;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .core.p { fill: var(--ink-dark); }
+  .core.t { fill: var(--anno-dark); }
+  .node .hit { fill: transparent; stroke: none; pointer-events: all; }
+  .node .lbl { opacity: 0; transition: opacity .3s ease; pointer-events: none; }
+  .lbl.p { font-family: var(--mono); font-size: 8px; letter-spacing: .1em; fill: var(--ink-dark); }
+  .lbl.t { font-family: var(--serif); font-style: italic; font-size: 9.5px; fill: var(--anno-dark); }
+  .node.rest .lbl { opacity: 1; }
+  .node.active .lbl, .node.lit .lbl { opacity: 1; }
+  .node.member .lbl { opacity: .85; }
+  .node.active .core { fill: var(--redline-wire); }
+  .panel.is-focus .node:not(.active):not(.member):not(.lit) .core { opacity: .18; }
+  .panel.is-focus .node.rest:not(.active):not(.member):not(.lit) .lbl { opacity: 0; }
+  .node:focus-visible .core { stroke: var(--redline-wire); stroke-width: 2; }
+
+  /* ---------- graph: edge (thread) labels ---------- */
+  .edge-lbl {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: .14em;
+    fill: var(--anno-dark);
+    cursor: pointer;
+    outline: none;
+    transition: opacity .3s ease, fill .3s ease;
+  }
+  .edge-lbl.active { fill: var(--ink-dark); }
+  .panel.is-focus .edge-lbl:not(.active) { opacity: .22; }
+  .edge-lbl:focus-visible { fill: var(--redline-wire); }
+
+  /* ---------- draw-in (PRM-gated; without motion, final state renders as-is) ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .thread { animation: shimmer 26s ease-in-out infinite; }
+    .intro .thread { animation: threadDraw 820ms cubic-bezier(.25,.7,.3,1) both; }
+    .intro .core { animation: dotIn 340ms cubic-bezier(.2,.9,.3,1.3) both; }
+    .intro .node.rest .lbl, .intro .node.rest .leader, .intro .edge-lbl { animation: fadeIn 380ms ease-out both; animation-delay: 1.05s; }
+    .intro .hud, .intro .tag, .intro .panel-note { animation: fadeIn 500ms ease-out both; animation-delay: 1.15s; }
+    .chips { transform: translateY(4px); transition: opacity .25s ease, transform .25s ease; }
+    .ask:focus-within .chips { transform: none; }
+  }
+  @keyframes threadDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes dotIn { from { transform: scale(0); } to { transform: scale(1); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes shimmer { 0%, 100% { stroke-opacity: 1; } 50% { stroke-opacity: .78; } }
+
+  /* ---------- under 900px: stack, allow scroll ---------- */
+  @media (max-width: 900px) {
+    body { display: block; height: auto; overflow: auto; }
+    .left { width: 100%; height: auto; min-height: 45dvh; padding: 40px 28px; }
+    .nav-links { margin-top: 40px; }
+    .aside { margin-top: 40px; margin-bottom: 8px; }
+    .panel { width: 100%; height: 55dvh; min-height: 420px; }
+  }
+</style>
+</head>
+<body>
+
+<a class="studio-index" href="./index.html"><span class="arw">&lt;</span>STUDIO INDEX</a>
+
+<main class="left">
+  <header>
+    <h1 class="name">EMILIE EL CHIDIAC</h1>
+    <p class="subtitle">Design Technology Architect. Buildings talk to me; I&nbsp;take notes.</p>
+    <p class="fact mono-s">MACAD AWARDS 2026 · WINNER · COMPUTATIONAL DESIGN · MACAD @ IAAC</p>
+  </header>
+
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#work">WORK<span class="arw">&gt;</span></a>
+    <a href="#thoughts">THOUGHTS<span class="arw">&gt;</span></a>
+    <a href="#notebook">NOTEBOOK<span class="arw">&gt;</span></a>
+    <a href="#cv">CV<span class="arw">&gt;</span></a>
+    <a href="#about">ABOUT<span class="arw">&gt;</span></a>
+  </nav>
+
+  <div class="ask">
+    <input id="ask-input" type="text" readonly placeholder="ASK THE PORTFOLIO · OR PRESS /" aria-label="Ask the portfolio (mockup, non-functional)">
+    <div class="chips" aria-hidden="false">
+      <button type="button">SHOW ME THE WORK</button>
+      <button type="button">THE AWARD</button>
+      <button type="button">WHAT IS BIM?</button>
+    </div>
+  </div>
+
+  <p class="aside"><span class="nb">n.b.</span> those lines over there are my actual thoughts, drawing themselves. hover one.</p>
+</main>
+
+<section class="panel intro" id="panel" aria-label="Mind graph scale test: ten idea threads, every one of the fifty-two archive nodes drawn at once (simulated 2031 content). A deliberate density stress test.">
+  <svg id="mind" viewBox="0 0 800 860" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Idea threads: neuro, ai, data, geometry, comfort, xr, writing, fabrication, learning, pedagogy. Projects sit where threads cross. Every node in the archive is drawn — nothing hidden.">
+    <g id="g-threads"></g>
+    <g id="g-edges"></g>
+    <g id="g-nodes"></g>
+  </svg>
+  <div class="tag mono-s">SCALE TEST · EVERYTHING SHOWN · SIMULATED 2031</div>
+  <div class="hud mono-s">52 NODES AND COUNTING · HOVER A DOT · EVERY ONE OPENS<span class="sub">SIMULATED CONTENT FOR SCALE TESTING</span></div>
+  <p class="panel-note" aria-hidden="true">nothing hidden here. this is what all of it looks like at once.</p>
+</section>
+
+<div class="mockup-note">MOCKUP · NOT PRODUCTION</div>
+
+<script>
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  var panel = document.getElementById('panel');
+  var svg = document.getElementById('mind');
+  var gThreads = document.getElementById('g-threads');
+  var gEdges = document.getElementById('g-edges');
+  var gNodes = document.getElementById('g-nodes');
+
+  /* ================================================================
+     EVERYTHING, 2031 — the honest stress test.
+     Every one of the 52 archive nodes is drawn on all 10 threads.
+     Nothing is curated away. Labels are offset with thin leader
+     ticks; threads route through their member coordinates. The
+     point of the test is to reveal whether 52 nodes tangle — so we
+     do NOT cheat by hiding anything.
+     ================================================================ */
+
+  /* ---------- data: threads (10). Waypoints pass through member nodes ---------- */
+  var THREADS = [
+    { id: 'NEURO',    lbl: [30, 233],
+      pts: [[22,245],[130,272],[280,320],[352,368],[440,420],[560,340],[560,470],[720,250],[782,232]] },
+    { id: 'AI',       lbl: [30, 560], anch: 'start',
+      pts: [[22,574],[150,556],[280,320],[365,398],[440,420],[470,556],[560,596],[650,440],[688,338],[720,250],[744,24]] },
+    { id: 'DATA',     lbl: [30, 362],
+      pts: [[22,374],[150,396],[352,368],[440,420],[470,556],[525,482],[610,545],[638,508],[665,495],[700,612],[720,490],[782,468]] },
+    { id: 'GEOMETRY', lbl: [30, 640],
+      pts: [[22,654],[85,630],[150,556],[235,592],[320,624],[430,700],[560,596],[610,545],[640,528],[665,495],[716,519],[748,549],[782,588]] },
+    { id: 'COMFORT',  lbl: [312, 40],
+      pts: [[300,22],[304,148],[280,320],[250,455],[242,524],[235,592],[205,720],[152,790],[185,842]] },
+    { id: 'XR',       lbl: [30, 96],
+      pts: [[22,108],[205,140],[304,148],[400,158],[600,130],[672,196],[782,96]] },
+    { id: 'WRITING',  lbl: [772, 300], anch: 'end',
+      pts: [[782,312],[688,338],[560,340],[525,482],[505,660],[430,760],[498,842]] },
+    { id: 'FABRICATION', lbl: [772, 640], anch: 'end',
+      pts: [[782,652],[705,690],[615,724],[500,742],[430,700],[360,748]] },
+    { id: 'LEARNING', lbl: [772, 730], anch: 'end',
+      pts: [[782,742],[700,612],[615,724],[540,806],[430,760],[300,806]] },
+    { id: 'PEDAGOGY', lbl: [30, 826], anch: 'start',
+      pts: [[22,822],[110,806],[205,720],[300,806],[360,748],[500,742],[540,806],[615,724]] }
+  ];
+
+  /* ---------- data: nodes — ALL 52, nothing hidden ----------
+     k: p=project, t=thought · a: text-anchor · d: [dx,dy] label offset
+     sim: plausible-but-fictional 2031 placeholder (density judging only) */
+  var NODES = [
+    /* ===== 24 PROJECTS (mono caps) ===== */
+    /* 11 real */
+    { n: 'SENSI',                   k: 'p', x: 280, y: 320, th: ['NEURO','AI','COMFORT'], a: 'middle', d: [0,-13],  rest: true },
+    { n: 'NEUROSPACE',              k: 'p', x: 440, y: 420, th: ['NEURO','DATA','AI'],    a: 'start',  d: [14,4],   rest: true },
+    { n: 'OPTIMIZING FOR THE MIND', k: 'p', x: 720, y: 250, th: ['NEURO','AI'],          a: 'end',    d: [-13,-9] },
+    { n: 'LEGOARCH',                k: 'p', x: 150, y: 556, th: ['AI','GEOMETRY'],        a: 'start',  d: [12,-9] },
+    { n: 'RING 4000',               k: 'p', x: 560, y: 596, th: ['AI','GEOMETRY'],        a: 'middle', d: [0,24] },
+    { n: 'THE HUDDLE',              k: 'p', x: 665, y: 495, th: ['GEOMETRY','DATA'],      a: 'start',  d: [13,-9] },
+    { n: 'THE LUNGS',               k: 'p', x: 610, y: 545, th: ['DATA','GEOMETRY'],      a: 'end',    d: [-12,17] },
+    { n: 'A BALLOONING MARKET',     k: 'p', x: 235, y: 592, th: ['GEOMETRY','COMFORT'],   a: 'middle', d: [0,-15] },
+    { n: 'TOWERS AT SOMA',          k: 'p', x: 85,  y: 630, th: ['GEOMETRY'],             a: 'start',  d: [8,-15] },
+    { n: 'CAPPELLETTI PAVILION',    k: 'p', x: 748, y: 549, th: ['GEOMETRY'],             a: 'end',    d: [-12,-9] },
+    { n: 'XR FOR EDUCATION',        k: 'p', x: 400, y: 158, th: ['XR'],                   a: 'middle', d: [0,-14] },
+    /* 13 simulated */
+    { n: 'THE CORTISOL ATLAS',      k: 'p', x: 352, y: 368, th: ['NEURO','DATA'],         a: 'end',    d: [-13,-8], sim: true },
+    { n: 'FACADE LISTENER',         k: 'p', x: 470, y: 556, th: ['DATA','GEOMETRY'],      a: 'start',  d: [13,4],   sim: true },
+    { n: 'DAYLIGHT LEDGER',         k: 'p', x: 720, y: 490, th: ['DATA','COMFORT'],       a: 'end',    d: [-13,15], sim: true },
+    { n: 'THESIS: SCORING SPACE',   k: 'p', x: 560, y: 340, th: ['NEURO','WRITING','DATA'], a: 'middle', d: [0,-14], rest: true, sim: true },
+    { n: 'ROOM TONE',               k: 'p', x: 242, y: 524, th: ['COMFORT','DATA'],       a: 'end',    d: [-12,4],  sim: true },
+    { n: 'THE PATIENT CORRIDOR',    k: 'p', x: 304, y: 148, th: ['NEURO','COMFORT'],      a: 'start',  d: [12,-6],  sim: true },
+    { n: 'SOFT MACHINES STUDIO',    k: 'p', x: 500, y: 742, th: ['FABRICATION','GEOMETRY'], a: 'middle', d: [0,-14], sim: true },
+    { n: 'CLASSROOM SENSORIUM',     k: 'p', x: 672, y: 196, th: ['PEDAGOGY','XR'],        a: 'end',    d: [-13,-8], sim: true },
+    { n: 'PRINTED SHADE',           k: 'p', x: 615, y: 724, th: ['FABRICATION','GEOMETRY'], a: 'start', d: [13,4],  sim: true },
+    { n: 'THE HONEST DASHBOARD',    k: 'p', x: 525, y: 482, th: ['DATA','WRITING'],       a: 'start',  d: [13,-6],  sim: true },
+    { n: 'WAYFINDING FOR THE BLIND',k: 'p', x: 205, y: 720, th: ['COMFORT','PEDAGOGY'],   a: 'start',  d: [12,5],   sim: true },
+    { n: 'A QUIETER CLINIC',        k: 'p', x: 152, y: 790, th: ['NEURO','COMFORT'],      a: 'start',  d: [12,5],   sim: true },
+    { n: 'GRAMMAR OF ROOMS',        k: 'p', x: 430, y: 700, th: ['GEOMETRY','WRITING'],   a: 'middle', d: [0,-14],  sim: true },
+
+    /* ===== 24 THOUGHTS (serif italic) ===== */
+    /* 10 real */
+    { n: 'neuroaesthetics',              k: 't', x: 130, y: 272, th: ['NEURO'],            a: 'middle', d: [0,-14], rest: true },
+    { n: 'behavior information modeling',k: 't', x: 150, y: 396, th: ['DATA'],             a: 'middle', d: [0,-14], rest: true },
+    { n: 'physics solvers',              k: 't', x: 320, y: 624, th: ['GEOMETRY'],         a: 'middle', d: [0,19] },
+    { n: 'generative ai',                k: 't', x: 365, y: 398, th: ['AI'],               a: 'middle', d: [0,19] },
+    { n: 'extended reality',             k: 't', x: 205, y: 140, th: ['XR'],               a: 'middle', d: [0,-14] },
+    { n: 'comfort as data',              k: 't', x: 250, y: 455, th: ['COMFORT'],          a: 'start',  d: [12,3] },
+    { n: 'drawing as interface',         k: 't', x: 600, y: 130, th: ['XR'],               a: 'middle', d: [0,-14] },
+    { n: 'evolutionary search',          k: 't', x: 650, y: 440, th: ['AI'],               a: 'end',    d: [-12,-6] },
+    { n: 'buildings that respond',       k: 't', x: 638, y: 508, th: ['DATA'],             a: 'start',  d: [13,12] },
+    { n: 'heritage meets new tech',      k: 't', x: 716, y: 519, th: ['GEOMETRY'],         a: 'end',    d: [-11,-12] },
+    /* 14 simulated */
+    { n: 'slow software',                k: 't', x: 688, y: 338, th: ['AI','WRITING'],     a: 'start',  d: [13,9],  sim: true },
+    { n: 'sensors are rude',             k: 't', x: 470, y: 460, th: ['DATA','COMFORT'],   a: 'end',    d: [-12,-6], sim: true },
+    { n: 'the room remembers',           k: 't', x: 405, y: 300, th: ['NEURO','DATA'],     a: 'middle', d: [0,-13], sim: true },
+    { n: 'measured vs felt',             k: 't', x: 242, y: 480, th: ['COMFORT'],          a: 'end',    d: [-12,3], sim: true },
+    { n: 'drawings that listen',         k: 't', x: 500, y: 150, th: ['XR','AI'],          a: 'middle', d: [0,-13], sim: true },
+    { n: 'a defensible number',          k: 't', x: 505, y: 660, th: ['DATA','WRITING'],   a: 'start',  d: [13,5],  sim: true },
+    { n: 'teaching machines taste',      k: 't', x: 300, y: 806, th: ['LEARNING','PEDAGOGY'], a: 'start', d: [12,5], sim: true },
+    { n: 'paper prototypes',             k: 't', x: 360, y: 748, th: ['FABRICATION','LEARNING'], a: 'end', d: [-12,3], sim: true },
+    { n: 'the ethics of scoring',        k: 't', x: 460, y: 620, th: ['WRITING'],          a: 'end',    d: [-12,5], sim: true },
+    { n: 'comfort is political',         k: 't', x: 205, y: 500, th: ['COMFORT','WRITING'],a: 'start',  d: [12,3],  sim: true },
+    { n: 'post-occupancy honesty',       k: 't', x: 700, y: 612, th: ['DATA','LEARNING'],  a: 'end',    d: [-12,-6], sim: true },
+    { n: 'the thesis diary',             k: 't', x: 540, y: 806, th: ['WRITING','LEARNING'], a: 'start', d: [12,5], sim: true },
+    { n: 'unfinished on purpose',        k: 't', x: 110, y: 806, th: ['PEDAGOGY','WRITING'], a: 'start', d: [12,3], sim: true },
+    { n: 'buildings as patients',        k: 't', x: 560, y: 470, th: ['NEURO','DATA'],     a: 'start',  d: [13,10], sim: true },
+
+    /* ===== +4 rounded to reach 52 (simulated series stubs) ===== */
+    { n: 'RETROFIT ORACLE',              k: 'p', x: 782, y: 468, th: ['DATA','AI'],        a: 'end',    d: [-12,14], sim: true },
+    { n: 'THE SLOW ATELIER',             k: 'p', x: 705, y: 690, th: ['FABRICATION','LEARNING'], a: 'end', d: [-12,-6], sim: true },
+    { n: 'quiet metrics',                k: 't', x: 665, y: 420, th: ['DATA','WRITING'],   a: 'start',  d: [13,-4], sim: true },
+    { n: 'the honest cover',             k: 't', x: 430, y: 760, th: ['WRITING','PEDAGOGY'], a: 'middle', d: [0,18], sim: true }
+  ];
+
+  /* ---------- helpers ---------- */
+  function make(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var key in attrs) e.setAttribute(key, attrs[key]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  /* cardinal spline through waypoints -> smooth cubic path */
+  function spline(pts, k) {
+    k = k || 0.18;
+    var d = 'M ' + pts[0][0] + ' ' + pts[0][1];
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[Math.max(i - 1, 0)];
+      var p1 = pts[i];
+      var p2 = pts[i + 1];
+      var p3 = pts[Math.min(i + 2, pts.length - 1)];
+      var c1x = p1[0] + (p2[0] - p0[0]) * k, c1y = p1[1] + (p2[1] - p0[1]) * k;
+      var c2x = p2[0] - (p3[0] - p1[0]) * k, c2y = p2[1] - (p3[1] - p1[1]) * k;
+      d += ' C ' + c1x.toFixed(1) + ' ' + c1y.toFixed(1) + ', '
+                 + c2x.toFixed(1) + ' ' + c2y.toFixed(1) + ', '
+                 + p2[0] + ' ' + p2[1];
+    }
+    return d;
+  }
+
+  /* ---------- build threads + edge labels ---------- */
+  var threadEls = {}; /* id -> { path, lbl } */
+  THREADS.forEach(function (t, i) {
+    var path = make('path', {
+      'class': 'thread', 'd': spline(t.pts),
+      'pathLength': '1', 'stroke-dasharray': '1', 'stroke-dashoffset': '0',
+      'data-thread': t.id
+    }, gThreads);
+    path.style.animationDelay = (i * 80) + 'ms';
+
+    var lbl = make('text', {
+      'class': 'edge-lbl', 'x': t.lbl[0], 'y': t.lbl[1],
+      'text-anchor': t.anch || 'start', 'tabindex': '0', 'role': 'button',
+      'aria-label': t.id + ' thread — highlight its projects and thoughts',
+      'data-thread': t.id
+    }, gEdges);
+    lbl.textContent = t.id;
+    threadEls[t.id] = { path: path, lbl: lbl };
+  });
+
+  /* ---------- build nodes (ALL of them — nothing hidden) ---------- */
+  var nodeEls = []; /* { g, th } */
+  var order = NODES.slice().sort(function (a, b) { return a.x - b.x; });
+  NODES.forEach(function (nd) {
+    var g = make('g', {
+      'class': 'node' + (nd.rest ? ' rest' : ''),
+      'tabindex': '0', 'role': 'link',
+      'aria-label': nd.n + ' — ' + (nd.k === 'p' ? 'project' : 'thought') +
+                    (nd.sim ? ' (simulated placeholder)' : '') +
+                    ' · threads: ' + nd.th.join(', ').toLowerCase()
+    }, gNodes);
+
+    /* thin leader tick from the dot to its offset label (helps read dense clusters) */
+    var lx = nd.x + nd.d[0], ly = nd.y + nd.d[1];
+    make('line', {
+      'class': 'leader',
+      'x1': nd.x, 'y1': nd.y,
+      'x2': lx + (nd.a === 'start' ? -3 : nd.a === 'end' ? 3 : 0),
+      'y2': ly - 3
+    }, g);
+
+    var core = make('circle', {
+      'class': 'core ' + nd.k, 'cx': nd.x, 'cy': nd.y,
+      'r': nd.k === 'p' ? 4.5 : 3
+    }, g);
+    core.style.animationDelay = (480 + order.indexOf(nd) * 18) + 'ms';
+    make('circle', { 'class': 'hit', 'cx': nd.x, 'cy': nd.y, 'r': 12 }, g);
+    var lbl = make('text', {
+      'class': 'lbl ' + nd.k,
+      'x': lx, 'y': ly, 'text-anchor': nd.a
+    }, g);
+    lbl.textContent = nd.n;
+    nodeEls.push({ g: g, th: nd.th });
+  });
+
+  /* ---------- interaction ---------- */
+  function clearAll() {
+    panel.classList.remove('is-focus');
+    nodeEls.forEach(function (m) { m.g.classList.remove('active', 'member', 'lit'); });
+    THREADS.forEach(function (t) {
+      threadEls[t.id].path.classList.remove('active');
+      threadEls[t.id].lbl.classList.remove('active');
+    });
+  }
+
+  function activateNode(entry) {
+    clearAll();
+    panel.classList.add('is-focus');
+    entry.g.classList.add('active');
+    entry.th.forEach(function (id) {
+      if (!threadEls[id]) return;
+      threadEls[id].path.classList.add('active');
+      threadEls[id].lbl.classList.add('active');
+    });
+    nodeEls.forEach(function (m) {
+      if (m === entry) return;
+      var shared = m.th.some(function (id) { return entry.th.indexOf(id) !== -1; });
+      if (shared) m.g.classList.add('member');
+    });
+  }
+
+  function activateThread(id) {
+    clearAll();
+    panel.classList.add('is-focus');
+    threadEls[id].path.classList.add('active');
+    threadEls[id].lbl.classList.add('active');
+    nodeEls.forEach(function (m) {
+      if (m.th.indexOf(id) !== -1) m.g.classList.add('lit');
+    });
+  }
+
+  nodeEls.forEach(function (entry) {
+    entry.g.addEventListener('mouseenter', function () { activateNode(entry); });
+    entry.g.addEventListener('mouseleave', clearAll);
+    entry.g.addEventListener('focus', function () { activateNode(entry); });
+    entry.g.addEventListener('blur', clearAll);
+  });
+  THREADS.forEach(function (t) {
+    var lbl = threadEls[t.id].lbl;
+    lbl.addEventListener('mouseenter', function () { activateThread(t.id); });
+    lbl.addEventListener('mouseleave', clearAll);
+    lbl.addEventListener('focus', function () { activateThread(t.id); });
+    lbl.addEventListener('blur', clearAll);
+  });
+
+  /* ---------- intro cleanup (filled animations release to identical final state) ---------- */
+  window.setTimeout(function () { panel.classList.remove('intro'); }, 2000);
+
+  /* ---------- the pill: '/' focuses it (visual mock only) ---------- */
+  var ask = document.getElementById('ask-input');
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== ask) {
+      e.preventDefault();
+      ask.focus();
+    }
+  });
+})();
+</script>
+</body>
+</html>

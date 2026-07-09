@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEC — Notebook · Level 2 · The Drawing (mockup)</title>
+<link rel="stylesheet" href="./pen-table.css">
+<style>
+  /* ————— page scaffold ————— */
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 52px 32px 140px; }
+
+  .kicker { color: var(--anno); text-transform: uppercase; }
+  h1 { font-family: var(--display); font-weight: 600; font-size: 30px; letter-spacing: -0.01em; margin: 14px 0 12px; }
+  .intro { font-family: var(--serif); font-size: 15px; line-height: 1.55; max-width: 62ch; color: rgba(22,24,29,.82); }
+  .intro em { font-style: italic; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 26px; margin-top: 22px; text-transform: uppercase; color: var(--anno); align-items: center; }
+  .legend .item { display: inline-flex; align-items: center; gap: 7px; }
+  .sq { display: inline-block; width: 7px; height: 7px; background: var(--ink); }
+  .legend .glyph { font-family: var(--mono); font-size: 10px; color: var(--ink); }
+
+  .divider { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid rgba(22,24,29,.2);
+             margin-top: 26px; padding-top: 8px; text-transform: uppercase; color: var(--anno); }
+
+  /* ————— stage: drawing left, log right ————— */
+  .stage { position: relative; display: grid; grid-template-columns: 240px 1fr; column-gap: 48px; margin-top: 10px; }
+  .graph-col { position: relative; }
+  .graph-col svg { position: absolute; top: 0; left: 0; display: block; }
+  .graph-note { position: absolute; bottom: 26px; left: 0; width: 240px; color: var(--anno); text-transform: uppercase; }
+
+  .rows-head { height: 84px; display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 10px;
+               color: var(--anno); text-transform: uppercase; }
+
+  /* ————— entry rows (same anatomy as the flat notebook) ————— */
+  .entries { list-style: none; padding-bottom: 110px; }
+  .entry { display: grid; grid-template-columns: 58px 22px 1fr auto; gap: 2px 14px; align-items: baseline;
+           padding: 13px 10px 13px 4px; border-bottom: 1px solid rgba(22,24,29,.2); cursor: default; }
+  .entry:first-child { border-top: 1px solid rgba(22,24,29,.2); }
+  .entry .d { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--anno); }
+  .entry .mk { font-family: var(--mono); font-size: 10px; letter-spacing: 0; color: var(--ink); text-align: center; }
+  .entry .mk .sq { vertical-align: baseline; }
+  .entry .body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .entry .t.pt { font-family: var(--display); font-weight: 600; font-size: 14px; letter-spacing: 0; }
+  .entry .t.th { font-family: var(--serif); font-style: italic; font-size: 14px; color: rgba(22,24,29,.85); }
+  .entry .t.ml { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
+  .entry .blurb { font-family: var(--serif); font-size: 13px; line-height: 1.5; color: rgba(22,24,29,.72); max-width: 66ch; }
+  .entry .side { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; white-space: nowrap; text-align: right; text-transform: uppercase; }
+  .entry .side .tag { color: var(--anno); margin-left: 8px; }
+  .entry .side .prep { color: var(--anno); }
+  .entry.is-red .d, .entry.is-red .mk, .entry.is-red .t { color: var(--redline); }
+  .entry.lit { background: rgba(22,24,29,.035); }
+  .entry:focus-visible { outline: 2px solid var(--redline); outline-offset: -2px; }
+
+  /* ————— graph ink ————— */
+  .bpath { fill: none; stroke: var(--ink); stroke-width: 1; stroke-linecap: round; }
+  g[data-branch="main"] .bpath { stroke-width: 1.4; }
+  .bpath.redline { stroke: var(--redline); }
+  .dot { fill: var(--ink); }
+  .dot.red { fill: var(--redline); }
+  .tip { fill: var(--mylar); stroke: var(--ink); stroke-width: 1.2; }
+  .tip.live { stroke: var(--redline); }
+  .blabel { font-family: var(--mono); font-size: 8px; letter-spacing: .08em; fill: var(--anno); text-transform: uppercase; }
+  .ytick { font-family: var(--mono); font-size: 8px; letter-spacing: .08em; fill: var(--anno); }
+  .livelbl { font-family: var(--mono); font-size: 8px; letter-spacing: .08em; fill: var(--redline); }
+
+  svg.active g.branch { opacity: .35; }
+  svg.active g.branch.lit { opacity: 1; }
+  svg.active g.branch.lit .bpath { stroke-width: 2.5; }
+  svg.active g.branch.lit .blabel { fill: var(--ink); }
+
+  .hitpath { fill: none; stroke: transparent; stroke-width: 12; pointer-events: stroke; }
+  .hit { fill: transparent; pointer-events: all; cursor: pointer; }
+  .hit:focus-visible { outline: 2px solid var(--redline); outline-offset: 2px; border-radius: 50%; }
+
+  /* leader + chip overlays */
+  .leader { position: absolute; height: 0; border-top: 1px dotted rgba(86,91,99,.65); pointer-events: none; display: none; z-index: 3; }
+  .chip { position: absolute; display: none; z-index: 4; pointer-events: none; background: var(--mylar); border: 1px solid var(--ink);
+          padding: 3px 7px; font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+  .leader.on, .chip.on { display: block; }
+
+  .stack-note { display: none; margin: 18px 0 6px; color: var(--anno); text-transform: uppercase; }
+
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    g.branch, .bpath { transition: opacity .18s ease, stroke-width .18s ease; }
+    .entry { transition: background-color .15s ease; }
+    .tip.live { animation: tick 2.4s ease-in-out infinite; }
+    @keyframes tick { 0%, 100% { stroke-opacity: 1; } 50% { stroke-opacity: .35; } }
+  }
+
+  @media (max-width: 899px) {
+    .stage { grid-template-columns: 1fr; }
+    .graph-col, .leader, .chip { display: none !important; }
+    .rows-head { height: auto; padding-top: 14px; }
+    .entries { padding-bottom: 30px; }
+    .stack-note { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<header class="chrome"><div class="mark">EEC</div><div><div style="font-weight:600;font-size:12px;letter-spacing:.1em;">EMILIE EL CHIDIAC</div><div class="mono-s anno">DESIGN TECHNOLOGY ARCHITECT · MACAD @ IAAC</div></div><nav><a href="#">WORK</a><a href="#" aria-current="page">NOTEBOOK</a><a href="#">ABOUT</a><a href="#">CV</a></nav><a class="door" href="#" style="color:var(--redline)">EXPLORE THE NETWORK &gt;</a></header>
+
+<div class="wrap">
+
+  <p class="mono kicker">NOTEBOOK · LEVEL 2 OF 3 — THE DRAWING</p>
+  <h1>The career, as a commit graph.</h1>
+  <p class="intro">One main line since 2018, five branches, three still open. Every project, thought,
+     milestone and award below commits somewhere. Hover a row — or a dot — and its whole branch
+     lights up. Only one tip is red, because only one thing here is <em>live</em>.</p>
+
+  <div class="legend mono-s">
+    <span class="item"><span class="sq" aria-hidden="true"></span> PROJECT</span>
+    <span class="item"><span class="glyph" aria-hidden="true">#</span> SHEET ISSUE</span>
+    <span class="item"><span class="glyph" aria-hidden="true">~</span> THOUGHT</span>
+    <span class="item"><span class="glyph" aria-hidden="true">+</span> MILESTONE</span>
+    <span class="item"><span class="glyph" aria-hidden="true">*</span> AWARD</span>
+    <span class="item" style="margin-left:auto;">HOVER OR TAB A ROW — ITS BRANCH LIGHTS</span>
+  </div>
+
+  <div class="divider mono-s">
+    <span>COMMIT LOG · NEWEST FIRST</span>
+    <span>VERTICAL SCALE: ORDINAL — ENTRIES, NOT DAYS</span>
+  </div>
+
+  <p class="stack-note mono-s">NARROW VIEWPORT — DRAWING HIDDEN, LOG ONLY. OPEN AT &ge;900PX FOR THE GRAPH.</p>
+
+  <section class="stage" id="stage" aria-label="Career commit graph and log">
+
+    <div class="graph-col" aria-hidden="false">
+      <svg id="graph" role="img" aria-label="Commit graph: main line from B.Arch 2018 to now, with branches for Self-Employed, BIM International, SOMA, Dynamic Solution and MaCAD"></svg>
+      <p class="graph-note mono-s">MAIN + 5 BRANCHES · 3 OPEN<br>RED = LIVE, NOTHING ELSE</p>
+    </div>
+
+    <div class="rows-col">
+      <div class="rows-head mono-s">
+        <span>19 ENTRIES · 2018 &gt; NOW</span>
+        <span>BRANCH SHOWN ON HOVER</span>
+      </div>
+
+      <ol class="entries" id="entries">
+
+        <li class="entry is-red" tabindex="0" data-branch="macad" data-kind="sheet">
+          <span class="d">2026-07</span>
+          <span class="mk" aria-hidden="true">#</span>
+          <span class="body"><span class="t ml">SHEETS P-101, P-102, P-104 ISSUED &gt;</span><span class="sr">Sheet issue, branch MaCAD</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="proj">
+          <span class="d">2026-06</span>
+          <span class="mk" aria-hidden="true"><span class="sq"></span></span>
+          <span class="body">
+            <span class="t pt">Sensi</span>
+            <span class="blurb">&ldquo;Comfort is usually the thing we hope shows up after the design is done. Sensi makes it a design layer.&rdquo;</span>
+          </span>
+          <span class="side"><a href="#">P-101</a></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="thought">
+          <span class="d">2026-06</span>
+          <span class="mk" aria-hidden="true">~</span>
+          <span class="body"><span class="t th">buildings that respond</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="mile">
+          <span class="d">2026-06</span>
+          <span class="mk" aria-hidden="true">+</span>
+          <span class="body"><span class="t ml">MACAD YEAR 1 COMPLETE · THE TECHNICAL YEAR</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="award">
+          <span class="d">2026-06</span>
+          <span class="mk" aria-hidden="true">*</span>
+          <span class="body"><span class="t ml">MACAD AWARDS · DESIGN COPILOTS · WINNER (SENSI)</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="proj">
+          <span class="d">2026-05</span>
+          <span class="mk" aria-hidden="true"><span class="sq"></span></span>
+          <span class="body">
+            <span class="t pt">lEgoarCh</span>
+            <span class="blurb">&ldquo;A render is a promise, not a product: lEgoarCh takes a text prompt and returns a buildable LEGO set.&rdquo;</span>
+          </span>
+          <span class="side"><span class="prep">P-106 · IN PREPARATION</span></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="thought">
+          <span class="d">2026-05</span>
+          <span class="mk" aria-hidden="true">~</span>
+          <span class="body"><span class="t th">comfort as data</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="award">
+          <span class="d">2026-05</span>
+          <span class="mk" aria-hidden="true">*</span>
+          <span class="body"><span class="t ml">JURY AWARD · AIA GENERATIVE AI (LEGOARCH)</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="proj">
+          <span class="d">2026-04</span>
+          <span class="mk" aria-hidden="true"><span class="sq"></span></span>
+          <span class="body">
+            <span class="t pt">A Ballooning Market</span>
+            <span class="blurb">&ldquo;I decided to fill a historic Cairo market with balloons, and I almost failed.&rdquo;</span>
+          </span>
+          <span class="side"><a href="#">P-104</a></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="thought">
+          <span class="d">2026-04</span>
+          <span class="mk" aria-hidden="true">~</span>
+          <span class="body"><span class="t th">physics solvers</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="proj">
+          <span class="d">2026-03</span>
+          <span class="mk" aria-hidden="true"><span class="sq"></span></span>
+          <span class="body">
+            <span class="t pt">NeuroSpace</span>
+            <span class="blurb">&ldquo;Move a slider, watch the score respond. It&rsquo;s BIM, reframed as Behavior Information Modeling.&rdquo;</span>
+          </span>
+          <span class="side"><a href="#">P-102</a><span class="tag">SOLO</span></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="macad" data-kind="mile">
+          <span class="d">2025-10</span>
+          <span class="mk" aria-hidden="true">+</span>
+          <span class="body"><span class="t ml">MACAD @ IAAC · YEAR 1 BEGINS</span><span class="sr">Branch MaCAD departs the main line here</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="dyn" data-kind="mile">
+          <span class="d">2024-08</span>
+          <span class="mk" aria-hidden="true">+</span>
+          <span class="body"><span class="t ml">PROJECT ARCHITECT · DYNAMIC SOLUTION CO.</span><span class="sr">Branch Dynamic Solution departs, still open</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="soma" data-kind="mile">
+          <span class="d">2023-08</span>
+          <span class="mk" aria-hidden="true">+</span>
+          <span class="body"><span class="t ml">DESIGN ARCHITECT · SOMA, DUBAI</span><span class="sr">Branch SOMA, merges back 2024-07</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="soma" data-kind="proj">
+          <span class="d">2023-06</span>
+          <span class="mk" aria-hidden="true"><span class="sq"></span></span>
+          <span class="body">
+            <span class="t pt">Towers at SOMA</span>
+            <span class="blurb">&ldquo;Facade and massing studies in Rhino and Grasshopper across four Dubai towers.&rdquo;</span>
+          </span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="self" data-kind="award">
+          <span class="d">2023-05</span>
+          <span class="mk" aria-hidden="true">*</span>
+          <span class="body"><span class="t ml">BIENNALE ARTE 2024 · PROJECT FEATURED</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="self" data-kind="proj">
+          <span class="d">2022-06</span>
+          <span class="mk" aria-hidden="true"><span class="sq"></span></span>
+          <span class="body">
+            <span class="t pt">Ring 4000</span>
+            <span class="blurb">&ldquo;Rings of Mars, Top 50: AI-driven workflows for a Martian ring city.&rdquo;</span>
+          </span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="self" data-kind="mile">
+          <span class="d">2022-01</span>
+          <span class="mk" aria-hidden="true">+</span>
+          <span class="body"><span class="t ml">SELF-EMPLOYED PRACTICE OPENS</span><span class="sr">Branch departs and stays open — the live red tip</span></span>
+          <span class="side"></span>
+        </li>
+
+        <li class="entry" tabindex="0" data-branch="main" data-kind="mile">
+          <span class="d">2018-09</span>
+          <span class="mk" aria-hidden="true">+</span>
+          <span class="body"><span class="t ml">B.ARCH · LEBANESE AMERICAN UNIVERSITY · DEAN&rsquo;S LIST</span><span class="sr">Main line starts here</span></span>
+          <span class="side"></span>
+        </li>
+
+      </ol>
+    </div>
+
+    <div class="leader" id="leader" aria-hidden="true"></div>
+    <div class="chip mono-s" id="chip" aria-hidden="true"></div>
+  </section>
+
+</div>
+
+<div class="mockup-note">MOCKUP · NOT PRODUCTION</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var BR = {
+    main:  { x: 60,  name: 'MAIN LINE',                 label: 'MAIN · B.ARCH 2018 > NOW' },
+    self:  { x: 88,  name: 'SELF-EMPLOYED · LIVE',      label: 'SELF-EMPLOYED · 2022.01 > NOW' },
+    bim:   { x: 116, name: 'BIM INTERNATIONAL',         label: 'BIM INTL · 2023' },
+    soma:  { x: 144, name: 'SOMA · DUBAI',              label: 'SOMA · 2023.08 > 2024.07' },
+    dyn:   { x: 172, name: 'DYNAMIC SOLUTION · KUWAIT', label: 'DYNAMIC SOLUTION · 2024.08 > NOW' },
+    macad: { x: 200, name: 'MACAD @ IAAC',              label: 'MACAD @ IAAC · 2025.10 > NOW' }
+  };
+  var TIP = { self: 20, main: 34, macad: 42, dyn: 50 };
+  var NOWY = 64;
+
+  var stage  = document.getElementById('stage');
+  var svg    = document.getElementById('graph');
+  var chip   = document.getElementById('chip');
+  var leader = document.getElementById('leader');
+  var rows   = [].slice.call(document.querySelectorAll('.entry'));
+  var rowsCol = document.querySelector('.rows-col');
+
+  var ys = [];          // dot y per row index (stage coords)
+  var rowsLeft = 0;     // left edge of rows column in stage coords
+  var built = false;
+
+  function est(s) { return s.length * 6.3; } // rough rotated-label length, px
+
+  function curveUp(x1, y1, x2, y2) {
+    var k = Math.min(26, Math.max(10, (y1 - y2) * 0.6));
+    return 'C ' + x1 + ' ' + (y1 - k) + ' ' + x2 + ' ' + (y2 + k) + ' ' + x2 + ' ' + y2 + ' ';
+  }
+
+  function build() {
+    if (window.innerWidth < 900) { built = false; svg.innerHTML = ''; return; }
+
+    var sRect = stage.getBoundingClientRect();
+    ys = rows.map(function (r) {
+      var rr = r.getBoundingClientRect();
+      return Math.round(rr.top - sRect.top + rr.height / 2);
+    });
+    rowsLeft = Math.round(rowsCol.getBoundingClientRect().left - sRect.left);
+
+    var H = Math.round(stage.offsetHeight);
+    svg.setAttribute('viewBox', '0 0 240 ' + H);
+    svg.setAttribute('width', '240');
+    svg.setAttribute('height', H);
+
+    // geometry ------------------------------------------------------
+    var yMerge  = ys[12] + Math.round((ys[13] - ys[12]) * 0.42);  // SOMA merges 2024-07, just below the 2024-08 row
+    var bimTop  = ys[13] + 16;                                    // BIM merges 2023-08
+    var bimBot  = ys[14] + 18;                                    // BIM departs 2023-06
+    var bimLaneTop = bimTop + 16, bimLaneBot = bimBot - 16;
+    var bimDotY = Math.round((bimLaneTop + bimLaneBot) / 2);
+    var yEnd = ys[18] + 44;
+
+    var paths = {
+      main:  'M 60 ' + TIP.main + ' L 60 ' + yEnd,
+      self:  'M 60 ' + (ys[17] + 38) + ' ' + curveUp(60, ys[17] + 38, 88, ys[17]) + 'L 88 56',
+      bim:   'M 60 ' + bimBot + ' ' + curveUp(60, bimBot, 116, bimLaneBot) +
+             'L 116 ' + bimLaneTop + ' ' + curveUp(116, bimLaneTop, 60, bimTop),
+      soma:  'M 60 ' + (ys[14] + 40) + ' ' + curveUp(60, ys[14] + 40, 144, ys[14]) +
+             'L 144 ' + ys[13] + ' ' + curveUp(144, ys[13], 60, yMerge),
+      dyn:   'M 60 ' + (ys[12] + 38) + ' ' + curveUp(60, ys[12] + 38, 172, ys[12]) + 'L 172 ' + TIP.dyn,
+      macad: 'M 60 ' + (ys[11] + 38) + ' ' + curveUp(60, ys[11] + 38, 200, ys[11]) + 'L 200 ' + TIP.macad
+    };
+
+    var labelY = {
+      main:  100,
+      self:  ys[16] + 34,
+      bim:   Math.round((bimTop + bimBot) / 2 - est(BR.bim.label) / 2),
+      soma:  yMerge + 8,
+      dyn:   Math.round((TIP.dyn + ys[12]) / 2 - est(BR.dyn.label) / 2),
+      macad: Math.round((ys[0] + ys[11]) / 2 - est(BR.macad.label) / 2)
+    };
+
+    // build markup --------------------------------------------------
+    var s = '';
+
+    // NOW line + year ticks (static ink, bottom layer)
+    s += '<g aria-hidden="true">';
+    s += '<line x1="44" y1="' + NOWY + '" x2="236" y2="' + NOWY + '" stroke="rgba(22,24,29,.25)" stroke-width="1" stroke-dasharray="3 4"/>';
+    s += '<text class="ytick" x="34" y="' + (NOWY + 3) + '" text-anchor="end">NOW</text>';
+    var seen = {};
+    rows.forEach(function (r, i) {
+      var yr = r.querySelector('.d').textContent.slice(0, 4);
+      if (seen[yr]) return; seen[yr] = true;
+      s += '<line x1="40" y1="' + ys[i] + '" x2="48" y2="' + ys[i] + '" stroke="rgba(22,24,29,.35)" stroke-width="1"/>';
+      s += '<text class="ytick" x="34" y="' + (ys[i] + 3) + '" text-anchor="end">' + yr + '</text>';
+    });
+    // origin tick under the main line
+    s += '<line x1="52" y1="' + yEnd + '" x2="68" y2="' + yEnd + '" stroke="var(--ink)" stroke-width="1"/>';
+    s += '<text class="ytick" x="60" y="' + (yEnd + 14) + '" text-anchor="middle">EST. 2018</text>';
+    s += '</g>';
+
+    // branch groups: path + rotated label + dots + tips
+    Object.keys(BR).forEach(function (b) {
+      var bx = BR[b].x;
+      s += '<g class="branch" data-branch="' + b + '">';
+      s += '<path class="bpath" d="' + paths[b] + '"/>';
+      if (b === 'self') { // the one live redline: red tip segment + open red circle
+        s += '<path class="bpath redline" d="M 88 56 L 88 23"/>';
+        s += '<circle class="tip live" cx="88" cy="20" r="3"/>';
+        s += '<text class="livelbl" x="96" y="30">LIVE</text>';
+      }
+      if (b === 'main')  s += '<circle class="tip" cx="60"  cy="' + (TIP.main  - 3) + '" r="3"/>';
+      if (b === 'dyn')   s += '<circle class="tip" cx="172" cy="' + (TIP.dyn   - 3) + '" r="3"/>';
+      if (b === 'macad') s += '<circle class="tip" cx="200" cy="' + (TIP.macad - 3) + '" r="3"/>';
+      var lx = bx + 11;
+      s += '<text class="blabel" x="' + lx + '" y="' + labelY[b] + '" transform="rotate(90 ' + lx + ' ' + labelY[b] + ')">' + BR[b].label + '</text>';
+      rows.forEach(function (r, i) {
+        if (r.getAttribute('data-branch') !== b) return;
+        var red = r.classList.contains('is-red');
+        s += '<circle class="dot' + (red ? ' red' : '') + '" cx="' + bx + '" cy="' + ys[i] + '" r="' + (red ? 2.6 : 2) + '"/>';
+      });
+      if (b === 'bim') s += '<circle class="dot" cx="116" cy="' + bimDotY + '" r="2"/>';
+      s += '</g>';
+    });
+
+    // hit layer (fat invisible strokes + focusable dot targets), on top
+    Object.keys(BR).forEach(function (b) {
+      s += '<path class="hitpath" data-branch="' + b + '" d="' + paths[b] + '"/>';
+    });
+    rows.forEach(function (r, i) {
+      var b = r.getAttribute('data-branch');
+      var t = r.querySelector('.t').textContent.replace(/"/g, '&quot;');
+      s += '<circle class="hit" tabindex="0" role="img" data-branch="' + b + '" data-idx="' + i +
+           '" data-x="' + BR[b].x + '" data-y="' + ys[i] + '" cx="' + BR[b].x + '" cy="' + ys[i] +
+           '" r="9" aria-label="' + t + ' — branch ' + BR[b].name + '"/>';
+    });
+    s += '<circle class="hit" tabindex="0" role="img" data-branch="bim" data-x="116" data-y="' + bimDotY +
+         '" cx="116" cy="' + bimDotY + '" r="9" aria-label="BIM International, 2023-06 to 2023-08 — short branch, merges back"/>';
+
+    svg.innerHTML = s;
+    built = true;
+  }
+
+  // interaction -----------------------------------------------------
+  function activate(b, idx, px, py) {
+    if (!BR[b]) return;
+    [].slice.call(svg.querySelectorAll('g.branch')).forEach(function (g) {
+      var mine = g.getAttribute('data-branch') === b;
+      g.classList.toggle('lit', mine);
+    });
+    svg.classList.add('active');
+    rows.forEach(function (r, i) { r.classList.toggle('lit', i === idx); });
+
+    chip.textContent = BR[b].name;
+    var cx, cy;
+    if (idx != null) { cx = BR[b].x; cy = ys[idx]; }
+    else if (px != null) { cx = px; cy = py; }
+    if (cx != null) {
+      chip.style.left = (cx + 14) + 'px';
+      chip.style.top = (cy - 26) + 'px';
+      chip.classList.add('on');
+    }
+    if (idx != null && built) {
+      leader.style.top = (ys[idx] - 1) + 'px';
+      leader.style.left = (BR[b].x + 6) + 'px';
+      leader.style.width = Math.max(0, rowsLeft - BR[b].x - 10) + 'px';
+      leader.classList.add('on');
+    } else {
+      leader.classList.remove('on');
+    }
+  }
+
+  function deactivate() {
+    svg.classList.remove('active');
+    [].slice.call(svg.querySelectorAll('g.branch.lit')).forEach(function (g) { g.classList.remove('lit'); });
+    rows.forEach(function (r) { r.classList.remove('lit'); });
+    chip.classList.remove('on');
+    leader.classList.remove('on');
+  }
+
+  function rowIndex(el) { return rows.indexOf(el); }
+
+  rowsCol.addEventListener('pointerover', function (e) {
+    var r = e.target.closest ? e.target.closest('.entry') : null;
+    if (r && built) activate(r.getAttribute('data-branch'), rowIndex(r));
+  });
+  rowsCol.addEventListener('pointerleave', deactivate);
+
+  svg.addEventListener('pointerover', function (e) {
+    var t = e.target;
+    if (!t.getAttribute) return;
+    var b = t.getAttribute('data-branch');
+    if (!b) return;
+    var idx = t.getAttribute('data-idx');
+    if (idx != null) { activate(b, parseInt(idx, 10)); return; }
+    var dx = t.getAttribute('data-x');
+    if (dx != null) { activate(b, null, parseFloat(dx), parseFloat(t.getAttribute('data-y'))); return; }
+    var sRect = stage.getBoundingClientRect();
+    activate(b, null, e.clientX - sRect.left, e.clientY - sRect.top);
+  });
+  svg.addEventListener('pointerleave', deactivate);
+
+  stage.addEventListener('focusin', function (e) {
+    var t = e.target;
+    if (t.classList.contains('entry') && built) { activate(t.getAttribute('data-branch'), rowIndex(t)); return; }
+    if (t.classList && t.classList.contains('hit')) {
+      var idx = t.getAttribute('data-idx');
+      activate(t.getAttribute('data-branch'),
+               idx != null ? parseInt(idx, 10) : null,
+               parseFloat(t.getAttribute('data-x')),
+               parseFloat(t.getAttribute('data-y')));
+    }
+  });
+  stage.addEventListener('focusout', deactivate);
+
+  // build (after fonts settle, and on resize) -----------------------
+  var raf = null;
+  function schedule() { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(build); }
+  window.addEventListener('resize', schedule);
+  window.addEventListener('load', schedule);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  build();
+})();
+</script>
+
+<a href="./index.html" style="position:fixed;bottom:10px;left:12px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--redline);background:var(--mylar);border:1px solid var(--redline);padding:4px 9px;text-decoration:none;z-index:999;">&lt; STUDIO INDEX</a></body>
+</html>

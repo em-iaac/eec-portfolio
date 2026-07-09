@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMILIE EL CHIDIAC — cover · dark threads (mockup)</title>
+<link rel="stylesheet" href="./pen-table.css">
+<style>
+  /* ---------- shell: all-dark, full-bleed, non-scrolling ---------- */
+  html, body { height: 100%; }
+  body {
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--carbon);
+    color: var(--ink-dark);
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+
+  /* ---------- the drawing: fills the whole viewport ---------- */
+  .stage { position: fixed; inset: 0; }
+  .stage svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* ---------- text overlay: floats top-left over the drawing ---------- */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: min(46vw, 640px);
+    height: 100dvh;
+    padding: 54px 56px;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none; /* let the drawing receive hover; re-enable on interactive kids */
+    z-index: 3;
+  }
+  /* soft radial scrim behind the text block only — keeps overlay legible over threads */
+  .overlay::before {
+    content: '';
+    position: absolute;
+    top: -8%; left: -12%;
+    width: 130%; height: 116%;
+    background: radial-gradient(
+      62% 60% at 34% 40%,
+      rgba(11,14,19,.94) 0%,
+      rgba(11,14,19,.88) 34%,
+      rgba(11,14,19,.55) 62%,
+      rgba(11,14,19,0) 100%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .overlay > * { pointer-events: auto; }
+
+  .name {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: .02em;
+    color: var(--ink-dark);
+    line-height: 1;
+  }
+  .subtitle {
+    margin-top: 13px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--anno-dark);
+    max-width: 32ch;
+  }
+  .fact {
+    margin-top: 20px;
+    color: var(--anno-dark);
+    line-height: 1.9;
+    font-size: 9px;
+  }
+
+  /* ---------- vertical links ---------- */
+  .nav-links {
+    margin-top: 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .16em;
+    color: var(--ink-dark);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+  }
+  .nav-links a .arw {
+    color: var(--anno-dark);
+    margin-left: 10px;
+    display: inline-block;
+    transition: color .2s ease, transform .2s ease;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible {
+    outline: none;
+    text-decoration: underline;
+    text-decoration-color: var(--redline-wire);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 6px;
+  }
+  .nav-links a:hover .arw, .nav-links a:focus-visible .arw {
+    color: var(--redline-wire);
+    transform: translateX(4px);
+  }
+
+  /* ---------- ask pill ---------- */
+  .ask { margin-top: 30px; }
+  .ask input {
+    width: 268px;
+    height: 36px;
+    border: 1.5px solid var(--anno-dark);
+    border-radius: 999px;
+    background: rgba(11,14,19,.55);
+    padding: 0 16px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .1em;
+    color: var(--ink-dark);
+    cursor: pointer;
+  }
+  .ask input::placeholder { color: var(--anno-dark); opacity: 1; }
+  .ask input:focus { outline: none; border-color: var(--redline-wire); }
+  .chips {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  .ask:focus-within .chips { opacity: 1; pointer-events: auto; }
+  .chips button {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: .12em;
+    color: var(--anno-dark);
+    background: rgba(11,14,19,.55);
+    border: 1px solid var(--anno-dark);
+    border-radius: 999px;
+    padding: 6px 11px;
+    cursor: pointer;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .chips button:hover, .chips button:focus-visible {
+    color: var(--ink-dark); border-color: var(--ink-dark); outline: none;
+  }
+
+  /* ---------- handwritten aside ---------- */
+  .aside {
+    margin-top: auto;
+    max-width: 300px;
+    font-family: var(--hand);
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.35;
+    color: var(--anno-dark);
+    transform: rotate(-2deg);
+    transform-origin: left bottom;
+  }
+  .aside .nb { color: var(--redline-wire); }
+
+  /* ---------- HUD + legend ---------- */
+  .hud {
+    position: fixed;
+    right: 26px;
+    bottom: 40px;
+    color: var(--anno-dark);
+    letter-spacing: .14em;
+    text-align: right;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .legend {
+    position: fixed;
+    left: 132px;
+    bottom: 12px;
+    color: var(--anno-dark);
+    letter-spacing: .12em;
+    z-index: 3;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ---------- threads ---------- */
+  .thread {
+    fill: none;
+    stroke: var(--ink-dark);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    opacity: .28;
+    transition: opacity .35s ease, stroke-width .35s ease, stroke .35s ease;
+  }
+  .thread.active { opacity: .92; stroke-width: 1.6; }
+  .stage.is-focus .thread:not(.active) { opacity: .08; }
+
+  /* ---------- nodes ---------- */
+  .node { cursor: pointer; outline: none; }
+  .node .core {
+    transition: opacity .3s ease, fill .3s ease, stroke .3s ease;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .core.p { fill: var(--ink-dark); stroke: none; }         /* project = filled dot */
+  .core.t { fill: none; stroke: var(--ink-dark); stroke-width: 1.4; } /* thought = hollow ring */
+  .core.award { fill: var(--ink-dark); stroke: none; }     /* award project = larger dot w/ star cut */
+  .starcut { fill: var(--carbon); pointer-events: none; transition: fill .3s ease; } /* star knocked out of the disc */
+  .node .hit { fill: transparent; stroke: none; pointer-events: all; }
+  .node .lbl { opacity: 0; transition: opacity .3s ease; pointer-events: none; }
+  .lbl.p { font-family: var(--mono); font-size: 8px; letter-spacing: .1em; fill: var(--ink-dark); }
+  .lbl.t { font-family: var(--serif); font-style: italic; font-size: 9.5px; fill: var(--anno-dark); }
+
+  /* rest state: a few labels always visible */
+  .node.rest .lbl { opacity: 1; }
+
+  /* active / connected */
+  .node.active .lbl, .node.member .lbl, .node.lit .lbl { opacity: 1; }
+  .stage.is-focus .node:not(.active):not(.member):not(.lit) .core { opacity: .2; }
+  .stage.is-focus .node:not(.active):not(.member):not(.lit) .starcut { opacity: .2; }
+  .stage.is-focus .node.rest:not(.active):not(.member):not(.lit) .lbl { opacity: 0; }
+  /* focus ring */
+  .node:focus-visible .core { stroke: var(--redline-wire); stroke-width: 2; }
+
+  /* ---------- edge (thread) labels ---------- */
+  .edge-lbl {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: .14em;
+    fill: var(--anno-dark);
+    cursor: pointer;
+    outline: none;
+    transition: opacity .3s ease, fill .3s ease;
+  }
+  .edge-lbl.active { fill: var(--ink-dark); }
+  .stage.is-focus .edge-lbl:not(.active) { opacity: .22; }
+  .edge-lbl:focus-visible { fill: var(--redline-wire); }
+
+  /* ---------- the question, running along the COMFORT thread (F2) ---------- */
+  .question-path {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 9px;
+    letter-spacing: .04em;
+    fill: var(--anno-dark);
+    opacity: .55;
+    transition: opacity .3s ease, fill .3s ease;
+  }
+  .stage.is-focus .question-path:not(.active) { opacity: .18; }
+  .question-path.active { opacity: .95; fill: var(--ink-dark); }
+
+  /* ---------- draw-in (PRM-gated) ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .intro .thread {
+      stroke-dasharray: 1; stroke-dashoffset: 1;
+      animation: threadDraw 900ms cubic-bezier(.25,.7,.3,1) both;
+    }
+    .intro .core { animation: dotIn 340ms cubic-bezier(.2,.9,.3,1.3) both; }
+    .intro .starcut { animation: fadeIn 340ms ease-out both; }
+    .intro .node.rest .lbl,
+    .intro .edge-lbl,
+    .intro .question-path { animation: fadeIn 460ms ease-out both; animation-delay: 1.15s; }
+    .intro .hud, .intro .legend { animation: fadeIn 520ms ease-out both; animation-delay: 1.25s; }
+    /* very slow float, PRM-gated */
+    .float { animation: drift 32s ease-in-out infinite; }
+    .chips { transform: translateY(4px); transition: opacity .25s ease, transform .25s ease; }
+    .ask:focus-within .chips { transform: none; }
+  }
+  @keyframes threadDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes dotIn { from { transform: scale(0); } to { transform: scale(1); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0); }
+    50%      { transform: translate(0, -4px); }
+  }
+
+  /* ---------- under 900px: allow scroll, overlay on top, drawing below ---------- */
+  @media (max-width: 900px) {
+    body { overflow: auto; height: auto; }
+    .stage { position: relative; height: 62dvh; min-height: 440px; }
+    .overlay {
+      position: relative;
+      width: 100%; height: auto;
+      padding: 40px 28px;
+    }
+    .overlay::before { display: none; }
+    .aside { margin-top: 36px; }
+    .hud { position: static; text-align: left; margin: 16px 28px 8px; }
+    .legend { position: static; margin: 0 28px 40px; left: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== THE DRAWING (fills viewport) ===== -->
+<section class="stage intro" id="stage" aria-label="Mind graph: six idea threads, twenty-one nodes over a dark ground">
+  <svg id="mind" viewBox="0 0 1440 860" preserveAspectRatio="xMidYMid slice"
+       role="group" aria-label="Idea threads: neuro, ai, geometry, xr, comfort, data. Projects sit where threads cross; the comfort thread carries the question.">
+    <defs></defs>
+    <g id="g-threads"></g>
+    <g id="g-question"></g>
+    <g id="g-edges"></g>
+    <g id="g-nodes"></g>
+  </svg>
+</section>
+
+<!-- ===== TEXT OVERLAY ===== -->
+<div class="overlay">
+  <header>
+    <h1 class="name">EMILIE EL CHIDIAC</h1>
+    <p class="subtitle">I care about design, technology, and people.</p>
+    <p class="fact mono-s">MACAD AWARDS 2026 · WINNER · COMPUTATIONAL DESIGN · MACAD @ IAAC</p>
+  </header>
+
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#work">WORK<span class="arw">&gt;</span></a>
+    <a href="#thoughts">THOUGHTS<span class="arw">&gt;</span></a>
+    <a href="#notebook">NOTEBOOK<span class="arw">&gt;</span></a>
+    <a href="#cv">CV<span class="arw">&gt;</span></a>
+    <a href="#about">ABOUT<span class="arw">&gt;</span></a>
+  </nav>
+
+  <div class="ask">
+    <input id="ask-input" type="text" readonly
+           placeholder="/ JUMP TO ANY PROJECT OR THOUGHT"
+           aria-label="Jump to anything (mockup, non-functional)">
+    <div class="chips">
+      <button type="button">SENSI</button>
+      <button type="button">THE AWARD POST</button>
+      <button type="button">DOWNLOAD CV</button>
+    </div>
+  </div>
+
+  <p class="aside"><span class="nb">n.b.</span> this whole mess is my head. hover a piece of it.</p>
+</div>
+
+<div class="hud mono-s">THIS IS WHAT'S ON MY MIND · HOVER A PIECE · EVERY ONE OPENS</div>
+<div class="legend mono-s">&#9679; PROJECT&nbsp;&nbsp;&nbsp;&#9675; THOUGHT&nbsp;&nbsp;&nbsp;&#10022; AWARD WINNER</div>
+
+<a href="./index.html" style="position:fixed;bottom:10px;left:12px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--redline-wire);background:rgba(11,14,19,.8);border:1px solid var(--redline-wire);padding:4px 9px;text-decoration:none;z-index:999;">&lt; STUDIO INDEX</a>
+<div class="mockup-note" style="color:var(--anno-dark);border-color:var(--anno-dark);background:rgba(11,14,19,.8);">MOCKUP · NOT PRODUCTION</div>
+
+<script>
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  var stage = document.getElementById('stage');
+  var defs = document.querySelector('#mind defs');
+  var gThreads = document.getElementById('g-threads');
+  var gQuestion = document.getElementById('g-question');
+  var gEdges = document.getElementById('g-edges');
+  var gNodes = document.getElementById('g-nodes');
+
+  /* lens colors per node type */
+  var LENS = { cyan: 'var(--cyan-wire)', magenta: 'var(--magenta-wire)', yellow: 'var(--yellow-wire)', white: 'var(--ink-dark)' };
+
+  /* ---------- threads (viewBox 1440x860; top-left ~34%x70% kept sparse) ----------
+     Dense crossings pushed to center/right/bottom. Node coords are shared waypoints. */
+  var THREADS = [
+    { id: 'NEURO',    lbl: [1408, 250], anchor: 'end',
+      pts: [[560,300],[720,330],[900,300],[1120,250],[1300,262],[1418,244]] },
+    { id: 'AI',       lbl: [1408, 560], anchor: 'end',
+      pts: [[470,700],[560,300],[705,398],[820,430],[980,596],[1120,250],[1300,470],[1418,554]] },
+    { id: 'DATA',     lbl: [1408, 372], anchor: 'end',
+      pts: [[470,700],[705,540],[820,430],[1085,510],[1150,545],[1220,528],[1300,388],[1418,378]] },
+    { id: 'GEOMETRY', lbl: [1408, 636], anchor: 'end',
+      pts: [[470,700],[560,748],[705,540],[655,592],[740,624],[980,596],[1030,545],[1085,510],[1136,519],[1300,600],[1418,606]] },
+    { id: 'COMFORT',  lbl: null, anchor: 'start',
+      pts: [[560,300],[670,455],[655,592],[625,720],[605,842]] },
+    { id: 'XR',       lbl: [1408, 118], anchor: 'end',
+      pts: [[520,140],[720,166],[1000,140],[1240,120],[1418,108]] }
+  ];
+
+  /* ---------- nodes ----------
+     k: p=project, t=thought | lens: color | th: threads | a: anchor | d: label offset
+     award: true adds a star. rest: true shows label at rest. */
+  var NODES = [
+    { n: 'SENSI',                    k: 'p', lens: 'cyan',    x: 560,  y: 300, th: ['NEURO','AI','COMFORT'], a: 'middle', d: [0,-15],  rest: true, award: true },
+    { n: 'NEUROSPACE',               k: 'p', lens: 'cyan',    x: 820,  y: 430, th: ['NEURO','DATA','AI'],    a: 'start',  d: [15,5],   rest: true },
+    { n: 'OPTIMIZING FOR THE MIND',  k: 'p', lens: 'cyan',    x: 1120, y: 250, th: ['NEURO','AI'],           a: 'end',    d: [-14,-9] },
+    { n: 'LEGOARCH',                 k: 'p', lens: 'cyan',    x: 705,  y: 540, th: ['AI','GEOMETRY'],        a: 'start',  d: [13,-9],  award: true },
+    { n: 'RING 4000',                k: 'p', lens: 'magenta', x: 980,  y: 596, th: ['AI','GEOMETRY'],        a: 'middle', d: [0,25],   award: true },
+    { n: 'THE HUDDLE',               k: 'p', lens: 'cyan',    x: 1085, y: 510, th: ['GEOMETRY','DATA'],      a: 'end',    d: [-13,-11],award: true },
+    { n: 'THE LUNGS',                k: 'p', lens: 'cyan',    x: 1030, y: 545, th: ['DATA','GEOMETRY'],      a: 'end',    d: [-13,20], award: true },
+    { n: 'A BALLOONING MARKET',      k: 'p', lens: 'cyan',    x: 655,  y: 592, th: ['GEOMETRY','COMFORT'],   a: 'middle', d: [0,-17] },
+    { n: 'TOWERS AT SOMA',           k: 'p', lens: 'magenta', x: 560,  y: 748, th: ['GEOMETRY'],             a: 'start',  d: [10,-17] },
+    { n: 'CAPPELLETTI PAVILION',     k: 'p', lens: 'yellow',  x: 1300, y: 600, th: ['GEOMETRY'],             a: 'end',    d: [-13,-11] },
+    { n: 'XR FOR EDUCATION',         k: 'p', lens: 'yellow',  x: 1000, y: 140, th: ['XR'],                   a: 'middle', d: [0,25] },
+
+    { n: 'neuroaesthetics',               k: 't', lens: 'white', x: 720,  y: 330, th: ['NEURO'],           a: 'middle', d: [0,-16] },
+    { n: 'behavior information modeling', k: 't', lens: 'white', x: 1300, y: 388, th: ['DATA'],            a: 'end',    d: [-14,-12], rest: true },
+    { n: 'physics solvers',               k: 't', lens: 'white', x: 740,  y: 624, th: ['GEOMETRY'],        a: 'middle', d: [0,21] },
+    { n: 'generative ai',                 k: 't', lens: 'white', x: 705,  y: 398, th: ['AI'],              a: 'middle', d: [0,-16] },
+    { n: 'extended reality',              k: 't', lens: 'white', x: 720,  y: 166, th: ['XR'],              a: 'middle', d: [0,-16] },
+    { n: 'comfort as data',               k: 't', lens: 'white', x: 670,  y: 455, th: ['COMFORT','DATA'],  a: 'start',  d: [13,4],   rest: true },
+    { n: 'drawing as interface',          k: 't', lens: 'white', x: 1240, y: 120, th: ['AI','XR'],         a: 'end',    d: [-13,-14] },
+    { n: 'evolutionary search',           k: 't', lens: 'white', x: 1300, y: 470, th: ['AI','GEOMETRY'],   a: 'end',    d: [-14,18] },
+    { n: 'heritage meets new tech',       k: 't', lens: 'white', x: 1136, y: 519, th: ['GEOMETRY'],        a: 'start',  d: [12,-12] },
+    { n: 'buildings that respond',        k: 't', lens: 'white', x: 625,  y: 720, th: ['COMFORT','NEURO'], a: 'start',  d: [13,4] }
+  ];
+
+  /* ---------- helpers ---------- */
+  function make(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var key in attrs) e.setAttribute(key, attrs[key]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  /* cardinal spline through waypoints -> smooth cubic path */
+  function spline(pts, k) {
+    k = k || 0.18;
+    var d = 'M ' + pts[0][0] + ' ' + pts[0][1];
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[Math.max(i - 1, 0)];
+      var p1 = pts[i];
+      var p2 = pts[i + 1];
+      var p3 = pts[Math.min(i + 2, pts.length - 1)];
+      var c1x = p1[0] + (p2[0] - p0[0]) * k, c1y = p1[1] + (p2[1] - p0[1]) * k;
+      var c2x = p2[0] - (p3[0] - p1[0]) * k, c2y = p2[1] - (p3[1] - p1[1]) * k;
+      d += ' C ' + c1x.toFixed(1) + ' ' + c1y.toFixed(1) + ', '
+                 + c2x.toFixed(1) + ' ' + c2y.toFixed(1) + ', '
+                 + p2[0] + ' ' + p2[1];
+    }
+    return d;
+  }
+
+  /* 5-point star path centered at (cx,cy), radius r */
+  function starPath(cx, cy, r) {
+    var d = '', inner = r * 0.42;
+    for (var i = 0; i < 10; i++) {
+      var rad = (i % 2 === 0) ? r : inner;
+      var ang = (Math.PI / 5) * i - Math.PI / 2;
+      var px = cx + Math.cos(ang) * rad;
+      var py = cy + Math.sin(ang) * rad;
+      d += (i === 0 ? 'M ' : 'L ') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+    }
+    return d + 'Z';
+  }
+
+  /* ---------- build threads + edge labels ---------- */
+  var threadEls = {}; /* id -> { path, lbl } */
+  THREADS.forEach(function (t, i) {
+    var isComfort = (t.id === 'COMFORT');
+    var pathD = spline(t.pts);
+    var path = make('path', {
+      'class': 'thread',
+      'd': pathD,
+      'pathLength': '1', 'stroke-dasharray': '1',
+      'data-thread': t.id
+    }, gThreads);
+    if (isComfort) path.setAttribute('id', 'comfort-path');
+    path.style.animationDelay = (i * 100) + 'ms';
+
+    var lbl = null;
+    if (t.lbl) {
+      lbl = make('text', {
+        'class': 'edge-lbl', 'x': t.lbl[0], 'y': t.lbl[1],
+        'text-anchor': t.anchor, 'tabindex': '0', 'role': 'button',
+        'aria-label': t.id + ' thread — highlight its projects and thoughts',
+        'data-thread': t.id
+      }, gEdges);
+      lbl.textContent = t.id;
+    }
+    threadEls[t.id] = { path: path, lbl: lbl };
+  });
+
+  /* ---------- the question, as a textPath following the COMFORT thread (F2) ----------
+     A hidden reference copy of the comfort path lives in <defs> so the textPath
+     can trace exactly the same bezier that is drawn. */
+  make('path', { 'id': 'comfort-ref', 'd': spline(THREADS[4].pts), 'fill': 'none' }, defs);
+  var qText = make('text', {
+    'class': 'question-path', 'tabindex': '0', 'role': 'button',
+    'aria-label': 'The question that runs through the work: how will this space make someone feel? — highlights the comfort thread',
+    'data-thread': 'COMFORT'
+  }, gQuestion);
+  var qPath = make('textPath', { 'href': '#comfort-ref', 'startOffset': '5%' }, qText);
+  qPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#comfort-ref');
+  qPath.textContent = 'how will this space make someone feel?';
+  threadEls['COMFORT'].qText = qText; /* so activating COMFORT lights the question */
+
+  /* ---------- build nodes ---------- */
+  var nodeEls = []; /* { g, th, lens } */
+  var order = NODES.slice().sort(function (a, b) { return a.x - b.x; });
+  NODES.forEach(function (nd) {
+    var g = make('g', {
+      'class': 'node' + (nd.rest ? ' rest' : '') + ' float',
+      'tabindex': '0', 'role': 'link',
+      'aria-label': nd.n + ' — ' + (nd.k === 'p' ? 'project' : 'thought') +
+                    (nd.award ? ' (award winner)' : '') +
+                    ' · threads: ' + nd.th.join(', ').toLowerCase()
+    }, gNodes);
+    g.style.animationDelay = (order.indexOf(nd) * 220) + 'ms';
+
+    var core;
+    if (nd.k === 'p') {
+      if (nd.award) {
+        /* award-winning project = larger filled dot with a star knocked out */
+        core = make('circle', { 'class': 'core p award', 'cx': nd.x, 'cy': nd.y, 'r': 6.6 }, g);
+        var starEl = make('path', { 'class': 'starcut', 'd': starPath(nd.x, nd.y, 3.7) }, g);
+        starEl.style.animationDelay = (500 + order.indexOf(nd) * 30) + 'ms';
+      } else {
+        /* project = filled dot */
+        core = make('circle', { 'class': 'core p', 'cx': nd.x, 'cy': nd.y, 'r': 3.6 }, g);
+      }
+    } else {
+      /* thought = hollow ring */
+      core = make('circle', { 'class': 'core t', 'cx': nd.x, 'cy': nd.y, 'r': 3.2 }, g);
+    }
+    core.style.animationDelay = (480 + order.indexOf(nd) * 30) + 'ms';
+
+    make('circle', { 'class': 'hit', 'cx': nd.x, 'cy': nd.y, 'r': 15 }, g);
+
+    var lbl = make('text', {
+      'class': 'lbl ' + nd.k,
+      'x': nd.x + nd.d[0], 'y': nd.y + nd.d[1], 'text-anchor': nd.a
+    }, g);
+    lbl.textContent = nd.n;
+
+    nodeEls.push({ g: g, th: nd.th, lens: nd.lens, core: core, lbl: lbl });
+  });
+
+  /* ---------- interaction: color on touch ---------- */
+  function paintThreads(ids, color) {
+    ids.forEach(function (id) {
+      var t = threadEls[id];
+      if (!t) return;
+      t.path.classList.add('active');
+      t.path.style.stroke = color;
+      if (t.lbl) t.lbl.classList.add('active');
+      if (t.qText) t.qText.classList.add('active');
+    });
+  }
+
+  function clearAll() {
+    stage.classList.remove('is-focus');
+    nodeEls.forEach(function (m) {
+      m.g.classList.remove('active', 'member', 'lit');
+      m.core.style.fill = ''; m.core.style.stroke = '';
+    });
+    THREADS.forEach(function (t) {
+      var e = threadEls[t.id];
+      e.path.classList.remove('active');
+      e.path.style.stroke = '';
+      if (e.lbl) e.lbl.classList.remove('active');
+      if (e.qText) e.qText.classList.remove('active');
+    });
+  }
+
+  function activateNode(entry) {
+    clearAll();
+    stage.classList.add('is-focus');
+    entry.g.classList.add('active');
+    var color = LENS[entry.lens];
+    /* the node's own threads light in the node's lens color */
+    paintThreads(entry.th, color);
+    /* the node itself takes its lens color */
+    if (entry.lens !== 'white') {
+      var el = entry.core;
+      if (el.classList.contains('t')) el.style.stroke = color; else el.style.fill = color;
+    }
+    /* connected nodes brighten */
+    nodeEls.forEach(function (m) {
+      if (m === entry) return;
+      var shared = m.th.some(function (id) { return entry.th.indexOf(id) !== -1; });
+      if (shared) m.g.classList.add('member');
+    });
+  }
+
+  function activateThread(id) {
+    clearAll();
+    stage.classList.add('is-focus');
+    /* edge label / thread lights in neutral bright ink (not a lens color) */
+    paintThreads([id], 'var(--ink-dark)');
+    nodeEls.forEach(function (m) {
+      if (m.th.indexOf(id) !== -1) m.g.classList.add('lit');
+    });
+  }
+
+  nodeEls.forEach(function (entry) {
+    entry.g.addEventListener('mouseenter', function () { activateNode(entry); });
+    entry.g.addEventListener('mouseleave', clearAll);
+    entry.g.addEventListener('focus', function () { activateNode(entry); });
+    entry.g.addEventListener('blur', clearAll);
+  });
+  THREADS.forEach(function (t) {
+    var e = threadEls[t.id];
+    var trigger = e.lbl || e.qText; /* COMFORT has no edge label; use the question text */
+    if (!trigger) return;
+    trigger.addEventListener('mouseenter', function () { activateThread(t.id); });
+    trigger.addEventListener('mouseleave', clearAll);
+    trigger.addEventListener('focus', function () { activateThread(t.id); });
+    trigger.addEventListener('blur', clearAll);
+  });
+
+  /* ---------- intro cleanup (filled animations release to identical final state) ---------- */
+  window.setTimeout(function () { stage.classList.remove('intro'); }, 2100);
+
+  /* ---------- the pill: '/' focuses it (visual mock only) ---------- */
+  var ask = document.getElementById('ask-input');
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== ask) {
+      e.preventDefault();
+      ask.focus();
+    }
+  });
+})();
+</script>
+</body>
+</html>
