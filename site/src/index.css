@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './styles/fonts.css';
+@import './styles/language.css';
 
 /* ============================================================
    PEN TABLE · design tokens (Tailwind v4 CSS-first config)

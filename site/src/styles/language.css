@@ -1,0 +1,82 @@
+/* ============================================================
+   DESIGN LANGUAGE v2 · tokens (see /DESIGN-LANGUAGE.md, LOCKED 2026-07-09)
+
+   Soft / filleted / glass, a light+dark mode system. These are ADDITIVE: the
+   Pen Table @theme tokens in index.css are untouched, so nothing shipped breaks;
+   new + re-skinned surfaces consume the `--lang-*` / `--r-*` tokens below.
+
+   Mode switches via the CSS `light-dark()` function keyed off `color-scheme`:
+   - default `color-scheme: light dark` follows the OS preference;
+   - the ModeToggle sets `[data-theme]` on <html> to force one;
+   - a surface PINS a ground with `.lang-dark` / `.lang-light` (landing pins
+     dark, CV pins light) — color-scheme inherits, so nested glass resolves too.
+   ============================================================ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Fillet scale (mode-independent) */
+  --r-pill: 999px;
+  --r-control: 12px;
+  --r-image: 14px;
+  --r-card: 20px;
+  --r-sheet: 28px;
+
+  /* Motion + glass blur (mode-independent) */
+  --ease-soft: cubic-bezier(0.2, 0.8, 0.3, 1);
+  --lang-glass-blur: 16px;
+
+  /* Grounds + ink (light value, dark value) */
+  --lang-ground: light-dark(#f5f6f7, #0b0e13);
+  --lang-ink: light-dark(#16181d, #e8eaed);
+  --lang-ink-muted: light-dark(#565b63, #8a919c);
+  --lang-ink-faint: light-dark(#8a919c, #6b727e);
+  --lang-hairline: light-dark(rgba(22, 24, 29, 0.1), rgba(255, 255, 255, 0.1));
+  --lang-interaction: light-dark(#be123c, #ff4d6d);
+
+  /* Glass tiers: raised (cards/panels) + floating (overlays/sheets/menus) */
+  --lang-glass-1: light-dark(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.05));
+  --lang-glass-1-border: light-dark(rgba(22, 24, 29, 0.1), rgba(255, 255, 255, 0.12));
+  --lang-glass-2: light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.09));
+  --lang-glass-2-border: light-dark(rgba(22, 24, 29, 0.14), rgba(255, 255, 255, 0.18));
+}
+
+/* Forced modes (the ModeToggle writes [data-theme]) */
+html[data-theme='light'] {
+  color-scheme: light;
+}
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Surface pins: wrap a section to fix its ground regardless of mode */
+.lang-dark {
+  color-scheme: dark;
+}
+.lang-light {
+  color-scheme: light;
+}
+
+/* The glass primitive base. backdrop-blur where supported; a solid fallback
+   (opaque tier fill) keeps text legible if blur is unavailable or the visitor
+   has save-data / a weak GPU. */
+.lang-glass-1,
+.lang-glass-2 {
+  border-style: solid;
+  border-width: 0.5px;
+}
+.lang-glass-1 {
+  background: var(--lang-glass-1);
+  border-color: var(--lang-glass-1-border);
+}
+.lang-glass-2 {
+  background: var(--lang-glass-2);
+  border-color: var(--lang-glass-2-border);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .lang-glass-1,
+  .lang-glass-2 {
+    backdrop-filter: blur(var(--lang-glass-blur));
+    -webkit-backdrop-filter: blur(var(--lang-glass-blur));
+  }
+}
