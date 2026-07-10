@@ -31,6 +31,34 @@ re-skinned to this language in its own focused session (see §9).
 >    image fills the top ~80% edge to edge; the bottom band holds name + lens
 >    pill + up to TWO tags; the award pill rides the image corner. (The §5
 >    "inset `--r-image` image" reading is superseded.)
+>
+> **AMENDMENTS (Emilie, 2026-07-10, DL-1 session; visualised + confirmed in
+> chat):**
+>
+> 5. **One mode, whole site, EXECUTED (supersedes amendment 2):** the §2
+>    one-mode amendment is now built. The landing's dark pin, the interior
+>    shells' temporary light shim, and the `/work` soft pin (amendment 2,
+>    `.lang-lean-dark`) are all retired; `/work` simply follows the mode like
+>    everything else. PRINT/PDF stays the only pin. Until each page re-skins
+>    (DL-2..5) the Pen Table light tokens are mode-aware (the `light-dark()`
+>    bridge in `site/src/index.css` @theme): dark mode shows "the pen table at
+>    night" (mylar to carbon, ink to ink-dark, anno to anno-dark, redline to
+>    wire, lens pens to wires). The mind-graph landing renders in both grounds
+>    (dark: light ink on carbon; light: dark ink on cool white; lens accents
+>    wire on dark, darker pen on light).
+> 6. **Page transitions EXECUTED + the morph naming convention (implements
+>    the §3 amendment):** every navigation and the mode flip run the soft
+>    ~250ms crossfade on `--ease-soft`; shared-element morphs use
+>    `view-transition-name: page-<route-slug>` (the destination route with
+>    slashes as hyphens: `page-work-sensi`, `page-sheets-p-101`,
+>    `page-thoughts-bim`). The routed page's hero carries its own name; a
+>    source face (WORK card, the active mind-graph node) adopts it. At most
+>    ONE element per name per rendered state (a duplicate aborts the whole
+>    transition). Helper + docs: `site/src/lib/viewTransition.ts`; DL-2+
+>    re-skins attach their morphs by carrying the same names. Reduced motion:
+>    every transition is an instant swap. The Pen Table carbon-flood ceremony
+>    ("the light table switches off") retired with one mode: home navigations
+>    ride the same crossfade.
 
 ---
 

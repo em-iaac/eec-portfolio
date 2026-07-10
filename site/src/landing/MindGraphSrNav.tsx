@@ -20,12 +20,12 @@ export default function MindGraphSrNav() {
             {n.label} ({n.kind}, {LENSES[n.lens].label}
             {n.award ? ', award-winning' : ''}){' '}
             {n.sheetRoute && (
-              <Link to={n.sheetRoute} tabIndex={-1}>
+              <Link to={n.sheetRoute} viewTransition tabIndex={-1}>
                 Open sheet
               </Link>
             )}
             {n.noteRoute && (
-              <Link to={n.noteRoute} tabIndex={-1}>
+              <Link to={n.noteRoute} viewTransition tabIndex={-1}>
                 Open note
               </Link>
             )}

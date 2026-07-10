@@ -54,7 +54,7 @@ export function LensChipAnchor({ lens }: { lens: Lens }) {
 /** Cross-page router chip (into filtered Notebook views), client-side navigation */
 export function LensChipRoute({ lens }: { lens: Lens }) {
   return (
-    <Link className={CHIP_CLS} to={`/notebook#${lens}`}>
+    <Link className={CHIP_CLS} to={`/notebook#${lens}`} viewTransition>
       <ChipInner lens={lens} />
     </Link>
   )

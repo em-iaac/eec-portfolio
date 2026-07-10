@@ -29,23 +29,31 @@
       public open-to status line retired in Session 5, FLAG-01.)
    ============================================================ */
 @theme {
+  /* THE DL-1 BRIDGE (Emilie 2026-07-10, one mode whole site): the light-ground
+     Pen Table tokens are mode-aware until each page re-skins (DL-2..5). In dark
+     mode every not-yet-re-skinned surface flips to its already-designed dark
+     counterpart ("the pen table at night"): mylar->carbon, ink->ink-dark,
+     anno->anno-dark, redline->wire, lens pens->wires. The dark constants below
+     stay literal so existing dark strips keep working. Keyed off color-scheme
+     (language.css), so the toggle + print pin drive these too. */
+
   /* Grounds + linework */
-  --color-mylar: #f7f7f4; /* READ ground */
-  --color-ink: #16181d; /* text + linework, 16.6:1 on mylar */
-  --color-anno: #565b63; /* captions/metadata, 6.4:1 */
+  --color-mylar: light-dark(#f7f7f4, #0b0e13); /* READ ground */
+  --color-ink: light-dark(#16181d, #e8eaed); /* text + linework, 16.6:1 on mylar */
+  --color-anno: light-dark(#565b63, #8a919c); /* captions/metadata, 6.4:1 */
   /* Rules are ink at two opacities only: ink/20 standard, ink/35 emphasized */
 
   /* Redline: interaction + liveness only */
-  --color-redline: #be123c; /* interaction + liveness TEXT, 6.0:1 */
+  --color-redline: light-dark(#be123c, #ff4d6d); /* interaction + liveness TEXT, 6.0:1 */
   --color-redline-stroke: #e11d48; /* legacy hue: graphic strokes/fills >= 3px ONLY, never text */
   --color-redline-wire: #ff4d6d; /* dark-ground state */
 
   /* Lens colors (pen = light ground, wire = dark ground) */
-  --color-cyan-pen: #0e7490; /* lens: Computation & Research */
+  --color-cyan-pen: light-dark(#0e7490, #22d3ee); /* lens: Computation & Research */
   --color-cyan-wire: #22d3ee;
-  --color-magenta-pen: #a8186b; /* lens: Design & Practice */
+  --color-magenta-pen: light-dark(#a8186b, #f472b6); /* lens: Design & Practice */
   --color-magenta-wire: #f472b6;
-  --color-yellow-pen: #7a5e00; /* lens: Explorations; pen never sets running text, ticks + small labels only */
+  --color-yellow-pen: light-dark(#7a5e00, #facc15); /* lens: Explorations; pen never sets running text, ticks + small labels only */
   --color-yellow-wire: #facc15;
 
   /* Dark ground */
@@ -216,44 +224,9 @@ section[id] {
   mask-image: linear-gradient(to right, black calc(100% - 3rem), transparent);
 }
 
-/* Route transitions ("next sheet", motion 04, locked at NORMAL): the
-   viewport never slides. The old sheet lifts and fades (400ms ease-in)
-   while the next, already beneath, settles from scale 0.99. Progressive
-   enhancement via the View Transitions API; browsers without it (and
-   reduced motion) get an instant swap, which the spec allows. */
-@media (prefers-reduced-motion: no-preference) {
-  ::view-transition-old(root) {
-    animation: sheet-lift 400ms ease-in both;
-  }
-
-  ::view-transition-new(root) {
-    animation: sheet-settle 400ms ease-out both;
-  }
-
-  @keyframes sheet-lift {
-    to {
-      opacity: 0;
-      transform: translateY(-16px);
-    }
-  }
-
-  @keyframes sheet-settle {
-    from {
-      transform: scale(0.99);
-    }
-  }
-}
-
-/* Reduced motion: without this, the UA's DEFAULT view-transition cross-fade
-   still runs even though the custom animations above are gated. The
-   documented behavior is an instant swap. */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
-  }
-}
+/* Route transitions moved to the DL v2 language (DL-1, 2026-07-10): the old
+   Pen Table sheet-lift retired; the soft crossfade + shared-element morphs +
+   the reduced-motion instant swap live in styles/language.css. */
 
 /* CINEMA PLATES (Session 8; motion unlock (a) 2026-07-07 + the Sheet cinema
    addendum in DESIGN-SYSTEM.md, signed 2026-07-08): scroll-driven scrub
@@ -337,16 +310,18 @@ section[id] {
 }
 
 /* ============================================================
-   THE LANDING MIND-GRAPH (Session R1). The all-dark cover's artwork:
-   idea threads + project/thought marks over carbon. Ported from the proven
-   mock design-studio/cover-dark-threads.html with the council fixes. All
+   THE LANDING MIND-GRAPH (Session R1; bimodal since DL-1, 2026-07-10). The
+   cover's artwork: idea threads + project/thought marks over the mode's
+   ground (dark = light ink on carbon "the mind at night"; light = dark ink
+   on cool white "the mind on paper"). Ported from the proven mock
+   design-studio/cover-dark-threads.html with the council fixes. All
    ceremonies are one-shot and render their final state under reduced motion
-   (governance rule 7 / the honest-fallback floor). Colours come from @theme;
-   the JS only toggles state classes.
+   (governance rule 7 / the honest-fallback floor). Colours come from the
+   mode-aware --lang-* tokens; the JS only toggles state classes.
    ============================================================ */
 .mg-thread {
   fill: none;
-  stroke: var(--color-ink-dark);
+  stroke: var(--lang-ink);
   stroke-width: 1.2;
   stroke-linecap: round;
   opacity: 0.28;
@@ -368,12 +343,12 @@ section[id] {
   transition: opacity 0.3s ease, fill 0.3s ease, stroke 0.3s ease;
 }
 .mg-core.p {
-  fill: var(--color-ink-dark);
+  fill: var(--lang-ink);
   stroke: none;
 }
 .mg-core.t {
   fill: none;
-  stroke: var(--color-ink-dark);
+  stroke: var(--lang-ink);
   stroke-width: 1.4;
 }
 .mg-hit {
@@ -390,13 +365,13 @@ section[id] {
   font-family: var(--font-mono);
   font-size: 8px;
   letter-spacing: 0.1em;
-  fill: var(--color-ink-dark);
+  fill: var(--lang-ink);
 }
 .mg-lbl.t {
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 9.5px;
-  fill: var(--color-anno-dark);
+  fill: var(--lang-ink-muted);
 }
 .mg-node.rest .mg-lbl,
 .mg-node.active .mg-lbl,
@@ -411,7 +386,7 @@ section[id] {
   opacity: 0;
 }
 .mg-node:focus-visible .mg-core {
-  stroke: var(--color-redline-wire);
+  stroke: var(--lang-interaction);
   stroke-width: 2;
 }
 
@@ -419,19 +394,19 @@ section[id] {
   font-family: var(--font-mono);
   font-size: 8px;
   letter-spacing: 0.14em;
-  fill: var(--color-anno-dark);
+  fill: var(--lang-ink-muted);
   cursor: pointer;
   outline: none;
   transition: opacity 0.3s ease, fill 0.3s ease;
 }
 .mg-edge-lbl.active {
-  fill: var(--color-ink-dark);
+  fill: var(--lang-ink);
 }
 .mg-stage.is-focus .mg-edge-lbl:not(.active) {
   opacity: 0.22;
 }
 .mg-edge-lbl:focus-visible {
-  fill: var(--color-redline-wire);
+  fill: var(--lang-interaction);
 }
 
 /* award glow: a soft radial halo that breathes behind each sparkle. In-place
@@ -586,15 +561,20 @@ section[id] {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .work-dialog[open] {
-    animation: work-rise 260ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
-  }
   .work-dialog[open]::backdrop {
     animation: work-fade 260ms ease both;
   }
-  @media (max-width: 40rem) {
+  /* The rise is the NO-view-transitions entrance only (DL-1): where the API
+     exists the card-face morph (shared view-transition-name) is the entrance,
+     and a second translate underneath it would double the motion. */
+  @supports not (view-transition-name: none) {
     .work-dialog[open] {
-      animation: work-sheet 300ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+      animation: work-rise 260ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+    }
+    @media (max-width: 40rem) {
+      .work-dialog[open] {
+        animation: work-sheet 300ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+      }
     }
   }
 }

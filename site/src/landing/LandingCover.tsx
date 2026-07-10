@@ -1,7 +1,10 @@
-// THE LANDING (Session R1): the all-dark, full-bleed mind-graph cover. The
-// honest DOM hero (name, adjectives, positioning line, nav, jump bar) is real
-// text that paints in the first second regardless of the artwork; the mind-graph
-// is progressive enhancement layered under it. Non-scrolling on tablet/desktop
+// THE LANDING (Session R1; one-mode since DL-1, 2026-07-10): the full-bleed
+// mind-graph cover. It FOLLOWS the mode like every surface (carbon "mind at
+// night" in dark, cool-white "mind on paper" in light; the old dark pin
+// retired). The honest DOM hero (name, adjectives, positioning line, nav,
+// jump bar) is real text that paints in the first second regardless of the
+// artwork; the mind-graph is progressive enhancement layered under it.
+// Non-scrolling on tablet/desktop
 // (the cover is one frame); on phones the text band sits above an interactive
 // field so the ten-second scan and the tap-to-bloom both stay first-class.
 //
@@ -39,18 +42,18 @@ const DOORS: { label: string; to: string; primary?: boolean }[] = [
 // field exactly. Ink only, never a lens colour (shape-tick + label rule).
 function LegendMarks() {
   const marks: [string, ReactNode][] = [
-    ['PROJECT', <circle key="p" cx="7" cy="7" r="4" fill="var(--color-ink-dark)" />],
+    ['PROJECT', <circle key="p" cx="7" cy="7" r="4" fill="var(--lang-ink)" />],
     [
       'THOUGHT',
-      <circle key="t" cx="7" cy="7" r="3.4" fill="none" stroke="var(--color-ink-dark)" strokeWidth="1.4" />,
+      <circle key="t" cx="7" cy="7" r="3.4" fill="none" stroke="var(--lang-ink)" strokeWidth="1.4" />,
     ],
     [
       'AWARD',
       <path
         key="a"
         d={starPath(7, 7, 5.5)}
-        fill="var(--color-ink-dark)"
-        style={{ filter: 'drop-shadow(0 0 2px rgba(232,234,237,0.55))' }}
+        fill="var(--lang-ink)"
+        style={{ filter: 'drop-shadow(0 0 2px color-mix(in srgb, var(--lang-ink) 55%, transparent))' }}
       />,
     ],
   ]
@@ -61,7 +64,7 @@ function LegendMarks() {
           <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" className="overflow-visible">
             {mark}
           </svg>
-          <span className="font-mono text-[9px] tracking-[0.14em] text-anno-dark uppercase">{label}</span>
+          <span className="font-mono text-[9px] tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">{label}</span>
         </span>
       ))}
     </>
@@ -140,7 +143,7 @@ function JumpBar() {
   function go(to: string) {
     setQuery('')
     setOpen(false)
-    navigate(to)
+    navigate(to, { viewTransition: true })
   }
 
   return (
@@ -179,13 +182,13 @@ function JumpBar() {
         aria-expanded={open && matches.length > 0}
         aria-controls="jump-list"
         role="combobox"
-        className="h-10 w-full rounded-full border border-[#565b63] bg-carbon/60 px-4 font-mono text-[12px] tracking-[0.06em] text-ink-dark placeholder:text-anno-dark focus:border-redline-wire focus:outline-none"
+        className="lang-glass-1 h-10 w-full rounded-[var(--r-pill)] px-4 font-mono text-[12px] tracking-[0.06em] text-[var(--lang-ink)] placeholder:text-[var(--lang-ink-muted)] focus:border-[var(--lang-interaction)] focus:outline-none"
       />
       {open && matches.length > 0 && (
         <ul
           id="jump-list"
           role="listbox"
-          className="absolute left-0 top-11 z-20 max-h-[280px] w-full overflow-y-auto rounded-lg border border-[#565b63] bg-carbon/95 py-1 backdrop-blur-sm"
+          className="lang-glass-2 absolute left-0 top-11 z-20 max-h-[280px] w-full overflow-y-auto rounded-[var(--r-control)] py-1"
         >
           {matches.map((m, i) => (
             <li key={m.to + m.label} role="option" aria-selected={false}>
@@ -193,10 +196,10 @@ function JumpBar() {
                 id={`jump-opt-${i}`}
                 to={m.to}
                 onClick={() => go(m.to)}
-                className="flex items-center justify-between gap-3 px-3 py-2 font-mono text-[10px] tracking-[0.06em] text-ink-dark hover:bg-ink-dark/10 focus:bg-ink-dark/10 focus:outline-none"
+                className="flex items-center justify-between gap-3 px-3 py-2 font-mono text-[10px] tracking-[0.06em] text-[var(--lang-ink)] hover:bg-[color-mix(in_srgb,var(--lang-ink)_10%,transparent)] focus:bg-[color-mix(in_srgb,var(--lang-ink)_10%,transparent)] focus:outline-none"
               >
                 <span className="truncate">{m.label}</span>
-                <span className="shrink-0 text-[8px] tracking-[0.14em] text-anno-dark uppercase">{m.hint}</span>
+                <span className="shrink-0 text-[8px] tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">{m.hint}</span>
               </Link>
             </li>
           ))}
@@ -210,11 +213,11 @@ export default function LandingCover() {
   useEffect(() => {
     document.title = 'Emilie El Chidiac | Design Technology Architect'
     assertPaletteMatchesTheme()
-    // Paint the whole document carbon so any overscroll/rubber-band matches the
-    // cover (the app's default ground is mylar).
+    // Paint the whole document with the mode's ground so any
+    // overscroll/rubber-band matches the cover.
     const html = document.documentElement
     const prev = html.style.background
-    html.style.background = 'var(--color-carbon)'
+    html.style.background = 'var(--lang-ground)'
     return () => {
       html.style.background = prev
     }
@@ -225,7 +228,7 @@ export default function LandingCover() {
       id="main"
       tabIndex={-1}
       aria-label="Emilie El Chidiac, the mind graph of her projects and thoughts"
-      className="relative flex min-h-[100svh] flex-col overflow-hidden bg-carbon text-ink-dark outline-none sm:fixed sm:inset-0 sm:block sm:min-h-0"
+      className="relative flex min-h-[100svh] flex-col overflow-hidden bg-[var(--lang-ground)] text-[var(--lang-ink)] outline-none sm:fixed sm:inset-0 sm:block sm:min-h-0"
     >
       {/* Hero copy FIRST in the DOM so screen readers and keyboard users reach the
           name + positioning before the graph's node list; z-10 keeps it above the
@@ -235,14 +238,14 @@ export default function LandingCover() {
           {/* TIER 1 — name */}
           <div className="flex items-center gap-3">
             <LogoMark size={40} tone="wire" className="shrink-0" />
-            <h1 className="font-display text-[27px] font-semibold leading-[0.98] tracking-[0.01em] whitespace-nowrap text-ink-dark sm:text-[41.83px]">
+            <h1 className="font-display text-[27px] font-semibold leading-[0.98] tracking-[0.01em] whitespace-nowrap text-[var(--lang-ink)] sm:text-[41.83px]">
               EMILIE EL CHIDIAC
             </h1>
           </div>
 
           {/* TIER 2a — the role adjectives (draftCopy). One line on the name-row
               measure on sm+ (10px keeps all four inside it); wraps calmly on phones. */}
-          <p className="mt-5 font-mono text-[11px] leading-relaxed tracking-[0.08em] text-ink-bright lowercase sm:whitespace-nowrap sm:text-[11px] sm:tracking-[0.02em]">
+          <p className="mt-5 font-mono text-[11px] leading-relaxed tracking-[0.08em] text-[light-dark(#565b63,#c7cbd1)] lowercase sm:whitespace-nowrap sm:text-[11px] sm:tracking-[0.02em]">
             {ADJECTIVES}
           </p>
 
@@ -251,13 +254,13 @@ export default function LandingCover() {
               red pen for interaction only). One line on the 360px measure on sm+;
               wraps calmly on phones. (Caveat sized past the usual margin-note cap
               here is a sanctioned redesign departure from the old rule 8.) */}
-          <p className="mt-3 font-hand text-[21px] leading-tight text-[#d8d2c4] sm:whitespace-nowrap sm:text-[30.97px]">
+          <p className="mt-3 font-hand text-[21px] leading-tight text-[light-dark(#6d5f46,#d8d2c4)] sm:whitespace-nowrap sm:text-[30.97px]">
             {VOICE}
           </p>
 
           {/* The rule that marks where the identity ends and the pressable
               controls begin (Emilie, 2026-07-09). Full measure, hairline ink. */}
-          <div aria-hidden="true" className="mt-8 h-px w-full bg-ink-dark/15" />
+          <div aria-hidden="true" className="mt-8 h-px w-full bg-[var(--lang-hairline)]" />
 
           {/* TIER 3 — the doors, spanning the same measure as the pill below */}
           <nav aria-label="Primary" className="mt-6 flex justify-between font-mono text-[12px] tracking-[0.08em]">
@@ -268,8 +271,8 @@ export default function LandingCover() {
                 viewTransition
                 className={
                   d.primary
-                    ? '-m-1.5 p-1.5 font-semibold text-ink-dark underline decoration-redline-wire decoration-2 underline-offset-[6px] hover:decoration-[3px] focus-visible:outline-2 focus-visible:outline-redline-wire'
-                    : '-m-1.5 p-1.5 text-ink-dark hover:text-redline-wire focus-visible:outline-2 focus-visible:outline-redline-wire'
+                    ? '-m-1.5 p-1.5 font-semibold text-[var(--lang-ink)] underline decoration-[var(--lang-interaction)] decoration-2 underline-offset-[6px] hover:decoration-[3px] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
+                    : '-m-1.5 p-1.5 text-[var(--lang-ink)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
                 }
               >
                 {d.label}
@@ -292,7 +295,7 @@ export default function LandingCover() {
         className="pointer-events-none absolute inset-0 z-[5] hidden sm:block"
         style={{
           background:
-            'radial-gradient(56% 60% at 22% 50%, rgba(11,14,19,0.85) 0%, rgba(11,14,19,0.6) 38%, rgba(11,14,19,0.26) 66%, rgba(11,14,19,0) 100%)',
+            'radial-gradient(56% 60% at 22% 50%, color-mix(in srgb, var(--lang-ground) 85%, transparent) 0%, color-mix(in srgb, var(--lang-ground) 60%, transparent) 38%, color-mix(in srgb, var(--lang-ground) 26%, transparent) 66%, transparent 100%)',
         }}
       />
 
@@ -319,11 +322,11 @@ export default function LandingCover() {
         <LegendMarks />
       </div>
 
-      <div className="pointer-events-none mt-3 px-6 text-center font-mono text-[9px] tracking-[0.14em] text-anno-dark sm:absolute sm:bottom-8 sm:left-14 sm:z-10 sm:mt-0 sm:px-0 sm:text-left">
+      <div className="pointer-events-none mt-3 px-6 text-center font-mono text-[9px] tracking-[0.14em] text-[var(--lang-ink-muted)] sm:absolute sm:bottom-8 sm:left-14 sm:z-10 sm:mt-0 sm:px-0 sm:text-left">
         THIS IS WHAT'S ON MY MIND ·{' '}
         <Link
           to="/about"
-          className="pointer-events-auto text-redline-wire underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline-wire"
+          className="pointer-events-auto text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
         >
           WHAT'S IN YOURS? &gt;
         </Link>
@@ -331,9 +334,9 @@ export default function LandingCover() {
 
       <p
         className="mx-auto mt-4 mb-6 max-w-[30ch] -rotate-1 px-6 text-center font-hand text-[16px] leading-snug sm:absolute sm:right-14 sm:bottom-[3.75rem] sm:z-10 sm:mx-0 sm:mt-0 sm:mb-0 sm:max-w-[26ch] sm:-rotate-2 sm:px-0 sm:text-right sm:text-[18px]"
-        style={{ color: 'color-mix(in srgb, var(--color-ink-dark) 55%, var(--color-anno-dark))' }}
+        style={{ color: 'color-mix(in srgb, var(--lang-ink) 55%, var(--lang-ink-muted))' }}
       >
-        <span className="text-redline-wire">n.b.</span> {WINK}
+        <span className="text-[var(--lang-interaction)]">n.b.</span> {WINK}
       </p>
     </main>
   )

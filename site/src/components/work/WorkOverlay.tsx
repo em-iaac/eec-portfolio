@@ -9,11 +9,12 @@
 //
 // Centered card on desktop, bottom sheet on phones (.work-dialog in index.css);
 // the rise is one-shot and PRM-gated (final state instant under reduced motion).
-import { useEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Img from '../Img'
 import SheetVideo from '../sheet/SheetVideo'
 import { LensTick, LENSES } from '../Lens'
+import { vtName } from '../../lib/viewTransition'
 import type { WorkEntry } from '../../data/work'
 
 const RED_LINK =
@@ -95,13 +96,17 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
   const titleId = `work-title-${entry.id}`
 
   // Open as a true modal on mount (top layer, focus trap, background inert).
+  // A LAYOUT effect since DL-1: react-router runs the route update inside
+  // document.startViewTransition's flushSync, so the dialog must be [open]
+  // synchronously for the new-state capture to see the morph target; a
+  // passive effect would land after the capture and break the pair.
   // Escape is handled via the 'cancel' event, NOT 'close': the native 'close'
   // event is dispatched asynchronously, so under StrictMode the close() from
   // the first cleanup lands after the remount has reattached a listener and
   // fires a phantom close. 'cancel' only fires on real user dismissal (Escape),
   // never on a programmatic close(), so it survives the double-invoke. The X
   // and the backdrop route through onClose directly (below).
-  useEffect(() => {
+  useLayoutEffect(() => {
     const dlg = ref.current
     if (!dlg) return
     if (!dlg.open) dlg.showModal()
@@ -124,6 +129,9 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
       ref={ref}
       aria-labelledby={titleId}
       className="work-dialog"
+      // The shared-element destination: the opened card's face morphs into
+      // this panel and back on close (page-work-<id>, lib/viewTransition.ts).
+      style={{ viewTransitionName: vtName(`/work/${entry.id}`) }}
       // A click on the backdrop (the dialog element itself, outside the inner
       // panel) closes; clicks inside the panel do not bubble to here.
       onClick={(e) => {

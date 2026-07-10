@@ -1,5 +1,7 @@
-// The mind-graph artwork (Session R1): SVG idea threads + project/thought marks
-// over carbon. Progressive enhancement on top of the honest DOM hero — a throw
+// The mind-graph artwork (Session R1; bimodal since DL-1): SVG idea threads +
+// project/thought marks over the mode's ground (light ink on carbon in dark,
+// dark ink on cool white in light; lens accents wire/pen via LENS_ACCENT).
+// Progressive enhancement on top of the honest DOM hero — a throw
 // here degrades to no-graph (wrapped by the cover) while the text hero still
 // paints. Interaction: hover (desktop), focus (keyboard), and forgiving tap
 // (mobile, nearest-node picking so a fat finger never misses) all bloom a node's
@@ -10,8 +12,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
-import { EDGE, LENSES } from './palette'
+import { vtName } from '../lib/viewTransition'
+import { LENS_ACCENT } from './palette'
 import { MIND, THREADS, VIEWBOX, nodeRoute, spline, starPath, type MindNode } from './mindGraph'
+
+// The mode-aware ink (light ink on carbon, dark ink on cool white): the same
+// token the mg-* styles use, so JS-driven blooms match the CSS.
+const INK = 'var(--lang-ink)'
 
 type Active = { kind: 'node' | 'thread'; id: string } | null
 
@@ -83,7 +90,7 @@ export default function MindGraph() {
   if (active?.kind === 'node') {
     const n = byId.get(active.id)
     if (n) {
-      const color = n.kind === 'project' ? LENSES[n.lens].wire : EDGE
+      const color = n.kind === 'project' ? LENS_ACCENT[n.lens] : INK
       n.th.forEach((t) => {
         litThreads.add(t)
         threadColor[t] = color
@@ -96,7 +103,7 @@ export default function MindGraph() {
     }
   } else if (active?.kind === 'thread') {
     litThreads.add(active.id)
-    threadColor[active.id] = EDGE
+    threadColor[active.id] = INK
     MIND.nodes.forEach((m) => {
       if (m.th.includes(active.id)) nodeExtra[m.id] = 'lit'
     })
@@ -140,7 +147,7 @@ export default function MindGraph() {
     }
     e.preventDefault()
     if (armedId === n.id) {
-      navigate(nodeRoute(n))
+      navigate(nodeRoute(n), { viewTransition: true })
       return
     }
     setActive({ kind: 'node', id: n.id })
@@ -156,14 +163,14 @@ export default function MindGraph() {
         isFocus ? 'is-focus' : ''
       }`}
       role="group"
-      aria-label="Mind graph: six idea threads over a dark ground; projects sit where threads cross, thoughts sit along a thread."
+      aria-label="Mind graph: six idea threads; projects sit where threads cross, thoughts sit along a thread."
       onPointerDown={onPointerDown}
     >
       <defs>
         {/* soft radial glow reused by every award sparkle (one gradient, cheap) */}
         <radialGradient id="mg-glow-grad">
-          <stop offset="0%" stopColor={EDGE} stopOpacity="0.5" />
-          <stop offset="100%" stopColor={EDGE} stopOpacity="0" />
+          <stop offset="0%" style={{ stopColor: INK }} stopOpacity="0.5" />
+          <stop offset="100%" style={{ stopColor: INK }} stopOpacity="0" />
         </radialGradient>
       </defs>
 
@@ -227,13 +234,23 @@ export default function MindGraph() {
               onBlur={clear}
               onClick={() => {
                 if (lastPointer.current === 'touch') return // touch handled on the surface
-                navigate(nodeRoute(n))
+                navigate(nodeRoute(n), { viewTransition: true })
               }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
-                  navigate(nodeRoute(n))
+                  navigate(nodeRoute(n), { viewTransition: true })
                 }
+              }}
+              // The shared-element source: only the ACTIVE node (hover / focus /
+              // tap-armed always precedes its click) carries the destination
+              // route's view-transition-name, so exactly one candidate exists
+              // per state (the one-per-name rule, lib/viewTransition.ts). Where
+              // the browser cannot snapshot an inner SVG element this simply
+              // degrades to the soft crossfade.
+              style={{
+                viewTransitionName:
+                  active?.kind === 'node' && active.id === n.id ? vtName(nodeRoute(n)) : undefined,
               }}
             >
               {n.award ? (

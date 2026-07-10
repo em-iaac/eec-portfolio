@@ -27,13 +27,14 @@ function FilterBar({ active }: { active: Lens | null }) {
   const off = 'border-ink/30 text-anno hover:border-ink hover:text-ink'
   return (
     <div className="flex flex-wrap gap-2.5" role="group" aria-label="Filter by lens">
-      <Link to="/work" className={`${base} ${active === null ? on : off}`} aria-current={active === null ? 'true' : undefined}>
+      <Link to="/work" viewTransition className={`${base} ${active === null ? on : off}`} aria-current={active === null ? 'true' : undefined}>
         ALL
       </Link>
       {WORK_LENSES.map((l) => (
         <Link
           key={l}
           to={`/work#${l}`}
+          viewTransition
           className={`${base} ${active === l ? on : off}`}
           aria-current={active === l ? 'true' : undefined}
         >
@@ -74,8 +75,11 @@ export default function Work() {
     prevId.current = id
   }, [id, selected, navigate])
 
-  const open = (entryId: string) => navigate(`/work/${entryId}${hash}`)
-  const close = () => navigate(`/work${hash}`, { replace: true })
+  // viewTransition: the card face morphs into the preview hero and back
+  // (shared view-transition-name, lib/viewTransition.ts); browsers without
+  // the API just swap.
+  const open = (entryId: string) => navigate(`/work/${entryId}${hash}`, { viewTransition: true })
+  const close = () => navigate(`/work${hash}`, { replace: true, viewTransition: true })
 
   return (
     <SheetPage title="Work">
@@ -96,7 +100,14 @@ export default function Work() {
       <ul className="grid list-none grid-cols-1 gap-4 p-0 pb-4 sm:grid-cols-2 lg:grid-cols-3">
         {entries.map((entry, i) => (
           <li key={entry.id} className="flex">
-            <WorkCard entry={entry} onOpen={() => open(entry.id)} priority={i < 3} />
+            {/* morphSource yields the entry's view-transition-name to the open
+                overlay (one element per name per state, lib/viewTransition.ts) */}
+            <WorkCard
+              entry={entry}
+              onOpen={() => open(entry.id)}
+              priority={i < 3}
+              morphSource={selected?.id !== entry.id}
+            />
           </li>
         ))}
       </ul>

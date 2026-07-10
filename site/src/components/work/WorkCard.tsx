@@ -8,6 +8,7 @@
 // an app is live) without breaking the grid's uniform shape.
 import { LensTick, LENSES } from '../Lens'
 import Img from '../Img'
+import { vtName } from '../../lib/viewTransition'
 import type { WorkEntry } from '../../data/work'
 
 // The redline "live" dot is the ONE sanctioned use of red here: liveness, the
@@ -58,10 +59,14 @@ export default function WorkCard({
   entry,
   onOpen,
   priority = false,
+  morphSource = true,
 }: {
   entry: WorkEntry
   onOpen: () => void
   priority?: boolean
+  /** false while THIS entry's overlay is open: the overlay hero holds the
+   *  view-transition-name then (one element per name per state). */
+  morphSource?: boolean
 }) {
   return (
     <button
@@ -69,6 +74,9 @@ export default function WorkCard({
       onClick={onOpen}
       data-work-card={entry.id}
       aria-haspopup="dialog"
+      // The shared-element source: the card face morphs into the preview's
+      // hero (page-work-<id>, lib/viewTransition.ts).
+      style={{ viewTransitionName: morphSource ? vtName(`/work/${entry.id}`) : undefined }}
       className="group flex h-full w-full flex-col border border-ink/35 bg-mylar text-left transition-colors hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-redline"
     >
       {entry.cover ? (

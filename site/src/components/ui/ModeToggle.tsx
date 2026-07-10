@@ -47,13 +47,25 @@ export default function ModeToggle() {
   }, [])
 
   const flip = () => {
-    document.documentElement.dataset.theme = next
-    try {
-      localStorage.setItem(KEY, next)
-    } catch {
-      // private browsing: the choice still applies, it just will not survive
+    const apply = () => {
+      document.documentElement.dataset.theme = next
+      try {
+        localStorage.setItem(KEY, next)
+      } catch {
+        // private browsing: the choice still applies, it just will not survive
+      }
+      setMode(next)
     }
-    setMode(next)
+    // The dark<->light flip rides the same soft crossfade as navigation
+    // (language.css); no support or reduced motion = an instant swap.
+    if (
+      document.startViewTransition &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      document.startViewTransition(apply)
+    } else {
+      apply()
+    }
   }
 
   return (

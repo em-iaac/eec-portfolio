@@ -1,5 +1,11 @@
 import { lazy, Suspense, useEffect, useRef } from 'react'
-import { Navigate, Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
+import {
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigationType,
+  type RouteObject,
+} from 'react-router-dom'
 import Home from './pages/Home'
 import Notebook from './pages/Notebook'
 import About from './pages/About'
@@ -18,7 +24,8 @@ const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
 // prerendered.
 const Lab = import.meta.env.DEV ? lazy(() => import('./pages/Lab')) : null
 
-// Mylar hold while a lazy READ-mode chunk resolves (matches SheetRoute).
+// Ground-coloured hold while a lazy READ-mode chunk resolves (matches
+// SheetRoute); bg-mylar is mode-aware since the DL-1 token bridge.
 function MylarScreen() {
   return <div className="min-h-dvh bg-mylar" aria-hidden="true" />
 }
@@ -79,60 +86,76 @@ function PageCount() {
   return null
 }
 
-export default function App() {
+// The pathless chrome route wrapping every page: scroll/focus handling +
+// page counting travel with the outlet.
+function Chrome() {
   return (
     <>
       <ScrollToTop />
       <PageCount />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        {/* THE GALLERY (R2). /work/:id opens a card as a preview on top of the
-            grid; a shared card link deep-links straight to it. Old /work#lens
-            deep links now land on the gallery pre-filtered to that lens. */}
-        <Route
-          path="/work"
-          element={
-            <Suspense fallback={<MylarScreen />}>
-              <Work />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/work/:id"
-          element={
-            <Suspense fallback={<MylarScreen />}>
-              <Work />
-            </Suspense>
-          }
-        />
-        <Route path="/notebook" element={<Notebook />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/cv" element={<CV />} />
-        <Route path="/sheets/:sheetId" element={<SheetRoute />} />
-        <Route
-          path="/thoughts/:id"
-          element={
-            <Suspense fallback={<MylarScreen />}>
-              <ThoughtRoute />
-            </Suspense>
-          }
-        />
-        {Lab && (
-          <Route
-            path="/lab"
-            element={
-              <Suspense fallback={<MylarScreen />}>
-                <Lab />
-              </Suspense>
-            }
-          />
-        )}
-        {/* EXPLORE retired (R1): the landing IS the mind graph now. These URLs
-            are shared and citable, so they redirect to the landing, never 404. */}
-        <Route path="/explore" element={<Navigate to="/" replace />} />
-        <Route path="/explore/:nodeId" element={<Navigate to="/" replace />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <Outlet />
     </>
   )
 }
+
+// ROUTE OBJECTS for the DATA router (DL-1): the plain <Routes> tree moved
+// here because only data-router routes carry the `viewTransition` flag from
+// Link/navigate into document.startViewTransition (the declarative
+// <BrowserRouter> and even a descendant <Routes> under RouterProvider drop
+// it), and the soft crossfade + morphs ride that flag.
+export const routes: RouteObject[] = [
+  {
+    element: <Chrome />,
+    children: [
+      { path: '/', element: <Home /> },
+      // THE GALLERY (R2). /work/:id opens a card as a preview on top of the
+      // grid; a shared card link deep-links straight to it. Old /work#lens
+      // deep links now land on the gallery pre-filtered to that lens.
+      {
+        path: '/work',
+        element: (
+          <Suspense fallback={<MylarScreen />}>
+            <Work />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/work/:id',
+        element: (
+          <Suspense fallback={<MylarScreen />}>
+            <Work />
+          </Suspense>
+        ),
+      },
+      { path: '/notebook', element: <Notebook /> },
+      { path: '/about', element: <About /> },
+      { path: '/cv', element: <CV /> },
+      { path: '/sheets/:sheetId', element: <SheetRoute /> },
+      {
+        path: '/thoughts/:id',
+        element: (
+          <Suspense fallback={<MylarScreen />}>
+            <ThoughtRoute />
+          </Suspense>
+        ),
+      },
+      ...(Lab
+        ? [
+            {
+              path: '/lab',
+              element: (
+                <Suspense fallback={<MylarScreen />}>
+                  <Lab />
+                </Suspense>
+              ),
+            },
+          ]
+        : []),
+      // EXPLORE retired (R1): the landing IS the mind graph now. These URLs
+      // are shared and citable, so they redirect to the landing, never 404.
+      { path: '/explore', element: <Navigate to="/" replace /> },
+      { path: '/explore/:nodeId', element: <Navigate to="/" replace /> },
+      { path: '*', element: <Navigate to="/" replace /> },
+    ],
+  },
+]

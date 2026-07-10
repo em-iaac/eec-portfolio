@@ -1,23 +1,16 @@
 // THOUGHT LEAF (Session 11). The words-only counterpart to a sheet: a narrow
 // serif column on mylar for one written thought. Same drawing-set chrome as
-// SheetLayout (skip link, header strip, EXPLORE-exit ceremony, footer rule)
+// SheetLayout (skip link, header strip, footer rule)
 // so a note reads as another page in the same notebook, but the title is set
 // in lowercase serif italic (the thinking voice, not the drawing-set voice)
 // and there are NO figures, ever. The T-series number rides the number cell
 // (Emilie's ruling 2026-07-08). Sets document.title. n.b. dots are allowed in
 // the prose under rule 8's five-per-leaf cap; margin asides and plates are not.
 import { useEffect, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import {
-  ExploreExitContext,
-  ExploreExitLink,
-  ExploreOverlay,
-  liftStyle,
-  useExploreTransition,
-} from '../hooks/useExploreTransition'
-import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
+import { Link, useParams } from 'react-router-dom'
 import KindMark from '../components/KindMark'
 import { LensTick, LENSES, type Lens } from '../components/Lens'
+import { vtName } from '../lib/viewTransition'
 
 const RED_LINK =
   'text-redline underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline'
@@ -37,36 +30,36 @@ export default function ThoughtLeaf({
   navLabel: string
   children: ReactNode
 }) {
-  const { leaving, beginExit } = useExploreTransition()
-  const prm = usePrefersReducedMotion()
+  // The morph target: /thoughts/:id names its title so the mind-graph node
+  // that opened it travels into it (src/lib/viewTransition.ts).
+  const { id } = useParams()
 
   useEffect(() => {
     document.title = number ? `${title} | ${number}` : `${title} | thought note`
   }, [title, number])
 
   return (
-    <ExploreExitContext.Provider value={beginExit}>
-      <div className="flex min-h-dvh flex-col items-center">
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-redline focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-mylar"
-        >
-          Skip to content
-        </a>
-        <header className="w-full border-b border-ink">
-          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-3 font-mono text-[10px] tracking-[0.1em]">
-            <Link to="/" viewTransition className={`-m-2.5 p-2.5 ${RED_LINK}`}>
-              &lt; A-000 HOME
-            </Link>
-            <span className="hidden text-anno sm:block">{navLabel}</span>
-            <ExploreExitLink className={`-m-2.5 p-2.5 ${RED_LINK}`}>
-              MODE: EXPLORE &gt;
-            </ExploreExitLink>
-          </div>
-        </header>
+    <div className="flex min-h-dvh flex-col items-center">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-redline focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-mylar"
+      >
+        Skip to content
+      </a>
+      <header className="w-full border-b border-ink">
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-3 font-mono text-[10px] tracking-[0.1em]">
+          <Link to="/" viewTransition className={`-m-2.5 p-2.5 ${RED_LINK}`}>
+            &lt; A-000 HOME
+          </Link>
+          <span className="hidden text-anno sm:block">{navLabel}</span>
+          <Link to="/" viewTransition className={`-m-2.5 p-2.5 ${RED_LINK}`}>
+            MODE: EXPLORE &gt;
+          </Link>
+        </div>
+      </header>
 
-        <div className="flex w-full flex-1 flex-col items-center" style={liftStyle(leaving, prm)}>
-          <main
+      <div className="flex w-full flex-1 flex-col items-center">
+        <main
             id="main"
             tabIndex={-1}
             className="w-full max-w-[680px] px-5 py-8 outline-none sm:px-8 sm:py-12"
@@ -91,7 +84,10 @@ export default function ThoughtLeaf({
 
             {/* The thinking voice: lowercase serif italic, never the drawing-set
                 Archivo of a sheet title. */}
-            <h1 className="mb-[26px] max-w-[22ch] font-serif text-[27px] lowercase italic leading-[1.22] tracking-[-0.01em] text-ink">
+            <h1
+              className="mb-[26px] max-w-[22ch] font-serif text-[27px] lowercase italic leading-[1.22] tracking-[-0.01em] text-ink"
+              style={{ viewTransitionName: id ? vtName(`/thoughts/${id}`) : undefined }}
+            >
               {title}
             </h1>
 
@@ -106,10 +102,8 @@ export default function ThoughtLeaf({
               </Link>
               <span>{number ? `${number} · NOTE` : 'THOUGHT NOTE'}</span>
             </div>
-          </main>
-        </div>
-        <ExploreOverlay leaving={leaving} />
+        </main>
       </div>
-    </ExploreExitContext.Provider>
+    </div>
   )
 }

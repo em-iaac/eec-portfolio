@@ -156,7 +156,7 @@ export default function MiniSheet({ entry }: { entry: RegistryEntry }) {
           </a>
         ))}
         {entry.explore && (
-          <Link to="/" className={`-m-2 p-2 ${RED_LINK}`}>
+          <Link to="/" viewTransition className={`-m-2 p-2 ${RED_LINK}`}>
             SEE IT IN THE MIND &gt;
           </Link>
         )}

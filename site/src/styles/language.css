@@ -9,12 +9,11 @@
    - default `color-scheme: light dark` follows the OS preference;
    - the ModeToggle sets `[data-theme]` on <html> to force one (persisted;
      index.html re-applies it before first paint so a dark load never flashes);
-   - a surface PINS a ground with the same attribute on any wrapper (landing
-     pins dark; interior shells pin light until each page re-skins, DL-1..5) —
-     color-scheme inherits, so nested glass resolves too;
-   - `.lang-lean-dark` is the /work soft pin (Emilie 2026-07-10): dark for
-     everyone, continuity with the landing, UNLESS the visitor explicitly
-     toggled light. Applied when the gallery re-skins at DL-2.
+   - ONE MODE, WHOLE SITE (Emilie amendment, executed DL-1 2026-07-10): every
+     screen surface follows the mode, the landing included. The old screen
+     pins (landing pins dark, interior shells pin light, the /work
+     `.lang-lean-dark` soft pin) are RETIRED; the only pin left is print/PDF
+     below. `[data-theme]` on a wrapper stays a legal mechanism, print only.
    ============================================================ */
 
 :root {
@@ -62,21 +61,12 @@
   color-scheme: dark;
 }
 
-/* The /work soft pin: dark by default, released only by an explicit light
-   choice on the toggle (the OS setting alone does not release it). */
-.lang-lean-dark {
-  color-scheme: dark;
-}
-html[data-theme='light'] .lang-lean-dark {
-  color-scheme: light;
-}
-
-/* Print pins light everywhere (Emilie 2026-07-10: the CV and anything else
-   leaving the screen prints plain and light; ATS reads the PDF, not the site). */
+/* Print pins light everywhere: THE one surviving pin (Emilie 2026-07-10: the
+   CV and anything else leaving the screen prints plain and light; ATS reads
+   the PDF, not the site). */
 @media print {
   :root,
-  [data-theme='dark'],
-  .lang-lean-dark {
+  [data-theme='dark'] {
     color-scheme: light;
   }
 }
@@ -122,5 +112,59 @@ html[data-theme='light'] .lang-lean-dark {
   }
   .lang-lift:hover {
     transform: translateY(-2px);
+  }
+}
+
+/* ============================================================
+   PAGE TRANSITIONS (DL-1, Emilie amendment 2026-07-09: no hard cuts).
+   View Transitions API, springy and soft, never showy.
+
+   - BASELINE: every navigation and the dark<->light mode flip run a soft
+     ~250ms crossfade on --ease-soft (the root old/new snapshots below).
+     Links/navigate() opt in via react-router's viewTransition; the
+     ModeToggle wraps its theme write in document.startViewTransition.
+   - SHARED-ELEMENT MORPH: where a source maps to a destination the pair
+     shares a `view-transition-name` and the element itself travels.
+     NAMING CONVENTION (for DL-2+ re-skins): the name is the destination
+     route slug, `page-` + the route with slashes as hyphens, e.g.
+     `page-work-sensi`, `page-sheets-p-101`, `page-thoughts-bim`. The
+     routed page's hero carries it; a source face (WORK card tile, the
+     active mind-graph node) adopts the same name. HARD RULE: at most ONE
+     element per name per rendered state (a duplicate aborts the whole
+     transition to a hard cut). Helper + docs: src/lib/viewTransition.ts.
+   - FALLBACKS: no pair, or no browser support -> the crossfade / an
+     instant swap (react-router degrades cleanly). Under reduced motion
+     EVERY transition is an instant swap (the kill block below also
+     silences the UA's default crossfade, which would otherwise run).
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: lang-vt-out 250ms var(--ease-soft) both;
+  }
+  ::view-transition-new(root) {
+    animation: lang-vt-in 250ms var(--ease-soft) both;
+  }
+  /* Matched pairs (the morphs) ride the same clock + curve as the fade. */
+  ::view-transition-group(*) {
+    animation-duration: 250ms;
+    animation-timing-function: var(--ease-soft);
+  }
+  @keyframes lang-vt-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes lang-vt-in {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

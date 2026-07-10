@@ -25,6 +25,18 @@ export const LENS_TO_KEY: Record<Lens, LensKey> = {
   explorations: 'e',
 }
 
+// Mode-aware lens accents for the LIVE graph (DL-1, one mode whole site):
+// wire on the dark ground, the darker pen on the light ground, resolved by
+// the browser via light-dark() (the same pen/wire pairs as LENS_UI in
+// components/ui/Pill.tsx and the @theme lens tokens). The Node fallback
+// generator keeps using the literal `wire` values above: the static
+// mind-graph.svg stays the dark composition.
+export const LENS_ACCENT: Record<LensKey, string> = {
+  c: 'light-dark(#0e7490, #22d3ee)',
+  p: 'light-dark(#a8186b, #f472b6)',
+  e: 'light-dark(#7a5e00, #facc15)',
+}
+
 // Dev-only drift guard: warn if the mirror and the CSS tokens diverge.
 export function assertPaletteMatchesTheme() {
   if (!import.meta.env.DEV || typeof document === 'undefined') return
