@@ -47,6 +47,7 @@ export interface WorkEntry {
   dek: string // the one authored "what it proves" line (draftCopy)
   tech: string // the mono tech row
   recognition?: string // award wording where real; ink, no box, never red
+  awardFace?: string // the face's corner-pill short wording (DL-2; falls back to recognition)
   hasFullPage: boolean // a real deep page exists (issued sheet)
   fullPageRoute?: string // set ONLY where hasFullPage, so it never dead-ends
   // hero + supporting slots, resolved by the hero rule above
@@ -140,7 +141,10 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     tech: p.tech,
     // Recognition wording lives with the card copy; membership is guaranteed
     // to agree with AWARD_WINNER_IDS by the registry validator (never drifts).
+    // The face's corner pill takes the short form where one exists (DL-2: the
+    // face carries the least); the preview renders the full line verbatim.
     recognition: p.award,
+    awardFace: p.awardShort ?? p.award,
     hasFullPage: issued,
     fullPageRoute: issued ? entry.sheet.route : undefined,
     hero,
@@ -152,7 +156,9 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     strip: stripFor(p.image?.slug, p.image?.name, p.title),
     links: p.links.filter((l) => l.href !== consumedHref),
     story: p.blurb,
-    draftCopy: true, // every dek is unsigned (Section 14)
+    // A dek ships unsigned (Section 14) until Emilie signs it in a copy pass
+    // (dekSigned, projects.tsx); the flag retires per project, never in bulk.
+    draftCopy: !p.dekSigned,
   }
 }
 

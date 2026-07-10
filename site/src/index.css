@@ -521,12 +521,15 @@ section[id] {
 }
 
 /* ============================================================
-   THE WORK CARD-ON-TOP (Session R2). The gallery's preview overlay, built on
-   the native <dialog> element (focus trap, Escape, inert background, focus
-   return all free + correct). Centered card on desktop, bottom sheet on phones.
-   The rise is one-shot and PRM-gated; reduced motion shows the final state with
-   no motion (the honest-fallback floor). Native dialog is display:none until
-   open, so the flex column only needs to apply while [open].
+   THE WORK CARD-ON-TOP (Session R2, re-skinned DL-2 2026-07-10). The gallery's
+   preview, built on the native <dialog> element (focus trap, Escape, inert
+   background, focus return all free + correct), now a glass-2 FLOATING SHEET:
+   the fill, border and blur (+ the solid no-blur fallback) come from the
+   component's `lang-glass-2` class (styles/language.css); this block only owns
+   layout, the --r-sheet fillet, and the entrances. Centered sheet on desktop,
+   bottom sheet on phones. The rise is one-shot and PRM-gated; reduced motion
+   shows the final state with no motion (the honest-fallback floor). Native
+   dialog is display:none until open, so the flex column only applies [open].
    ============================================================ */
 .work-dialog {
   width: 100%;
@@ -534,9 +537,8 @@ section[id] {
   max-height: min(88vh, 60rem);
   margin: auto;
   padding: 0;
-  border: 0.5px solid color-mix(in srgb, var(--color-ink) 50%, transparent);
-  background: var(--color-mylar);
-  color: var(--color-ink);
+  border-radius: var(--r-sheet);
+  color: var(--lang-ink);
   overflow: hidden;
 }
 .work-dialog[open] {
@@ -553,10 +555,9 @@ section[id] {
     max-width: none;
     max-height: 90vh;
     margin: auto auto 0;
-    border-inline: 0;
-    border-block-end: 0;
-    border-start-start-radius: 1rem;
-    border-start-end-radius: 1rem;
+    border-inline-width: 0;
+    border-block-end-width: 0;
+    border-radius: var(--r-sheet) var(--r-sheet) 0 0;
   }
 }
 

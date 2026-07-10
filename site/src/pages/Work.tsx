@@ -1,46 +1,60 @@
-// THE GALLERY (Session R2) · /work. The missing surface: a uniform grid of
-// every project where a visitor browses the work visually, then opens any card
-// as a preview lifted over the dimmed grid. This is the landing's proof path
-// (the cover dropped its "SEE THE WORK" button; the emphasised WORK link and
-// the tappable nodes route here), so it must be excellent and fast.
+// THE GALLERY (Session R2, re-skinned DL-2 2026-07-10) · /work. A uniform grid
+// of every project where a visitor browses the work visually, then opens any
+// card as a glass sheet lifted over the dimmed grid. This is the landing's
+// proof path, so it must be excellent and fast.
 //
 // One data object drives it: WORK_ENTRIES (data/work.ts), the same object the
 // printed book's INDEX page (R7) will reuse. The lens filter is an OPEN facet
 // set (a new lens appears by itself). The overlay is URL-addressable at
 // /work/:id so a single card is shareable and prerenderable (R9).
 //
-// Copy in Emilie's voice ships draftCopy: the intro line, and every card dek.
+// DL-2: the page simply FOLLOWS the mode (the R2 dark lean retired at DL-1);
+// faces are the glass Card primitive, the filter is FilterPill, the preview is
+// the glass-2 sheet, and the card <-> sheet <-> page morphs ride the DL-1
+// naming convention (lib/viewTransition.ts).
+//
+// Copy: the intro line + all 11 deks were SIGNED by Emilie in the DL-2 copy
+// pass (in chat, 2026-07-10; dekSigned in projects.tsx). New copy on this
+// surface ships draftCopy until she signs it, as always (Section 14).
 import { useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import WorkCard from '../components/work/WorkCard'
 import WorkOverlay from '../components/work/WorkOverlay'
-import { LensTick, LENSES, type Lens } from '../components/Lens'
+import { FilterPill, LensMark } from '../components/ui/Pill'
+import { LENSES, type Lens } from '../components/Lens'
 import { WORK_ENTRIES, WORK_LENSES, workEntryById } from '../data/work'
 
-// The lens facet filter: ALL + one chip per lens present, hash-synced so a
-// filtered view is shareable (the Notebook's mechanism). Active reads ink
-// emphasis, never redline (red is liveness, not a category, rule 1).
+// The lens facet filter: ALL + one pill per lens present, hash-synced so a
+// filtered view is shareable (the Notebook's mechanism). Active reads solid
+// ink, never redline (red is liveness, not a category, rule 1); each lens
+// pill leads with its shape mark so colour never means alone.
 function FilterBar({ active }: { active: Lens | null }) {
-  const base = 'inline-flex items-center gap-2 border px-3 py-2 font-mono text-[10px] tracking-[0.08em] no-underline focus-visible:outline-2 focus-visible:outline-redline'
-  const on = 'border-ink bg-ink text-mylar'
-  const off = 'border-ink/30 text-anno hover:border-ink hover:text-ink'
   return (
-    <div className="flex flex-wrap gap-2.5" role="group" aria-label="Filter by lens">
-      <Link to="/work" viewTransition className={`${base} ${active === null ? on : off}`} aria-current={active === null ? 'true' : undefined}>
+    <div className="-mx-1 flex flex-wrap" role="group" aria-label="Filter by lens">
+      <FilterPill
+        as={Link}
+        to="/work"
+        viewTransition
+        active={active === null}
+        aria-current={active === null ? 'true' : undefined}
+        className="px-1"
+      >
         ALL
-      </Link>
+      </FilterPill>
       {WORK_LENSES.map((l) => (
-        <Link
+        <FilterPill
           key={l}
+          as={Link}
           to={`/work#${l}`}
           viewTransition
-          className={`${base} ${active === l ? on : off}`}
+          active={active === l}
           aria-current={active === l ? 'true' : undefined}
+          leading={<LensMark lens={l} active={active === l} />}
+          className="px-1"
         >
-          <LensTick lens={l} variant={active === l ? 'wire' : 'pen'} />
           {LENSES[l].label.toUpperCase()}
-        </Link>
+        </FilterPill>
       ))}
     </div>
   )
@@ -75,7 +89,7 @@ export default function Work() {
     prevId.current = id
   }, [id, selected, navigate])
 
-  // viewTransition: the card face morphs into the preview hero and back
+  // viewTransition: the card face morphs into the preview sheet and back
   // (shared view-transition-name, lib/viewTransition.ts); browsers without
   // the API just swap.
   const open = (entryId: string) => navigate(`/work/${entryId}${hash}`, { viewTransition: true })
@@ -83,21 +97,27 @@ export default function Work() {
 
   return (
     <SheetPage title="Work">
-      <section className="pt-10 pb-4" aria-labelledby="work-heading">
-        <h1 id="work-heading" className="mb-4 text-3xl font-semibold tracking-[-0.01em]">
+      <section className="pt-10 pb-5" aria-labelledby="work-heading">
+        <h1
+          id="work-heading"
+          className="mb-4 text-3xl font-semibold tracking-[-0.01em] text-[var(--lang-ink)]"
+        >
           Work
         </h1>
-        <p className="mb-6 max-w-[58ch] font-serif text-[17px] leading-relaxed">
+        <p className="mb-6 max-w-[58ch] font-serif text-[17px] leading-relaxed text-[var(--lang-ink)]">
           The work, newest first. Open a card to look closer; a few open all the way to their full page.
         </p>
         <FilterBar active={activeLens} />
-        <p className="mt-4 font-mono text-[10px] tracking-[0.12em] text-anno" aria-live="polite">
+        <p
+          className="mt-4 font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)]"
+          aria-live="polite"
+        >
           {entries.length} {entries.length === 1 ? 'PROJECT' : 'PROJECTS'}
           {activeLens ? ` · ${LENSES[activeLens].label.toUpperCase()}` : ' · ALL'}
         </p>
       </section>
 
-      <ul className="grid list-none grid-cols-1 gap-4 p-0 pb-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid list-none grid-cols-1 gap-5 p-0 pb-4 sm:grid-cols-2 lg:grid-cols-3">
         {entries.map((entry, i) => (
           <li key={entry.id} className="flex">
             {/* morphSource yields the entry's view-transition-name to the open

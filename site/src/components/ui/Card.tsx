@@ -6,7 +6,9 @@
 // (dek, tech, numbers, status) lives one layer in, never on the face.
 // With onOpen the whole card is ONE button (the R2 rule: a single clean tab
 // stop, no nested interactive children); without it, a plain article.
-import type { ReactNode } from 'react'
+// Extra props (style for a view-transition-name, data-* hooks) pass through to
+// the root, so a consumer wires its morph without forking the primitive (DL-2).
+import type { CSSProperties, ReactNode } from 'react'
 import type { Lens } from '../Lens'
 import { LensPill, Pill, StatusPill } from './Pill'
 
@@ -18,6 +20,8 @@ export default function Card({
   image,
   onOpen,
   className = '',
+  style,
+  ...rest
 }: {
   title: string
   lens: Lens
@@ -29,6 +33,8 @@ export default function Card({
   image?: ReactNode
   onOpen?: () => void
   className?: string
+  style?: CSSProperties
+  [prop: string]: unknown
 }) {
   const face = (
     <>
@@ -42,7 +48,11 @@ export default function Card({
         )}
         {award && (
           <span className="absolute top-2 right-2">
-            <StatusPill kind="award">{award}</StatusPill>
+            {/* solid: the pill rides the photograph, so its ink cannot gamble
+                its contrast on the image behind (AA floor, §0). */}
+            <StatusPill kind="award" solid>
+              {award}
+            </StatusPill>
           </span>
         )}
       </div>
@@ -64,13 +74,20 @@ export default function Card({
 
   const skin = `lang-glass-1 lang-lift flex aspect-square w-full flex-col overflow-hidden rounded-[var(--r-card)] transition-colors ${className}`
 
-  if (!onOpen) return <article className={skin}>{face}</article>
+  if (!onOpen)
+    return (
+      <article className={skin} style={style} {...rest}>
+        {face}
+      </article>
+    )
 
   return (
     <button
       type="button"
       onClick={onOpen}
       aria-haspopup="dialog"
+      style={style}
+      {...rest}
       className={`${skin} cursor-pointer hover:border-[var(--lang-ink-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]`}
     >
       {face}

@@ -70,9 +70,24 @@ export function FilterPill({
 }
 
 // Status: a live dot (interaction/liveness colour) or the ink award recognition.
-export function StatusPill({ kind, children }: { kind: 'live' | 'award'; children: ReactNode }) {
+// `solid` swaps the translucent fill for the pre-composited tier fill: a pill
+// riding ON A PHOTOGRAPH cannot rely on the ground behind it, so translucency
+// would gamble the ink's AA contrast on whatever the image happens to be
+// (legibility wins over glass, DESIGN-LANGUAGE §0).
+export function StatusPill({
+  kind,
+  solid = false,
+  children,
+}: {
+  kind: 'live' | 'award'
+  solid?: boolean
+  children: ReactNode
+}) {
   return (
-    <span className={`${BASE} lang-glass-1 px-2.5 py-1 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink)]`}>
+    <span
+      className={`${BASE} lang-glass-1 px-2.5 py-1 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink)]`}
+      style={solid ? { background: 'var(--lang-glass-2-solid)' } : undefined}
+    >
       {kind === 'live' ? (
         <span className="inline-block size-1.5 rounded-full" style={{ background: 'var(--lang-interaction)' }} />
       ) : (
@@ -101,6 +116,23 @@ function Chip({ shape }: { shape: LensShape }) {
   )
 }
 type LensShape = 'square' | 'diamond' | 'triangle'
+
+// The filter row's leading mark: the lens shape alone (the pill it rides in
+// supplies the label, so shape + label still travel together, a11y rule).
+// At rest it wears the lens accent; inside an ACTIVE pill (solid ink fill) it
+// inherits currentColor so the chip never fights the fill for contrast.
+export function LensMark({ lens, active = false }: { lens: Lens; active?: boolean }) {
+  const l = LENS_UI[lens]
+  return (
+    <span
+      aria-hidden="true"
+      className="inline-flex"
+      style={active ? undefined : ({ color: l.accent } as CSSProperties)}
+    >
+      <Chip shape={l.shape} />
+    </span>
+  )
+}
 
 export function LensPill({ lens }: { lens: Lens }) {
   const l = LENS_UI[lens]
