@@ -17,6 +17,11 @@
 // pass (in chat, 2026-07-10; dekSigned in projects.tsx). New copy on this
 // surface ships draftCopy until she signs it, as always (Section 14).
 import { useEffect, useRef } from 'react'
+// G1 (2026-07-10): the opened card IS the showcase now (WorkOverlay grew the
+// signed spine; the Pen Table sheet tier retired, /sheets/* redirects here).
+// The intro line was reworded for the model change ("a few open all the way
+// to their full page" stopped being true): the NEW wording is draftCopy
+// until Emilie signs it; the deks stay signed (dekSigned, content/projects).
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import WorkCard from '../components/work/WorkCard'
@@ -89,7 +94,17 @@ export default function Work() {
     prevId.current = id
   }, [id, selected, navigate])
 
-  // viewTransition: the card face morphs into the preview sheet and back
+  // The showcase IS the project's page (G1), so the document title follows
+  // the open entry. Runs after SheetPage's own title effect (parent effects
+  // fire after children), so this wins while a showcase is open and
+  // SheetPage's "Work" returns when it closes via the selected -> undefined
+  // pass below.
+  useEffect(() => {
+    if (selected) document.title = `${selected.title} | Emilie El Chidiac`
+    else document.title = 'Work | Emilie El Chidiac'
+  }, [selected])
+
+  // viewTransition: the card face morphs into the showcase sheet and back
   // (shared view-transition-name, lib/viewTransition.ts); browsers without
   // the API just swap.
   const open = (entryId: string) => navigate(`/work/${entryId}${hash}`, { viewTransition: true })
@@ -105,7 +120,7 @@ export default function Work() {
           Work
         </h1>
         <p className="mb-6 max-w-[58ch] font-serif text-[17px] leading-relaxed text-[var(--lang-ink)]">
-          The work, newest first. Open a card to look closer; a few open all the way to their full page.
+          The work, newest first. Open a card and you have the whole project; the deep dives live a link away.
         </p>
         <FilterBar active={activeLens} />
         <p

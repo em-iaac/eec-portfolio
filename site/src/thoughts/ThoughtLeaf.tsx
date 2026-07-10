@@ -1,7 +1,7 @@
-// THOUGHT LEAF (Session 11). The words-only counterpart to a sheet: a narrow
-// serif column on mylar for one written thought. Same drawing-set chrome as
-// SheetLayout (skip link, header strip, footer rule)
-// so a note reads as another page in the same notebook, but the title is set
+// THOUGHT LEAF (Session 11). The words-only page for one written thought: a
+// narrow serif column with its own drawing-set chrome (skip link, header
+// strip, footer rule; the SheetLayout it once shared retired with the sheet
+// tier at G1; this page re-skins at G2). The title is set
 // in lowercase serif italic (the thinking voice, not the drawing-set voice)
 // and there are NO figures, ever. The T-series number rides the number cell
 // (Emilie's ruling 2026-07-08). Sets document.title. n.b. dots are allowed in

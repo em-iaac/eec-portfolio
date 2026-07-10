@@ -2,7 +2,7 @@
 // `npm run build`: a broken registry join fails the build before it ships a
 // blank card, a dead sheet route, a missing figure, or a shifted EXPLORE
 // layout. Checks are structural only; copy stays Emilie's problem.
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
@@ -10,7 +10,6 @@ import { AWARD_WINNER_IDS, ENTRIES, EXPLORE_NODES } from './registry'
 import { buildMindGraph } from '../landing/mindGraph'
 import { PROJECTS_BY_SLUG } from './projects'
 import { WORK_ENTRIES } from './work'
-import { SHEETS } from '../sheets'
 import { THOUGHT_NOTES } from '../thoughts/notes'
 import images from './images.json'
 import videos from './videos.json'
@@ -25,10 +24,26 @@ test('every entry.project resolves in PROJECTS_BY_SLUG', () => {
   expect(broken).toEqual([])
 })
 
-test('every issued sheet has its SHEETS component', () => {
-  const broken = ENTRIES.filter(
-    e => e.sheet?.status === 'issued' && !SHEETS[e.sheet.number.toLowerCase()],
-  ).map(e => `${e.id} -> ${e.sheet?.number}`)
+// G1: the sheet tier retired; every sheet ref must route to the SHOWCASE of
+// a real project entry (/work/<project entry id>), so a Notebook row, a
+// mind-graph node, or an old /sheets redirect can never land on nothing.
+test('every sheet ref routes to an existing project entry showcase', () => {
+  const projectIds = new Set(ENTRIES.filter(e => e.kind === 'project').map(e => e.id))
+  const broken = ENTRIES.filter(e => {
+    if (!e.sheet) return false
+    const m = /^\/work\/(.+)$/.exec(e.sheet.route)
+    return !m || !projectIds.has(m[1]!)
+  }).map(e => `${e.id} -> ${e.sheet?.route}`)
+  expect(broken).toEqual([])
+})
+
+// THE MASTER CONTENT FILE (G1, §11): every project must carry the signed
+// spine's required beats. WHAT + WHY are authored for every project (Emilie's
+// ruling); HOW and OUTCOME stay optional (a thin showcase is honest).
+test('every project master file carries WHAT + WHY', () => {
+  const broken = Object.values(PROJECTS_BY_SLUG)
+    .filter(p => p.what == null || p.why == null)
+    .map(p => p.slug)
   expect(broken).toEqual([])
 })
 
@@ -106,16 +121,6 @@ test('a WorkEntry shows a recognition line iff it is an award winner', () => {
   expect(broken).toEqual([])
 })
 
-// The full-page link is offered only where a real page exists (an issued
-// sheet), so OPEN THE FULL PAGE can never dead-end into a placeholder.
-test('a WorkEntry links to a full page iff its sheet is issued', () => {
-  const broken = WORK_ENTRIES.filter(
-    w =>
-      w.hasFullPage !== (w.status === 'issued') ||
-      Boolean(w.fullPageRoute) !== w.hasFullPage,
-  ).map(w => w.id)
-  expect(broken).toEqual([])
-})
 
 // Video binaries are committed by hand (the pipeline runs locally, never in
 // CI), so the manifest can silently outrun the repo: every file videos.json
@@ -132,23 +137,6 @@ test('every videos.json file exists on disk', () => {
   expect(broken).toEqual([])
 })
 
-// Sheet video refs live in JSX (SheetVideo slug/name, CinemaPlate video
-// media), so a rename in the manifest would silently blank a plate while the
-// build stays green. Scan the sheet sources and assert each ref resolves in
-// videos.json, mirroring the image check (Session 8, from the code review).
-test('every sheet video ref resolves in videos.json', () => {
-  const sheetsDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'sheets')
-  const hasVideo = (slug: string, name: string) =>
-    (videos as Record<string, { name: string }[]>)[slug]?.some(v => v.name === name) ?? false
-  const broken: string[] = []
-  for (const file of readdirSync(sheetsDir).filter(f => f.endsWith('.tsx'))) {
-    const src = readFileSync(join(sheetsDir, file), 'utf8')
-    // <SheetVideo ... slug="x" ... name="y" ...> (repo convention: slug first)
-    for (const m of src.matchAll(/<SheetVideo\b[^>]*?\bslug="([^"]+)"[^>]*?\bname="([^"]+)"/g))
-      if (!hasVideo(m[1]!, m[2]!)) broken.push(`${file}: SheetVideo ${m[1]}/${m[2]}`)
-    // CinemaPlate media={{ kind: 'video', slug: 'x', name: 'y', ... }}
-    for (const m of src.matchAll(/kind:\s*'video'[^}]*?\bslug:\s*'([^']+)'[^}]*?\bname:\s*'([^']+)'/g))
-      if (!hasVideo(m[1]!, m[2]!)) broken.push(`${file}: plate ${m[1]}/${m[2]}`)
-  }
-  expect(broken).toEqual([])
-})
+// (G1: the sheet-source video-ref scan retired with the sheet tier; the
+// showcase's hero video is data-driven from videos.json itself, so a rename
+// can no longer strand a JSX ref.)

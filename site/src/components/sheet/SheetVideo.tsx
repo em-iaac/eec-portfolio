@@ -1,14 +1,13 @@
-// Self-hosted video figure (Session 8; SheetVideo entry in DESIGN-SYSTEM.md,
-// sanctioned by the Sheet cinema addendum). Reads src/data/videos.json from
-// scripts/optimize-videos.mjs. Native controls are ALWAYS present (WCAG
-// 2.2.2: the visitor can pause anything that moves, and the pause STICKS).
-// Without reduced motion and without a data-saver signal, SILENT clips run
-// as muted loops whose play/pause follows viewport visibility; clips with an
-// audio track never autoplay at all (sound never autoplays, addendum a11y
-// floor). Under reduced motion, save-data, or low-power: poster + controls,
-// no autoplay, no loop, preload none. Mono caption in SheetFigure grammar;
-// silent captures say so in the caption. `bare` renders only the <video>
-// (CinemaPlate supplies the frame + figcaption when the video is a plate).
+// Self-hosted video (Session 8; the caption/figure dress retired with the
+// Pen Table sheet tier at G1: the WORK showcase's hero supplies the frame).
+// Reads src/data/videos.json from scripts/optimize-videos.mjs. Native
+// controls are ALWAYS present (WCAG 2.2.2: the visitor can pause anything
+// that moves, and the pause STICKS). Without reduced motion and without a
+// data-saver signal, SILENT clips run as muted loops whose play/pause
+// follows viewport visibility; clips with an audio track never autoplay at
+// all (sound never autoplays, the addendum a11y floor). Under reduced
+// motion, save-data, or low-power: poster + controls, no autoplay, no loop,
+// preload none.
 import { useEffect, useRef } from 'react'
 import manifest from '../../data/videos.json'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
@@ -47,14 +46,10 @@ export default function SheetVideo({
   slug,
   name,
   ariaLabel,
-  caption,
-  bare = false,
 }: {
   slug: string
   name: string
   ariaLabel: string
-  caption?: string
-  bare?: boolean
 }) {
   const prm = usePrefersReducedMotion()
   const ref = useRef<HTMLVideoElement | null>(null)
@@ -113,7 +108,7 @@ export default function SheetVideo({
   if (!src) return null
   const poster = pickPoster(entry.poster)
 
-  const video = (
+  return (
     <video
       ref={ref}
       controls
@@ -131,24 +126,5 @@ export default function SheetVideo({
         <source key={s.file} src={BASE + s.file} type={s.type} />
       ))}
     </video>
-  )
-
-  if (bare) return video
-
-  return (
-    <figure className="m-0">
-      <div
-        className="overflow-hidden border border-ink/35"
-        style={{ aspectRatio: entry.aspect }}
-      >
-        {video}
-      </div>
-      {caption && (
-        <figcaption className="mt-1.5 font-mono text-[9px] tracking-[0.08em] text-anno">
-          {caption}
-          {!entry.audio && ' · SILENT CAPTURE'}
-        </figcaption>
-      )}
-    </figure>
   )
 }

@@ -1,10 +1,12 @@
-// The inline n.b. dot (governance rule 8): an 8px redline marker placed
-// exactly where Em noted something in the prose. Hover or focus reveals the
-// handwritten note; click pins it; Escape closes. The dot dims while its
-// note is open. Session 8 fix: the tip mounts only while open (a hidden-
-// but-laid-out tip added ~80px of phantom horizontal overflow on phones),
-// entering via the one-shot .nbtip-enter ceremony, and clamps itself to
-// the viewport so edge notes never clip. Reduced motion: no animation.
+// DESIGN LANGUAGE v2 primitive · NB, the inline n.b. hover dot. Emilie's G1
+// ruling (in chat, 2026-07-10): the sheet-era margin wink survives as "a dot
+// you hover on so we don't lose space and it's for people who look for it".
+// This is the Pen Table NBDot ported to the glass language: the dot is the
+// interaction accent, the tip is a glass-2 surface, the note reads serif
+// italic (the handwritten Caveat register stayed behind with the mylar). The
+// pin / Escape / outside-tap / viewport-clamp mechanics carry over verbatim;
+// the hit box rises to the 44px touch floor (padding + negative margin so
+// the line rhythm is untouched).
 import { useEffect, useRef, useState } from 'react'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 
@@ -13,7 +15,7 @@ const TIP_W = 218
 const TIP_LEFT = -60
 const GUTTER = 12
 
-export default function NBDot({
+export default function NB({
   note,
   align = 'left',
 }: {
@@ -103,11 +105,13 @@ export default function NBDot({
             setHover(false)
           }
         }}
-        className="-m-2 inline-block cursor-pointer border-0 bg-transparent p-2 align-super leading-none focus-visible:outline-2 focus-visible:outline-redline"
+        // 8px dot + 18px padding all around = a 44px hit box (FLOORS); the
+        // matching negative margin keeps the dot sitting in the prose line.
+        className="-m-[18px] inline-block cursor-pointer border-0 bg-transparent p-[18px] align-super leading-none focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
       >
         <span
           aria-hidden="true"
-          className="block size-2 rounded-full bg-redline-stroke"
+          className="block size-2 rounded-full bg-[var(--lang-interaction)]"
           style={{
             opacity: open ? 0.45 : 1,
             transition: prm ? 'none' : 'opacity 250ms',
@@ -118,11 +122,17 @@ export default function NBDot({
         <span
           role="note"
           style={{ translate: `${shift}px 0` }}
-          className={`nbtip-enter pointer-events-none absolute top-5 z-10 block w-[218px] border border-ink/35 bg-mylar px-[11px] py-2 text-left font-hand text-[17px] leading-[1.3] tracking-normal text-anno normal-case shadow-[0_4px_14px] shadow-ink/10 ${
+          // The SOLID tier fill, not the translucent glass: the tip floats
+          // over running prose, and a nested backdrop-filter does not blur
+          // inside an already-blurred panel (the showcase sheet), so glass
+          // here would gamble the note's contrast on the text behind it
+          // (the AA floor; same ruling as the Card's on-photo award pill).
+          className={`nbtip-enter pointer-events-none absolute top-5 z-10 block w-[218px] rounded-[var(--r-control)] border-[0.5px] border-[var(--lang-glass-2-border)] bg-[var(--lang-glass-2-solid)] px-[11px] py-2 text-left font-serif text-[13px] leading-[1.45] font-normal tracking-normal normal-case italic text-[var(--lang-ink)] ${
             align === 'right' ? 'right-0' : 'left-[-60px]'
           }`}
         >
-          <span className="text-redline">n.b.</span> {note}
+          <span className="font-mono text-[10px] not-italic text-[var(--lang-interaction)]">n.b.</span>{' '}
+          {note}
         </span>
       )}
     </span>

@@ -5,15 +5,15 @@
 //
 // THE CONVENTION: the name is the DESTINATION route's slug, `page-` + the
 // route with slashes as hyphens (`/work/sensi` -> `page-work-sensi`,
-// `/sheets/p-101` -> `page-sheets-p-101`, `/thoughts/bim` ->
-// `page-thoughts-bim`).
-// - The routed page's HERO (title block / hero media / overlay media)
-//   carries its own route's name, derived from useParams so it stays
-//   data-driven (SheetLayout, ThoughtLeaf, WorkOverlay).
+// `/thoughts/bim` -> `page-thoughts-bim`).
+// - The routed page's HERO (title block / hero media / showcase sheet)
+//   carries its own route's name, derived from the route so it stays
+//   data-driven (ThoughtLeaf, WorkOverlay; the /sheets tier retired at G1,
+//   its URLs redirect into /work/:id).
 // - A SOURCE that opens that route puts the same name on its face: the
-//   WORK card tile (except while its own overlay is open), the ACTIVE
-//   mind-graph node. DL-2+ re-skins (the glass card, project pages) attach
-//   their morphs by carrying the same names, nothing else to wire.
+//   WORK card tile (except while its own showcase is open), the ACTIVE
+//   mind-graph node. Re-skins attach their morphs by carrying the same
+//   names, nothing else to wire.
 // - HARD RULE: at most ONE element per name per rendered state. A duplicate
 //   makes the browser skip the whole transition (a hard cut, worse than no
 //   name). Assign names via inline style.viewTransitionName.

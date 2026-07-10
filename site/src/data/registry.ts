@@ -78,10 +78,14 @@ export interface RegistryEntry {
   explore?: ExploreRef
 }
 
-const sheet = (number: string, status: SheetStatus): SheetRef => ({
+// G1 (2026-07-10): the opened WORK card IS the project's showcase, so a
+// sheet ref routes to /work/<project entry id> (the deep-linkable sheet).
+// The number survives as the quiet label; old /sheets/<number> URLs are
+// shared and citable, so pages/SheetRoute.tsx redirects them here forever.
+const sheet = (number: string, status: SheetStatus, workId: string): SheetRef => ({
   number,
   status,
-  route: `/sheets/${number.toLowerCase()}`,
+  route: `/work/${workId}`,
 })
 
 // The route is derived from the thought id (matches EXPLORE/data.js RAW ids),
@@ -104,7 +108,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Sensi',
     lens: 'computation',
     tags: ['neuro', 'comfort', 'ai', 'research'],
-    sheet: sheet('P-101', 'issued'),
+    sheet: sheet('P-101', 'issued', 'sensi'),
     project: 'sensi',
     draftCopy: true, // the P-101 sheet's copy is drafts pending sign-off
   },
@@ -115,7 +119,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'NeuroSpace',
     lens: 'computation',
     tags: ['neuro', 'geometry', 'simulation', 'data', 'web'],
-    sheet: sheet('P-102', 'issued'),
+    sheet: sheet('P-102', 'issued', 'neurospace'),
     project: 'neurospace',
     draftCopy: true, // the P-102 sheet's copy is drafts pending sign-off
   },
@@ -126,7 +130,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'A Ballooning Market',
     lens: 'computation',
     tags: ['simulation', 'geometry', 'heritage', 'play'],
-    sheet: sheet('P-104', 'issued'),
+    sheet: sheet('P-104', 'issued', 'ballooning'),
     project: 'ballooning-market',
   },
 
@@ -138,7 +142,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Sensi',
     lens: 'computation',
     tags: ['neuro', 'comfort', 'ai', 'research'],
-    sheet: sheet('P-101', 'issued'),
+    sheet: sheet('P-101', 'issued', 'sensi'),
     project: 'sensi',
     image: { slug: 'sensi', name: 'app-shape', alt: 'Sensi interface scoring a floor plan across six senses' },
     explore: { label: 'SENSI', nodeKind: 'project', order: 0 },
@@ -151,7 +155,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'NeuroSpace',
     lens: 'computation',
     tags: ['neuro', 'geometry', 'simulation', 'data', 'web'],
-    sheet: sheet('P-102', 'issued'),
+    sheet: sheet('P-102', 'issued', 'neurospace'),
     project: 'neurospace',
     image: { slug: 'neurospace', name: 'landing', alt: 'NeuroSpace landing page with parametric room and live scores' },
     explore: { label: 'NEUROSPACE', nodeKind: 'project', order: 1 },
@@ -164,7 +168,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'The Huddle',
     lens: 'computation',
     tags: ['geometry', 'simulation', 'climate'],
-    sheet: sheet('P-103', 'in-preparation'),
+    sheet: sheet('P-103', 'in-preparation', 'huddle'),
     project: 'huddle',
     image: { slug: 'huddle', name: 'axonometric', alt: 'Axonometric of The Huddle wind-adaptive module cluster' },
     explore: { label: 'THE HUDDLE', nodeKind: 'project', order: 2 },
@@ -177,7 +181,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'The Lungs',
     lens: 'computation',
     tags: ['data', 'climate', 'web'],
-    sheet: sheet('P-105', 'in-preparation'),
+    sheet: sheet('P-105', 'in-preparation', 'lungs'),
     project: 'lungs',
     image: { slug: 'lungs', name: 'tower', alt: 'The Lungs hyperbuilding tower over Santiago' },
     explore: { label: 'THE LUNGS', nodeKind: 'project', order: 3 },
@@ -190,7 +194,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'lEgoarCh',
     lens: 'computation',
     tags: ['ai', 'geometry', 'play'],
-    sheet: sheet('P-106', 'in-preparation'),
+    sheet: sheet('P-106', 'in-preparation', 'legoarch'),
     project: 'legoarch',
     image: { slug: 'legoarch', name: 'sagrada-render', alt: 'lEgoarCh generated LEGO set of the Sagrada Familia' },
     explore: { label: 'LEGOARCH', nodeKind: 'project', order: 4 },
@@ -203,7 +207,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'A Ballooning Market',
     lens: 'computation',
     tags: ['simulation', 'geometry', 'heritage', 'play'],
-    sheet: sheet('P-104', 'issued'),
+    sheet: sheet('P-104', 'issued', 'ballooning'),
     project: 'ballooning-market',
     image: { slug: 'ballooning-market', name: 'render-1', alt: 'CMY balloons packed into the steel frame of Bab al-Luq market' },
     explore: { label: 'A BALLOONING MARKET', nodeKind: 'project', order: 5 },
@@ -216,7 +220,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Optimizing for the Mind',
     lens: 'computation',
     tags: ['neuro', 'ai', 'research', 'future'],
-    sheet: sheet('P-107', 'in-preparation'),
+    sheet: sheet('P-107', 'in-preparation', 'podcast'),
     project: 'podcast',
     links: [{ label: 'SPOTIFY', href: 'https://open.spotify.com/episode/6WpF5HmKteEBateSqSWe0D' }],
     explore: { label: 'OPTIMIZING FOR THE MIND', nodeKind: 'project', order: 6 },
@@ -229,7 +233,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Towers at SOMA',
     lens: 'practice',
     tags: ['geometry', 'practice', 'heritage'],
-    sheet: sheet('P-108', 'in-preparation'),
+    sheet: sheet('P-108', 'in-preparation', 'soma'),
     project: 'soma-towers',
     image: { slug: 'professional', name: 'citywalk', alt: 'City Walk tower facade study, Dubai' },
     explore: { label: 'TOWERS AT SOMA', nodeKind: 'project', order: 7 },
@@ -242,7 +246,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Rings of Mars: Ring 4000',
     lens: 'practice',
     tags: ['ai', 'practice', 'future'],
-    sheet: sheet('P-109', 'in-preparation'),
+    sheet: sheet('P-109', 'in-preparation', 'mars'),
     project: 'marsception',
     image: { slug: 'professional', name: 'marsception', alt: 'Rings of Mars competition entry visualization' },
     explore: { label: 'RING 4000', nodeKind: 'project', order: 8 },
@@ -255,7 +259,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'Cappelletti Pavilion',
     lens: 'explorations',
     tags: ['geometry', 'simulation', 'play', 'research'],
-    sheet: sheet('P-110', 'in-preparation'),
+    sheet: sheet('P-110', 'in-preparation', 'cappelletti'),
     project: 'cappelletti',
     image: { slug: 'cappelletti', name: 'poster', alt: 'Cappelletti Pavilion poster with pasta-derived shell structure' },
     explore: { label: 'CAPPELLETTI PAVILION', nodeKind: 'project', order: 9 },
@@ -268,7 +272,7 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'XR for Education',
     lens: 'explorations',
     tags: ['xr', 'research', 'play', 'education'],
-    sheet: sheet('P-111', 'in-preparation'),
+    sheet: sheet('P-111', 'in-preparation', 'xr'),
     project: 'xr-lab',
     explore: { label: 'XR FOR EDUCATION', nodeKind: 'project', order: 10 },
   },

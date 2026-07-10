@@ -228,86 +228,9 @@ section[id] {
    Pen Table sheet-lift retired; the soft crossfade + shared-element morphs +
    the reduced-motion instant swap live in styles/language.css. */
 
-/* CINEMA PLATES (Session 8; motion unlock (a) 2026-07-07 + the Sheet cinema
-   addendum in DESIGN-SYSTEM.md, signed 2026-07-08): scroll-driven scrub
-   INSIDE issued sheets only, "leafing through the notebook". This is the
-   ONE sanctioned exception to rule 7's one-shot clause; its element-level
-   clause still binds (filters on .plate-media only, never root). The
-   document's scroll stays native (a11y floor: no wheel/touch/key
-   interception anywhere). JS (lib/scrubManager.ts) writes --p (raw plate
-   progress) and --dev (ratcheted develop: never regresses) on .plate; the
-   layers below map them. Var fallbacks are the FINAL state (rule 7
-   doctrine): with no scrub JS the plate renders developed, caption risen.
-   Heights use svh, never vh/dvh (iOS address bar: svh is worst-case
-   visible, dvh churns layout mid-scroll). will-change rides only while the
-   plate is near the viewport (.plate-live, toggled by the manager's
-   IntersectionObserver). Never put contain/content-visibility on a plate
-   or its ancestors, and never "fix" a bleed overflow with overflow-x:
-   hidden on body/html (that creates a scroll container and kills the pin;
-   use overflow: clip if clipping is ever needed). */
-/* The pin is a DESKTOP dramaturgy: below lg the plate flows unpinned and
-   the scrub follows viewport traversal instead (the manager measures the
-   rendered height and picks the geometry), because a ~16:9 capture pinned
-   inside a phone-height stage reads as a stamp floating in empty mylar.
-   `flow` plates opt out of the pin everywhere (a pin must earn its hold). */
-.plate {
-  height: auto;
-}
-
-.plate-stage {
-  position: static;
-}
-
-@media (min-width: 64rem) {
-  .plate {
-    height: var(--plate-h, 180svh);
-  }
-
-  .plate-stage {
-    position: sticky;
-    top: 0;
-    display: grid;
-    height: 100svh;
-    align-content: center;
-  }
-}
-
-.plate-media {
-  transform: scale(calc(1 + 0.04 * (1 - min(1, var(--p, 1) * 2))));
-  filter: grayscale(calc((1 - var(--dev, 1)) * 100%));
-}
-
-.plate-live .plate-media {
-  will-change: transform, filter;
-}
-
-/* Caption + riding note: opacity rides the RATCHETED develop var so a read
-   caption never fades back out on an upward scroll (legible at every
-   position, a11y floor); only the translate breathes with raw progress.
-   The note drifts on a longer ramp than the caption: the parallax lag IS
-   the "handwriting riding along". Video plates hold --dev at 1, so their
-   captions are simply present. */
-.plate-caption {
-  opacity: clamp(0, calc(var(--dev, 1) * 1.6), 1);
-  transform: translateY(calc((1 - min(1, var(--p, 1) * 2)) * 14px));
-}
-
-.plate-note {
-  opacity: clamp(0, calc(var(--dev, 1) * 1.4), 1);
-  transform: translateY(calc((1 - var(--p, 1)) * 28px));
-}
-
-/* Reduced motion: the static plate component renders instead of the scrub;
-   this block is the belt-and-suspenders guarantee (rule 7 final states). */
-@media (prefers-reduced-motion: reduce) {
-  .plate-media,
-  .plate-caption,
-  .plate-note {
-    transform: none;
-    filter: none;
-    opacity: 1;
-  }
-}
+/* CINEMA PLATES retired (G1, 2026-07-10): the scroll-scrubbed sheet cinema
+   left with the Pen Table sheet tier; the showcase leads with the plain
+   hero (video/live/photo/audio) and develop-once. */
 
 /* ============================================================
    THE LANDING MIND-GRAPH (Session R1; bimodal since DL-1, 2026-07-10). The
@@ -521,9 +444,10 @@ section[id] {
 }
 
 /* ============================================================
-   THE WORK CARD-ON-TOP (Session R2, re-skinned DL-2 2026-07-10). The gallery's
-   preview, built on the native <dialog> element (focus trap, Escape, inert
-   background, focus return all free + correct), now a glass-2 FLOATING SHEET:
+   THE WORK SHOWCASE (Session R2's card-on-top, re-skinned DL-2, grown into
+   the project's whole page at G1 2026-07-10). Built on the native <dialog>
+   element (focus trap, Escape, inert background, focus return all free +
+   correct), a glass-2 FLOATING SHEET:
    the fill, border and blur (+ the solid no-blur fallback) come from the
    component's `lang-glass-2` class (styles/language.css); this block only owns
    layout, the --r-sheet fillet, and the entrances. Centered sheet on desktop,
@@ -540,6 +464,44 @@ section[id] {
   border-radius: var(--r-sheet);
   color: var(--lang-ink);
   overflow: hidden;
+}
+
+/* Scroll without the bar (Emilie's G1.1 ruling: "invisible even [if] we
+   should scroll"): the sheet's vertical scroller and the media filmstrip
+   keep native scrolling (wheel, touch, keys) but render no scrollbar. The
+   collapsed story keeps most sheets from scrolling at all; the filmstrip's
+   half-visible last frame is its own affordance. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* THE LIGHTBOX (G1.1): tap any frame and it opens full size in a second
+   <dialog> stacked over the sheet (the top layer stacks; Escape closes the
+   top one only). Transparent dialog, the picture is the surface; a near-
+   carbon backdrop in both modes (it sits on imagery, not on the ground).
+   PRM: the fade is gated, the final state renders instantly. */
+.work-lightbox {
+  max-width: 100vw;
+  max-height: 100dvh;
+  margin: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  overflow: visible;
+}
+.work-lightbox::backdrop {
+  background: rgba(11, 14, 19, 0.82);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .work-lightbox[open] {
+    animation: work-fade 200ms ease both;
+  }
+  .work-lightbox[open]::backdrop {
+    animation: work-fade 200ms ease both;
+  }
 }
 .work-dialog[open] {
   display: flex;

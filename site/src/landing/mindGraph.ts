@@ -187,7 +187,10 @@ export function buildMindGraph(): { threads: readonly Thread[]; nodes: MindNode[
       d: g.d,
       rest: g.rest === true,
       award: AWARD_WINNER_IDS.has(n.id),
-      sheetRoute: n.sheet?.status === 'issued' ? n.sheet.route : undefined,
+      // G1: every project node routes to its showcase at /work/:id (the
+      // issued gate retired with the sheet tier; a thin project's showcase
+      // is honestly short, never a placeholder).
+      sheetRoute: n.sheet?.route,
       noteRoute: n.note?.status === 'drafted' ? n.note.route : undefined,
     }
   })
@@ -197,10 +200,9 @@ export function buildMindGraph(): { threads: readonly Thread[]; nodes: MindNode[
 // One shared instance: the layout is deterministic, so build once per session.
 export const MIND = buildMindGraph()
 
-// A node opens to its leaf where one exists (issued sheet / drafted note), else
-// to the gallery where the not-yet-written work lives (/work redirects to the
-// notebook until R2 ships). Never a dead end. Shared by the graph marks and the
-// jump bar so both route a node identically.
+// A node opens to its leaf: a project's showcase at /work/:id (G1), a
+// thought's drafted note, else the gallery. Never a dead end. Shared by the
+// graph marks and the jump bar so both route a node identically.
 export function nodeRoute(n: MindNode): string {
   return n.sheetRoute ?? n.noteRoute ?? '/work'
 }

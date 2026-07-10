@@ -1,13 +1,15 @@
-// THE WORK RENDITION (Session R2) · the gallery's card object.
+// THE WORK RENDITION (Session R2, grown into the SHOWCASE at G1).
 //
-// ONE CONTENT, TWO RENDITIONS: this file derives the exact card object that
-// both the /work grid AND the printed book's INDEX page (R7) map over. The
-// registry stays the single source (project entries, sheet number/status, the
-// award refIds); projects.tsx carries the card copy (title, lens, tech, award
-// wording, blurb, the dek). Nothing is authored here; it is composed here.
+// ONE CONTENT, TWO RENDITIONS: this file derives the exact object that both
+// the /work grid AND the printed book's INDEX page (R7) map over. The
+// registry stays the single source (project entries, sheet number/status,
+// the award refIds); the MASTER CONTENT FILES (src/content/projects/, G1)
+// carry everything the project says: card copy AND the showcase spine.
+// Nothing is authored here; it is composed here.
 //
-// THE HERO RULE (Emilie, 2026-07-09): the opened preview leads with the work,
-// and one hero is chosen by a fixed priority from the assets a project has:
+// THE HERO RULE (Emilie, 2026-07-09): the opened showcase leads with the
+// work, and one hero is chosen by a fixed priority from the assets a project
+// has:
 //
 //     video  >  live app  >  photo  >  audio  >  text
 //
@@ -16,10 +18,11 @@
 // project picks its member automatically and the gallery needs zero layout
 // work per entry (THE ECONOMY: cheap to update from the registry).
 //
-// PREVIEW, NOT PAGE: the card is a preview. Depth (code, findings, cinema)
-// lives on the full project page, linked ONLY where an issued sheet exists, so
-// the link can never dead-end into a placeholder. The rich card-as-experience
-// is a later, dedicated session.
+// THE SHOWCASE, NOT A PREVIEW (G1, Emilie's model change executed): the
+// opened card IS the project's whole page, deep-linkable at /work/:id. Its
+// spine (signed 2026-07-10): WHAT · WHY · HOW · WHAT CAME OF IT, then tools,
+// then links OUT to repo / blog / live. Depth stays in the linked repo/blog;
+// the Pen Table sheet tier retired with G1 (/sheets/* redirects here).
 import type { ReactNode } from 'react'
 import type { Lens } from '../components/Lens'
 import { ENTRIES, type RegistryEntry, type SheetStatus } from './registry'
@@ -37,19 +40,17 @@ export interface WorkPicture {
 
 export interface WorkEntry {
   id: string // registry project id (permanent; citations resolve for years)
-  slug: string // projects.tsx slug
+  slug: string // master file slug (content/projects)
   number: string // quiet label, e.g. 'P-101'
   status: SheetStatus // 'issued' | 'in-preparation'
   date: string // 'YYYY-MM', drives newest-first
   title: string
   lens: Lens
   tags: string[]
-  dek: string // the one authored "what it proves" line (draftCopy)
+  dek: string // the one authored "what it proves" line; the showcase's claim
   tech: string // the mono tech row
   recognition?: string // award wording where real; ink, no box, never red
   awardFace?: string // the face's corner-pill short wording (DL-2; falls back to recognition)
-  hasFullPage: boolean // a real deep page exists (issued sheet)
-  fullPageRoute?: string // set ONLY where hasFullPage, so it never dead-ends
   // hero + supporting slots, resolved by the hero rule above
   hero: HeroKind
   cover?: WorkPicture // the 4:3 grid tile (undefined -> typographic tile)
@@ -59,15 +60,21 @@ export interface WorkEntry {
   pullQuote?: { text: string; source: string } // the audio hero's lead line
   strip: WorkPicture[] // supporting pictures
   links: { label: string; href: string }[] // links not already used as hero
-  story: ReactNode // the project blurb, reused verbatim
+  // The showcase spine (G1, signed): WHAT + WHY always present; HOW and
+  // OUTCOME only where real material exists (a thin showcase is honest).
+  what: ReactNode
+  why: ReactNode
+  how?: ReactNode[]
+  outcome?: ReactNode
   draftCopy: boolean // the dek is unsigned until Emilie approves it
+  showcaseDraft: boolean // the spine prose is unsigned until Emilie signs it
 }
 
 type ImgRow = { name: string }
 
 // Slugs referenced by more than one project (only 'professional' today: SOMA +
 // Marsception share a folder). A shared slug shows NO strip, so one project
-// never borrows the other's frames. Mirrors MiniSheet's SHARED_SLUGS rule.
+// never borrows the other's frames.
 const SHARED_SLUGS = (() => {
   const count = new Map<string, number>()
   for (const e of ENTRIES) {
@@ -122,7 +129,6 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
   const p = entry.project ? PROJECTS_BY_SLUG[entry.project] : undefined
   if (!p || !entry.sheet || !entry.lens || !p.dek) return null
 
-  const issued = entry.sheet.status === 'issued'
   const { hero, heroVideo, live, audio, consumedHref } = resolveHero(p)
   const cover = p.image
     ? { slug: p.image.slug, name: p.image.name, alt: p.image.alt }
@@ -142,11 +148,9 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     // Recognition wording lives with the card copy; membership is guaranteed
     // to agree with AWARD_WINNER_IDS by the registry validator (never drifts).
     // The face's corner pill takes the short form where one exists (DL-2: the
-    // face carries the least); the preview renders the full line verbatim.
+    // face carries the least); the showcase renders the full line verbatim.
     recognition: p.award,
     awardFace: p.awardShort ?? p.award,
-    hasFullPage: issued,
-    fullPageRoute: issued ? entry.sheet.route : undefined,
     hero,
     cover,
     heroVideo,
@@ -155,10 +159,14 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     pullQuote: p.pullQuote,
     strip: stripFor(p.image?.slug, p.image?.name, p.title),
     links: p.links.filter((l) => l.href !== consumedHref),
-    story: p.blurb,
+    what: p.what,
+    why: p.why,
+    how: p.how,
+    outcome: p.outcome,
     // A dek ships unsigned (Section 14) until Emilie signs it in a copy pass
-    // (dekSigned, projects.tsx); the flag retires per project, never in bulk.
+    // (dekSigned); the G1 spine prose carries its own flag the same way.
     draftCopy: !p.dekSigned,
+    showcaseDraft: p.showcaseDraft,
   }
 }
 

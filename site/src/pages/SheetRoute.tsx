@@ -1,32 +1,15 @@
-// /sheets/:sheetId resolver: issued sheets render their content component;
-// registry entries still in preparation get the enriched MiniSheet placeholder
-// (blurb, figures, tags, links, EXPLORE deep link); unknown numbers land on
-// the Notebook.
-import { Suspense } from 'react'
+// /sheets/:sheetId · the PERMANENT REDIRECT (G1, 2026-07-10). The Pen Table
+// sheet tier retired when the opened WORK card became the project's whole
+// showcase; sheet numbers survive as quiet labels and old /sheets/p-101
+// URLs are shared and citable, so they land on the project's showcase at
+// /work/:id forever, never a 404 (IDs are permanent, REDESIGN-SPEC §11).
+// Unknown numbers fall back to the gallery.
 import { Navigate, useParams } from 'react-router-dom'
 import { getSheetEntry } from '../data/registry'
-import { SHEETS } from '../sheets'
-import MiniSheet from '../components/sheet/MiniSheet'
-
-function SheetLoading() {
-  return <div className="min-h-dvh bg-mylar" aria-hidden="true" />
-}
 
 export default function SheetRoute() {
   const { sheetId = '' } = useParams()
-  const key = sheetId.toLowerCase()
-  const entry = getSheetEntry(key)
+  const entry = getSheetEntry(sheetId.toLowerCase())
 
-  if (!entry || !entry.sheet) return <Navigate to="/notebook" replace />
-
-  const Sheet = SHEETS[key]
-  if (entry.sheet.status === 'issued' && Sheet) {
-    return (
-      <Suspense fallback={<SheetLoading />}>
-        <Sheet />
-      </Suspense>
-    )
-  }
-
-  return <MiniSheet entry={entry} />
+  return <Navigate to={entry ? `/work/${entry.id}` : '/work'} replace />
 }

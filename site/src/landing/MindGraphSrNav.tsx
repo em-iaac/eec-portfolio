@@ -1,7 +1,8 @@
 // The screen-reader alternative to the mind-graph (Session R1; migrated from the
 // retired explore/NetworkSrNav.tsx). Reads the pure model + registry so the
 // constellation is fully navigable with no SVG and in every fallback mode: every
-// project and thought with its issued-sheet or drafted-note link, awards noted.
+// project with its showcase link (G1: /work/:id), every thought with its
+// drafted-note link, awards noted.
 //
 // The SVG nodes are already focusable role="link"s, so a sighted keyboard user
 // already has a visible path through the graph. These links stay reachable to a
@@ -21,7 +22,7 @@ export default function MindGraphSrNav() {
             {n.award ? ', award-winning' : ''}){' '}
             {n.sheetRoute && (
               <Link to={n.sheetRoute} viewTransition tabIndex={-1}>
-                Open sheet
+                Open project
               </Link>
             )}
             {n.noteRoute && (

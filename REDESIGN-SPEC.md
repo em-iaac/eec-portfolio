@@ -204,6 +204,39 @@ where a visitor browses the projects visually. WORK is that page.
 
 ## 5 · The template family portrait
 
+> **MODEL CHANGE (Emilie, 2026-07-09): the separate project "full page" is
+> RETIRED. The opened card IS the project showcase.** A project has two layers,
+> not three: the gallery CARD → the SHOWCASE (the opened glass sheet, deep-linkable
+> at `/work/:id`). The showcase leads with the proof (media rule
+> video›live›photo›audio›text), then answers WHAT / HOW / WITH WHAT / WHY (exact
+> spine TBD — decided at the top of the G1 session from researched options, e.g.
+> what/how/with-what/why vs abstract/method/findings vs a hybrid), then links OUT
+> to repo / blog / live for the deep version. It is TIGHT by design: "a portfolio,
+> not a blog" (Emilie) — code, full method, and long write-ups live in the linked
+> repo/blog, not reproduced on-site. ONE flexible template that ADAPTS by media
+> type (a video project, a build, a podcast lead differently — this is the
+> "different templates per type" without maintaining N templates). The existing
+> Pen Table SheetLayout sheets (P-101/102/104) are retired; their content migrates
+> into the showcase (trimmed to the spine + proof + links). THOUGHTS are the
+> exception (a written note keeps a calm readable page) — settled in G2. The
+> master-content-file model (§11) still feeds the showcase + book spread + CV line.
+> The five-member family below is SUPERSEDED by this single adaptive showcase (the
+> "listening" adaptation = the podcast's audio proof; "in-progress" = a project
+> whose showcase is thin until material lands). Kept below for its anatomy notes.
+>
+> **EXECUTED (G1, 2026-07-10).** The spine was decided with Emilie at the top of
+> the G1 session (options visualised in chat, her amendment signed): **WHAT ·
+> WHY · HOW · WHAT CAME OF IT, then the tools, then the links out.** WHAT + WHY
+> are authored for every project; HOW and the outcome render only where real
+> material exists. Her second ruling: the sheet-era margin wink survives as an
+> inline **hover dot** ("a dot you hover on so we don't lose space and it's for
+> people who look for it") — `components/ui/NB.tsx`, at most one per project.
+> The master content files live at `site/src/content/projects/` (one per
+> project, §11), the showcase is `components/work/WorkOverlay.tsx` at
+> `/work/:id`, the P-101/102/104 Pen Table sheets are retired and every
+> `/sheets/*` URL redirects to its project's showcase (never 404). All new
+> spine prose ships `showcaseDraft: true` pending her copy sign-off.
+
 One genus, five members, ONE shared anatomy so the reader learns the page once.
 Shared anatomy, top to bottom: **identification row** (lens · context · team ·
 award-recognition · one defensible stat) → **title** (voice varies by member) →
@@ -474,6 +507,24 @@ Right-sized one-sitting sessions. Paste the matching prompt into a fresh Claude
 Code session, one at a time. Each is self-contained. Sessions never run git write
 commands; each ends with a proposed commit summary, the changed-file list, and the
 sign-off list, for Emilie to commit manually.
+
+> **REGROUPED (2026-07-09, Emilie): the remaining work is FIVE grouped sessions.**
+> R1/R2 + DL-0/1/2 shipped (landing, gallery, glass foundation, chrome, WORK
+> re-skin). What's left, grouped:
+> **G1 · Project pages** (was R3+R4): resolve the open design fork (card templates
+> vs full pages) + proof-first + master content file + glass, all projects + the
+> thought-note pages.
+> **G2 · Thoughts + Notebook** (was /thoughts + DL-3 + R5): a design brainstorm
+> first — do thoughts and the notebook combine, where the commit graph lives, the
+> thought-card template — then build.
+> **G3 · About + Contact + CV (screen design)** (was DL-4 + DL-5 screen).
+> **G4 · Final sweep** (was R9 + R10): every page consistent, a11y/perf/cross-
+> browser, comment hygiene, retire every draft flag.
+> **G5 · Print: the A4 portfolio book + the A4 one-page CV PDF** (was R7 + the CV
+> PDF pipeline).
+> Each group's DESIGN decisions are resolved in the director session (visualise-
+> first) before its build prompt is issued. The per-session prompts below (R3-R10)
+> remain as source material folded into these five.
 
 > **PLAN UPDATE (2026-07-09, after R2 + the v2 pivot):** R1 (landing) and R2 (WORK
 > gallery) SHIPPED, building STRUCTURE in the interim Pen Table skin. The visual

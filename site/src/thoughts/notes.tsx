@@ -1,8 +1,10 @@
 // THE THOUGHT NOTES (Session 11). One written leaf per EXPLORE thought,
 // rendered by ThoughtRoute inside ThoughtLeaf. Words only: plain <p> (the leaf
-// styles them) plus optional inline <NBDot> handwriting under rule 8's
-// five-per-leaf cap. ALL copy here is a DRAFT in Emilie's voice pending her
-// sign-off (each thought entry carries draftCopy in the registry).
+// styles them) plus optional inline <NB> hover dots under rule 8's
+// five-per-leaf cap (G1: the Pen Table NBDot retired with the sheet tier;
+// the glass NB is a drop-in with the same props and mechanics). ALL copy
+// here is a DRAFT in Emilie's voice pending her sign-off (each thought entry
+// carries draftCopy in the registry).
 //
 // Binding copy rules (Session 11 + the calibration dossier): no em dashes; no
 // '{' anywhere; the verbs are score / estimate / model, never "measure", and
@@ -11,7 +13,7 @@
 // the coined phrase "Behavior Information Modeling" never stands alone, it sits
 // next to Building Information Modeling and one gesture from NeuroSpace.
 import { type ReactNode } from 'react'
-import NBDot from '../components/sheet/NBDot'
+import NBDot from '../components/ui/NB'
 
 export const THOUGHT_NOTES: Record<string, ReactNode> = {
   // T-101 · runs long: this is the spine of the whole research direction.
