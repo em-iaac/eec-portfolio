@@ -6,6 +6,12 @@
 // composition lives in src/landing/.
 import LandingCover from '../landing/LandingCover'
 
+// The landing PINS DARK (DESIGN-LANGUAGE.md §2): the cover is carbon in every
+// mode; the [data-theme] wrapper makes any nested DL v2 glass resolve dark.
 export default function Home() {
-  return <LandingCover />
+  return (
+    <div data-theme="dark">
+      <LandingCover />
+    </div>
+  )
 }

@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- DL v2 mode system: re-apply a persisted toggle choice BEFORE first
+         paint so a forced mode never flashes the other ground. The default
+         (no stored choice) follows the OS via color-scheme in language.css. -->
+    <script>
+      try {
+        var eecTheme = localStorage.getItem('eec-theme')
+        if (eecTheme === 'light' || eecTheme === 'dark')
+          document.documentElement.dataset.theme = eecTheme
+      } catch (e) {}
+    </script>
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f6f7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0e13" />
     <link
       rel="preload"
       as="font"

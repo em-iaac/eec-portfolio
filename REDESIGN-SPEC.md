@@ -11,6 +11,18 @@ authority (those remain as history). Mockups live in `design-studio/` (serve wit
 No production code was written in this session; the landing is proven as the
 mockup `design-studio/cover-dark-threads.html`.
 
+> **VISUAL SKIN SUPERSEDED (2026-07-09): see `DESIGN-LANGUAGE.md` (v2).** After R2,
+> Emilie pivoted the visual language to **soft / filleted / glass + a light/dark
+> mode system** ("Apple Intelligence / liquid glass"; "the lab, softened").
+> `DESIGN-LANGUAGE.md` is now the VISUAL language of record; THIS file remains the
+> CONCEPT of record (the mind graph, the notebook, the lab framing, the IA, the
+> honesty rules, the copy — all unchanged). **Where sections below describe SKIN
+> (corners, surfaces, density, mono-as-texture, the Pen Table look — especially
+> §5 template family, §7 chrome, §8 colour/type/motion), defer to
+> `DESIGN-LANGUAGE.md`.** Where the two touch CONCEPT, this file wins. The rebuild
+> plan (§16) now runs through the DL re-skin sequence (DESIGN-LANGUAGE §9): every
+> future page-building session builds in the v2 language, DL-0 (foundation) first.
+
 ---
 
 ## 0 · How to read this file · what binds
@@ -134,9 +146,12 @@ layer floats over it inside a soft radial scrim so it stays legible.
   technology and minds."** ("minds" carries the neuro/behavior niche.)
 - One mono fact line: **MACAD AWARDS 2026 · WINNER · COMPUTATIONAL DESIGN ·
   MACAD @ IAAC** (the 10-second scan's award + niche insurance).
-- Nav links WORK / THOUGHTS / NOTEBOOK / CV / ABOUT, PLUS a prominent
-  **SEE THE WORK →** affordance (a button, not a quiet link: the council's
-  required proof-path for a phone recruiter).
+- Nav links WORK / THOUGHTS / NOTEBOOK / CV / ABOUT, with **WORK visually
+  EMPHASISED** as the recruiter's proof-path. (R1 build refinement, Emilie: the
+  separate "SEE THE WORK" button was DROPPED to avoid duplicating the nav; the
+  emphasised WORK link carries the council's proof-path job, backed up by the
+  tappable nodes and the jump bar, which are additional one-tap routes to the
+  work.)
 - A **jump bar** ("jump to any project or thought", `/` to focus): a smart-drawer
   that filters everything on the site and routes to it. Named as travel, never
   "ask"; no live AI (a live model is a flagged FUTURE experiment, needs a server).
@@ -147,7 +162,7 @@ layer floats over it inside a soft radial scrim so it stays legible.
   **"what's in yours?"**, opens the contact invite on About.
 
 **3.3 The honest hero (the council's core fix, adopted).** The name, subtitle,
-fact line, SEE THE WORK button, and the graph's screen-reader `<nav>` are real DOM
+fact line, the emphasised WORK link, and the graph's screen-reader `<nav>` are real DOM
 that paint in under one second, before and regardless of any animation or WebGL.
 The mockup is SVG/DOM (no three.js on the landing), so this is nearly free. The
 ten-second phone scan (name / title / award / niche / a tap to the work) is
@@ -240,7 +255,7 @@ The running record, drawn as the literal commit graph of a career.
 ## 7 · One chrome grammar
 
 - ONE header family, two densities. COVER pages (landing, WORK, notebook, about,
-  cv) get the full header: mark · name/role · nav · SEE THE WORK / jump. PROJECT
+  cv) get the full header: mark · name/role · nav (WORK emphasised) · jump. PROJECT
   and THOUGHT pages get a QUIET strip that still carries the mark, the nav, and the
   same door labels (so a shared deep link is never a nav dead-end).
 - Every project/thought page gains ENDMATTER: `‹ back to the notebook` + `next ›`
@@ -365,8 +380,10 @@ the fallback." Resolutions, all folded in above:
   (3.4). The artwork becomes the reward for staying, not the toll for entering.
 - **CAUGHT: the subtitle stated no niche.** RESOLVED: Emilie's niche-bearing line,
   "…I work with design, technology and minds." (3.2).
-- **CAUGHT: proof must be reachable in the 10-second scan.** ADOPTED: the loud
-  SEE THE WORK button on the cover (3.2, option A).
+- **CAUGHT: proof must be reachable in the 10-second scan.** ADOPTED: an
+  emphasised WORK proof-path on the cover (3.2). (At R1 build this became an
+  emphasised WORK nav link rather than a separate button, to avoid duplication;
+  the tappable nodes + jump bar are additional one-tap routes to the work.)
 - **CAUGHT: "everything forever" risks illegibility at 50+.** RULED (Emilie): keep
   everything (the mess is the art), made usable by tap-to-bloom + default-lit +
   zoom; revisit only if it truly breaks around 35 nodes.
@@ -453,15 +470,27 @@ All mock prose is sample `draftCopy`.
 
 ## 16 · The implementation session plan
 
-Right-sized one-sitting sessions, recruiter-door-first (council sequencing). Paste
-the matching prompt into a fresh Claude Code session, one at a time. Each is
-self-contained. Sessions never run git write commands; each ends with a proposed
-commit summary, the changed-file list, and the sign-off list, for Emilie to commit
-manually.
+Right-sized one-sitting sessions. Paste the matching prompt into a fresh Claude
+Code session, one at a time. Each is self-contained. Sessions never run git write
+commands; each ends with a proposed commit summary, the changed-file list, and the
+sign-off list, for Emilie to commit manually.
+
+> **PLAN UPDATE (2026-07-09, after R2 + the v2 pivot):** R1 (landing) and R2 (WORK
+> gallery) SHIPPED, building STRUCTURE in the interim Pen Table skin. The visual
+> pivot (`DESIGN-LANGUAGE.md`) inserts a re-skin sequence **DL-0 … DL-5** (see
+> DESIGN-LANGUAGE §9) that is now the ACTIVE next track: **DL-0 Foundation** (the
+> mode system + glass primitives, live-verified) comes next, then DL-1 header/
+> footer → DL-2 WORK re-skin → DL-3 notebook → DL-4 about → DL-5 CV. The remaining
+> R-sessions below still stand for the surfaces DL does not cover, but they now
+> BUILD IN THE v2 LANGUAGE (glass/soft/mode-aware, per DESIGN-LANGUAGE.md) rather
+> than Pen Table: R3 project template + master file, R4 remaining project pages,
+> R7 the A4 book (screen glass / print plain), R9 prerender + share + 404 + jump
+> bar, R10 hardening + sweep. (R5 notebook ≈ DL-3; R6 CV ≈ DL-5; R8 about ≈ DL-4 —
+> fold each pair into one session.) Sequence the recruiter door first as before.
 
 | # | Session | Target | Definition of done |
 |---|---------|--------|--------------------|
-| R1 | The Landing | Ship the all-dark mind-graph cover with the honest DOM hero + phone-first interaction | Cover live; DOM hero (name/subtitle/fact/SEE THE WORK) paints < 1s; tap-to-bloom + default-lit + 44px targets; woven question; `/explore*` → `/` redirects; fallback + a11y + perf budgets pass on desktop, 390px, reduced motion |
+| R1 | The Landing ✅ SHIPPED | Ship the all-dark mind-graph cover with the honest DOM hero + phone-first interaction | Cover live; DOM hero (name/subtitle/fact/emphasised WORK) paints < 1s; tap-to-bloom + default-lit + 44px targets; woven question (fragment only); `/explore*` → `/` redirects; fallback + a11y verified desktop, 390px, reduced motion, keyboard, tap. (R1 refinements: SEE-THE-WORK button dropped for an emphasised WORK link; explore→/ naming cleanup deferred to R10; confirm Lighthouse LCP/CLS numbers at R10.) |
 | R2 | The WORK gallery | The missing "show me the work" surface | `/work` grid of all 11 projects; card-on-top opens story + pictures + link; one-line deks authored; lens facet filter; award recognition line; same data shape the book index will reuse |
 | R3 | Project template + master file (flagships) | One template genus, proven proof-first on the 2 flagships, one chrome grammar | Master content file shape defined; P-101 + P-102 render from it proof-first; one header (two densities) + endmatter; caption grammar + type scale + listing fix; softened tone; PRM + mobile clean |
 | R4 | The remaining project pages | Every project on a real page; backlog absorbed | The other 9 projects migrated to master files; standard / in-progress / listening members; no bare placeholder anywhere; validator green |
@@ -470,7 +499,7 @@ manually.
 | R7 | The A4 book | The downloadable lab-report book | Build-time A4-landscape print route; ~6 flagship lab-report spreads + index page (WORK's data) + CV tail; Pen Table skin; high-res print asset ladder; regenerates every build |
 | R8 | About + NOW + shelf + contact | The human layer | About with the pivot story + the "what's in yours?" contact invite; a dated NOW module (one file to update); a reading shelf; all `draftCopy` |
 | R9 | Share layer + prerender + 404 + jump bar | The site travels designed and is findable | Per-route prerender (real HTML per route); per-route OG/share cards; warm 404; the jump-bar smart-drawer wired to the site content index |
-| R10 | The hardening + sweep | Verified against its own rules; signed | `/code-review` high; a11y (keyboard, contrast, SR on the graph); perf vs budgets; cross-browser; the source-comment hygiene sweep; every `dateDraft`/`draftCopy` retired with Emilie |
+| R10 | The hardening + sweep | Verified against its own rules; signed | `/code-review` high; a11y (keyboard, contrast, SR on the graph); perf vs budgets (confirm the landing's Lighthouse LCP/CLS numbers deferred from R1); cross-browser; the source-comment hygiene sweep; the deferred "explore → /" naming cleanup (useExploreTransition etc.); every `dateDraft`/`draftCopy` retired with Emilie |
 
 Sessions R5-R10 are the PhD-door / polish tail (deferred per the council); R1-R4
 are the recruiter door and should ship first.

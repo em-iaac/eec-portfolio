@@ -12,6 +12,12 @@ import SheetRoute from './pages/SheetRoute'
 const Work = lazy(() => import('./pages/Work'))
 const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
 
+// THE PRIMITIVES LAB (DL-0): dev-only verification surface for the DL v2
+// foundation. The DEV gate makes the whole chunk unreachable in prod, so it
+// tree-shakes away: zero production weight, never in the nav, never
+// prerendered.
+const Lab = import.meta.env.DEV ? lazy(() => import('./pages/Lab')) : null
+
 // Mylar hold while a lazy READ-mode chunk resolves (matches SheetRoute).
 function MylarScreen() {
   return <div className="min-h-dvh bg-mylar" aria-hidden="true" />
@@ -111,6 +117,16 @@ export default function App() {
             </Suspense>
           }
         />
+        {Lab && (
+          <Route
+            path="/lab"
+            element={
+              <Suspense fallback={<MylarScreen />}>
+                <Lab />
+              </Suspense>
+            }
+          />
+        )}
         {/* EXPLORE retired (R1): the landing IS the mind graph now. These URLs
             are shared and citable, so they redirect to the landing, never 404. */}
         <Route path="/explore" element={<Navigate to="/" replace />} />

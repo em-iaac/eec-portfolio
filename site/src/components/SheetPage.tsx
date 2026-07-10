@@ -25,7 +25,11 @@ export default function SheetPage({
 
   return (
     <ExploreExitContext.Provider value={beginExit}>
-      <div className="flex min-h-dvh flex-col">
+      {/* TEMPORARY light pin (DL-0): the sheet pages still speak Pen Table
+          (ink-on-mylar constants), so the mode-aware chrome inside must
+          resolve light here or a dark-glass header would sit on mylar.
+          Each page drops this pin as it re-skins (DL-1..DL-5). */}
+      <div data-theme="light" className="flex min-h-dvh flex-col">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-redline focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-mylar"

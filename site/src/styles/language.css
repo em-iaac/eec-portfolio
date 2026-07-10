@@ -7,9 +7,14 @@
 
    Mode switches via the CSS `light-dark()` function keyed off `color-scheme`:
    - default `color-scheme: light dark` follows the OS preference;
-   - the ModeToggle sets `[data-theme]` on <html> to force one;
-   - a surface PINS a ground with `.lang-dark` / `.lang-light` (landing pins
-     dark, CV pins light) — color-scheme inherits, so nested glass resolves too.
+   - the ModeToggle sets `[data-theme]` on <html> to force one (persisted;
+     index.html re-applies it before first paint so a dark load never flashes);
+   - a surface PINS a ground with the same attribute on any wrapper (landing
+     pins dark; interior shells pin light until each page re-skins, DL-1..5) —
+     color-scheme inherits, so nested glass resolves too;
+   - `.lang-lean-dark` is the /work soft pin (Emilie 2026-07-10): dark for
+     everyone, continuity with the landing, UNLESS the visitor explicitly
+     toggled light. Applied when the gallery re-skins at DL-2.
    ============================================================ */
 
 :root {
@@ -39,27 +44,47 @@
   --lang-glass-1-border: light-dark(rgba(22, 24, 29, 0.1), rgba(255, 255, 255, 0.12));
   --lang-glass-2: light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.09));
   --lang-glass-2-border: light-dark(rgba(22, 24, 29, 0.14), rgba(255, 255, 255, 0.18));
+
+  /* The tier fills pre-composited over the ground, fully opaque: what a
+     browser without backdrop blur renders instead of translucency (a solid
+     panel of the same tone, never a see-through mush). */
+  --lang-glass-1-solid: light-dark(#f9f9fa, #171a1f);
+  --lang-glass-2-solid: light-dark(#fcfcfd, #212428);
 }
 
-/* Forced modes (the ModeToggle writes [data-theme]) */
-html[data-theme='light'] {
+/* Forced modes + surface pins, ONE mechanism: the ModeToggle writes
+   [data-theme] on <html>; a pinned surface carries the same attribute on its
+   wrapper. */
+[data-theme='light'] {
   color-scheme: light;
 }
-html[data-theme='dark'] {
+[data-theme='dark'] {
   color-scheme: dark;
 }
 
-/* Surface pins: wrap a section to fix its ground regardless of mode */
-.lang-dark {
+/* The /work soft pin: dark by default, released only by an explicit light
+   choice on the toggle (the OS setting alone does not release it). */
+.lang-lean-dark {
   color-scheme: dark;
 }
-.lang-light {
+html[data-theme='light'] .lang-lean-dark {
   color-scheme: light;
 }
 
-/* The glass primitive base. backdrop-blur where supported; a solid fallback
-   (opaque tier fill) keeps text legible if blur is unavailable or the visitor
-   has save-data / a weak GPU. */
+/* Print pins light everywhere (Emilie 2026-07-10: the CV and anything else
+   leaving the screen prints plain and light; ATS reads the PDF, not the site). */
+@media print {
+  :root,
+  [data-theme='dark'],
+  .lang-lean-dark {
+    color-scheme: light;
+  }
+}
+
+/* The glass primitive base. backdrop-blur where supported (incl. the -webkit
+   prefix, old Safari); everywhere else the translucent fill is REPLACED by the
+   solid tier fill, so text never sits on a see-through mush. Blur stays capped
+   at --lang-glass-blur and only ever rides these bounded panels, never a root. */
 .lang-glass-1,
 .lang-glass-2 {
   border-style: solid;
@@ -73,10 +98,29 @@ html[data-theme='dark'] {
   background: var(--lang-glass-2);
   border-color: var(--lang-glass-2-border);
 }
-@supports (backdrop-filter: blur(1px)) {
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
   .lang-glass-1,
   .lang-glass-2 {
     backdrop-filter: blur(var(--lang-glass-blur));
     -webkit-backdrop-filter: blur(var(--lang-glass-blur));
+  }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .lang-glass-1 {
+    background: var(--lang-glass-1-solid);
+  }
+  .lang-glass-2 {
+    background: var(--lang-glass-2-solid);
+  }
+}
+
+/* Card hover lift: small, springy, PRM-gated (under reduced motion the card
+   simply brightens its border, which transitions as a colour, not a motion). */
+@media (prefers-reduced-motion: no-preference) {
+  .lang-lift {
+    transition: transform 240ms var(--ease-soft);
+  }
+  .lang-lift:hover {
+    transform: translateY(-2px);
   }
 }

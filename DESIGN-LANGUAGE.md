@@ -12,6 +12,26 @@ forward is retired on the surfaces it touches.
 This file is DESIGN ONLY. It does not itself rebuild any page; each page is
 re-skinned to this language in its own focused session (see §9).
 
+> **AMENDMENTS (Emilie, 2026-07-10, DL-0 session; each visualised + confirmed
+> in chat, never a silent rewrite):**
+> 1. **CV mode (supersedes the §2 "CV pins LIGHT" pin):** the CV FOLLOWS the
+>    mode on screen, so there is no light island between dark pages. Light is
+>    pinned only where it leaves the screen: `@media print` and the PDF
+>    artifact (ATS reads the PDF, not the site).
+> 2. **/work soft pin (settles the §2 ambiguity):** /work opens DARK for
+>    everyone, continuity with the landing, and goes light only when the
+>    visitor EXPLICITLY toggles light. The OS setting alone does not release
+>    it (`.lang-lean-dark` in language.css; applied at DL-2).
+> 3. **Header (pulled forward from DL-1):** one floating glass pill above
+>    every interior page: the EEC mark (routes home), the four doors, a
+>    hairline divider, the round 44px ModeToggle. The drawing-set title block
+>    (logo cell + name cell + rules + draw-in ceremony) retires; name and role
+>    leave the chrome (the landing carries identity).
+> 4. **Card face (refines §5):** the card is a SQUARE, `--r-card` fillet; the
+>    image fills the top ~80% edge to edge; the bottom band holds name + lens
+>    pill + up to TWO tags; the award pill rides the image corner. (The §5
+>    "inset `--r-image` image" reading is superseded.)
+
 ---
 
 ## 0 · What binds (unchanged, non-negotiable)
@@ -52,11 +72,19 @@ lives on dark but the CV must stay light for ATS + print.
   `[data-theme="light|dark"]` attribute on `<html>` (a user toggle sets it;
   persisted). Semantic tokens (§3) switch by mode; components never hardcode a
   ground.
-- **Pinned surfaces (documented exceptions):** the **landing pins DARK** (the
-  cover / threshold, regardless of mode); the **CV pins LIGHT** (ATS + print).
-  Everything else follows the mode. `/work` opens **dark** by default (it reads
-  as an extension of the landing) but honours a light-mode visitor.
-- Pinning = wrap the surface in a `[data-theme]` container; never hardcode hex.
+- **ONE mode for the WHOLE site, the landing included (Emilie amendment,
+  2026-07-09).** The landing FOLLOWS the mode (it is light or dark like every
+  other surface, and whatever it opens in, the whole site matches — "if it starts
+  dark, everything is dark by default"). The mind-graph artwork survives both
+  grounds (dark = light-ink threads on carbon "the mind at night"; light =
+  dark-ink threads on cool-white "the mind on paper"; lens colours use their wire
+  variants on dark, their darker pen variants on light). This RETIRES the earlier
+  "landing pins DARK" rule and the "/work leans dark" default; both simply follow
+  the mode now.
+- **The ONE pinned exception is PRINT/PDF output:** the CV's downloadable PDF and
+  any print stylesheet pin LIGHT (ATS + print legibility). The CV *screen*
+  follows the mode like everything else.
+- Any pin = wrap in a `[data-theme]` container; never hardcode hex.
 
 **Light (default, cool clean):** ground `#f5f6f7` (Emilie chose cool-clean over
 warm-mylar, 2026-07-09). **Dark:** ground `#0b0e13` (carbon, the landing).
@@ -96,6 +124,16 @@ mush). Blur is capped and applied to bounded panels only (perf).
 `--ease-soft: cubic-bezier(.2,.8,.3,1)`; durations 200-320ms; springy, soft.
 Every ceremony one-shot and renders its final state under `prefers-reduced-motion`
 (the floor from REDESIGN-SPEC §8 carries over verbatim).
+
+**Page transitions (Emilie amendment, 2026-07-09): no hard cuts.** Navigation uses
+the **View Transitions API** with a SHARED-ELEMENT morph where a source element
+maps to a destination: a mind-graph NODE morphs into the project/thought page it
+opens; a WORK card morphs into its overlay and into its full page (matching
+`view-transition-name`s on the paired elements). Where no shared element exists
+(generic page-to-page) or the browser lacks support (e.g. Firefox), it falls back
+to a **soft crossfade** (~250ms, `--ease-soft`); the same crossfade smooths the
+dark↔light mode flip. Under `prefers-reduced-motion` every transition is an
+instant swap. Springy and soft, never showy.
 
 ---
 

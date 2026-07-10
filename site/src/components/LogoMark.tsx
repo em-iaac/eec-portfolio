@@ -32,8 +32,8 @@ const VERTS: Pt[] = [P.T, P.P4, P.P5, P.P3, P.P2, P.B, P.P1]
 export interface LogoMarkProps {
   /** rendered height in px */
   size?: number
-  /** ink = light ground, wire = dark ground */
-  tone?: 'ink' | 'wire'
+  /** ink = light ground, wire = dark ground, lang = mode-aware (DL v2 tokens) */
+  tone?: 'ink' | 'wire' | 'lang'
   /** vertex nodes (off for very small sizes) */
   nodes?: boolean
   /** the redline vertex where the three letters meet */
@@ -48,8 +48,14 @@ export default function LogoMark({
   redNode = true,
   className,
 }: LogoMarkProps) {
-  const ink = tone === 'ink' ? 'var(--color-ink)' : 'var(--color-ink-dark)'
-  const red = tone === 'ink' ? 'var(--color-redline-stroke)' : 'var(--color-redline-wire)'
+  const ink =
+    tone === 'lang' ? 'var(--lang-ink)' : tone === 'ink' ? 'var(--color-ink)' : 'var(--color-ink-dark)'
+  const red =
+    tone === 'lang'
+      ? 'var(--lang-interaction)'
+      : tone === 'ink'
+        ? 'var(--color-redline-stroke)'
+        : 'var(--color-redline-wire)'
   const r = 11
 
   return (

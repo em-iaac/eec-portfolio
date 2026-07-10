@@ -2,7 +2,7 @@
 // metadata unit: fully filleted (--r-pill), mode-aware via the --lang-* tokens.
 // Lens colour NEVER carries meaning alone — the shape-chip (square / diamond /
 // triangle) rides inside the lens pill, the a11y rule carried from Pen Table.
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, ElementType, ReactNode } from 'react'
 import type { Lens } from '../Lens'
 
 const BASE = 'inline-flex items-center gap-1.5 rounded-[var(--r-pill)] leading-none'
@@ -27,6 +27,46 @@ export function Pill({
     : 'lang-glass-1 text-[var(--lang-ink-muted)]'
   const type = mono ? 'font-mono text-[10px] tracking-[0.06em]' : 'text-[11px]'
   return <span className={`${BASE} px-3 py-1.5 ${type} ${skin} ${className}`}>{leading}{children}</span>
+}
+
+// Filter: the interactive facet control (the gallery's lens facets and any
+// future filter row). A REAL control, unlike the metadata pills above: the
+// visual pill stays compact but the transparent hit area is >= 44px tall
+// (touch floor), extended invisibly the way the old header extended its
+// links. Active = solid ink; rest = raised glass. Renders as a button by
+// default or as any element via `as` (a router Link for hash facets).
+export function FilterPill({
+  as,
+  active = false,
+  leading,
+  className = '',
+  children,
+  ...rest
+}: {
+  as?: ElementType
+  active?: boolean
+  leading?: ReactNode
+  className?: string
+  children: ReactNode
+  [prop: string]: unknown
+}) {
+  const Tag = as ?? 'button'
+  const skin = active
+    ? 'bg-[var(--lang-ink)] text-[var(--lang-ground)] border-[0.5px] border-transparent'
+    : 'lang-glass-1 text-[var(--lang-ink-muted)] hover:border-[var(--lang-ink-muted)] hover:text-[var(--lang-ink)]'
+  return (
+    <Tag
+      {...(Tag === 'button' ? { type: 'button' } : {})}
+      aria-pressed={Tag === 'button' ? active : undefined}
+      className={`inline-flex min-h-11 min-w-11 items-center justify-center no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] ${className}`}
+      {...rest}
+    >
+      <span className={`${BASE} px-3.5 py-2 font-mono text-[10px] tracking-[0.06em] transition-colors ${skin}`}>
+        {leading}
+        {children}
+      </span>
+    </Tag>
+  )
 }
 
 // Status: a live dot (interaction/liveness colour) or the ink award recognition.

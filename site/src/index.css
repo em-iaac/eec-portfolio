@@ -127,55 +127,8 @@ section[id] {
   scroll-margin-top: 1.5rem;
 }
 
-/* Header draw-in ceremony (one-shot, once per session): the title block's
-   bottom rule inks left to right while a 7px redline dot rides the leading
-   edge and fades on arrival. Composite <= 900ms (650 run + 250 fade).
-   Reduced motion: rule complete, dot never shown. */
-.hdr-rule {
-  transform-origin: left;
-  animation: hdr-draw 650ms ease-out both;
-}
-
-.hdr-pen {
-  animation:
-    hpen-run 650ms ease-out both,
-    hpen-fade 250ms 650ms ease-out both;
-}
-
-@keyframes hdr-draw {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
-@keyframes hpen-run {
-  from {
-    left: 0;
-  }
-  to {
-    left: calc(100% - 7px);
-  }
-}
-
-@keyframes hpen-fade {
-  to {
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hdr-rule {
-    animation: none;
-    transform: none;
-  }
-
-  .hdr-pen {
-    display: none;
-  }
-}
+/* Header draw-in ceremony retired at DL-0 (2026-07-10): the drawing-set
+   title block gave way to the floating glass pill (DESIGN-LANGUAGE.md). */
 
 /* EXPLORE info-card entrance (Session 5 bundle): the focused word's card
    fades and rises 8px, ~280ms. Keyed per focused node in ExplorePage so

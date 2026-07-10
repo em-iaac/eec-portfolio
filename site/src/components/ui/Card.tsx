@@ -1,0 +1,80 @@
+// DESIGN LANGUAGE v2 primitive · Card (see /DESIGN-LANGUAGE.md §5 and the
+// 2026-07-10 amendment): a SQUARE, filleted, image-forward glass card. The
+// image owns the top ~80% edge to edge; the bottom band holds the name, the
+// lens pill and up to TWO tags (enforced here, not by caller discipline); an
+// award rides the image corner as the ink recognition pill. Everything else
+// (dek, tech, numbers, status) lives one layer in, never on the face.
+// With onOpen the whole card is ONE button (the R2 rule: a single clean tab
+// stop, no nested interactive children); without it, a plain article.
+import type { ReactNode } from 'react'
+import type { Lens } from '../Lens'
+import { LensPill, Pill, StatusPill } from './Pill'
+
+export default function Card({
+  title,
+  lens,
+  tags = [],
+  award,
+  image,
+  onOpen,
+  className = '',
+}: {
+  title: string
+  lens: Lens
+  /** sentence-case labels; only the first two render (the face stays quiet) */
+  tags?: string[]
+  /** e.g. "MaCAD '26" — rendered as the ✦ ink pill on the image corner */
+  award?: string
+  /** the developing image (an <Img>, <img> or art); omit for the quiet tile */
+  image?: ReactNode
+  onOpen?: () => void
+  className?: string
+}) {
+  const face = (
+    <>
+      <div className="relative min-h-0 flex-[4] overflow-hidden">
+        {image ?? (
+          <div className="flex h-full w-full items-center justify-center bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)]">
+            <span className="font-mono text-[10px] tracking-[0.14em] text-[var(--lang-ink-faint)]">
+              PHOTO PENDING
+            </span>
+          </div>
+        )}
+        {award && (
+          <span className="absolute top-2 right-2">
+            <StatusPill kind="award">{award}</StatusPill>
+          </span>
+        )}
+      </div>
+      <div className="flex min-h-0 flex-1 flex-col justify-center gap-1.5 px-3.5 py-2 text-left">
+        <span className="truncate text-[15px] leading-tight font-semibold text-[var(--lang-ink)]">
+          {title}
+        </span>
+        <span className="flex min-w-0 items-center gap-1.5 overflow-hidden">
+          <LensPill lens={lens} />
+          {tags.slice(0, 2).map(t => (
+            <Pill key={t} className="whitespace-nowrap">
+              {t}
+            </Pill>
+          ))}
+        </span>
+      </div>
+    </>
+  )
+
+  const skin = `lang-glass-1 lang-lift flex aspect-square w-full flex-col overflow-hidden rounded-[var(--r-card)] transition-colors ${className}`
+
+  if (!onOpen) return <article className={skin}>{face}</article>
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-haspopup="dialog"
+      className={`${skin} cursor-pointer hover:border-[var(--lang-ink-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]`}
+    >
+      {face}
+      <span className="sr-only">Open preview</span>
+    </button>
+  )
+}
