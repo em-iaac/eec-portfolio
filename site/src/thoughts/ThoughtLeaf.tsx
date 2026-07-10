@@ -6,7 +6,8 @@
 // NO panel under the prose (glass is for UI, not for words), NO figures,
 // ever. n.b. hover dots stay under rule 8's five-per-leaf cap. The endmatter
 // carries the two corridors: back to the shelf, and this thought's place in
-// time (the notebook's thoughts facet).
+// time (the CV graph view's thoughts facet, since the notebook door retired
+// at G3).
 import { type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
@@ -64,7 +65,7 @@ export default function ThoughtLeaf({
           <Link to="/thoughts" viewTransition className={RED_LINK}>
             ‹ ALL THOUGHTS
           </Link>
-          <Link to="/notebook#thoughts" viewTransition className={RED_LINK}>
+          <Link to="/cv?view=graph&facet=thoughts" viewTransition className={RED_LINK}>
             SEE THIS THOUGHT IN TIME ›
           </Link>
           {next && (

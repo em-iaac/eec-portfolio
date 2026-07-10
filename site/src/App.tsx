@@ -7,7 +7,6 @@ import {
   type RouteObject,
 } from 'react-router-dom'
 import Home from './pages/Home'
-import Notebook from './pages/Notebook'
 import About from './pages/About'
 import CV from './pages/CV'
 import SheetRoute from './pages/SheetRoute'
@@ -54,6 +53,10 @@ function ScrollToTop() {
     // resets as normal).
     const inWork = (p: string) => p === '/work' || p.startsWith('/work/')
     if (inWork(prev) && inWork(pathname)) return
+    // Same-path search-param navigations (the CV's ?view/?facet, G3) must
+    // never reset scroll or steal focus; the effect re-runs on navType flips
+    // (PUSH<->REPLACE) even when the pathname is unchanged.
+    if (prev === pathname && !hash) return
     if (navType === 'POP') return
     if (hash) {
       document.getElementById(hash.slice(1))?.scrollIntoView()
@@ -85,6 +88,21 @@ function PageCount() {
     window.goatcounter?.count?.({ path: COUNT_BASE + pathname })
   }, [pathname])
   return null
+}
+
+// THE NOTEBOOK DOOR RETIRED (G3, 2026-07-10, Emilie): the career graph moved
+// onto the CV as its graph view. /notebook links are shared and citable, so
+// they redirect forever, never 404, and land on the view they meant: the
+// record. Old kind-facet hashes carry over as the ?facet= param; unknown
+// hashes (incl. the pre-G2 lens hashes) land as ALL, same as the old page.
+function NotebookRedirect() {
+  const { hash } = useLocation()
+  const f = hash.replace('#', '')
+  const search =
+    f === 'projects' || f === 'thoughts' || f === 'milestones'
+      ? `?view=graph&facet=${f}`
+      : '?view=graph'
+  return <Navigate to={{ pathname: '/cv', search }} replace />
 }
 
 // The pathless chrome route wrapping every page: scroll/focus handling +
@@ -138,7 +156,7 @@ export const routes: RouteObject[] = [
           </Suspense>
         ),
       },
-      { path: '/notebook', element: <Notebook /> },
+      { path: '/notebook', element: <NotebookRedirect /> },
       { path: '/about', element: <About /> },
       { path: '/cv', element: <CV /> },
       { path: '/sheets/:sheetId', element: <SheetRoute /> },

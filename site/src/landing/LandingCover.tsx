@@ -32,7 +32,6 @@ const WINK = 'this whole mess is my head. touch a piece of it.'
 const DOORS: { label: string; to: string; primary?: boolean }[] = [
   { label: 'WORK', to: '/work', primary: true },
   { label: 'THOUGHTS', to: '/thoughts' },
-  { label: 'NOTEBOOK', to: '/notebook' },
   { label: 'CV', to: '/cv' },
   { label: 'ABOUT', to: '/about' },
 ]

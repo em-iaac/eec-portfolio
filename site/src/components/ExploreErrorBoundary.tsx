@@ -44,8 +44,8 @@ export default class ExploreErrorBoundary extends Component<
             </span>
           </p>
           <p className="flex flex-wrap gap-x-6 gap-y-2">
-            <Link to="/notebook" viewTransition className={WIRE_LINK}>
-              OPEN THE NOTEBOOK &gt;
+            <Link to="/work" viewTransition className={WIRE_LINK}>
+              OPEN THE WORK &gt;
             </Link>
             <Link to="/" viewTransition className={WIRE_LINK}>
               BACK HOME &gt;

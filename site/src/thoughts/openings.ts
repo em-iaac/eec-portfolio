@@ -1,9 +1,9 @@
 // THE OPENINGS (G2): the first sentences of each thought note, VERBATIM.
-// The /thoughts index and the notebook's field card show these as excerpts,
-// so the shelf reads like the notes it holds. Kept in a JSX-free module so
-// the eager Notebook page never drags the full note prose (notes.tsx) into
-// the landing bundle. Update an opening whenever its note's first lines
-// change (notes.tsx re-exports this map so the pairing stays visible there).
+// The /thoughts index and the CV career graph's field card show these as
+// excerpts, so the shelf reads like the notes it holds. Kept in a JSX-free
+// module so the graph never drags the full note prose (notes.tsx) into its
+// chunk. Update an opening whenever its note's first lines change (notes.tsx
+// re-exports this map so the pairing stays visible there).
 export const THOUGHT_OPENINGS: Record<string, string> = {
   bim: "For thirty years we've been getting very good at Building Information Modeling: every beam, every duct, every clash, tracked to the millimeter.",
   neuroaes:

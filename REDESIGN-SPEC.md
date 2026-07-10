@@ -82,8 +82,9 @@ honest, funny) are unchanged.
 
 ## 2 · Information architecture
 
-One world, five doors, no "modes". Nav (visible + scannable on every page):
-**WORK · THOUGHTS · NOTEBOOK · CV · ABOUT**.
+One world, four doors, no "modes" (five doors until G3, 2026-07-10: the NOTEBOOK
+door retired; see §6). Nav (visible + scannable on every page):
+**WORK · THOUGHTS · CV · ABOUT**.
 
 ```
 /  (LANDING)            the mind graph, all-dark, full-bleed. The one showcase.
@@ -91,11 +92,13 @@ One world, five doors, no "modes". Nav (visible + scannable on every page):
 ├── /work               THE GALLERY: grid of all projects; card-on-top opens a
 │   └── /work/:id         project's story; deep link to its full page.
 ├── /projects/:id       THE PROJECT PAGE ("sheet"): proof-first; 5-template family.
-├── /thoughts           THE THOUGHTS index: the written notes, newest first.
-│   └── /thoughts/:id     a thought note (words-only leaf).
-├── /notebook           THE RUNNING RECORD as the career commit graph.
-├── /cv                 plain ATS-safe CV; build-time PDF from the same data.
-├── /about              the person; the pivot story; contact ("what's in yours?").
+├── /thoughts           THE THOUGHTS index: the written notes, newest first,
+│   └── /thoughts/:id     quiet year groups (G3); a thought note (words-only leaf).
+├── /notebook           RETIRED at G3 → redirects to /cv?view=graph forever (the
+│                         record); old #kind hashes carry over as the facet param.
+├── /cv                 plain ATS-safe CV list, default; screen-only GRAPH VIEW
+│                         toggle carries the career commit graph (§6, §9).
+├── /about              the person; the pivot story; NOW; contact ("what's in yours?").
 └── (404)               a warm "this thought wandered off, back to the mind ›".
 ```
 
@@ -103,7 +106,10 @@ RETIRED: the separate immersive `/explore` route and `/explore/:id` focus route,
 and the READ/EXPLORE "mode" framing. The mind graph absorbs the showcase job. Old
 `/explore*` URLs redirect to `/` (client redirect; they are shared and citable, so
 they must never 404). See Section 12 (F7) for the migration of the frozen-layout
-guardrails onto the new graph.
+guardrails onto the new graph. Also RETIRED (G3, 2026-07-10, Emilie): the
+/notebook door; the career graph relocates INTO the CV's screen-only GRAPH VIEW
+(§9), and /notebook redirects there forever, never 404s. References to the
+NOTEBOOK door elsewhere in this file read through this amendment.
 
 Every route is prerendered to a real HTML file at build time (Section 11) so each
 has its own share/preview card and returns real content (not an SPA shell) to
@@ -266,6 +272,27 @@ Family rules (bound into the spec, no extra sign-off):
 
 ## 6 · The notebook · the career commit graph
 
+> **RETIRED AS A PAGE (G3, 2026-07-10, Emilie; decided over mockups + the
+> live build in-session).** The /notebook door closes; `/notebook` redirects
+> to the CV's GRAPH VIEW (`/cv?view=graph`) forever and never 404s; old
+> `#projects/#thoughts/#milestones` hashes carry over as the `?facet=` param.
+> The DESIGN below survives the move intact: the drawn graph (6 lanes, the
+> one live red tip, draw-in, PRM = instant final state), the readable rows
+> beside it, the glass-2 field card, the ~84px narrow rail, and the kind
+> facets (now buttons writing `?facet=`) all relocated into
+> `site/src/cv/CareerGraph.tsx` as built at G2; only the door, its page shell
+> and its h1 retired. The two-room model becomes ROOM + VIEW: THOUGHTS stays
+> the reading room (and gained quiet year groups at G3); the time drawing is
+> the CV's second face. Corridors retarget accordingly (notes' "in time"
+> links land on the graph view, thoughts facet lit). New at G3: the record
+> gained its NOW entry (kind `now`, single-sourced in `site/src/data/now.ts`,
+> prepended so it is always the newest commit) riding the self-employed lane
+> under the live tip, always lit under every facet, mirrored by the About
+> page's NOW module. On the list face, a faint GHOST RAIL of the drawing
+> (Emilie's "background ish" amendment on the live build) keeps the left
+> margin, developing to full ink on hover/focus; pressing it or the GRAPH
+> pill swaps the words for the record.
+
 > **EXECUTED (G2, 2026-07-10; every ruling Emilie's, decided over mockups in
 > chat).** The G2 fork ("two clean surfaces" vs Emilie's "one merged notebook
 > with two lenses") resolved as **TWO ROOMS + LENS-AS-FACET (Model C)**:
@@ -383,8 +410,15 @@ edge only, never the bound gutter. See Sections 9-10.
   / professional record ("Rhino Compute" spelled with a space once for ATS).
 - The ONLY non-plain touch: a small functional "updated <month year>" line for
   version clarity. NO drawing-set / "issued" language (Emilie's calibration).
-- The commit-graph lives in the NOTEBOOK, never on the CV; recruiters want zero
-  novelty in a résumé and ATS sees nothing in a graph.
+- The CV's DEFAULT stays the fully plain list: ATS-safe, zero novelty, exactly as
+  above. **The career commit graph now lives here, behind a screen-only GRAPH
+  VIEW toggle (Emilie, 2026-07-10, superseding the earlier "never on the CV"
+  line; the notebook door retired the same day, §2 + §6).** A reader who wants
+  the drawing flips to it (`/cv?view=graph`, LIST | GRAPH aria-pressed pills, a
+  faint ghost rail on the list face as the desktop invitation); the default
+  view, ATS parsing, print (`hidden` beaten by `print:block`, always the plain
+  light list, both modes, both views) and the build-time PDF are unaffected: no
+  toggle, no graph ever leaves the screen.
 
 ---
 
@@ -470,7 +504,7 @@ motion, print); its UNIFY findings are the basis of Sections 5, 7, 8.
 
 ---
 
-## 13 · Decision log (Emilie's sign-offs, 2026-07-08/09)
+## 13 · Decision log (Emilie's sign-offs, 2026-07-08 › 10)
 
 Every item below was chosen by Emilie with a visual in front of her.
 
@@ -493,8 +527,25 @@ labels · "issued/mode/field" language retired.
 **Platform:** one master file per project → 3 renditions · lab-for-years ambition
 · per-route prerender · open lens set (facets) · warm 404 · commit graph in the
 notebook not the CV.
-**Housekeeping ruled:** menu = WORK/THOUGHTS/NOTEBOOK/CV/ABOUT · source-comment
-hygiene sweep = yes · EXPLORE retires with redirects.
+**Housekeeping ruled:** menu = WORK/THOUGHTS/NOTEBOOK/CV/ABOUT (superseded at
+G3: four doors) · source-comment hygiene sweep = yes · EXPLORE retires with
+redirects.
+**G3 (2026-07-10):** four doors, NOTEBOOK page retired (/notebook → /cv graph
+view, redirects forever, hash → facet) · the CV gains the screen-only GRAPH
+VIEW toggle; default plain list + print + PDF untouched; a faint ghost rail on
+the list face is the desktop way in (Emilie's "background ish" amendment over
+the live build; the boxed FIG stamp rejected) · CV list to §9 spec: real dates,
+skills regrouped craft / AI workflows / ships-with / professional record, full
+certificate names, FOCUS + UPDATED lines, the BARCELONA | BEIRUT string dropped
+(FLAG-02) · registry gains the `now` kind, single-sourced in now.ts, always the
+newest commit, always lit · About rebuilt: the h1 CARRIES the pivot ("the
+architect who asked one question too many", draft 1 of 3), no intro paragraph,
+approved story + invitation verbatim, dated NOW module (the page's one glass
+object), contact invite completes the landing's "what's in yours?" line
+(mailto, no availability status), headshot hover-colorize retired to
+develop-once, the reading shelf SKIPPED for G3 · /thoughts gains the YEARS
+time-spine (picked over RAIL and NONE from live screenshots): quiet mono year
+labels group the rows, nothing else changes.
 
 ---
 
@@ -505,11 +556,20 @@ hygiene sweep = yes · EXPLORE retires with redirects.
   all sheet/thought prose, the 404 line.
 - ~~The THOUGHTS index page form~~ DECIDED at G2 (see §6): contents-only
   editorial rows, no lead, no intro. Still needing her sign-off from G2: the
-  /thoughts h1 ("what i keep thinking about"), the notebook h1 ("The career,
-  as a commit graph."), the "… SHOWCASES OPENED ›" publish wording, the
-  KindMark `✦` award glyph, the notebook rows dropping the lens tick +
-  IN-PREP status labels (quiet numbers only), and whether /work + /notebook
-  keep their mono kickers once the no-intro ruling sweeps the site (G4).
+  /thoughts h1 ("what i keep thinking about"), the "… SHOWCASES OPENED ›"
+  publish wording, the KindMark `✦` award glyph, the record rows dropping the
+  lens tick + IN-PREP status labels (quiet numbers only), and whether /work
+  (and the CV graph view's chrome) keep their mono kickers once the no-intro
+  ruling sweeps the site (G4). (The notebook h1 retired with its page at G3.)
+- From G3 (all shipped `draftCopy`, unsigned): the About kicker ("ABOUT · THE
+  PERSON") + the picked h1 wording · the NOW module's three lines (now.ts) +
+  the NOW row/field-card wording on the graph · the contact callback line
+  ("That's what's on my mind. What's in yours?") · the CV FOCUS line · the
+  SKILLS regroup wording · the ghost rail's "OPEN THE GRAPH ›" reveal line ·
+  the retargeted /thoughts corridor label ("SEE THE THOUGHTS IN TIME · THE CV,
+  DRAWN ›") · the YEARS spine refinement question (drop row dates to
+  month-only under the year labels?) · whether the NOW module ever gets a
+  "this feeds the record ›" corridor line (deferred, G4).
 - The EXPLORE-retirement redirect behaviour and the frozen-layout migration
   (F7) — confirmed at the landing session.
 - The book's spread copy and the flagship selection for the ~6 spreads.

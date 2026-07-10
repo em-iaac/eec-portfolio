@@ -1,7 +1,5 @@
 // Lens encoding: color NEVER appears without shape + label (governance rule 2).
-// LensTick is aria-hidden; LensChip is the only public way to show a lens.
-import { Link } from 'react-router-dom'
-
+// LensTick is aria-hidden and only ever rides next to a text label.
 export type Lens = 'computation' | 'practice' | 'explorations'
 
 export const LENSES: Record<Lens, { label: string; pen: string; wire: string }> = {
@@ -30,43 +28,6 @@ export function LensTick({
   )
 }
 
-const CHIP_CLS =
-  'inline-flex items-center gap-2 border border-ink/30 px-3 py-2 font-mono text-[10px] tracking-[0.08em] text-ink no-underline hover:border-ink focus-visible:outline-2 focus-visible:outline-redline'
-
-function ChipInner({ lens }: { lens: Lens }) {
-  return (
-    <>
-      <LensTick lens={lens} />
-      <span>{LENSES[lens].label.toUpperCase()}</span>
-    </>
-  )
-}
-
-/** Same-page anchor chip (Notebook filter: the hash IS the filter state) */
-export function LensChipAnchor({ lens }: { lens: Lens }) {
-  return (
-    <a className={CHIP_CLS} href={`#${lens}`}>
-      <ChipInner lens={lens} />
-    </a>
-  )
-}
-
-/** Cross-page router chip (into filtered Notebook views), client-side navigation */
-export function LensChipRoute({ lens }: { lens: Lens }) {
-  return (
-    <Link className={CHIP_CLS} to={`/notebook#${lens}`} viewTransition>
-      <ChipInner lens={lens} />
-    </Link>
-  )
-}
-
-export function Legend({ mode }: { mode: 'anchors' | 'route' }) {
-  const Chip = mode === 'anchors' ? LensChipAnchor : LensChipRoute
-  return (
-    <div className="flex flex-wrap gap-2.5">
-      {(Object.keys(LENSES) as Lens[]).map(l => (
-        <Chip key={l} lens={l} />
-      ))}
-    </div>
-  )
-}
+// (G3: the LensChipAnchor / LensChipRoute / Legend chips retired as dead
+// code with the notebook door; they were unimported and hardlinked the old
+// /notebook#<lens> hashes. LensTick + LENSES above are the living exports.)

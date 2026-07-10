@@ -6,7 +6,8 @@ import { existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
-import { AWARD_WINNER_IDS, ENTRIES, EXPLORE_NODES } from './registry'
+import { AWARD_WINNER_IDS, ENTRIES, EXPLORE_NODES, timelineEntries } from './registry'
+import { BRANCH_OF, FORKS, GEOMETRY_ANCHOR_IDS } from '../cv/graphIds'
 import { buildMindGraph } from '../landing/mindGraph'
 import { PROJECTS_BY_SLUG } from './projects'
 import { WORK_ENTRIES } from './work'
@@ -25,7 +26,7 @@ test('every entry.project resolves in PROJECTS_BY_SLUG', () => {
 })
 
 // G1: the sheet tier retired; every sheet ref must route to the SHOWCASE of
-// a real project entry (/work/<project entry id>), so a Notebook row, a
+// a real project entry (/work/<project entry id>), so a career-graph row, a
 // mind-graph node, or an old /sheets redirect can never land on nothing.
 test('every sheet ref routes to an existing project entry showcase', () => {
   const projectIds = new Set(ENTRIES.filter(e => e.kind === 'project').map(e => e.id))
@@ -87,6 +88,38 @@ test('every explore node has mind-graph geometry (coverage)', () => {
   const build = () => buildMindGraph()
   expect(build).not.toThrow()
   expect(build().nodes.length).toBe(EXPLORE_NODES.length)
+})
+
+// Dates are the record's spine and every sort is a bare localeCompare, which
+// is only chronological for zero-padded 'YYYY-MM'. now.ts is hand-edited
+// every time life moves, so the format contract is enforced here, not just
+// commented (G3 review finding).
+test('every entry date is zero-padded YYYY-MM', () => {
+  const broken = ENTRIES.filter(e => !/^\d{4}-(0[1-9]|1[0-2])$/.test(e.date)).map(
+    e => `${e.id} -> ${e.date}`,
+  )
+  expect(broken).toEqual([])
+})
+
+// The career graph joins the registry by string id (fork geometry anchors +
+// lane assignment); a rename in the registry must fail the build, not
+// silently blank the rail or mis-lane an entry (G3 review finding).
+test('every career-graph id resolves in the registry', () => {
+  const ids = new Set(ENTRIES.map(e => e.id))
+  const wanted = [...GEOMETRY_ANCHOR_IDS, ...Object.keys(BRANCH_OF), ...Object.keys(FORKS)]
+  const broken = wanted.filter(id => !ids.has(id))
+  expect(broken).toEqual([])
+})
+
+// THE NOW ENTRY (G3): exactly one, always the newest thing in the record
+// (the CV graph draws it at the live tip; a stale NOW would lie about the
+// present), and never an explore node (the frozen mind-graph layout must
+// not see it).
+test('the NOW entry is the single newest timeline item', () => {
+  const nows = ENTRIES.filter(e => e.kind === 'now')
+  expect(nows.map(e => e.id)).toEqual(['now'])
+  expect(nows[0]!.explore).toBeUndefined()
+  expect(timelineEntries()[0]!.id).toBe('now')
 })
 
 // The award star derives from award entries' refId, so each refId must resolve

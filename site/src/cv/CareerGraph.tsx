@@ -1,38 +1,40 @@
-// THE NOTEBOOK (rebuilt G2, 2026-07-10, Emilie's rulings in-session): the
-// TIME room of the two-room model. The career drawn as its literal commit
-// graph (REDESIGN-SPEC §6, the locked hybrid form): a real drawn graph on
-// the left (main line B.Arch › NOW, branches for the employers and schools,
-// ONE live red tip on the self-employed line), fully readable diary rows on
-// the right. The rows ARE the record and carry every link (44px targets,
+// THE CAREER GRAPH (G2 build, relocated G3, 2026-07-10, Emilie's ruling):
+// the notebook door closed and its drawing moved HERE, the CV's second face.
+// Everything Emilie ruled at G2 survives the move: a real drawn graph on the
+// left (main line B.Arch › NOW, branches for the employers and schools, ONE
+// live red tip on the self-employed line), fully readable diary rows on the
+// right. The rows ARE the record and carry every link (44px targets,
 // keyboard-first); the drawing is the structure and the dots are its
 // pointer-hover garnish (aria-hidden, mirrored by the rows). A glass-2
 // field card answers any hovered/focused row. At narrow widths the rail
 // COMPRESSES (~84px, labels off), it never hides.
 //
-// Emilie's G2 rulings carried here: kind FACETS not lenses (the thoughts
-// facet is her "commit-graph lens on the thinking": the record DIMS, nothing
-// reflows); no intro paragraph (titles are self-explanatory, sitewide); the
-// h1 line is draftCopy until she signs it. Old /notebook#<lens> URLs land as
-// ALL (unknown hash = no facet). Branch spans are presentation config from
-// cv.ts facts; entries assign by id override, then by date (MaCAD era wins
-// after 2025-10).
+// Changed in the move: the kind facets are now BUTTONS reporting to the CV
+// page (which carries them as ?facet= in the URL), not /notebook#hash links;
+// and the record gained its NOW entry (data/now.ts) riding the self-employed
+// lane right under the live tip, always lit under every facet (dimming the
+// present would contradict the one-red-tip grammar).
+//
+// Screen-only by construction: CV.tsx mounts this inside a print:hidden
+// wrapper and prints the plain list instead.
 import { useLayoutEffect, useRef, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import SheetPage from '../components/SheetPage'
+import { Link } from 'react-router-dom'
 import KindMark, { LOG_KINDS } from '../components/KindMark'
 import { FilterPill } from '../components/ui/Pill'
 import { timelineEntries, type RegistryEntry } from '../data/registry'
 import { PROJECTS_BY_SLUG } from '../data/projects'
+import { NOW } from '../data/now'
 import { THOUGHT_OPENINGS } from '../thoughts/openings'
 import { collapseSheetIssues, type LogItem } from '../lib/collapseSheets'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
+import { type CareerFacet } from './facets'
+import { type BranchId, BRANCH_OF, FORKS, GEOMETRY_ANCHOR_IDS } from './graphIds'
 
 const RED_LINK =
   'text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
 
-// ---- Branches (presentation config; facts from cv.ts + the registry) -------
-
-type BranchId = 'main' | 'self' | 'bim' | 'soma' | 'dyn' | 'macad'
+// ---- Branches (presentation config; facts from cv.ts + the registry;
+//      the registry-joined id maps live in graphIds.ts, validator-guarded) --
 
 const BRANCH_LABEL: Record<BranchId, string> = {
   main: 'B.ARCH · LAU · 2018 › NOW',
@@ -52,25 +54,6 @@ const BRANCH_NAME: Record<BranchId, string> = {
   macad: 'MaCAD @ IAAC',
 }
 
-// Entries that do NOT follow the date rule (the date rule: MaCAD era after
-// 2025-10, everything else the main line). Projects ride the branch they
-// were made on; awards/press ride the branch of the work they recognise.
-const BRANCH_OF: Record<string, BranchId> = {
-  soma: 'soma',
-  mars: 'self',
-  'mars-top50': 'self',
-  biennale: 'self',
-  cemetery: 'self',
-}
-
-// A departure milestone sits ON the main line and forks its branch off.
-const FORKS: Record<string, BranchId> = {
-  'self-open': 'self',
-  'soma-start': 'soma',
-  'dynamic-start': 'dyn',
-  'macad-start': 'macad',
-}
-
 function branchOf(e: RegistryEntry): BranchId {
   return BRANCH_OF[e.id] ?? (e.date >= '2025-10' ? 'macad' : 'main')
 }
@@ -81,17 +64,16 @@ function itemBranch(it: LogItem): BranchId {
 
 // ---- Facets (kinds, not lenses: the G2 model) ------------------------------
 
-type Facet = 'projects' | 'thoughts' | 'milestones'
-
-const FACET_MATCH: Record<Facet, Set<RegistryEntry['kind']>> = {
+const FACET_MATCH: Record<CareerFacet, Set<RegistryEntry['kind']>> = {
   projects: new Set(['project', 'sheet']),
   thoughts: new Set(['thought']),
   milestones: new Set(['milestone', 'award', 'press', 'talk']),
 }
 
-function itemMatches(it: LogItem, facet: Facet | null): boolean {
+function itemMatches(it: LogItem, facet: CareerFacet | null): boolean {
   if (!facet) return true
   if (it.type === 'sheetGroup') return facet === 'projects'
+  if (it.e.kind === 'now') return true // the present survives every facet
   return FACET_MATCH[facet].has(it.e.kind)
 }
 
@@ -117,6 +99,10 @@ function curve(x1: number, y1: number, x2: number, y2: number): string {
   return `C ${x1} ${y1 - k} ${x2} ${y2 + k} ${x2} ${y2} `
 }
 
+// INVARIANT: the drawing anchors on the five fork/era milestones in
+// GEOMETRY_ANCHOR_IDS (graphIds.ts, validator-guarded). If any of them ever
+// leaves the registry, buildGeom returns null and the rail renders empty
+// while the rows keep the record readable (and the validator fails first).
 function buildGeom(stage: HTMLElement, rowEls: HTMLElement[], items: LogItem[]): Geom | null {
   const narrow = window.innerWidth < 768
   const L = narrow ? LANES_SLIM : LANES_WIDE
@@ -131,11 +117,7 @@ function buildGeom(stage: HTMLElement, rowEls: HTMLElement[], items: LogItem[]):
 
   const at = (id: string) =>
     items.findIndex((it) => it.type === 'entry' && it.e.id === id)
-  const iSelf = at('self-open')
-  const iSoma = at('soma-start')
-  const iDyn = at('dynamic-start')
-  const iMacad = at('macad-start')
-  const iBarch = at('barch-grad')
+  const [iSelf = -1, iSoma = -1, iDyn = -1, iMacad = -1, iBarch = -1] = GEOMETRY_ANCHOR_IDS.map(at)
   if ([iSelf, iSoma, iDyn, iMacad, iBarch].some((i) => i < 0)) return null
 
   const yEnd = Y(ys.length - 1) + 44
@@ -199,7 +181,7 @@ function CommitGraph({
 }: {
   geom: Geom
   items: LogItem[]
-  facet: Facet | null
+  facet: CareerFacet | null
   litBranches: Set<BranchId> | null
   drawIn: boolean
   onDotHover: (i: number) => void
@@ -306,18 +288,20 @@ function CommitGraph({
               {BRANCH_LABEL[b]}
             </text>
           )}
-          {/* commit dots: pointer garnish only (the rows are the record) */}
+          {/* commit dots: pointer garnish only (the rows are the record).
+              The NOW dot is the one red commit, right under the live tip. */}
           {items.map((it, i) => {
             if (itemBranch(it) !== b) return null
             const faded = !itemMatches(it, facet)
+            const isNow = it.type === 'entry' && it.e.kind === 'now'
             return (
               <circle
                 key={i}
                 className="nbg-mark"
                 cx={L[b]}
                 cy={geom.ys[i]}
-                r={it.type === 'entry' && it.e.kind === 'project' ? 2.8 : 2.2}
-                fill="var(--lang-ink)"
+                r={isNow || (it.type === 'entry' && it.e.kind === 'project') ? 2.8 : 2.2}
+                fill={isNow ? 'var(--lang-interaction)' : 'var(--lang-ink)'}
                 opacity={faded ? 0.18 : 1}
                 style={{ pointerEvents: 'all', cursor: 'default' }}
                 onPointerEnter={() => onDotHover(i)}
@@ -338,6 +322,17 @@ function projectOf(e: RegistryEntry) {
 }
 
 function RowBody({ e }: { e: RegistryEntry }) {
+  if (e.kind === 'now') {
+    // draftCopy: the NOW wording renders from data/now.ts, unsigned.
+    return (
+      <div className="min-w-0">
+        <p className="text-[15px] leading-6 font-semibold text-[var(--lang-ink)]">Now</p>
+        <p className="mt-1 max-w-[62ch] font-serif text-[13.5px] leading-relaxed text-[var(--lang-ink-muted)]">
+          building {NOW.building} · reading {NOW.reading} · thinking about {NOW.thinking}
+        </p>
+      </div>
+    )
+  }
   if (e.kind === 'project') {
     const p = projectOf(e)
     return (
@@ -412,7 +407,7 @@ function GroupBody({ sheets }: { sheets: RegistryEntry[] }) {
           </Link>
         </span>
       ))}{' '}
-      — SHOWCASES{' '}OPENED{' '}›
+      — SHOWCASES{' '}OPENED{' '}›
     </p>
   )
 }
@@ -424,23 +419,25 @@ function FieldCard({ item, index, total }: { item: LogItem; index: number; total
   const title = e ? e.title : item.type === 'sheetGroup' ? item.sheets.map((s) => s.title).join(' · ') : ''
   const date = e ? e.date : (item as { date: string }).date
   const kind = e
-    ? { project: '■ PROJECT', thought: '~ THOUGHT', milestone: '+ MILESTONE', award: '✦ RECOGNITION', press: '¶ PRESS', sheet: '# PUBLISHED', talk: '" TALK' }[e.kind]
+    ? { project: '■ PROJECT', thought: '~ THOUGHT', milestone: '+ MILESTONE', award: '✦ RECOGNITION', press: '¶ PRESS', sheet: '# PUBLISHED', talk: '" TALK', now: '● NOW' }[e.kind]
     : '# PUBLISHED'
   const blurb = e
     ? e.kind === 'project'
       ? projectOf(e)?.dek
       : e.kind === 'thought'
         ? THOUGHT_OPENINGS[e.id]
-        : undefined
+        : e.kind === 'now'
+          ? `building ${NOW.building} · reading ${NOW.reading} · thinking about ${NOW.thinking}`
+          : undefined
     : undefined
   return (
     <aside
       aria-hidden="true"
-      className="lang-glass-2 infocard-enter fixed right-4 bottom-4 left-4 z-30 rounded-[var(--r-sheet)] px-5 py-4 md:top-24 md:right-6 md:bottom-auto md:left-auto md:w-80"
+      className="lang-glass-2 infocard-enter pointer-events-none fixed right-4 bottom-4 left-4 z-30 rounded-[var(--r-sheet)] px-5 py-4 md:top-24 md:right-6 md:bottom-auto md:left-auto md:w-80"
     >
       <div className="flex justify-between gap-3 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
         <span>{date}</span>
-        <span className="text-[var(--lang-ink)]">{kind}</span>
+        <span className={e?.kind === 'now' ? 'text-[var(--lang-interaction)]' : 'text-[var(--lang-ink)]'}>{kind}</span>
       </div>
       <p
         className={`mt-2 text-[16px] leading-snug font-semibold text-[var(--lang-ink)] ${
@@ -462,20 +459,22 @@ function FieldCard({ item, index, total }: { item: LogItem; index: number; total
   )
 }
 
-// ---- The page ---------------------------------------------------------------
+// ---- The graph view --------------------------------------------------------
 
-const FACETS: { id: Facet | null; to: string; mark?: string; label: string }[] = [
-  { id: null, to: '/notebook', label: 'ALL' },
-  { id: 'projects', to: '/notebook#projects', mark: '■', label: 'PROJECTS' },
-  { id: 'thoughts', to: '/notebook#thoughts', mark: '~', label: 'THOUGHTS' },
-  { id: 'milestones', to: '/notebook#milestones', mark: '+', label: 'MILESTONES' },
+const FACETS: { id: CareerFacet | null; mark?: string; label: string }[] = [
+  { id: null, label: 'ALL' },
+  { id: 'projects', mark: '■', label: 'PROJECTS' },
+  { id: 'thoughts', mark: '~', label: 'THOUGHTS' },
+  { id: 'milestones', mark: '+', label: 'MILESTONES' },
 ]
 
-export default function Notebook() {
-  const { hash } = useLocation()
-  const raw = hash.replace('#', '')
-  const facet: Facet | null = raw === 'projects' || raw === 'thoughts' || raw === 'milestones' ? raw : null
-
+export default function CareerGraph({
+  facet,
+  onFacetChange,
+}: {
+  facet: CareerFacet | null
+  onFacetChange: (facet: CareerFacet | null) => void
+}) {
   const prm = usePrefersReducedMotion()
   const items = collapseSheetIssues(timelineEntries())
   const total = items.reduce((n, it) => n + (it.type === 'sheetGroup' ? it.sheets.length : 1), 0)
@@ -512,41 +511,28 @@ export default function Notebook() {
   }
 
   return (
-    <SheetPage title="Notebook">
-      <section className="pt-10 pb-2" aria-labelledby="notebook-heading">
-        <p className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
-          THE NOTEBOOK · THE RUNNING RECORD
-        </p>
-        {/* draftCopy: the h1 line is drafted in Emilie's voice, unsigned. */}
-        <h1 id="notebook-heading" className="mt-3 mb-4 text-3xl font-semibold tracking-[-0.01em] text-[var(--lang-ink)]">
-          The career, as a commit graph.
-        </h1>
+    <section aria-label="The career as a commit graph">
+      <div className="-mx-1 flex flex-wrap" role="group" aria-label="Filter the record by kind">
+        {FACETS.map((f) => (
+          <FilterPill
+            key={f.label}
+            active={facet === f.id}
+            onClick={() => onFacetChange(f.id)}
+            className="px-1"
+          >
+            {f.mark && <span aria-hidden="true">{f.mark}&nbsp;</span>}
+            {f.label}
+          </FilterPill>
+        ))}
+      </div>
 
-        <div className="-mx-1 flex flex-wrap" role="group" aria-label="Filter the record by kind">
-          {FACETS.map((f) => (
-            <FilterPill
-              key={f.label}
-              as={Link}
-              to={f.to}
-              viewTransition
-              active={facet === f.id}
-              aria-current={facet === f.id ? 'true' : undefined}
-              className="px-1"
-            >
-              {f.mark && <span aria-hidden="true">{f.mark}&nbsp;</span>}
-              {f.label}
-            </FilterPill>
-          ))}
-        </div>
-
-        <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]" aria-live="polite">
-          <span aria-hidden="true">■ PROJECT · ~ THOUGHT · + MILESTONE · ✦ AWARD · ¶ PRESS</span>
-          <span className="text-[var(--lang-interaction)]">ONE RED TIP = LIVE</span>
-          <span className="ml-auto">
-            {total} ENTRIES · 2021 › NOW{facet ? ` · ${facet.toUpperCase()}` : ''}
-          </span>
-        </p>
-      </section>
+      <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]" aria-live="polite">
+        <span aria-hidden="true">■ PROJECT · ~ THOUGHT · + MILESTONE · ✦ AWARD · ¶ PRESS</span>
+        <span className="text-[var(--lang-interaction)]">ONE RED TIP = LIVE</span>
+        <span className="ml-auto">
+          {total} ENTRIES · 2021 › NOW{facet ? ` · ${facet.toUpperCase()}` : ''}
+        </span>
+      </p>
 
       <div
         ref={stageRef}
@@ -611,6 +597,6 @@ export default function Notebook() {
           <FieldCard key={focusIdx} item={focused} index={focusIdx} total={items.length} />
         )}
       </div>
-    </SheetPage>
+    </section>
   )
 }

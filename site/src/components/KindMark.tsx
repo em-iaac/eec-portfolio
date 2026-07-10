@@ -2,6 +2,8 @@
 // row in the record carries a mono kind-mark in its date gutter. The key:
 //   filled ink square = project   (a CSS block, not a font glyph, so it
 //                                  renders crisp at gutter sizes)
+//   filled red dot = now          (G3: the live tip's own row; red is
+//                                  liveness, and this row IS the liveness)
 //   #  = publication              (a showcase opening; ink like the rest
 //                                  since G2: red is liveness, not events)
 //   ~  = thought
@@ -15,7 +17,7 @@
 // IMAGE CARDS skip the mark: the card is self-evident.
 import type { EntryKind } from '../data/registry'
 
-const GLYPH: Record<Exclude<EntryKind, 'project'>, string> = {
+const GLYPH: Record<Exclude<EntryKind, 'project' | 'now'>, string> = {
   sheet: '#',
   thought: '~',
   milestone: '+',
@@ -32,6 +34,7 @@ const SR: Record<EntryKind, string> = {
   award: 'award',
   press: 'press',
   talk: 'talk',
+  now: 'happening now',
 }
 
 // The tightened log tier (Session 6 hierarchy): projects and publications
@@ -49,6 +52,8 @@ export default function KindMark({ kind }: { kind: EntryKind }) {
     <>
       {kind === 'project' ? (
         <span aria-hidden="true" className="inline-block size-[7px] rounded-[2px] bg-[var(--lang-ink)]" />
+      ) : kind === 'now' ? (
+        <span aria-hidden="true" className="inline-block size-[7px] rounded-full bg-[var(--lang-interaction)]" />
       ) : (
         <span aria-hidden="true" className="text-[var(--lang-ink)]">{GLYPH[kind]}</span>
       )}

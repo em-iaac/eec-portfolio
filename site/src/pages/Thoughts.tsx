@@ -8,6 +8,7 @@
 // sitewide). The corridor line at the foot deep-links into the notebook's
 // thoughts facet: her "two lenses" delivered as two rooms with a corridor,
 // not a toggle.
+import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import { LensTick, LENSES } from '../components/Lens'
@@ -19,6 +20,15 @@ function noteEntries(): RegistryEntry[] {
   return ENTRIES.filter(
     (e) => e.kind === 'thought' && e.note?.status === 'drafted' && THOUGHT_OPENINGS[e.id],
   ).sort(byDateDesc)
+}
+
+// THE TIME-SPINE (G3, 2026-07-10, Emilie picked YEARS from two live mocks):
+// quiet mono year labels group the rows, so the reading room shows a mind
+// developing (one note in 2022, six by 2026) without lanes, dots, red, or an
+// intro. The labels are visual grouping garnish (aria-hidden): every row
+// already carries its full date for readers and screen readers alike.
+function yearOf(e: RegistryEntry): string {
+  return e.date.slice(0, 4)
 }
 
 function LeafRow({ e }: { e: RegistryEntry }) {
@@ -84,19 +94,35 @@ export default function Thoughts() {
         </section>
 
         <ol className="mt-4 list-none p-0">
-          {notes.map((e) => (
-            <LeafRow key={e.id} e={e} />
-          ))}
+          {notes.map((e, i) => {
+            const y = yearOf(e)
+            const first = i === 0 || yearOf(notes[i - 1]!) !== y
+            return (
+              <Fragment key={e.id}>
+                {first && (
+                  <li
+                    aria-hidden="true"
+                    className="grid px-2 pt-7 pb-1 first:pt-1 sm:grid-cols-[92px_minmax(0,1fr)]"
+                  >
+                    <span className="font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]">{y}</span>
+                  </li>
+                )}
+                <LeafRow e={e} />
+              </Fragment>
+            )
+          })}
         </ol>
 
-        {/* The corridor: the same record, read in time, one tap away. */}
+        {/* The corridor: the same record, read in time, one tap away. Retargeted
+            at G3 (the notebook door retired into the CV graph view); the label
+            is draftCopy, unsigned. */}
         <p className="mt-8 border-t-[0.5px] border-[var(--lang-hairline)] pt-4 pb-12 font-mono text-[9px] tracking-[0.08em]">
           <Link
-            to="/notebook#thoughts"
+            to="/cv?view=graph&facet=thoughts"
             viewTransition
             className="-m-2 p-2 text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
           >
-            SEE THE THOUGHTS IN TIME · THE NOTEBOOK ›
+            SEE THE THOUGHTS IN TIME · THE CV, DRAWN ›
           </Link>
         </p>
       </div>

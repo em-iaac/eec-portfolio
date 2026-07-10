@@ -31,7 +31,7 @@ import { LENSES, type Lens } from '../components/Lens'
 import { WORK_ENTRIES, WORK_LENSES, workEntryById } from '../data/work'
 
 // The lens facet filter: ALL + one pill per lens present, hash-synced so a
-// filtered view is shareable (the Notebook's mechanism). Active reads solid
+// filtered view is shareable (the old notebook's mechanism). Active reads solid
 // ink, never redline (red is liveness, not a category, rule 1); each lens
 // pill leads with its shape mark so colour never means alone.
 function FilterBar({ active }: { active: Lens | null }) {

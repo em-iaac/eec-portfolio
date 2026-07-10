@@ -188,9 +188,9 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
     >
       {/* The identity bar (G1.1): title + lens + award moved up here; the
           quiet number + status left the sheet (they live on in the registry
-          and the Notebook). Award = recognition, ink, no box, never red
-          (rule 1); the bar carries the short wording, the pill grammar of
-          the card face. */}
+          and the CV career graph). Award = recognition, ink, no box, never
+          red (rule 1); the bar carries the short wording, the pill grammar
+          of the card face. */}
       <div className="flex items-center justify-between gap-3 border-b border-[var(--lang-hairline)] px-5 py-2.5">
         <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1">
           <h2 id={titleId} className="text-[17px] leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)]">

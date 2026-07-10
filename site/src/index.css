@@ -152,13 +152,8 @@ section[id] {
   }
 }
 
-/* Notebook lens filter (Session 5 bundle): the filtered results fade in
-   ~180ms when the lens changes ONLY (keyed by lens; initial mount is not
-   keyed, so first paint is still). Reduced motion: final state. */
-.nb-fade {
-  animation: nb-fade-in 180ms ease-out both;
-}
-
+/* (G3: the .nb-fade utility retired with the notebook door; the keyframes
+   survive because the career graph's marks fade in on them below.) */
 @keyframes nb-fade-in {
   from {
     opacity: 0;
@@ -195,7 +190,6 @@ section[id] {
 
 @media (prefers-reduced-motion: reduce) {
   .infocard-enter,
-  .nb-fade,
   .kicker-draw .k-line,
   .kicker-draw .k-dot,
   .kicker-draw .k-head {
@@ -212,17 +206,8 @@ section[id] {
   }
 }
 
-/* The bench roll's scroller: the thin native scrollbar doubles as the
-   progress rule; the right edge fades to hint continuation. */
-.bench-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--color-ink) 35%, transparent)
-    transparent;
-}
-
-.bench-fade {
-  mask-image: linear-gradient(to right, black calc(100% - 3rem), transparent);
-}
+/* (G3: the bench roll's .bench-scroll / .bench-fade retired with the dead
+   BenchRoll component.) */
 
 /* Route transitions moved to the DL v2 language (DL-1, 2026-07-10): the old
    Pen Table sheet-lift retired; the soft crossfade + shared-element morphs +
@@ -443,11 +428,12 @@ section[id] {
   }
 }
 
-/* THE NOTEBOOK GRAPH draw-in (G2, motion primitive 5): the lanes ink in
-   once on page open (staggered per branch via inline animation-delay), the
-   marks and lettering fade up after. One-shot, never loops; the live tip is
-   a static red mark (red = still happening, not an animation). Reduced
-   motion renders the finished drawing instantly. */
+/* THE CAREER GRAPH draw-in (G2 as the notebook, relocated to the CV graph
+   view at G3, motion primitive 5): the lanes ink in once on view open
+   (staggered per branch via inline animation-delay), the marks and lettering
+   fade up after. One-shot, never loops; the live tip is a static red mark
+   (red = still happening, not an animation). Reduced motion renders the
+   finished drawing instantly. */
 .nbg-draw .nbg-lane {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;

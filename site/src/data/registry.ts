@@ -1,8 +1,7 @@
-// THE NOTEBOOK REGISTRY · single source of truth for the research record.
-// Every dated thing Emilie ships or thinks is ONE entry here; the Home bench
-// roll, the Notebook archive, the sheet routes, and the EXPLORE graph all
-// read from this file. Adding a project = one entry + assets + (later) a
-// sheet file.
+// THE REGISTRY · single source of truth for the research record.
+// Every dated thing Emilie ships or thinks is ONE entry here; the CV career
+// graph, the sheet routes, and the mind graph all read from this file.
+// Adding a project = one entry + assets + (later) a sheet file.
 //
 // CONTRACT INVARIANTS:
 // 1. `explore.order` equals the RAW index in
@@ -19,6 +18,7 @@
 // `dateDraft: true` marks months Emilie has not confirmed; `draftCopy: true`
 // marks copy pending her sign-off. Both render normally but are greppable.
 import type { Lens } from '../components/Lens'
+import { NOW } from './now'
 
 export type EntryKind =
   | 'sheet'
@@ -28,6 +28,7 @@ export type EntryKind =
   | 'award'
   | 'talk'
   | 'press'
+  | 'now'
 
 export type SheetStatus = 'issued' | 'in-preparation'
 
@@ -96,7 +97,24 @@ const note = (id: string, number: string, status: NoteStatus = 'drafted'): NoteR
   route: `/thoughts/${id}`,
 })
 
+// THE NOW ENTRY (G3, 2026-07-10): derived from now.ts so the About module
+// and the record can never drift. PREPENDED, not appended: its date may TIE
+// the newest entries (it does today, 2026-07), byDateDesc compares dates
+// only, and Array.sort is stable, so first position guarantees NOW renders
+// as the newest commit. No `explore` ref, ever (the frozen mind-graph layout
+// never sees it); the validator enforces both invariants.
+const NOW_ENTRY: RegistryEntry = {
+  id: 'now',
+  kind: 'now',
+  date: NOW.date,
+  title: 'Now',
+  tags: [],
+  draftCopy: true,
+}
+
 export const ENTRIES: RegistryEntry[] = [
+  NOW_ENTRY,
+
   // ---- Sheet issues (the lab log's publication events) -------------------
   // These sit in NUMERIC order on purpose: the collapse rule preserves
   // ENTRIES order for same-month issues, so this renders "SHEETS P-101,
@@ -543,16 +561,8 @@ export function timelineEntries(): RegistryEntry[] {
   return [...ENTRIES].sort(byDateDesc)
 }
 
-export function entriesByYear(): [string, RegistryEntry[]][] {
-  const years = new Map<string, RegistryEntry[]>()
-  for (const e of timelineEntries()) {
-    const y = e.date.slice(0, 4)
-    const list = years.get(y)
-    if (list) list.push(e)
-    else years.set(y, [e])
-  }
-  return [...years.entries()]
-}
+// (G3: the unused entriesByYear() selector retired with the notebook sweep;
+// it predated the 'now' pseudo-entry and had no consumers.)
 
 // The sheet route resolver returns the PROJECT entry (it carries the image,
 // lens, and title the sheet chrome needs), never the sheet-issue log event.

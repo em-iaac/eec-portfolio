@@ -29,7 +29,7 @@ export interface ProjectMaster {
   // The card face's corner-pill short wording (DL-2); the full award line
   // still renders verbatim in the showcase.
   awardShort?: string
-  // The Notebook/index short text (locked copy where noted in the file).
+  // The record/index short text (locked copy where noted in the file).
   blurb: ReactNode
   tech: string
   links: { label: string; href: string }[]

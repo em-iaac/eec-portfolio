@@ -1,9 +1,8 @@
 // The collapse rule (Session 6), RENDER LAYER ONLY: the registry logs every
 // sheet issue as its own entry (data model unchanged), but the record READS
 // by month: same-month issues aggregate into one "SHEETS P-101, P-102
-// ISSUED >" row (Notebook), column (bench roll), or feed row (mobile). The
-// group is emitted at the newest issue's position; a single-issue month
-// stays a plain entry.
+// ISSUED >" row (the CV career graph, since G3). The group is emitted at the
+// newest issue's position; a single-issue month stays a plain entry.
 import type { RegistryEntry } from '../data/registry'
 
 export type LogItem =

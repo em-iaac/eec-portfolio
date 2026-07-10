@@ -19,14 +19,22 @@ export default function Surface({
   radius = 'card',
   className = '',
   children,
+  ...rest
 }: {
   as?: ElementType
   tier?: 1 | 2
   radius?: keyof typeof RADIUS
   className?: string
   children?: ReactNode
+  // G3: pass-through for aria-* / id / data-* (the NOW module labels itself);
+  // the primitive still owns tier + radius + glass.
+  [prop: string]: unknown
 }) {
   const Tag = as ?? 'div'
   const glass = tier === 2 ? 'lang-glass-2' : 'lang-glass-1'
-  return <Tag className={`${glass} ${RADIUS[radius]} ${className}`}>{children}</Tag>
+  return (
+    <Tag className={`${glass} ${RADIUS[radius]} ${className}`} {...rest}>
+      {children}
+    </Tag>
+  )
 }

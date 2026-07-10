@@ -13,14 +13,13 @@ import LogoMark from './LogoMark'
 import ModeToggle from './ui/ModeToggle'
 
 // De-numbered Session 6: titles only, no 01/02/03 indices.
-// G2 (2026-07-10): THOUGHTS becomes the fifth door (the reading room shipped;
-// until then the landing pointed THOUGHTS at the notebook).
+// G3 (2026-07-10, Emilie): four doors. NOTEBOOK retired (the career graph
+// lives on the CV as its graph view; /notebook redirects there forever).
 const NAV: { label: string; to: string; primary?: boolean }[] = [
   { label: 'WORK', to: '/work', primary: true },
   { label: 'THOUGHTS', to: '/thoughts' },
-  { label: 'NOTEBOOK', to: '/notebook' },
-  { label: 'ABOUT', to: '/about' },
   { label: 'CV', to: '/cv' },
+  { label: 'ABOUT', to: '/about' },
 ]
 
 export default function TitleBlock() {
