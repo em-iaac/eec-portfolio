@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEC — G2 · Notebook · the glass commit graph (mockup)</title>
+<link rel="stylesheet" href="./glass.css">
+<style>
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 28px 140px; }
+
+  .kicker { color: var(--ink-muted); text-transform: uppercase; }
+  h1 { font-weight: 600; font-size: 30px; letter-spacing: -0.01em; margin: 12px 0 10px; }
+  .intro { font-family: var(--serif); font-size: 16px; line-height: 1.6; max-width: 58ch; color: var(--ink-muted); }
+  .intro em { font-style: italic; }
+
+  .facets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; align-items: center; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 18px; color: var(--ink-muted); text-transform: uppercase; align-items: center; }
+  .legend .live { color: var(--interaction); }
+
+  /* ---- stage: drawing left, record right ---- */
+  .stage { position: relative; display: grid; grid-template-columns: 250px 1fr; column-gap: 40px; margin-top: 26px; }
+  .graph-col { position: relative; }
+  .graph-col svg { position: absolute; top: 0; left: 0; display: block; overflow: visible; }
+
+  .entries { list-style: none; }
+  .entry { display: grid; grid-template-columns: 60px 20px 1fr auto; gap: 2px 12px; align-items: baseline;
+           padding: 12px 12px 12px 6px; border-top: .5px solid var(--hairline); border-radius: var(--r-control);
+           transition: background-color .18s, opacity .18s; }
+  .entry .d { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: var(--ink-muted); }
+  .entry .mk { font-family: var(--mono); font-size: 10px; text-align: center; color: var(--ink); }
+  .entry .mk .sq { display: inline-block; width: 7px; height: 7px; border-radius: 2px; background: var(--ink); vertical-align: baseline; }
+  .entry .body { min-width: 0; }
+  .entry .t-pt { font-weight: 600; font-size: 15px; letter-spacing: 0; }
+  .entry .t-pt a { color: var(--ink); text-decoration: none; }
+  .entry .t-pt a:hover { text-decoration: underline; text-decoration-color: var(--interaction); text-underline-offset: 4px; }
+  .entry .dek { font-family: var(--serif); font-size: 13.5px; line-height: 1.5; color: var(--ink-muted); max-width: 62ch; margin-top: 3px; }
+  .entry .t-th { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink-muted); }
+  .entry .t-th a { color: inherit; text-decoration: none; }
+  .entry .t-th a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--interaction); text-underline-offset: 4px; }
+  .entry .t-log { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .entry .t-quiet { color: var(--ink-muted); }
+  .entry .side { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: var(--ink-faint); white-space: nowrap; text-align: right; }
+  .entry.lit { background: var(--glass-1); }
+  .entry.dim { opacity: .28; }
+  .entry:focus-visible { outline: 2px solid var(--interaction); outline-offset: -2px; }
+
+  /* ---- graph ink ---- */
+  .lane { fill: none; stroke: var(--ink); stroke-width: 1.1; stroke-linecap: round; opacity: .55; }
+  g[data-b="main"] .lane { stroke-width: 1.6; opacity: .8; }
+  .lane.livecap { stroke: var(--interaction); opacity: 1; }
+  .dot { fill: var(--ink); }
+  .dot.award { fill: var(--ink); }
+  .tip { fill: var(--ground); stroke: var(--ink); stroke-width: 1.2; }
+  .tip.live { stroke: var(--interaction); stroke-width: 1.6; }
+  .blabel { font-family: var(--mono); font-size: 8px; letter-spacing: .1em; fill: var(--ink-muted); text-transform: uppercase; }
+  .ytick { font-family: var(--mono); font-size: 8px; letter-spacing: .08em; fill: var(--ink-faint); }
+  .livelbl { font-family: var(--mono); font-size: 8px; letter-spacing: .1em; fill: var(--interaction); }
+  .nowlbl { font-family: var(--mono); font-size: 8px; letter-spacing: .1em; fill: var(--ink); }
+
+  svg.active g.branch { opacity: .25; }
+  svg.active g.branch.lit { opacity: 1; }
+  svg.active g.branch.lit .lane { stroke-width: 2.2; opacity: 1; }
+  svg.active g.branch.lit .blabel { fill: var(--ink); }
+  svg .dot.dimk { opacity: .2; }
+
+  .hitpath { fill: none; stroke: transparent; stroke-width: 12; pointer-events: stroke; }
+  .hit { fill: transparent; pointer-events: all; cursor: pointer; }
+  .hit:focus-visible { outline: 2px solid var(--interaction); outline-offset: 2px; border-radius: 50%; }
+
+  /* ---- the field card (glass-2) ---- */
+  #card { position: fixed; top: 96px; right: 22px; width: 320px; z-index: 60;
+          border-radius: var(--r-sheet); padding: 18px 20px 14px; opacity: 0; visibility: hidden; }
+  #card.show { opacity: 1; visibility: visible; }
+  .c-top { display: flex; justify-content: space-between; gap: 12px; color: var(--ink-muted); }
+  #c-kind { color: var(--ink); }
+  #c-title { font-weight: 600; font-size: 17px; line-height: 1.3; margin: 10px 0 8px; }
+  #c-title.thought { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 18px; text-transform: lowercase; }
+  #c-blurb { font-family: var(--serif); font-size: 13.5px; line-height: 1.6; }
+  #c-link { margin-top: 12px; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; }
+  #c-link a { color: var(--interaction); text-decoration: underline; text-underline-offset: 4px; }
+  #c-link:empty { display: none; }
+  .c-foot { display: flex; justify-content: space-between; gap: 12px; margin-top: 14px; padding-top: 10px;
+            border-top: .5px solid var(--hairline); color: var(--ink-muted); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    g.branch, .lane, .dot, .entry { transition: opacity .18s ease, stroke-width .18s ease; }
+    #card { transform: translateX(14px); transition: opacity .18s ease, transform .22s var(--ease-soft), visibility 0s linear .22s; }
+    #card.show { transform: translateX(0); transition: opacity .18s ease, transform .22s var(--ease-soft); }
+    svg .lane { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .9s var(--ease-soft) forwards; }
+    g[data-b="self"]  .lane { animation-delay: .08s; }
+    g[data-b="bim"]   .lane { animation-delay: .14s; }
+    g[data-b="soma"]  .lane { animation-delay: .2s; }
+    g[data-b="dyn"]   .lane { animation-delay: .26s; }
+    g[data-b="macad"] .lane { animation-delay: .32s; }
+    svg .dot, svg .tip, svg text { animation: fadein .5s ease .6s backwards; }
+    .tip.live { animation: fadein .5s ease .6s backwards, pulse 2.6s ease-in-out 1.2s infinite; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes fadein { from { opacity: 0; } }
+    @keyframes pulse { 0%,100% { stroke-opacity: 1; } 50% { stroke-opacity: .35; } }
+  }
+
+  /* ---- narrow: the rail compresses, it never hides ---- */
+  @media (max-width: 899px) {
+    .wrap { padding: 20px 16px 120px; }
+    .stage { grid-template-columns: 78px 1fr; column-gap: 14px; }
+    .blabel { display: none; }
+    .entry { grid-template-columns: 1fr auto; padding-left: 2px; }
+    .entry .d { order: 0; }
+    .entry .mk { display: none; }
+    .entry .body { grid-column: 1 / -1; }
+    .entry .side { display: none; }
+    #card, #card.show { top: auto; bottom: 14px; left: 12px; right: 12px; width: auto; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="pillbar"><div class="bar glass-2">
+  <a class="mark" href="#">EEC</a>
+  <nav>
+    <a href="#" style="font-weight:600;color:var(--ink);text-decoration:underline;text-decoration-color:var(--interaction);text-decoration-thickness:2px;text-underline-offset:4px;">WORK</a>
+    <a href="./thoughts-glass-reading.html">THOUGHTS</a>
+    <a href="#" aria-current="page">NOTEBOOK</a>
+    <a href="#">CV</a>
+    <a href="#">ABOUT</a>
+  </nav>
+  <span class="div"></span>
+  <button class="toggle" id="mode" aria-label="Toggle light or dark mode">◐</button>
+</div></header>
+
+<div class="wrap">
+
+  <p class="mono kicker">THE NOTEBOOK · THE RUNNING RECORD</p>
+  <h1>The career, as a commit graph.</h1>
+  <p class="intro">One main line, five branches, three still open. Everything I ship or think
+     commits somewhere: hover a row, or a dot, and its whole branch lights. Only one tip is red,
+     because only one thing here is <em>live</em>.</p>
+
+  <div class="facets" role="group" aria-label="Filter the record by kind">
+    <button class="fpill" aria-pressed="true" data-f="all"><span>ALL</span></button>
+    <button class="fpill" aria-pressed="false" data-f="proj"><span>■ PROJECTS</span></button>
+    <button class="fpill" aria-pressed="false" data-f="thought"><span>~ THOUGHTS</span></button>
+    <button class="fpill" aria-pressed="false" data-f="mile"><span>+ MILESTONES</span></button>
+  </div>
+
+  <div class="legend mono-s">
+    <span>■ PROJECT</span><span>~ THOUGHT</span><span>+ MILESTONE</span><span>✦ AWARD</span><span>¶ PRESS</span>
+    <span class="live">● ONE RED TIP = LIVE</span>
+    <span style="margin-left:auto">26 ENTRIES · 2021 › NOW</span>
+  </div>
+
+  <section class="stage" id="stage" aria-label="Career commit graph and record">
+    <div class="graph-col"><svg id="graph" role="img" aria-label="Commit graph: the main line from B.Arch to now, with branches for the self-employed practice, BIM International, SOMA, Dynamic Solution and MaCAD. The self-employed tip is the one live red tip."></svg></div>
+
+    <ol class="entries" id="entries">
+      <li class="entry" tabindex="0" data-b="macad" data-k="pub" data-link="open sensi ›">
+        <span class="d">2026-07</span><span class="mk">#</span>
+        <span class="body"><span class="t-log t-quiet">SENSI · NEUROSPACE · A BALLOONING MARKET — SHOWCASES OPENED ›</span></span>
+        <span class="side"></span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="proj" data-award="1" data-link="open the showcase ›"
+          data-blurb="Comfort, designed on purpose: a copilot scores a plan across six senses, calibrated to a person, not an average.">
+        <span class="d">2026-06</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">Sensi</a></span>
+          <p class="dek">Comfort, designed on purpose: a copilot scores a plan across six senses, calibrated to a person, not an average.</p></span>
+        <span class="side">P-101</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="award"
+          data-blurb="Won with Sensi at the IAAC Year 1 exhibition.">
+        <span class="d">2026-06</span><span class="mk">✦</span>
+        <span class="body"><span class="t-log t-quiet">MACAD AWARDS · DESIGN COPILOTS · WINNER (SENSI)</span></span>
+        <span class="side"></span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="mile"
+          data-blurb="The technical year closes: computation, machine learning, and a working definition of Behavior Information Modeling.">
+        <span class="d">2026-06</span><span class="mk">+</span>
+        <span class="body"><span class="t-log">MACAD YEAR 1 COMPLETE · THE TECHNICAL YEAR</span></span>
+        <span class="side"></span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="thought" data-link="read the note ›"
+          data-blurb="A words-only note. Where the whole network keeps pointing.">
+        <span class="d">2026-06</span><span class="mk">~</span>
+        <span class="body"><span class="t-th"><a href="./thought-note-glass.html">buildings that respond</a></span></span>
+        <span class="side">T-110</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="proj" data-award="1" data-link="open the showcase ›"
+          data-blurb="A render is only a promise until the bricks fit: AI imagines the set, code makes it actually buildable.">
+        <span class="d">2026-05</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">lEgoarCh</a></span>
+          <p class="dek">A render is only a promise until the bricks fit: AI imagines the set, code makes it actually buildable.</p></span>
+        <span class="side">P-106</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="award"
+          data-blurb="For lEgoarCh: a buildable LEGO set walks into an architecture jury.">
+        <span class="d">2026-05</span><span class="mk">✦</span>
+        <span class="body"><span class="t-log t-quiet">JURY AWARD · AIA GENERATIVE AI (LEGOARCH)</span></span>
+        <span class="side"></span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="thought" data-link="read the note ›"
+          data-blurb="A words-only note. The sentence that became Sensi's spine.">
+        <span class="d">2026-05</span><span class="mk">~</span>
+        <span class="body"><span class="t-th"><a href="./thought-note-glass.html">comfort as data</a></span></span>
+        <span class="side">T-106</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="proj" data-link="open the showcase ›"
+          data-blurb="Physics is the difference between a mess and a roof: the balloons ghosted through each other until Kangaroo gave them awareness.">
+        <span class="d">2026-04</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">A Ballooning Market</a></span>
+          <p class="dek">Physics is the difference between a mess and a roof: the balloons ghosted through each other until Kangaroo gave them awareness.</p></span>
+        <span class="side">P-104</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="thought" data-link="read the note ›"
+          data-blurb="A words-only note, filed the month the balloons fought back.">
+        <span class="d">2026-04</span><span class="mk">~</span>
+        <span class="body"><span class="t-th"><a href="./thought-note-glass.html">physics solvers</a></span></span>
+        <span class="side">T-103</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="proj" data-award="1" data-link="open the showcase ›"
+          data-blurb="The studio's data was the architecture: a live app running a hyperbuilding designed to filter a city's air.">
+        <span class="d">2026-03</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">The Lungs</a></span>
+          <p class="dek">The studio's data was the architecture: a live app running a hyperbuilding designed to filter a city's air.</p></span>
+        <span class="side">P-105</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="proj" data-link="open the showcase ›"
+          data-blurb="Your room is doing something to you right now: move a slider and watch a browser score it live.">
+        <span class="d">2026-02</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">NeuroSpace</a></span>
+          <p class="dek">Your room is doing something to you right now: move a slider and watch a browser score it live.</p></span>
+        <span class="side">P-102</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="proj" data-link="open the showcase ›"
+          data-blurb="Where Behavior Information Modeling got its name: why no standard yet asks if a building is good for your brain.">
+        <span class="d">2026-01</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">Optimizing for the Mind</a></span>
+          <p class="dek">Where Behavior Information Modeling got its name: why no standard yet asks if a building is good for your brain.</p></span>
+        <span class="side">P-107</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="thought" data-link="read the note ›"
+          data-blurb="A words-only note. Same four letters, a different information.">
+        <span class="d">2026-01</span><span class="mk">~</span>
+        <span class="body"><span class="t-th"><a href="./thought-note-glass.html">behavior information modeling</a></span></span>
+        <span class="side">T-101</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="proj" data-link="open the showcase ›"
+          data-blurb="Stop fighting the wind and build with it: modules that grow along the gusts instead of bracing against them.">
+        <span class="d">2025-12</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">The Huddle</a></span>
+          <p class="dek">Stop fighting the wind and build with it: modules that grow along the gusts instead of bracing against them.</p></span>
+        <span class="side">P-103</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="macad" data-k="proj" data-link="open the showcase ›"
+          data-blurb="A pasta shape is quietly structural: evolutionary optimization scaled a cappelletti shell to a 160 kg pavilion.">
+        <span class="d">2025-11</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">Cappelletti Pavilion</a></span>
+          <p class="dek">A pasta shape is quietly structural: evolutionary optimization scaled a cappelletti shell to a 160 kg pavilion.</p></span>
+        <span class="side">P-110</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="main" data-also="macad" data-k="mile"
+          data-blurb="The technical year begins in Barcelona. Everything above this fork commits to this branch.">
+        <span class="d">2025-10</span><span class="mk">+</span>
+        <span class="body"><span class="t-log">MACAD BEGINS · IAAC · BEIRUT › BARCELONA</span></span>
+        <span class="side"></span>
+      </li>
+      <li class="entry" tabindex="0" data-b="main" data-also="dyn" data-k="mile"
+          data-blurb="Kuwait. Exhibitions, stages and parametric product work. The line is still open.">
+        <span class="d">2024-08</span><span class="mk">+</span>
+        <span class="body"><span class="t-log">PROJECT ARCHITECT · DYNAMIC SOLUTION · KUWAIT</span></span>
+        <span class="side"></span>
+      </li>
+      <li class="entry" tabindex="0" data-b="self" data-k="press"
+          data-blurb="A design project travels to Venice.">
+        <span class="d">2024-04</span><span class="mk">¶</span>
+        <span class="body"><span class="t-log t-quiet">DESIGN PROJECT FEATURED · BIENNALE ARTE 2024 · VENICE</span></span>
+        <span class="side"></span>
+      </li>
+      <li class="entry" tabindex="0" data-b="soma" data-k="proj" data-link="open the showcase ›"
+          data-blurb="A parametric study only counts once it survives a drawing set: four towers carried from Grasshopper into BIM.">
+        <span class="d">2024-02</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">Towers at SOMA</a></span>
+          <p class="dek">A parametric study only counts once it survives a drawing set: four towers carried from Grasshopper into BIM.</p></span>
+        <span class="side">P-108</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="self" data-k="proj" data-award="1" data-link="open the showcase ›"
+          data-blurb="An early bet that generative tools belonged on an architect's desk, back when that still raised eyebrows.">
+        <span class="d">2023-10</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">Rings of Mars: Ring 4000</a></span>
+          <p class="dek">An early bet that generative tools belonged on an architect's desk, back when that still raised eyebrows.</p></span>
+        <span class="side">P-109</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="main" data-also="soma" data-k="mile"
+          data-blurb="Tower-scale facade logic in Dubai. Merges back 2024-07.">
+        <span class="d">2023-08</span><span class="mk">+</span>
+        <span class="body"><span class="t-log">DESIGN ARCHITECT · SOMA · DUBAI | BEIRUT</span></span>
+        <span class="side"></span>
+      </li>
+      <li class="entry" tabindex="0" data-b="main" data-k="mile"
+          data-blurb="Five years of architecture school in Beirut, with distinction. Everything above is drawn with what LAU taught me.">
+        <span class="d">2023-06</span><span class="mk">+</span>
+        <span class="body"><span class="t-log">B.ARCH · LAU · DEAN'S DISTINCTION</span></span>
+        <span class="side"></span>
+      </li>
+      <li class="entry" tabindex="0" data-b="main" data-k="proj" data-link="open the showcase ›"
+          data-blurb="Where the XR thread started: point a phone at a molecule and watch it react in the room.">
+        <span class="d">2022-06</span><span class="mk"><span class="sq"></span></span>
+        <span class="body"><span class="t-pt"><a href="#">XR for Education</a></span>
+          <p class="dek">Where the XR thread started: point a phone at a molecule and watch it react in the room.</p></span>
+        <span class="side">P-111</span>
+      </li>
+      <li class="entry" tabindex="0" data-b="main" data-also="self" data-k="mile"
+          data-blurb="The personal line departs here and never merges back. Competitions, Mars, and everything too curious to bill a client for.">
+        <span class="d">2022-01</span><span class="mk">+</span>
+        <span class="body"><span class="t-log">SELF-EMPLOYED PRACTICE OPENS</span></span>
+        <span class="side"></span>
+      </li>
+      <li class="entry" tabindex="0" data-b="main" data-k="mile"
+          data-blurb="Headsets on students, molecules in the room: the research thread starts here.">
+        <span class="d">2021-09</span><span class="mk">+</span>
+        <span class="body"><span class="t-log">RESEARCH ASSISTANT · LAU XR LAB · BYBLOS</span></span>
+        <span class="side"></span>
+      </li>
+    </ol>
+  </section>
+
+</div>
+
+<aside id="card" class="glass-2" aria-label="Field card">
+  <div class="c-top mono-s"><span id="c-date"></span><span id="c-kind"></span></div>
+  <h2 id="c-title"></h2>
+  <p id="c-blurb"></p>
+  <p id="c-link"></p>
+  <div class="c-foot mono-s"><span id="c-branch"></span><span id="c-count"></span></div>
+</aside>
+
+<div class="mockup-note">MOCKUP · NOT PRODUCTION · SAMPLE PROSE</div>
+<a class="studio-link" href="./index.html">&lt; STUDIO INDEX</a>
+
+<script>
+(function () {
+  'use strict';
+
+  document.getElementById('mode').addEventListener('click', function () {
+    var h = document.documentElement;
+    var dark = matchMedia('(prefers-color-scheme: dark)').matches;
+    var cur = h.getAttribute('data-theme') || (dark ? 'dark' : 'light');
+    h.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+  });
+
+  var KIND = { proj: '■ PROJECT', thought: '~ THOUGHT', mile: '+ MILESTONE', award: '✦ RECOGNITION', press: '¶ PRESS', pub: '# PUBLISHED' };
+  var BRN = { main: 'THE MAIN LINE', self: 'SELF-EMPLOYED · LIVE', bim: 'BIM INTERNATIONAL', soma: 'SOMA · DUBAI', dyn: 'DYNAMIC SOLUTION · KUWAIT', macad: 'MACAD @ IAAC' };
+  var LBL = { main: 'B.ARCH 2018 › NOW', self: 'SELF-EMPLOYED · 2022 › NOW', bim: 'BIM INTL · 2023', soma: 'SOMA · 2023 › 2024', dyn: 'DYNAMIC SOLUTION · 2024 › NOW', macad: 'MACAD @ IAAC · 2025 › NOW' };
+
+  var stage = document.getElementById('stage');
+  var svg = document.getElementById('graph');
+  var card = document.getElementById('card');
+  var rows = [].slice.call(document.querySelectorAll('.entry'));
+  var narrow = false, ys = [], built = false;
+
+  function lanes() {
+    return narrow
+      ? { main: 12, self: 25, bim: 38, soma: 51, dyn: 64, macad: 77 }
+      : { main: 60, self: 96, bim: 132, soma: 168, dyn: 204, macad: 240 };
+  }
+
+  function curve(x1, y1, x2, y2) {
+    var k = Math.min(28, Math.max(12, Math.abs(y1 - y2) * .6));
+    return 'C ' + x1 + ' ' + (y1 - k) + ' ' + x2 + ' ' + (y2 + k) + ' ' + x2 + ' ' + y2 + ' ';
+  }
+
+  function idx(pred) { for (var i = 0; i < rows.length; i++) if (pred(rows[i])) return i; return -1; }
+
+  function build() {
+    narrow = window.innerWidth < 900;
+    var L = lanes();
+    var sr = stage.getBoundingClientRect();
+    ys = rows.map(function (r) { var rr = r.getBoundingClientRect(); return Math.round(rr.top - sr.top + rr.height / 2); });
+
+    var H = Math.round(stage.offsetHeight);
+    var W = narrow ? 84 : 250;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('width', W); svg.setAttribute('height', H);
+
+    var iMacad = idx(function (r) { return r.dataset.also === 'macad'; });
+    var iDyn = idx(function (r) { return r.dataset.also === 'dyn'; });
+    var iSoma = idx(function (r) { return r.dataset.also === 'soma'; });
+    var iSelf = idx(function (r) { return r.dataset.also === 'self'; });
+    var iBarch = idx(function (r) { return r.textContent.indexOf("B.ARCH") > -1; });
+    var yEnd = ys[rows.length - 1] + 44;
+    var yMerge = ys[iDyn] + Math.round((ys[iSoma] - ys[iDyn]) * .3);
+    var bimTop = ys[iSoma] + 18, bimBot = ys[iBarch] - 6;
+    var bimMid = Math.round((bimTop + bimBot) / 2);
+
+    var TIP = { self: 26, main: 40, macad: 40, dyn: 54 };
+    var paths = {
+      main: 'M ' + L.main + ' ' + TIP.main + ' L ' + L.main + ' ' + yEnd,
+      self: 'M ' + L.main + ' ' + (ys[iSelf] + 30) + ' ' + curve(L.main, ys[iSelf] + 30, L.self, ys[iSelf]) + 'L ' + L.self + ' ' + (TIP.self + 30),
+      bim: 'M ' + L.main + ' ' + (bimBot + 22) + ' ' + curve(L.main, bimBot + 22, L.bim, bimBot) + 'L ' + L.bim + ' ' + bimTop + ' ' + curve(L.bim, bimTop, L.main, bimTop - 26),
+      soma: 'M ' + L.main + ' ' + (ys[iSoma] + 30) + ' ' + curve(L.main, ys[iSoma] + 30, L.soma, ys[iSoma]) + 'L ' + L.soma + ' ' + (yMerge + 24) + ' ' + curve(L.soma, yMerge + 24, L.main, yMerge),
+      dyn: 'M ' + L.main + ' ' + (ys[iDyn] + 30) + ' ' + curve(L.main, ys[iDyn] + 30, L.dyn, ys[iDyn]) + 'L ' + L.dyn + ' ' + TIP.dyn,
+      macad: 'M ' + L.main + ' ' + (ys[iMacad] + 30) + ' ' + curve(L.main, ys[iMacad] + 30, L.macad, ys[iMacad]) + 'L ' + L.macad + ' ' + TIP.macad
+    };
+
+    var s = '';
+    s += '<g aria-hidden="true">';
+    var seen = {};
+    rows.forEach(function (r, i) {
+      var yr = r.querySelector('.d').textContent.slice(0, 4);
+      if (seen[yr]) return; seen[yr] = true;
+      if (!narrow) s += '<text class="ytick" x="30" y="' + (ys[i] + 3) + '" text-anchor="end">' + yr + '</text>';
+    });
+    s += '</g>';
+
+    Object.keys(paths).forEach(function (b) {
+      s += '<g class="branch" data-b="' + b + '">';
+      s += '<path class="lane" d="' + paths[b] + '"/>';
+      if (b === 'self') {
+        s += '<path class="lane livecap" d="M ' + L.self + ' ' + (TIP.self + 30) + ' L ' + L.self + ' ' + (TIP.self + 6) + '"/>';
+        s += '<circle class="tip live" cx="' + L.self + '" cy="' + TIP.self + '" r="3.4"/>';
+        if (!narrow) s += '<text class="livelbl" x="' + (L.self + 8) + '" y="' + (TIP.self + 3) + '">LIVE</text>';
+      }
+      if (b === 'main') {
+        s += '<circle class="tip" cx="' + L.main + '" cy="' + (TIP.main - 4) + '" r="3"/>';
+        if (!narrow) s += '<text class="nowlbl" x="' + (L.main - 10) + '" y="' + (TIP.main - 8) + '" text-anchor="end">NOW</text>';
+      }
+      if (b === 'dyn') s += '<circle class="tip" cx="' + L.dyn + '" cy="' + (TIP.dyn - 4) + '" r="3"/>';
+      if (b === 'macad') s += '<circle class="tip" cx="' + L.macad + '" cy="' + (TIP.macad - 4) + '" r="3"/>';
+      if (!narrow) {
+        var lx = { main: L.main - 8, self: L.self + 10, bim: L.bim + 10, soma: L.soma + 10, dyn: L.dyn + 10, macad: L.macad + 10 }[b];
+        var ly = { main: yEnd - 14, self: ys[iSelf] - 40, bim: bimMid, soma: ys[iSoma] - 36, dyn: ys[iDyn] - 60, macad: ys[iMacad] - 46 }[b];
+        s += '<text class="blabel" x="' + lx + '" y="' + ly + '" transform="rotate(90 ' + lx + ' ' + ly + ')">' + LBL[b] + '</text>';
+      }
+      rows.forEach(function (r, i) {
+        if (r.dataset.b !== b) return;
+        var award = r.dataset.award === '1';
+        s += '<circle class="dot" data-i="' + i + '" cx="' + L[b] + '" cy="' + ys[i] + '" r="' + (award ? 3.2 : 2.4) + '"/>';
+      });
+      s += '</g>';
+    });
+    s += '<circle class="dot" data-b="bim" cx="' + L.bim + '" cy="' + bimMid + '" r="2.4"/>';
+
+    Object.keys(paths).forEach(function (b) { s += '<path class="hitpath" data-b="' + b + '" d="' + paths[b] + '"/>'; });
+    rows.forEach(function (r, i) {
+      var b = r.dataset.b;
+      s += '<circle class="hit" tabindex="0" role="button" data-b="' + b + '" data-i="' + i + '" cx="' + L[b] + '" cy="' + ys[i] + '" r="11" aria-label="' +
+        r.querySelector('.t-pt, .t-th, .t-log').textContent.replace(/"/g, '&quot;') + '"/>';
+    });
+
+    svg.innerHTML = s;
+    built = true;
+  }
+
+  function lit(b, i) {
+    svg.classList.add('active');
+    [].forEach.call(svg.querySelectorAll('g.branch'), function (g) {
+      var mine = g.dataset.b === b || (i != null && rows[i] && rows[i].dataset.also === g.dataset.b);
+      g.classList.toggle('lit', mine);
+    });
+    rows.forEach(function (r, j) { r.classList.toggle('lit', j === i); });
+    if (i != null) {
+      var r = rows[i];
+      document.getElementById('c-date').textContent = r.querySelector('.d').textContent;
+      document.getElementById('c-kind').textContent = KIND[r.dataset.k] || '';
+      var t = document.getElementById('c-title');
+      t.textContent = r.querySelector('.t-pt, .t-th, .t-log').textContent;
+      t.classList.toggle('thought', r.dataset.k === 'thought');
+      document.getElementById('c-blurb').textContent = r.dataset.blurb || '';
+      var lk = document.getElementById('c-link');
+      lk.innerHTML = r.dataset.link ? '<a href="#">' + r.dataset.link.toUpperCase() + '</a>' : '';
+      document.getElementById('c-branch').textContent = 'BRANCH · ' + BRN[r.dataset.b];
+      document.getElementById('c-count').textContent = 'COMMIT ' + String(rows.length - i).padStart(2, '0') + ' / ' + rows.length;
+      card.classList.add('show');
+    }
+  }
+  function unlit() {
+    svg.classList.remove('active');
+    [].forEach.call(svg.querySelectorAll('g.branch.lit'), function (g) { g.classList.remove('lit'); });
+    rows.forEach(function (r) { r.classList.remove('lit'); });
+    card.classList.remove('show');
+  }
+
+  rows.forEach(function (r, i) {
+    r.addEventListener('pointerenter', function () { lit(r.dataset.b, i); });
+    r.addEventListener('focus', function () { lit(r.dataset.b, i); });
+  });
+  document.getElementById('entries').addEventListener('pointerleave', unlit);
+  document.getElementById('entries').addEventListener('focusout', unlit);
+
+  svg.addEventListener('pointerover', function (e) {
+    var t = e.target; if (!t.dataset) return;
+    if (t.dataset.i != null) { lit(t.dataset.b || rows[+t.dataset.i].dataset.b, +t.dataset.i); }
+    else if (t.dataset.b) { lit(t.dataset.b, null); }
+  });
+  svg.addEventListener('pointerleave', unlit);
+  svg.addEventListener('focusin', function (e) {
+    var t = e.target; if (t.dataset && t.dataset.i != null) lit(t.dataset.b, +t.dataset.i);
+  });
+  svg.addEventListener('focusout', unlit);
+
+  // facets: a lens is a filter, not a mode: the record dims, nothing reflows
+  var MATCH = { all: null, proj: ['proj', 'pub'], thought: ['thought'], mile: ['mile', 'award', 'press'] };
+  [].forEach.call(document.querySelectorAll('.fpill'), function (p) {
+    p.addEventListener('click', function () {
+      [].forEach.call(document.querySelectorAll('.fpill'), function (q) { q.setAttribute('aria-pressed', q === p ? 'true' : 'false'); });
+      var m = MATCH[p.dataset.f];
+      rows.forEach(function (r, i) {
+        var on = !m || m.indexOf(r.dataset.k) > -1;
+        r.classList.toggle('dim', !on);
+      });
+      [].forEach.call(svg.querySelectorAll('.dot[data-i]'), function (d) {
+        var r = rows[+d.dataset.i];
+        d.classList.toggle('dimk', m && m.indexOf(r.dataset.k) === -1);
+      });
+    });
+  });
+
+  var raf = null;
+  function schedule() { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(build); }
+  window.addEventListener('resize', schedule);
+  window.addEventListener('load', schedule);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  build();
+})();
+</script>
+</body>
+</html>

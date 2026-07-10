@@ -119,9 +119,8 @@ export default function Work() {
         >
           Work
         </h1>
-        <p className="mb-6 max-w-[58ch] font-serif text-[17px] leading-relaxed text-[var(--lang-ink)]">
-          The work, newest first. Open a card and you have the whole project; the deep dives live a link away.
-        </p>
+        {/* The intro line retired at G2 (Emilie: no page intros, sitewide;
+            titles are self-explanatory). */}
         <FilterBar active={activeLens} />
         <p
           className="mt-4 font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)]"

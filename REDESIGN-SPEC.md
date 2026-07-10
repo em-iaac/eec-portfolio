@@ -208,9 +208,10 @@ where a visitor browses the projects visually. WORK is that page.
 > RETIRED. The opened card IS the project showcase.** A project has two layers,
 > not three: the gallery CARD → the SHOWCASE (the opened glass sheet, deep-linkable
 > at `/work/:id`). The showcase leads with the proof (media rule
-> video›live›photo›audio›text), then answers WHAT / HOW / WITH WHAT / WHY (exact
-> spine TBD — decided at the top of the G1 session from researched options, e.g.
-> what/how/with-what/why vs abstract/method/findings vs a hybrid), then links OUT
+> video›live›photo›audio›text), then answers the SIGNED SPINE **WHAT · WHY · HOW ·
+> WHAT CAME OF IT** (G1, Emilie 2026-07-09; "what came of it" pulls an honest
+> outcome into every project; the wink lives in an n.b. hover dot; tools + claim +
+> links sit alongside; THE STORY collapses by default), then links OUT
 > to repo / blog / live for the deep version. It is TIGHT by design: "a portfolio,
 > not a blog" (Emilie) — code, full method, and long write-ups live in the linked
 > repo/blog, not reproduced on-site. ONE flexible template that ADAPTS by media
@@ -264,6 +265,39 @@ Family rules (bound into the spec, no extra sign-off):
 ---
 
 ## 6 · The notebook · the career commit graph
+
+> **EXECUTED (G2, 2026-07-10; every ruling Emilie's, decided over mockups in
+> chat).** The G2 fork ("two clean surfaces" vs Emilie's "one merged notebook
+> with two lenses") resolved as **TWO ROOMS + LENS-AS-FACET (Model C)**:
+> - **NOTEBOOK = the TIME room**, this section's hybrid form carried into the
+>   glass language: drawn graph (6 lanes: main + self-employed [the one live
+>   red tip] + BIM Intl stub + SOMA [merges back] + Dynamic + MaCAD) beside
+>   the readable rows; **kind facets** (all · projects · thoughts ·
+>   milestones, hash-addressed `/notebook#thoughts`) DIM the record instead
+>   of reflowing it: the thoughts facet IS Emilie's "commit-graph lens on the
+>   thinking", delivered without a mode toggle. Old `#<lens>` hashes degrade
+>   to ALL. Glass-2 field card on row/dot hover (desktop garnish only; rows
+>   carry every link, 44px, keyboard-first). At <768px the rail COMPRESSES to
+>   ~84px, it never hides. Draw-in one-shot, PRM = instant final state; the
+>   live tip is static red (no pulse).
+> - **THOUGHTS = the READING room** at `/thoughts` (the fifth nav door):
+>   editorial contents rows (no lead, no cards: date + T-number gutter, serif
+>   italic lowercase title, the note's VERBATIM opening sentences, lens tick,
+>   READ), glass only as the hover wash. The note page is **words on the
+>   ground** (no panel): meta line, 62ch serif column, n.b. dots, endmatter
+>   with prev/next + the corridors. Openings live in
+>   `site/src/thoughts/openings.ts`, mirrored verbatim from notes.tsx.
+> - **CORRIDORS both ways:** notes + index deep-link into
+>   `/notebook#thoughts`; thought commits/rows open their notes. Index-row
+>   titles morph into note titles (`page-thoughts-<id>`).
+> - **Sitewide ruling (Emilie, G2): NO page-intro paragraphs; titles are
+>   self-explanatory.** Applied to /thoughts, /notebook, /work (its signed
+>   intro line retired); About at G3, sweep at G4.
+> - Registry append: `self-open` milestone (2022-01, from cv.ts) anchors the
+>   live branch. KindMark award glyph is now `✦` (matches the award pill);
+>   the sheet `#` dropped its redline (red = liveness only); sheet-issue rows
+>   read "… SHOWCASES OPENED ›" (drafted wording). The h1 lines and the
+>   /thoughts h1 ship as draftCopy.
 
 The running record, drawn as the literal commit graph of a career.
 
@@ -469,8 +503,13 @@ hygiene sweep = yes · EXPLORE retires with redirects.
 - The exact wording of drafted copy (all `draftCopy`): the subtitle, the margin
   wink, the "what's on my mind / in yours" lines, every project's one-line dek,
   all sheet/thought prose, the 404 line.
-- The THOUGHTS index page form (proposal: a simple list/garden, newest first,
-  Notebook warmth) — visualised at its build session.
+- ~~The THOUGHTS index page form~~ DECIDED at G2 (see §6): contents-only
+  editorial rows, no lead, no intro. Still needing her sign-off from G2: the
+  /thoughts h1 ("what i keep thinking about"), the notebook h1 ("The career,
+  as a commit graph."), the "… SHOWCASES OPENED ›" publish wording, the
+  KindMark `✦` award glyph, the notebook rows dropping the lens tick +
+  IN-PREP status labels (quiet numbers only), and whether /work + /notebook
+  keep their mono kickers once the no-intro ruling sweeps the site (G4).
 - The EXPLORE-retirement redirect behaviour and the frozen-layout migration
   (F7) — confirmed at the landing session.
 - The book's spread copy and the flagship selection for the ~6 spreads.

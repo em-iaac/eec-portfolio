@@ -409,6 +409,15 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['xr', 'education'],
   },
   {
+    // G2 append: the self-employed line needs its anchor on the record (the
+    // notebook's one live branch departs here; date from cv.ts, 2022.01 > NOW).
+    id: 'self-open',
+    kind: 'milestone',
+    date: '2022-01',
+    title: 'Self-employed practice opens',
+    tags: ['practice'],
+  },
+  {
     id: 'barch-grad',
     kind: 'milestone',
     date: '2023-06',

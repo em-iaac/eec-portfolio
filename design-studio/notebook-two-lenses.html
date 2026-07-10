@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEC — G2 · Notebook · one room, two lenses (mockup)</title>
+<link rel="stylesheet" href="./glass.css">
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 28px 24px 140px; }
+  .kicker { color: var(--ink-muted); text-transform: uppercase; }
+  h1 { font-weight: 600; font-size: 30px; letter-spacing: -0.01em; margin: 12px 0 10px; }
+  .intro { font-family: var(--serif); font-size: 16px; line-height: 1.6; max-width: 58ch; color: var(--ink-muted); }
+
+  /* the lens control: both states always labeled */
+  .lensctl { display: inline-flex; margin-top: 20px; border-radius: var(--r-pill); padding: 4px; gap: 2px; }
+  .lensctl button { min-height: 44px; min-width: 110px; border: none; background: none; cursor: pointer;
+                    border-radius: var(--r-pill); padding: 0 18px; font-family: var(--mono); font-size: 10px;
+                    letter-spacing: .06em; color: var(--ink-muted); }
+  .lensctl button[aria-pressed='true'] { background: var(--ink); color: var(--ground); }
+
+  .lensview { margin-top: 24px; }
+  .lensview.off { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .lensview.on { animation: xfade .25s var(--ease-soft); }
+    @keyframes xfade { from { opacity: 0; } }
+  }
+
+  /* TIME lens: slim rail + rows (compressed form; the full drawing is notebook-glass-graph.html) */
+  .stage { display: grid; grid-template-columns: 92px 1fr; column-gap: 22px; }
+  .graph-col { position: relative; }
+  .graph-col svg { position: absolute; top: 0; left: 0; overflow: visible; }
+  .lane { fill: none; stroke: var(--ink); stroke-width: 1.1; stroke-linecap: round; opacity: .55; }
+  .lane.trunk { stroke-width: 1.6; opacity: .8; }
+  .lane.livecap { stroke: var(--interaction); opacity: 1; }
+  .dot { fill: var(--ink); }
+  .tip { fill: var(--ground); stroke: var(--ink); stroke-width: 1.2; }
+  .tip.live { stroke: var(--interaction); stroke-width: 1.6; }
+  .ytick { font-family: var(--mono); font-size: 8px; letter-spacing: .08em; fill: var(--ink-faint); }
+
+  .entries { list-style: none; }
+  .entry { display: grid; grid-template-columns: 60px 1fr auto; gap: 2px 12px; align-items: baseline;
+           padding: 11px 12px 11px 6px; border-top: .5px solid var(--hairline); }
+  .entry .d { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: var(--ink-muted); }
+  .entry .t-pt { font-weight: 600; font-size: 15px; }
+  .entry .t-th { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink-muted); }
+  .entry .t-log { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+  .entry .side { font-family: var(--mono); font-size: 9px; color: var(--ink-faint); }
+
+  /* READING lens: the leaf cards */
+  .leaves { list-style: none; display: flex; flex-direction: column; gap: 14px; max-width: 720px; }
+  .leaf { border-radius: var(--r-card); padding: 20px 24px 16px; }
+  .leaf .meta { display: flex; gap: 10px; align-items: center; color: var(--ink-muted); }
+  .leaf .meta .num { color: var(--ink-faint); margin-left: auto; }
+  .leaf h2 { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 20px;
+             text-transform: lowercase; margin: 9px 0 7px; }
+  .leaf .open { font-family: var(--serif); font-size: 14.5px; line-height: 1.6; color: var(--ink-muted);
+                display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .caveat { margin-top: 26px; padding-top: 12px; border-top: 1px dashed var(--ink-faint);
+            font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: var(--ink-faint); text-transform: uppercase; }
+
+  @media (max-width: 700px) { .stage { grid-template-columns: 64px 1fr; column-gap: 12px; } }
+</style>
+</head>
+<body>
+
+<header class="pillbar"><div class="bar glass-2">
+  <a class="mark" href="#">EEC</a>
+  <nav>
+    <a href="#" style="font-weight:600;color:var(--ink);text-decoration:underline;text-decoration-color:var(--interaction);text-decoration-thickness:2px;text-underline-offset:4px;">WORK</a>
+    <a href="#" aria-current="page">NOTEBOOK</a>
+    <a href="#">CV</a>
+    <a href="#">ABOUT</a>
+  </nav>
+  <span class="div"></span>
+  <button class="toggle" id="mode" aria-label="Toggle light or dark mode">◐</button>
+</div></header>
+
+<div class="wrap">
+
+  <p class="mono kicker">THE NOTEBOOK · ONE RECORD, TWO WAYS TO READ IT</p>
+  <h1>The notebook.</h1>
+  <p class="intro">Model B: THOUGHTS leaves the nav; the notebook holds everything and you choose a
+     lens. Time is the commit graph. Reading is the notes.</p>
+
+  <div class="lensctl glass-1" role="group" aria-label="Choose a lens">
+    <button id="btn-time" aria-pressed="true">◫ TIME</button>
+    <button id="btn-read" aria-pressed="false">~ READING</button>
+  </div>
+
+  <section id="view-time" class="lensview on stage" aria-label="The record in time">
+    <div class="graph-col"><svg id="graph" role="img" aria-label="Compressed commit rail"></svg></div>
+    <ol class="entries" id="entries">
+      <li class="entry" data-b="macad"><span class="d">2026-06</span><span class="t-pt">Sensi</span><span class="side">P-101</span></li>
+      <li class="entry" data-b="macad"><span class="d">2026-06</span><span class="t-log muted">✦ MACAD AWARDS · WINNER (SENSI)</span><span class="side"></span></li>
+      <li class="entry" data-b="macad"><span class="d">2026-06</span><span class="t-th">buildings that respond</span><span class="side">T-110</span></li>
+      <li class="entry" data-b="macad"><span class="d">2026-05</span><span class="t-pt">lEgoarCh</span><span class="side">P-106</span></li>
+      <li class="entry" data-b="macad"><span class="d">2026-05</span><span class="t-th">comfort as data</span><span class="side">T-106</span></li>
+      <li class="entry" data-b="macad"><span class="d">2026-04</span><span class="t-pt">A Ballooning Market</span><span class="side">P-104</span></li>
+      <li class="entry" data-b="macad"><span class="d">2026-02</span><span class="t-pt">NeuroSpace</span><span class="side">P-102</span></li>
+      <li class="entry" data-b="macad"><span class="d">2026-01</span><span class="t-th">behavior information modeling</span><span class="side">T-101</span></li>
+      <li class="entry" data-b="main" data-also="macad"><span class="d">2025-10</span><span class="t-log">+ MACAD BEGINS · IAAC</span><span class="side"></span></li>
+      <li class="entry" data-b="main" data-also="dyn"><span class="d">2024-08</span><span class="t-log">+ PROJECT ARCHITECT · DYNAMIC SOLUTION</span><span class="side"></span></li>
+      <li class="entry" data-b="soma"><span class="d">2024-02</span><span class="t-pt">Towers at SOMA</span><span class="side">P-108</span></li>
+      <li class="entry" data-b="self"><span class="d">2023-10</span><span class="t-pt">Ring 4000</span><span class="side">P-109</span></li>
+      <li class="entry" data-b="main" data-also="soma"><span class="d">2023-08</span><span class="t-log">+ DESIGN ARCHITECT · SOMA</span><span class="side"></span></li>
+      <li class="entry" data-b="main" data-also="self"><span class="d">2022-01</span><span class="t-log">+ SELF-EMPLOYED PRACTICE OPENS</span><span class="side"></span></li>
+      <li class="entry" data-b="main"><span class="d">2021-09</span><span class="t-log">+ RESEARCH ASSISTANT · LAU XR LAB</span><span class="side"></span></li>
+    </ol>
+  </section>
+
+  <section id="view-read" class="lensview off" aria-label="The record as reading">
+    <ol class="leaves">
+      <li class="leaf glass-1">
+        <p class="meta mono-s"><span>~ 2026-06</span><span class="num">T-110</span></p>
+        <h2>buildings that respond</h2>
+        <p class="open">Right now a building is a fixed guess. Someone chose the ceiling height and the window size years before you arrived, and you live inside their averaged assumptions whether they fit you or not.</p>
+      </li>
+      <li class="leaf glass-1">
+        <p class="meta mono-s"><span>~ 2026-05</span><span class="num">T-106</span></p>
+        <h2>comfort as data</h2>
+        <p class="open">You don't walk into a room and average your experience. You walk in and the thing that's wrong is the thing you notice.</p>
+      </li>
+      <li class="leaf glass-1">
+        <p class="meta mono-s"><span>~ 2026-01</span><span class="num">T-101</span></p>
+        <h2>behavior information modeling</h2>
+        <p class="open">For thirty years we've been getting very good at Building Information Modeling: every beam, every duct, every clash, tracked to the millimeter.</p>
+      </li>
+      <li class="leaf glass-1">
+        <p class="meta mono-s"><span>~ 2025-12</span><span class="num">T-102</span></p>
+        <h2>neuroaesthetics</h2>
+        <p class="open">Neuroaesthetics is the unglamorous name for a question everyone already feels: why does one room settle you and another keep you on edge?</p>
+      </li>
+    </ol>
+    <p class="caveat">READING LENS · PROJECTS AND MILESTONES ARE IN THE TIME LENS ONLY</p>
+  </section>
+
+</div>
+
+<div class="mockup-note">MOCKUP · MODEL B · TIME LENS SHOWN COMPRESSED (FULL FORM = notebook-glass-graph.html)</div>
+<a class="studio-link" href="./index.html">&lt; STUDIO INDEX</a>
+
+<script>
+(function () {
+  'use strict';
+  document.getElementById('mode').addEventListener('click', function () {
+    var h = document.documentElement;
+    var dark = matchMedia('(prefers-color-scheme: dark)').matches;
+    var cur = h.getAttribute('data-theme') || (dark ? 'dark' : 'light');
+    h.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+  });
+
+  var bt = document.getElementById('btn-time'), br = document.getElementById('btn-read');
+  var vt = document.getElementById('view-time'), vr = document.getElementById('view-read');
+  function setLens(read, push) {
+    bt.setAttribute('aria-pressed', String(!read));
+    br.setAttribute('aria-pressed', String(read));
+    vt.classList.toggle('off', read); vt.classList.toggle('on', !read);
+    vr.classList.toggle('off', !read); vr.classList.toggle('on', read);
+    if (push) history.replaceState(null, '', read ? '#reading' : '#time');
+    if (!read) schedule();
+  }
+  bt.addEventListener('click', function () { setLens(false, true); });
+  br.addEventListener('click', function () { setLens(true, true); });
+
+  var stage = document.getElementById('view-time');
+  var svg = document.getElementById('graph');
+  var rows = [].slice.call(document.querySelectorAll('.entry'));
+  var L = { main: 12, self: 28, soma: 44, dyn: 60, macad: 76 };
+
+  function curve(x1, y1, x2, y2) {
+    var k = Math.min(26, Math.max(10, Math.abs(y1 - y2) * .6));
+    return 'C ' + x1 + ' ' + (y1 - k) + ' ' + x2 + ' ' + (y2 + k) + ' ' + x2 + ' ' + y2 + ' ';
+  }
+  function idx(pred) { for (var i = 0; i < rows.length; i++) if (pred(rows[i])) return i; return -1; }
+
+  function build() {
+    if (vt.classList.contains('off')) return;
+    var sr = stage.getBoundingClientRect();
+    var ys = rows.map(function (r) { var rr = r.getBoundingClientRect(); return Math.round(rr.top - sr.top + rr.height / 2); });
+    var H = Math.round(stage.offsetHeight);
+    svg.setAttribute('viewBox', '0 0 92 ' + H); svg.setAttribute('width', 92); svg.setAttribute('height', H);
+
+    var iMacad = idx(function (r) { return r.dataset.also === 'macad'; });
+    var iDyn = idx(function (r) { return r.dataset.also === 'dyn'; });
+    var iSoma = idx(function (r) { return r.dataset.also === 'soma'; });
+    var iSelf = idx(function (r) { return r.dataset.also === 'self'; });
+    var yEnd = ys[rows.length - 1] + 36;
+    var yMerge = ys[iDyn] + Math.round((ys[iSoma] - ys[iDyn]) * .3);
+
+    var s = '';
+    s += '<path class="lane trunk" d="M ' + L.main + ' 36 L ' + L.main + ' ' + yEnd + '"/>';
+    s += '<circle class="tip" cx="' + L.main + '" cy="32" r="3"/>';
+    s += '<path class="lane" d="M ' + L.main + ' ' + (ys[iSelf] + 26) + ' ' + curve(L.main, ys[iSelf] + 26, L.self, ys[iSelf]) + 'L ' + L.self + ' 50"/>';
+    s += '<path class="lane livecap" d="M ' + L.self + ' 50 L ' + L.self + ' 28"/>';
+    s += '<circle class="tip live" cx="' + L.self + '" cy="24" r="3.2"/>';
+    s += '<path class="lane" d="M ' + L.main + ' ' + (ys[iSoma] + 26) + ' ' + curve(L.main, ys[iSoma] + 26, L.soma, ys[iSoma]) + 'L ' + L.soma + ' ' + (yMerge + 22) + ' ' + curve(L.soma, yMerge + 22, L.main, yMerge);
+    s += '"/>';
+    s += '<path class="lane" d="M ' + L.main + ' ' + (ys[iDyn] + 26) + ' ' + curve(L.main, ys[iDyn] + 26, L.dyn, ys[iDyn]) + 'L ' + L.dyn + ' 44"/>';
+    s += '<circle class="tip" cx="' + L.dyn + '" cy="40" r="3"/>';
+    s += '<path class="lane" d="M ' + L.main + ' ' + (ys[iMacad] + 26) + ' ' + curve(L.main, ys[iMacad] + 26, L.macad, ys[iMacad]) + 'L ' + L.macad + ' 44"/>';
+    s += '<circle class="tip" cx="' + L.macad + '" cy="40" r="3"/>';
+    rows.forEach(function (r, i) { s += '<circle class="dot" cx="' + L[r.dataset.b] + '" cy="' + ys[i] + '" r="2.4"/>'; });
+    svg.innerHTML = s;
+  }
+
+  var raf = null;
+  function schedule() { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(build); }
+  window.addEventListener('resize', schedule);
+  window.addEventListener('load', schedule);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  if (location.hash === '#reading') setLens(true, false);
+  build();
+})();
+</script>
+</body>
+</html>

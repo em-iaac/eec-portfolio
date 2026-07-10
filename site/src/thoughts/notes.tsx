@@ -15,6 +15,12 @@
 import { type ReactNode } from 'react'
 import NBDot from '../components/ui/NB'
 
+// THE OPENINGS (G2) live in openings.ts (JSX-free so the eager Notebook can
+// import them without pulling this prose into the landing bundle). Each
+// string there is the VERBATIM opening of its note here; update both
+// together or the index lies about the note.
+export { THOUGHT_OPENINGS } from './openings'
+
 export const THOUGHT_NOTES: Record<string, ReactNode> = {
   // T-101 · runs long: this is the spine of the whole research direction.
   bim: (

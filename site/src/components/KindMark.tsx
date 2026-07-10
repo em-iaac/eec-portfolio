@@ -1,31 +1,32 @@
-// The field-guide grammar (Session 6): every text row in the record carries
-// a mono kind-mark in its date gutter. The key:
+// The field-guide grammar (Session 6; softened G2, 2026-07-10): every text
+// row in the record carries a mono kind-mark in its date gutter. The key:
 //   filled ink square = project   (a CSS block, not a font glyph, so it
 //                                  renders crisp at gutter sizes)
-//   #  = sheet issue              (REDLINE: issue events are liveness, rule 1)
+//   #  = publication              (a showcase opening; ink like the rest
+//                                  since G2: red is liveness, not events)
 //   ~  = thought
 //   +  = milestone
-//   *  = award
+//   ✦  = award                    (G2: the recognition glyph, matching the
+//                                  award pill; the old '*' retired)
 //   ¶  = press
 //   "  = talk (reserved; none live yet)
-// Marks are ink except the sheet '#'. No visible text label rides along
-// (Session 6 ruling: the marks carry the meaning); the sr-only kind name
-// keeps screen readers informed. Project IMAGE CARDS (bench roll, mobile
-// feed) skip the mark: the card is self-evident.
+// No visible text label rides along (Session 6 ruling: the marks carry the
+// meaning); the sr-only kind name keeps screen readers informed. Project
+// IMAGE CARDS skip the mark: the card is self-evident.
 import type { EntryKind } from '../data/registry'
 
 const GLYPH: Record<Exclude<EntryKind, 'project'>, string> = {
   sheet: '#',
   thought: '~',
   milestone: '+',
-  award: '*',
+  award: '✦',
   press: '¶',
   talk: '"',
 }
 
 const SR: Record<EntryKind, string> = {
   project: 'project',
-  sheet: 'sheet issue',
+  sheet: 'publication',
   thought: 'thought',
   milestone: 'milestone',
   award: 'award',
@@ -33,7 +34,7 @@ const SR: Record<EntryKind, string> = {
   talk: 'talk',
 }
 
-// The tightened log tier (Session 6 hierarchy): projects and sheet issues
+// The tightened log tier (Session 6 hierarchy): projects and publications
 // keep full row weight everywhere; these kinds read as marginalia.
 export const LOG_KINDS: ReadonlySet<EntryKind> = new Set([
   'thought',
@@ -47,11 +48,9 @@ export default function KindMark({ kind }: { kind: EntryKind }) {
   return (
     <>
       {kind === 'project' ? (
-        <span aria-hidden="true" className="inline-block size-[7px] bg-ink" />
+        <span aria-hidden="true" className="inline-block size-[7px] rounded-[2px] bg-[var(--lang-ink)]" />
       ) : (
-        <span aria-hidden="true" className={kind === 'sheet' ? 'text-redline' : 'text-ink'}>
-          {GLYPH[kind]}
-        </span>
+        <span aria-hidden="true" className="text-[var(--lang-ink)]">{GLYPH[kind]}</span>
       )}
       <span className="sr-only">{SR[kind]} </span>
     </>

@@ -443,6 +443,38 @@ section[id] {
   }
 }
 
+/* THE NOTEBOOK GRAPH draw-in (G2, motion primitive 5): the lanes ink in
+   once on page open (staggered per branch via inline animation-delay), the
+   marks and lettering fade up after. One-shot, never loops; the live tip is
+   a static red mark (red = still happening, not an animation). Reduced
+   motion renders the finished drawing instantly. */
+.nbg-draw .nbg-lane {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: nbg-lane-draw 900ms var(--ease-soft) forwards;
+}
+
+.nbg-draw .nbg-mark {
+  animation: nb-fade-in 500ms ease-out 620ms backwards;
+}
+
+@keyframes nbg-lane-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nbg-draw .nbg-lane,
+  .nbg-draw .nbg-mark {
+    animation: none;
+  }
+
+  .nbg-draw .nbg-lane {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* ============================================================
    THE WORK SHOWCASE (Session R2's card-on-top, re-skinned DL-2, grown into
    the project's whole page at G1 2026-07-10). Built on the native <dialog>

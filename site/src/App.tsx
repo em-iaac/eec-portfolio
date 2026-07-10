@@ -16,6 +16,7 @@ import SheetRoute from './pages/SheetRoute'
 // gallery (with its overlay + video code) and the note prose only load when
 // someone actually opens /work or /thoughts/:id.
 const Work = lazy(() => import('./pages/Work'))
+const Thoughts = lazy(() => import('./pages/Thoughts'))
 const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
 
 // THE PRIMITIVES LAB (DL-0): dev-only verification surface for the DL v2
@@ -124,6 +125,16 @@ export const routes: RouteObject[] = [
         element: (
           <Suspense fallback={<MylarScreen />}>
             <Work />
+          </Suspense>
+        ),
+      },
+      // THE READING ROOM (G2): the thoughts index; each note keeps its own
+      // /thoughts/:id leaf below.
+      {
+        path: '/thoughts',
+        element: (
+          <Suspense fallback={<MylarScreen />}>
+            <Thoughts />
           </Suspense>
         ),
       },
