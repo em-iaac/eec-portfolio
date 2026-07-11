@@ -13,8 +13,9 @@ import LogoMark from './LogoMark'
 import ModeToggle from './ui/ModeToggle'
 
 // De-numbered Session 6: titles only, no 01/02/03 indices.
-// G3 (2026-07-10, Emilie): four doors. NOTEBOOK retired (the career graph
-// lives on the CV as its graph view; /notebook redirects there forever).
+// G3 (2026-07-10, Emilie): four doors, NOTEBOOK retired. Since the meta
+// build (2026-07-11) THOUGHTS holds the whole record (the neural world;
+// /notebook redirects there); the label stays THOUGHTS (gate 7, Emilie).
 const NAV: { label: string; to: string; primary?: boolean }[] = [
   { label: 'WORK', to: '/work', primary: true },
   { label: 'THOUGHTS', to: '/thoughts' },

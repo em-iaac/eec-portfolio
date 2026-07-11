@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE NEURAL STUDIO · the merge · the thought-graph IS the landing (mockup)</title>
+<link rel="stylesheet" href="./glass.css">
+<style>
+  /* ---- CANDIDATE 3 · THE MERGE ------------------------------------------
+     The neural THOUGHT-graph (thoughts as neurons developing over time) becomes
+     the front-door artwork. The honest hero floats over it, top-left, standing
+     in the sparse early years; the mind's recent activity blooms to the right,
+     ending in the one live red tip. IA consequence explored: if the graph lives
+     on the landing, /thoughts becomes a READING ROOM ONLY (the words). WORK
+     stays one emphasised tap away (projects live behind that door). */
+  html, body { height: 100%; }
+  body { height: 100dvh; overflow: hidden; background: var(--ground); color: var(--ink); -webkit-font-smoothing: antialiased; position: relative; }
+  .stage { position: fixed; inset: 0; z-index: 0; }
+  .stage svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .scrim { position: fixed; inset: 0; z-index: 1; pointer-events: none; background:
+    radial-gradient(52% 66% at 22% 44%, color-mix(in srgb, var(--ground) 90%, transparent) 0%, color-mix(in srgb, var(--ground) 64%, transparent) 42%, color-mix(in srgb, var(--ground) 20%, transparent) 70%, transparent 100%); }
+  @media (max-width: 900px){ .scrim{ display:none; } }
+
+  .overlay { position: fixed; top: 0; left: 0; width: min(44vw, 520px); height: 100dvh; padding: 52px 54px; display: flex; flex-direction: column; z-index: 3; pointer-events: none; }
+  .overlay > * { pointer-events: auto; }
+  .idrow { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 40px; height: 40px; flex: none; }
+  .name { font-family: var(--display); font-weight: 600; font-size: clamp(25px, 2.9vw, 40px); letter-spacing: .01em; line-height: .98; white-space: nowrap; }
+  .adj { margin-top: 18px; font-family: var(--mono); font-size: 11px; letter-spacing: .02em; line-height: 1.7; color: var(--ink-muted); text-transform: lowercase; }
+  .voice { margin-top: 12px; font-family: var(--hand); font-size: clamp(21px, 2.3vw, 30px); line-height: 1.15; color: light-dark(#6d5f46, #d8d2c4); }
+  .fact { margin-top: 16px; font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--ink-muted); line-height: 1.9; }
+  .rule { margin-top: 22px; height: 1px; width: 100%; background: var(--hairline); }
+  nav.doors { margin-top: 20px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; }
+  nav.doors a { color: var(--ink); text-decoration: none; padding: 8px 6px; margin: -8px -6px; min-height: 44px; display: inline-flex; align-items: center; }
+  nav.doors a.primary { font-weight: 600; text-decoration: underline; text-decoration-color: var(--interaction); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  nav.doors a:hover { color: var(--interaction); }
+  .jump { margin-top: 16px; }
+  .jump input { width: 100%; max-width: 300px; height: 42px; border-radius: var(--r-pill); background: var(--glass-1); border: .5px solid var(--glass-1-border); backdrop-filter: blur(var(--blur)); padding: 0 16px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink); }
+  .jump input::placeholder { color: var(--ink-muted); }
+  .wink { margin-top: auto; max-width: 280px; font-family: var(--hand); font-size: 17px; line-height: 1.3; color: color-mix(in srgb, var(--ink) 55%, var(--ink-muted)); transform: rotate(-2deg); transform-origin: left bottom; }
+  .wink .nb { color: var(--interaction); }
+  .caption { position: fixed; left: 54px; bottom: 24px; z-index: 3; font-family: var(--mono); font-size: 9px; letter-spacing: .12em; color: var(--ink-muted); }
+  .caption a { color: var(--interaction); text-decoration: underline; text-underline-offset: 3px; }
+
+  .studioctl { position: fixed; top: 14px; right: 16px; z-index: 20; display: flex; gap: 6px; }
+  .studioctl button { font-family: var(--mono); font-size: 9px; letter-spacing: .06em; min-height: 34px; padding: 6px 10px; border-radius: var(--r-pill); background: var(--glass-2); border: .5px solid var(--glass-2-border); backdrop-filter: blur(var(--blur)); color: var(--ink); cursor: pointer; }
+  .studioctl button[aria-pressed='true'] { background: var(--ink); color: var(--ground); }
+
+  /* the IA note badge (studio annotation) */
+  .ianote { position: fixed; right: 20px; top: 70px; z-index: 6; max-width: 250px; padding: 12px 14px; border-radius: var(--r-control); font-family: var(--mono); font-size: 9px; letter-spacing: .04em; line-height: 1.6; color: var(--ink-muted); }
+  .ianote b { color: var(--interaction); }
+
+  /* neural pieces */
+  .dendrite { fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; opacity: .4; }
+  .conn { fill: none; stroke: var(--ink); stroke-linecap: round; transition: opacity .25s, stroke-width .25s; }
+  .pulse { fill: none; stroke-linecap: round; opacity: 0; }
+  .pulse.firing { animation: travel 1000ms linear both; }
+  @keyframes travel { 0%{opacity:0;stroke-dashoffset:1} 12%{opacity:.95} 88%{opacity:.95} 100%{opacity:0;stroke-dashoffset:0} }
+  .soma-glow { pointer-events: none; }
+  .node { cursor: pointer; outline: none; }
+  .node .hit { fill: transparent; }
+  .node .lbl { font-family: var(--serif); font-style: italic; font-size: 12px; fill: var(--ink-muted); transition: fill .25s; }
+  .node .yr { font-family: var(--mono); font-size: 8px; letter-spacing: .06em; fill: var(--ink-faint); }
+  .node:hover .lbl, .node:focus-visible .lbl, .node.on .lbl { fill: var(--ink); }
+  .node:focus-visible .soma { stroke: var(--interaction); stroke-width: 2; }
+  .stage.is-focus .node:not(.on):not(.member) .lbl { opacity: .28; }
+  .stage.is-focus .node:not(.on):not(.member) .soma { opacity: .4; }
+  .stage.is-focus .conn:not(.lit) { opacity: .05 !important; }
+  .livetip text { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; fill: var(--interaction); }
+  .axislbl { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; fill: var(--ink-muted); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  .fieldcard { position: fixed; z-index: 6; max-width: 300px; padding: 14px 16px; border-radius: var(--r-sheet); opacity: 0; transform: translateY(6px); transition: opacity .2s, transform .2s; pointer-events: none; }
+  .fieldcard.show { opacity: 1; transform: none; }
+  .fieldcard .meta { display: flex; justify-content: space-between; gap: 10px; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: var(--ink-muted); }
+  .fieldcard h3 { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 17px; text-transform: lowercase; color: var(--ink); margin-top: 8px; }
+  .fieldcard p { font-family: var(--serif); font-size: 13.5px; line-height: 1.5; color: var(--ink-muted); margin-top: 6px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .intro .dendrite, .intro .conn { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 800ms var(--ease-soft) both; }
+    .intro .soma, .intro .soma-glow { animation: pop 380ms var(--ease-soft) both; }
+    .intro .lbl, .intro .yr { animation: fade 460ms ease-out both; }
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+  @keyframes fade { from { opacity: 0; } }
+  .soma, .soma-glow { transform-box: fill-box; transform-origin: center; }
+
+  @media (max-width: 900px) {
+    body { overflow: auto; height: auto; display: flex; flex-direction: column; }
+    .overlay { order: 0; position: relative; width: 100%; height: auto; padding: 30px 24px 8px; }
+    .stage { order: 2; position: relative; height: 54dvh; min-height: 380px; }
+    .caption { order: 3; position: static; margin: 10px 24px; }
+    .ianote { position: static; order: 1; margin: 4px 24px; max-width: none; }
+    .wink { margin-top: 20px; }
+  }
+</style>
+</head>
+<body>
+<section class="stage intro" id="stage" aria-hidden="true">
+  <svg id="mind" viewBox="0 0 1440 860" preserveAspectRatio="xMidYMid slice"><defs></defs>
+    <g id="g-axis"></g><g id="g-conns"></g><g id="g-nodes"></g></svg>
+</section>
+<div class="scrim" aria-hidden="true"></div>
+
+<main class="overlay">
+  <div class="idrow">
+    <svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="var(--interaction)" stroke-width="1.5"/><text x="20" y="25" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--ink)">EEC</text></svg>
+    <h1 class="name">EMILIE EL CHIDIAC</h1>
+  </div>
+  <p class="adj">architect · writer · researcher · creative technologist</p>
+  <p class="voice">I work with design, technology and minds.</p>
+  <p class="fact">MACAD AWARDS 2026 · WINNER · COMPUTATIONAL DESIGN · MACAD @ IAAC</p>
+  <div class="rule" aria-hidden="true"></div>
+  <nav class="doors" aria-label="Primary">
+    <a href="#work" class="primary">WORK</a>
+    <a href="#thoughts">THOUGHTS</a>
+    <a href="#cv">CV</a>
+    <a href="#about">ABOUT</a>
+  </nav>
+  <div class="jump"><input type="text" placeholder="/  jump to anything" aria-label="Jump to any project or thought"></div>
+  <p class="wink"><span class="nb">n.b.</span> this whole mess is my head, drawn as it grew. touch a piece of it.</p>
+</main>
+
+<div class="caption">THIS IS WHAT'S ON MY MIND, OVER TIME · <a href="#about">WHAT'S IN YOURS? ›</a></div>
+<aside class="ianote glass-2"><b>IA NOTE (studio)</b><br>if the mind-over-time graph lives HERE, /thoughts becomes a reading room only. WORK stays one tap away.</aside>
+
+<nav class="sr-only" aria-label="Thoughts on the landing"><ul id="sr-nav"></ul></nav>
+
+<div class="studioctl">
+  <button id="replay" type="button">⟳ REPLAY</button>
+  <button id="dial" type="button" aria-pressed="false">✦ ANATOMICAL</button>
+  <button id="mode" type="button">◐ MODE</button>
+</div>
+<a class="studio-link" href="./index.html">&lt; STUDIO INDEX</a>
+<div class="mockup-note">MOCKUP · NOT PRODUCTION</div>
+
+<script>
+(function () {
+  'use strict';
+  var NS='http://www.w3.org/2000/svg';
+  var PRM=window.matchMedia('(prefers-reduced-motion: reduce)');
+  function make(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+  function rngFrom(seed){var a=seed>>>0;return function(){a|=0;a=(a+0x6D2B79F5)|0;var t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
+  function spline(pts,k){k=k||0.2;var d='M '+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);for(var i=0;i<pts.length-1;i++){var p0=pts[Math.max(i-1,0)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(i+2,pts.length-1)];var c1x=p1[0]+(p2[0]-p0[0])*k,c1y=p1[1]+(p2[1]-p0[1])*k,c2x=p2[0]-(p3[0]-p1[0])*k,c2y=p2[1]-(p3[1]-p1[1])*k;d+=' C '+c1x.toFixed(1)+' '+c1y.toFixed(1)+', '+c2x.toFixed(1)+' '+c2y.toFixed(1)+', '+p2[0].toFixed(1)+' '+p2[1].toFixed(1);}return d;}
+
+  var LENS={c:'var(--cyan)',p:'var(--magenta)',e:'var(--yellow)'};
+  var THOUGHTS=[
+    {id:'xreal',date:'2022-09',lens:'e',title:'extended reality',open:'I started in a lab strapping headsets onto students to see whether a lesson lands harder when you can walk around inside it.'},
+    {id:'genai',date:'2024-06',lens:'c',title:'generative ai',open:'Generative AI made the inspired gesture free. Anyone can produce a thousand renders before lunch, and a render is a promise, not a product.'},
+    {id:'evosearch',date:'2025-11',lens:'e',title:'evolutionary search',open:'Evolutionary search is what I reach for when a problem is too tangled to solve head on: let a population of designs breed, mutate, and compete.'},
+    {id:'neuroaes',date:'2025-12',lens:'c',title:'neuroaesthetics',open:'Neuroaesthetics is the unglamorous name for a question everyone already feels: why does one room settle you and another keep you on edge?'},
+    {id:'bim',date:'2026-01',lens:'c',title:'behavior information modeling',open:"For thirty years we've been getting very good at Building Information Modeling: every beam, every duct, tracked to the millimeter."},
+    {id:'drawiface',date:'2026-03',lens:'p',title:'drawing as interface',open:'For most of my life the drawing was the output. You designed the thing, then you drew it to prove it existed.'},
+    {id:'solvers',date:'2026-04',lens:'e',title:'physics solvers',open:"A physics solver is the most honest collaborator I have: it doesn't care what I intended, only what I actually built."},
+    {id:'heritage',date:'2026-04',lens:'p',title:'heritage meets new tech',open:'The usual choice with an old building is a trap: a museum piece no one may touch, or a glass box in the middle called modern.'},
+    {id:'comfort',date:'2026-05',lens:'c',title:'comfort as data',open:"You don't average a room. You walk in and the thing that's wrong is the thing you notice: the glare, the echo, the cold draft."},
+    {id:'respond',date:'2026-06',lens:'c',title:'buildings that respond',open:'Right now a building is a fixed guess. Someone chose the ceiling height and the window size years before you arrived.'}
+  ];
+  var BACK={evosearch:['genai'],bim:['neuroaes'],drawiface:['genai'],solvers:['evosearch'],heritage:['genai'],comfort:['neuroaes','bim'],respond:['comfort','neuroaes']};
+
+  /* graph area: clear of the hero column on the left; the sparse past sits under
+     the scrim, the vibrant present blooms in the open right. */
+  var W=1440,H=860,X0=560,X1=1380,MIDY=430,AMP=150;
+  var state={style:'diagrammatic'};
+  var STYLE={diagrammatic:{count:5,length:38,wobble:0.55,branch:0.28,depth:1,baseW:1.1,glow:false,r:5.6},
+             anatomical:{count:7,length:50,wobble:0.9,branch:0.6,depth:2,baseW:1.7,glow:true,r:6}};
+  function growBranch(x,y,ang,len,rng,o,depth,out){var steps=3+Math.floor(rng()*2),seg=len/steps,a=ang,cx=x,cy=y,pts=[[x,y]];for(var s=0;s<steps;s++){a+=(rng()-0.5)*o.wobble;var g=seg*(1-s*0.14);cx+=Math.cos(a)*g;cy+=Math.sin(a)*g;pts.push([cx,cy]);if(depth<o.depth&&s>=1&&rng()<o.branch)growBranch(cx,cy,a+(rng()<0.5?0.7:-0.7),len*0.55,rng,o,depth+1,out);}out.push(pts);return out;}
+  function dendrites(cx,cy,seed,o){var out=[],rng=rngFrom(seed);for(var i=0;i<o.count;i++){var ang=(i/o.count)*Math.PI*2+(rng()-0.5)*0.6;growBranch(cx,cy,ang,o.length,rng,o,0,out);}return out;}
+
+  var svg=document.getElementById('mind'),stage=document.getElementById('stage'),defs=svg.querySelector('defs');
+  var gAxis=document.getElementById('g-axis'),gConns=document.getElementById('g-conns'),gNodes=document.getElementById('g-nodes');
+  var card=null, pos={}, neuronEls={}, connEls=[];
+
+  function build(){
+    gAxis.innerHTML='';gConns.innerHTML='';gNodes.innerHTML='';defs.innerHTML='';pos={};neuronEls={};connEls=[];
+    var rg=make('radialGradient',{id:'mg-glow'},defs);make('stop',{offset:'0%','stop-color':'var(--ink)','stop-opacity':0.34},rg);make('stop',{offset:'100%','stop-color':'var(--ink)','stop-opacity':0},rg);
+    var f=make('filter',{id:'mg-soft',x:'-40%',y:'-40%',width:'180%',height:'180%'},defs);make('feGaussianBlur',{stdDeviation:1.4},f);
+    var o=STYLE[state.style];
+
+    var sorted=THOUGHTS.slice().sort(function(a,b){return a.date<b.date?-1:1;});
+    var n=sorted.length;
+    sorted.forEach(function(th,i){var x=X0+((i+0.5)/n)*(X1-X0);pos[th.id]={x:x,y:MIDY+AMP*Math.sin(i*0.95+0.5),i:i};});
+
+    /* the faint career substrate baseline + the one live red tip */
+    var baseY=760;
+    make('line',{x1:X0-30,y1:baseY,x2:X1+40,y2:baseY,stroke:'var(--hairline)','stroke-width':1},gAxis);
+    var cl=make('text',{'class':'axislbl',x:X0-30,y:baseY+40,'text-anchor':'start'},gAxis);cl.textContent='CAREER SUBSTRATE · SELF-EMPLOYED 2022 › NOW · full record on the CV';
+    make('line',{x1:X1+12,y1:baseY,x2:X1+40,y2:baseY,stroke:'var(--interaction)','stroke-width':1.6},gAxis);
+    var lt=make('g',{'class':'livetip'},gAxis);make('circle',{cx:X1+40,cy:baseY,r:3.6,fill:'var(--ground)',stroke:'var(--interaction)','stroke-width':1.7},lt);
+    var ltt=make('text',{x:X1+34,y:baseY-9,'text-anchor':'end'},lt);ltt.textContent='LIVE · STILL THINKING';
+    /* year ticks under the first node of each year */
+    var seen={};sorted.forEach(function(th){var yr=th.date.slice(0,4);if(seen[yr])return;seen[yr]=1;var x=pos[th.id].x;make('line',{x1:x,y1:baseY-6,x2:x,y2:baseY,stroke:'var(--hairline)','stroke-width':1},gAxis);var yl=make('text',{'class':'axislbl',x:x,y:baseY+18,'text-anchor':'middle'},gAxis);yl.textContent=yr;});
+
+    /* connections */
+    Object.keys(BACK).forEach(function(id){BACK[id].forEach(function(src){var a=pos[src],b=pos[id];if(!a||!b)return;var mx=(a.x+b.x)/2,my=Math.min(a.y,b.y)-46;var d=spline([[a.x,a.y],[mx,my],[b.x,b.y]]);var col=LENS[THOUGHTS.filter(function(t){return t.id===id;})[0].lens];var conn=make('path',{'class':'conn',d:d,'stroke':'var(--ink)','stroke-width':1.4,opacity:0.4,'pathLength':1},gConns);make('circle',{cx:b.x,cy:b.y,r:2.4,fill:col,opacity:0.6},gConns);var pulse=make('path',{'class':'pulse',d:d,stroke:col,'stroke-width':2.6,'pathLength':1,'stroke-dasharray':'0.14 1'},gConns);connEls.push({from:src,to:id,conn:conn,pulse:pulse});});});
+
+    /* neurons */
+    sorted.forEach(function(th,idx){
+      var p=pos[th.id],col=LENS[th.lens];
+      var g=make('g',{'class':'node',tabindex:0,role:'link','aria-label':th.title+' — thought, '+th.date+'. '+(BACK[th.id]?('connects back to '+BACK[th.id].join(', ')+'. '):'')+'Read the note.'},gNodes);
+      dendrites(p.x,p.y,idx*97+7,o).forEach(function(pts){var w=o.baseW;if(o.glow)make('path',{'class':'dendrite',d:spline(pts),stroke:col,'stroke-width':w*2.3,opacity:0.1,'pathLength':1,filter:'url(#mg-soft)'},g);make('path',{'class':'dendrite',d:spline(pts),'stroke-width':w,'pathLength':1,stroke:'var(--ink)'},g);});
+      if(o.glow)make('circle',{'class':'soma-glow',cx:p.x,cy:p.y,r:o.r*3,fill:'url(#mg-glow)'},g);
+      make('circle',{'class':'soma',cx:p.x,cy:p.y,r:o.r-0.6,fill:'var(--ground)',stroke:'var(--ink)','stroke-width':1.7},g);
+      make('circle',{cx:p.x,cy:p.y,r:2,fill:col,opacity:0.8},g);
+      make('circle',{'class':'hit',cx:p.x,cy:p.y,r:24},g);
+      var above=(idx%2===0);
+      var lbl=make('text',{'class':'lbl',x:p.x,y:p.y+(above?-o.r-11:o.r+18),'text-anchor':'middle'},g);lbl.textContent=th.title;
+      var yr=make('text',{'class':'yr',x:p.x,y:p.y+(above?-o.r-24:o.r+30),'text-anchor':'middle'},g);yr.textContent=th.date;
+      neuronEls[th.id]=g;bind(th,g);
+    });
+  }
+
+  function firePulse(pulse,conn,delay){if(PRM.matches){conn.classList.add('lit');setTimeout(function(){conn.classList.remove('lit');},900);return;}setTimeout(function(){pulse.classList.remove('firing');void pulse.getBoundingClientRect();pulse.classList.add('firing');conn.classList.add('lit');setTimeout(function(){conn.classList.remove('lit');},1000);},delay||0);}
+  function lightThought(id){stage.classList.add('is-focus');var g=neuronEls[id];if(g)g.classList.add('on');var partners={};connEls.forEach(function(c){if(c.to===id||c.from===id){c.conn.classList.add('lit');partners[c.from]=1;partners[c.to]=1;firePulse(c.pulse,c.conn);}});Object.keys(partners).forEach(function(pid){if(neuronEls[pid])neuronEls[pid].classList.add('member');});showCard(id);}
+  function clearLight(){stage.classList.remove('is-focus');Object.keys(neuronEls).forEach(function(k){neuronEls[k].classList.remove('on','member');});connEls.forEach(function(c){c.conn.classList.remove('lit');});if(card){card.classList.remove('show');}}
+  function showCard(id){var th=THOUGHTS.filter(function(t){return t.id===id;})[0];if(!th)return;if(!card){card=document.createElement('aside');card.className='fieldcard glass-2';card.setAttribute('aria-hidden','true');document.body.appendChild(card);}
+    card.innerHTML='<div class="meta"><span>'+th.date+'</span><span>'+({c:'COMPUTATION & RESEARCH',p:'DESIGN & PRACTICE',e:'EXPLORATIONS'}[th.lens])+'</span></div><h3>'+th.title+'</h3><p>'+th.open+'</p>';
+    var soma=neuronEls[id].querySelector('.soma');var b=soma.getBoundingClientRect();
+    var left=Math.max(12,Math.min(b.left+b.width/2-150,innerWidth-312));
+    var top=(b.top<innerHeight*0.55)?(b.bottom+14):(b.top-160);
+    card.style.left=left+'px';card.style.top=Math.max(12,top)+'px';card.classList.add('show');}
+  function bind(th,g){g.addEventListener('mouseenter',function(){clearLight();lightThought(th.id);});g.addEventListener('mouseleave',clearLight);g.addEventListener('focus',function(){clearLight();lightThought(th.id);});g.addEventListener('blur',clearLight);g.addEventListener('click',function(){console.log('open /thoughts/'+th.id);});}
+
+  function develop(){
+    if(PRM.matches){stage.classList.remove('intro');return;}
+    stage.classList.remove('intro');void stage.getBoundingClientRect();stage.classList.add('intro');
+    var sorted=THOUGHTS.slice().sort(function(a,b){return a.date<b.date?-1:1;});
+    sorted.forEach(function(th,i){var g=neuronEls[th.id];if(!g)return;Array.prototype.forEach.call(g.querySelectorAll('.dendrite'),function(el){el.style.animationDelay=(i*240)+'ms';});Array.prototype.forEach.call(g.querySelectorAll('.soma,.soma-glow,.lbl,.yr'),function(el){el.style.animationDelay=(i*240+260)+'ms';});});
+    connEls.forEach(function(c){var ti=sorted.map(function(t){return t.id;}).indexOf(c.to);c.conn.style.animationDelay=(ti*240+140)+'ms';firePulse(c.pulse,c.conn,ti*240+520);});
+    setTimeout(function(){stage.classList.remove('intro');},THOUGHTS.length*240+1500);
+  }
+
+  function buildSrNav(){var ul=document.getElementById('sr-nav');ul.innerHTML='';THOUGHTS.slice().sort(function(a,b){return a.date<b.date?1:-1;}).forEach(function(th){var li=document.createElement('li');var a=document.createElement('a');a.href='#thoughts/'+th.id;a.textContent=th.title+' (thought, '+th.date+')';li.appendChild(a);ul.appendChild(li);});var li=document.createElement('li');li.innerHTML='<a href="#work">All projects are in WORK</a>';ul.appendChild(li);}
+
+  var dialBtn=document.getElementById('dial');
+  dialBtn.addEventListener('click',function(){state.style=state.style==='diagrammatic'?'anatomical':'diagrammatic';dialBtn.setAttribute('aria-pressed',state.style==='anatomical');dialBtn.textContent=state.style==='anatomical'?'✦ DIAGRAMMATIC':'✦ ANATOMICAL';build();develop();});
+  document.getElementById('replay').addEventListener('click',develop);
+  document.getElementById('mode').addEventListener('click',function(){var c=document.documentElement.dataset.theme;document.documentElement.dataset.theme=c==='light'?'dark':c==='dark'?'light':(window.matchMedia('(prefers-color-scheme: dark)').matches?'light':'dark');});
+
+  build();buildSrNav();requestAnimationFrame(develop);
+})();
+</script>
+</body>
+</html>

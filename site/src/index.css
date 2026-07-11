@@ -152,13 +152,8 @@ section[id] {
   }
 }
 
-/* (G3: the .nb-fade utility retired with the notebook door; the keyframes
-   survive because the career graph's marks fade in on them below.) */
-@keyframes nb-fade-in {
-  from {
-    opacity: 0;
-  }
-}
+/* (The meta build: the nb-fade-in keyframes retired with the CV graph view;
+   the career drawing lives on as the neural world's skeleton below.) */
 
 /* Kicker leader-line draw-in (Session 5 bundle): the SVG line inks in, then
    the dot and arrowhead arrive, one-shot. Sequenced after the header rule via
@@ -428,36 +423,207 @@ section[id] {
   }
 }
 
-/* THE CAREER GRAPH draw-in (G2 as the notebook, relocated to the CV graph
-   view at G3, motion primitive 5): the lanes ink in once on view open
-   (staggered per branch via inline animation-delay), the marks and lettering
-   fade up after. One-shot, never loops; the live tip is a static red mark
-   (red = still happening, not an animation). Reduced motion renders the
-   finished drawing instantly. */
-.nbg-draw .nbg-lane {
+/* ============================================================
+   THE NEURAL WORLD (/thoughts, the meta build 2026-07-11): the whole record
+   drawn as one anatomical neural map over the career skeleton, horizontal,
+   2021 › NOW. At REST the world is quiet points in time: somas + labels
+   only. Every dendrite and correlation fibre sits at stroke-dashoffset 1
+   (with stroke-dasharray 1 + pathLength 1, the dashoffset IS "how much of
+   this fibre exists": 1 = none, 0 = fully grown). The proximity engine
+   (thoughts/world/useProximityEngine.ts) writes dashoffset + opacity INLINE
+   as attention approaches; this block owns only the resting look. Colours
+   ride the mode-aware --lang-* tokens (dark = the mind at night, light =
+   the mind on paper). Reduced motion: the engine never runs; everything
+   renders fully grown, the honest still.
+   ============================================================ */
+.nw-stage {
+  position: fixed;
+  inset: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-width: none;
+  cursor: grab;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+}
+.nw-stage::-webkit-scrollbar {
+  display: none;
+}
+.nw-stage.dragging {
+  cursor: grabbing;
+}
+/* the 40rem floor keeps browser zoom honest (WCAG 1.4.4): zooming shrinks the
+   CSS viewport but not the rem floor, so the world (and its labels) genuinely
+   enlarges and scrolls instead of re-fitting. No device >= 640px tall changes. */
+.nw-stage svg {
+  height: max(100%, 40rem);
+  width: auto;
+  display: block;
+}
+
+/* the ruler: the record is drawn with a ruler, the thinking by a nerve */
+.nw-lane {
+  fill: none;
+  stroke: var(--lang-ink);
+  stroke-linecap: round;
+  opacity: 0.2;
+}
+.nw-lane.main {
+  opacity: 0.3;
+}
+.nw-yearline {
+  stroke: var(--lang-hairline);
+  stroke-width: 1;
+}
+.nw-yearlbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  fill: var(--lang-ink-muted);
+}
+.nw-lanelbl {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  fill: var(--lang-ink-faint);
+}
+.nw-livetag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  fill: var(--lang-interaction);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nw-livetip {
+    animation: nw-livebeat 2.8s ease-in-out infinite;
+  }
+}
+@keyframes nw-livebeat {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* the nerve: hidden at rest, grown by the engine */
+.nw-dendrite,
+.nw-reach {
+  fill: none;
+  stroke: var(--lang-ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.38;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: nbg-lane-draw 900ms var(--ease-soft) forwards;
 }
-
-.nbg-draw .nbg-mark {
-  animation: nb-fade-in 500ms ease-out 620ms backwards;
+.nw-synapse {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
 }
-
-@keyframes nbg-lane-draw {
-  to {
+.nw-pulse {
+  fill: none;
+  stroke-linecap: round;
+  opacity: 0;
+}
+.nw-pulse.firing {
+  animation: nw-travel 950ms linear both;
+}
+@keyframes nw-travel {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 1;
+  }
+  14% {
+    opacity: 0.95;
+  }
+  86% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
     stroke-dashoffset: 0;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .nbg-draw .nbg-lane,
-  .nbg-draw .nbg-mark {
-    animation: none;
-  }
-
-  .nbg-draw .nbg-lane {
-    stroke-dashoffset: 0;
+.nw-node {
+  cursor: pointer;
+  outline: none;
+}
+.nw-node.still {
+  cursor: default;
+}
+/* the focus ring rides the big hit circle: one unambiguous indicator for
+   every kind (a 2px red edge on a 2.6-radius milestone dot reads as nothing,
+   and the live tip's soma is already red) */
+.nw-node:focus-visible .nw-soma {
+  stroke: var(--lang-interaction);
+  stroke-width: 2;
+}
+.nw-node:focus-visible .nw-hit {
+  fill: none;
+  stroke: var(--lang-interaction);
+  stroke-width: 2;
+  stroke-dasharray: 4 4;
+}
+.nw-hit {
+  fill: transparent;
+  stroke: none;
+  pointer-events: all;
+}
+.nw-glow {
+  pointer-events: none;
+  opacity: 0;
+}
+.nw-lbl {
+  pointer-events: none;
+}
+.nw-lbl.p {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  fill: var(--lang-ink);
+  text-transform: uppercase;
+}
+.nw-lbl.t {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12.5px;
+  fill: var(--lang-ink);
+}
+.nw-lbl.a,
+.nw-lbl.m {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.08em;
+  fill: var(--lang-ink);
+  text-transform: uppercase;
+}
+.nw-yr {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.06em;
+  /* muted, not faint: these are real dates (each is also in its node's
+     aria-label and on the field card, but what renders should hold ink) */
+  fill: var(--lang-ink-muted);
+  pointer-events: none;
+}
+/* the plumb line: a waking piece of the mind shows its moment on the record */
+.nw-plumb {
+  stroke: var(--lang-ink);
+  stroke-dasharray: 3 5;
+  opacity: 0;
+  pointer-events: none;
+}
+/* the field card goes full-width on phones (the prototype rule) */
+@media (max-width: 700px) {
+  .nw-fieldcard {
+    left: 12px !important;
+    right: 12px;
+    max-width: none;
   }
 }
 

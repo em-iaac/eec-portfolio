@@ -6,8 +6,14 @@ import { existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
-import { AWARD_WINNER_IDS, ENTRIES, EXPLORE_NODES, timelineEntries } from './registry'
-import { BRANCH_OF, FORKS, GEOMETRY_ANCHOR_IDS } from '../cv/graphIds'
+import { AWARD_WINNER_IDS, CORRELATIONS, ENTRIES, EXPLORE_NODES, timelineEntries } from './registry'
+import {
+  AWARD_ANCHOR_OVERRIDE,
+  LANE_FORKS,
+  MILESTONE_LANE,
+  SOMA_MERGE_AT,
+} from '../thoughts/world/skeletonIds'
+import { buildWorld, WORLD_KINDS } from '../thoughts/world/worldGraph'
 import { buildMindGraph } from '../landing/mindGraph'
 import { PROJECTS_BY_SLUG } from './projects'
 import { WORK_ENTRIES } from './work'
@@ -101,20 +107,88 @@ test('every entry date is zero-padded YYYY-MM', () => {
   expect(broken).toEqual([])
 })
 
-// The career graph joins the registry by string id (fork geometry anchors +
-// lane assignment); a rename in the registry must fail the build, not
-// silently blank the rail or mis-lane an entry (G3 review finding).
-test('every career-graph id resolves in the registry', () => {
+// The neural world joins the registry by string id (lane forks, milestone
+// lanes, the soma merge, the one award-anchor override); a rename in the
+// registry must fail the build, not silently blank a lane or orphan a star
+// (the G3 guarantee, carried onto the world).
+test('every world skeleton id resolves in the registry', () => {
   const ids = new Set(ENTRIES.map(e => e.id))
-  const wanted = [...GEOMETRY_ANCHOR_IDS, ...Object.keys(BRANCH_OF), ...Object.keys(FORKS)]
+  const wanted = [
+    ...Object.keys(LANE_FORKS),
+    ...Object.keys(MILESTONE_LANE),
+    ...Object.keys(AWARD_ANCHOR_OVERRIDE),
+    ...Object.values(AWARD_ANCHOR_OVERRIDE),
+    SOMA_MERGE_AT,
+  ]
   const broken = wanted.filter(id => !ids.has(id))
   expect(broken).toEqual([])
 })
 
-// THE NOW ENTRY (G3): exactly one, always the newest thing in the record
-// (the CV graph draws it at the live tip; a stale NOW would lie about the
-// present), and never an explore node (the frozen mind-graph layout must
-// not see it).
+// Every milestone must know its lane (a new milestone without a lane would
+// throw at build time; this fails first, with a readable list).
+test('every milestone has a world lane', () => {
+  const broken = ENTRIES.filter(e => e.kind === 'milestone' && !MILESTONE_LANE[e.id]).map(e => e.id)
+  expect(broken).toEqual([])
+})
+
+// The skeleton draws exactly the four forked lanes; a deleted LANE_FORKS row
+// would pass the id checks above (they only iterate existing keys) and leave
+// buildWorld drawing NaN paths, so the coverage is pinned here.
+test('the four forked lanes are all anchored', () => {
+  expect(new Set(Object.values(LANE_FORKS))).toEqual(new Set(['self', 'soma', 'dyn', 'macad']))
+})
+
+// THE CORRELATIONS (the meta build): the world's threads are registry data.
+// Both ends must resolve, ends are idea kinds only (thought/project: award
+// threads derive from refId, never duplicated here), no self-links, no
+// duplicate pairs in either direction, strength 1..3.
+test('every correlation is a valid idea-lineage pair', () => {
+  const byId = new Map(ENTRIES.map(e => [e.id, e]))
+  const broken: string[] = []
+  const seen = new Set<string>()
+  for (const [a, b, s] of CORRELATIONS) {
+    const ea = byId.get(a)
+    const eb = byId.get(b)
+    if (!ea) broken.push(`${a} (missing)`)
+    if (!eb) broken.push(`${b} (missing)`)
+    if (a === b) broken.push(`${a} (self-link)`)
+    if (ea && ea.kind !== 'thought' && ea.kind !== 'project') broken.push(`${a} (${ea.kind}: idea kinds only)`)
+    if (eb && eb.kind !== 'thought' && eb.kind !== 'project') broken.push(`${b} (${eb.kind}: idea kinds only)`)
+    if (!(s >= 1 && s <= 3)) broken.push(`${a}<->${b} (strength ${s})`)
+    const key = [a, b].sort().join('|')
+    if (seen.has(key)) broken.push(`${a}<->${b} (duplicate pair)`)
+    seen.add(key)
+  }
+  expect(broken).toEqual([])
+})
+
+// The world must COVER the record: every entry of a world kind renders as a
+// node (the census), and the model builds without throwing (missing lanes /
+// forks throw inside buildWorld).
+test('the world covers every project, thought, milestone and award', () => {
+  const world = buildWorld()
+  const wanted = ENTRIES.filter(e => WORLD_KINDS.has(e.kind))
+  expect(world.nodes.length).toBe(wanted.length)
+  const nodeIds = new Set(world.nodes.map(n => n.id))
+  expect(wanted.filter(e => !nodeIds.has(e.id)).map(e => e.id)).toEqual([])
+})
+
+// Route model (gate 3): projects and drafted thoughts open their pages,
+// awards open the showcase their refId names; milestones and unanchored
+// awards are the only card-only marks.
+test('every world node routes somewhere or is a sanctioned card-only mark', () => {
+  const world = buildWorld()
+  const broken = world.nodes
+    .filter(n => !n.route)
+    .filter(n => !(n.kind === 'milestone' || (n.kind === 'award' && !ENTRIES.find(e => e.id === n.id)?.refId)))
+    .map(n => n.id)
+  expect(broken).toEqual([])
+})
+
+// THE NOW ENTRY (G3; the world since the meta build): exactly one, always
+// the newest thing in the record (the world's red LIVE tip carries the NOW
+// card; a stale NOW would lie about the present), and never an explore node
+// (the frozen mind-graph layout must not see it).
 test('the NOW entry is the single newest timeline item', () => {
   const nows = ENTRIES.filter(e => e.kind === 'now')
   expect(nows.map(e => e.id)).toEqual(['now'])

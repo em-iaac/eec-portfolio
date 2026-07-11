@@ -5,9 +5,9 @@
 // title (the thinking voice), a 62ch serif column, and a quiet endmatter row.
 // NO panel under the prose (glass is for UI, not for words), NO figures,
 // ever. n.b. hover dots stay under rule 8's five-per-leaf cap. The endmatter
-// carries the two corridors: back to the shelf, and this thought's place in
-// time (the CV graph view's thoughts facet, since the notebook door retired
-// at G3).
+// carries the two corridors (retargeted by the meta build): back to the
+// reading room (?view=words), and this thought's place in time — the neural
+// world at /thoughts, centred + woken on this very neuron via the #id hash.
 import { type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
@@ -62,10 +62,10 @@ export default function ThoughtLeaf({
         </div>
 
         <div className="mt-9 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-t-[0.5px] border-[var(--lang-hairline)] pt-3.5 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
-          <Link to="/thoughts" viewTransition className={RED_LINK}>
+          <Link to="/thoughts?view=words" viewTransition className={RED_LINK}>
             ‹ ALL THOUGHTS
           </Link>
-          <Link to="/cv?view=graph&facet=thoughts" viewTransition className={RED_LINK}>
+          <Link to={`/thoughts#${id ?? ''}`} className={RED_LINK}>
             SEE THIS THOUGHT IN TIME ›
           </Link>
           {next && (

@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE NEURAL STUDIO · the drop-one test · nerve / ruler / merged (mockup)</title>
+<link rel="stylesheet" href="./glass.css">
+<style>
+  /* ---- THE DROP-ONE TEST -------------------------------------------------
+     Emilie's ask: feel the pure options before the verdict. Same 35 pieces,
+     same full-bleed world, three grammars:
+       NERVE ONLY  — no skeleton: everything is a neuron, correlations sing,
+                     but position carries no fact except left-to-right time.
+       RULER ONLY  — no neurons: the elevated commit graph, everything a mark
+                     on its true lane; facts sing, no idea ever touches another.
+       MERGED      — the world as proposed: ruler beneath, nerve above.
+     Flip between them in place; what disappears is the argument. */
+  html, body { height: 100%; }
+  body { height: 100dvh; overflow: hidden; background: var(--ground); color: var(--ink); -webkit-font-smoothing: antialiased; position: relative; }
+  .stage { position: fixed; inset: 0; z-index: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; cursor: grab; }
+  .stage::-webkit-scrollbar { display: none; }
+  .stage.dragging { cursor: grabbing; }
+  .stage svg { height: 100%; width: auto; display: block; }
+
+  .chrome { position: fixed; top: 0; left: 0; right: 0; z-index: 3; padding: 24px 34px 0; display: flex; align-items: flex-start; gap: 14px; pointer-events: none; }
+  .chrome > * { pointer-events: auto; }
+  .kicker { color: var(--interaction); }
+  .chrome h1 { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(20px, 2.4vw, 27px); text-transform: lowercase; color: var(--ink); margin-top: 8px; }
+  .chrome .sub { margin-top: 8px; font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--ink-muted); max-width: 520px; line-height: 1.7; }
+  .spacer { flex: 1 1 auto; }
+  .seg { display: inline-flex; padding: 3px; gap: 3px; border-radius: var(--r-pill); background: var(--glass-2); border: .5px solid var(--glass-2-border); backdrop-filter: blur(var(--blur)); }
+  .seg button { font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; padding: 8px 13px; min-height: 38px; border-radius: var(--r-pill); border: none; background: none; color: var(--ink-muted); cursor: pointer; }
+  .seg button[aria-pressed='true'] { background: var(--ink); color: var(--ground); }
+  .studioctl { display: flex; gap: 6px; align-items: flex-start; flex-wrap: wrap; justify-content: flex-end; }
+  .studioctl button { font-family: var(--mono); font-size: 9px; letter-spacing: .06em; min-height: 38px; padding: 6px 11px; border-radius: var(--r-pill); background: var(--glass-2); border: .5px solid var(--glass-2-border); backdrop-filter: blur(var(--blur)); color: var(--ink); cursor: pointer; }
+
+  .scrimtop { position: fixed; top: 0; left: 0; right: 0; height: 140px; z-index: 2; pointer-events: none; background: linear-gradient(to bottom, color-mix(in srgb, var(--ground) 92%, transparent), transparent); }
+  .scrimbot { position: fixed; bottom: 0; left: 0; right: 0; height: 80px; z-index: 2; pointer-events: none; background: linear-gradient(to top, color-mix(in srgb, var(--ground) 88%, transparent), transparent); }
+
+  /* what this variant loses (the point of the test) */
+  .loss { position: fixed; left: 34px; bottom: 20px; z-index: 3; max-width: 430px; padding: 11px 14px; border-radius: var(--r-control); font-family: var(--mono); font-size: 9px; letter-spacing: .05em; line-height: 1.7; color: var(--ink-muted); }
+  .loss b { color: var(--interaction); }
+  .hint { position: fixed; right: 34px; bottom: 20px; z-index: 3; font-family: var(--mono); font-size: 9px; letter-spacing: .12em; color: var(--ink-muted); }
+  .hint b { color: var(--interaction); font-weight: 400; }
+
+  .lane { fill: none; stroke: var(--ink); stroke-linecap: round; opacity: .2; }
+  .lane.mainline { opacity: .3; }
+  .stage.v-ruler .lane { opacity: .55; }
+  .stage.v-ruler .lane.mainline { opacity: .75; }
+  .lanelbl { font-family: var(--mono); font-size: 8px; letter-spacing: .12em; fill: var(--ink-faint); }
+  .stage.v-ruler .lanelbl { fill: var(--ink-muted); }
+  .yearline { stroke: var(--hairline); stroke-width: 1; }
+  .yearlbl { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; fill: var(--ink-muted); }
+  .livetag { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; fill: var(--interaction); }
+  @media (prefers-reduced-motion: no-preference) { .livetip { animation: livebeat 2.8s ease-in-out infinite; } }
+  @keyframes livebeat { 0%,100%{ opacity: .55; } 50%{ opacity: 1; } }
+
+  .dendrite { fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; opacity: .38; }
+  .reach { fill: none; stroke-linecap: round; opacity: .55; transition: opacity .25s, stroke-width .25s; }
+  .synapse { transition: opacity .25s; }
+  .pulse { fill: none; stroke-linecap: round; opacity: 0; }
+  .pulse.firing { animation: travel 950ms linear both; }
+  @keyframes travel { 0%{opacity:0;stroke-dashoffset:1} 14%{opacity:.95} 86%{opacity:.95} 100%{opacity:0;stroke-dashoffset:0} }
+  .soma-glow { pointer-events: none; }
+  .node { cursor: pointer; outline: none; }
+  .node .hit { fill: transparent; }
+  .node:focus-visible .soma { stroke: var(--interaction); stroke-width: 2; }
+  .lbl { transition: opacity .25s, fill .25s; }
+  .lbl.p { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; fill: var(--ink); }
+  .lbl.t { font-family: var(--serif); font-style: italic; font-size: 12.5px; fill: var(--ink-muted); }
+  .lbl.a, .lbl.m { font-family: var(--mono); font-size: 7.5px; letter-spacing: .08em; fill: var(--ink-faint); }
+  .stage.v-ruler .lbl.p { font-size: 8.5px; }
+  .stage.v-ruler .lbl.t { font-size: 11px; }
+  .yr { font-family: var(--mono); font-size: 7.5px; letter-spacing: .06em; fill: var(--ink-faint); }
+  .node:hover .lbl, .node.on .lbl, .node.near .lbl { fill: var(--ink); }
+  .stage.is-focus .node:not(.on):not(.near) { opacity: .24; }
+  .stage.is-focus .reach:not(.lit), .stage.is-focus .synapse:not(.lit) { opacity: .08; }
+  .stage.is-focus .lane { opacity: .08; }
+  .reach.lit { stroke-width: 1.9; opacity: .95; }
+  .plumb { stroke: var(--ink); opacity: .45; stroke-dasharray: 3 5; }
+
+  .fieldcard { position: fixed; z-index: 6; max-width: 300px; padding: 14px 16px; border-radius: var(--r-sheet); opacity: 0; transform: translateY(6px); transition: opacity .2s, transform .2s; pointer-events: none; }
+  .fieldcard.show { opacity: 1; transform: none; }
+  .fieldcard .meta { display: flex; justify-content: space-between; gap: 10px; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: var(--ink-muted); }
+  .fieldcard h3 { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 17px; text-transform: lowercase; color: var(--ink); margin-top: 8px; }
+  .fieldcard h3.up { font-family: var(--display); font-style: normal; text-transform: none; font-size: 16px; }
+  .fieldcard p { font-family: var(--serif); font-size: 13.5px; line-height: 1.5; color: var(--ink-muted); margin-top: 6px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .intro .dendrite, .intro .reach, .intro .lane { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 760ms var(--ease-soft) both; }
+    .intro .soma, .intro .soma-glow { animation: pop 380ms var(--ease-soft) both; }
+    .intro .synapse { animation: bloom 420ms var(--ease-soft) both; }
+    .intro .lbl, .intro .yr, .intro .lanelbl, .intro .yearlbl { animation: fade 460ms ease-out both; }
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+  @keyframes bloom { 0%{ transform: scale(0); opacity: 0; } 70%{ transform: scale(1.6); opacity: 1; } 100%{ transform: scale(1); opacity: 1; } }
+  @keyframes fade { from { opacity: 0; } }
+  .soma, .soma-glow, .synapse { transform-box: fill-box; transform-origin: center; }
+
+  @media (max-width: 700px) {
+    .chrome { padding: 18px 20px 0; flex-wrap: wrap; }
+    .loss { left: 20px; bottom: 16px; max-width: none; right: 20px; }
+    .hint { display: none; }
+    .fieldcard { left: 12px !important; right: 12px; max-width: none; }
+  }
+</style>
+</head>
+<body>
+<section class="stage intro v-merge" id="stage" aria-label="The drop-one test: the same 35 pieces drawn three ways: neurons only, commit graph only, or merged.">
+  <svg id="world" viewBox="0 0 3000 860" preserveAspectRatio="xMidYMid meet"><defs></defs>
+    <g id="g-years"></g><g id="g-lanes"></g><g id="g-conns"></g><g id="g-nodes"></g></svg>
+</section>
+<div class="scrimtop" aria-hidden="true"></div>
+<div class="scrimbot" aria-hidden="true"></div>
+
+<header class="chrome">
+  <div>
+    <div class="mono kicker">THE NEURAL STUDIO · THE DROP-ONE TEST</div>
+    <h1 id="vh1">the same mind, three grammars</h1>
+    <div class="sub">SAME 35 PIECES · FLIP THE GRAMMAR AND FEEL WHAT DISAPPEARS</div>
+  </div>
+  <span class="spacer"></span>
+  <div class="studioctl">
+    <div class="seg" role="group" aria-label="Grammar">
+      <button id="v-nerve" aria-pressed="false">NERVE ONLY</button>
+      <button id="v-ruler" aria-pressed="false">RULER ONLY</button>
+      <button id="v-merge" aria-pressed="true">MERGED</button>
+    </div>
+    <button id="replay" type="button">⟳ GROW</button>
+    <button id="mode" type="button">◐ MODE</button>
+  </div>
+</header>
+
+<aside class="loss glass-2" id="loss"></aside>
+<div class="hint"><b>DRAG</b> TO EXPLORE · HOVER OR TAP A PIECE</div>
+<nav class="sr-only" aria-label="Everything on the map"><ul id="sr-nav"></ul></nav>
+
+<a class="studio-link" href="./index.html">&lt; STUDIO INDEX</a>
+<div class="mockup-note">MOCKUP · NOT PRODUCTION</div>
+
+<script>
+(function () {
+  'use strict';
+  var NS='http://www.w3.org/2000/svg';
+  var PRM=window.matchMedia('(prefers-reduced-motion: reduce)');
+  function make(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+  function rngFrom(seed){var a=seed>>>0;return function(){a|=0;a=(a+0x6D2B79F5)|0;var t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
+  function spline(pts,k){k=k||0.2;var d='M '+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);for(var i=0;i<pts.length-1;i++){var p0=pts[Math.max(i-1,0)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(i+2,pts.length-1)];var c1x=p1[0]+(p2[0]-p0[0])*k,c1y=p1[1]+(p2[1]-p0[1])*k,c2x=p2[0]-(p3[0]-p1[0])*k,c2y=p2[1]-(p3[1]-p1[1])*k;d+=' C '+c1x.toFixed(1)+' '+c1y.toFixed(1)+', '+c2x.toFixed(1)+' '+c2y.toFixed(1)+', '+p2[0].toFixed(1)+' '+p2[1].toFixed(1);}return d;}
+  function starPath(cx,cy,r){var d='',inner=r*0.44;for(var i=0;i<8;i++){var rad=(i%2===0)?r:inner;var ang=(Math.PI/4)*i-Math.PI/2;var px=cx+Math.cos(ang)*rad,py=cy+Math.sin(ang)*rad;d+=(i===0?'M ':'L ')+px.toFixed(1)+' '+py.toFixed(1)+' ';}return d+'Z';}
+
+  var LENS={c:'var(--cyan)',p:'var(--magenta)',e:'var(--yellow)'};
+  var KINDNAME={p:'project',t:'thought',a:'award',m:'milestone'};
+
+  var CAST=[
+    {id:'xrlab-start',k:'m',date:'2021-09',title:'RESEARCH ASSISTANT · LAU XR LAB',lane:'main'},
+    {id:'self-open',k:'m',date:'2022-01',title:'SELF-EMPLOYED PRACTICE OPENS',lane:'self'},
+    {id:'barch-grad',k:'m',date:'2023-06',title:"B.ARCH · LAU · DEAN'S DISTINCTION",lane:'main'},
+    {id:'soma-start',k:'m',date:'2023-08',title:'DESIGN ARCHITECT · SOMA',lane:'soma'},
+    {id:'dynamic-start',k:'m',date:'2024-08',title:'PROJECT ARCHITECT · DYNAMIC SOLUTION',lane:'dyn'},
+    {id:'macad-start',k:'m',date:'2025-10',title:'MACAD BEGINS · IAAC',lane:'macad'},
+    {id:'macad-y1',k:'m',date:'2026-06',title:'MACAD YEAR 1 COMPLETE',lane:'macad'},
+    {id:'xr',k:'p',date:'2022-06',lens:'e',title:'XR FOR EDUCATION',lane:'main',blurb:'Headsets on students at the LAU XR Lab: does a lesson land harder when you can walk around inside it?'},
+    {id:'mars',k:'p',date:'2023-10',lens:'p',title:'RING 4000',lane:'self',blurb:'A two-person entry with Charles Abi Chahine: two people, one ring, Top 50.'},
+    {id:'soma',k:'p',date:'2024-02',lens:'p',title:'TOWERS AT SOMA',lane:'soma',blurb:'Facade and massing studies in Rhino and Grasshopper, carried into the BIM set.'},
+    {id:'cappelletti',k:'p',date:'2025-11',lens:'e',title:'CAPPELLETTI PAVILION',lane:'macad',blurb:'A pavilion optimized to a lattice, built with Ahmad Baltaji, shared end to end.'},
+    {id:'huddle',k:'p',date:'2025-12',lens:'c',title:'THE HUDDLE',lane:'macad',blurb:'Team of four, all hands on everything: WASP growth, Kangaroo settle, adaptive envelope.'},
+    {id:'podcast',k:'p',date:'2026-01',lens:'c',title:'OPTIMIZING FOR THE MIND',lane:'macad',blurb:'The podcast, co-hosted with Charles Abi Chahine: one guest, one coined term.'},
+    {id:'neurospace',k:'p',date:'2026-02',lens:'c',title:'NEUROSPACE',lane:'macad',blurb:'A live app that scores a room as you shape it: server geometry, browser scoring.'},
+    {id:'lungs',k:'p',date:'2026-03',lens:'c',title:'THE LUNGS',lane:'macad',blurb:'Data team of three: we built the app that ran the studio.'},
+    {id:'ballooning',k:'p',date:'2026-04',lens:'c',title:'A BALLOONING MARKET',lane:'macad',blurb:'A market roof that breathes: pneumatic form-finding under comfort constraints.'},
+    {id:'legoarch',k:'p',date:'2026-05',lens:'c',title:'LEGOARCH',lane:'macad',blurb:'Built with Charles Abi Chahine, end to end as a pair: a LEGO set that digitally verifies buildable.'},
+    {id:'sensi',k:'p',date:'2026-06',lens:'c',title:'SENSI',lane:'macad',blurb:'Project lead, A to Z. Built with a team of four: a six-sense comfort copilot.'},
+    {id:'xreal',k:'t',date:'2022-09',lens:'e',title:'extended reality',lane:'main',blurb:'I started in a lab strapping headsets onto students to see whether a lesson lands harder when you can walk around inside it.'},
+    {id:'genai',k:'t',date:'2024-06',lens:'c',title:'generative ai',lane:'self',blurb:'Generative AI made the inspired gesture free. A render is a promise, not a product.'},
+    {id:'evosearch',k:'t',date:'2025-11',lens:'e',title:'evolutionary search',lane:'macad',blurb:'Describe what good looks like, then let a population of designs breed, mutate, and compete.'},
+    {id:'neuroaes',k:'t',date:'2025-12',lens:'c',title:'neuroaesthetics',lane:'macad',blurb:'Why does one room settle you and another keep you on edge?'},
+    {id:'bim',k:'t',date:'2026-01',lens:'c',title:'behavior information modeling',lane:'macad',blurb:'Thirty years of tracking every beam and duct to the millimeter. Now track what the room does to the person.'},
+    {id:'drawiface',k:'t',date:'2026-03',lens:'p',title:'drawing as interface',lane:'macad',blurb:'For most of my life the drawing was the output. Now it is the way in.'},
+    {id:'solvers',k:'t',date:'2026-04',lens:'e',title:'physics solvers',lane:'macad',blurb:"A physics solver is the most honest collaborator I have: it doesn't care what I intended."},
+    {id:'heritage',k:'t',date:'2026-04',lens:'p',title:'heritage meets new tech',lane:'macad',blurb:'The usual choice with an old building is a trap: museum piece, or glass box called modern.'},
+    {id:'comfort',k:'t',date:'2026-05',lens:'c',title:'comfort as data',lane:'macad',blurb:"You don't average a room. The thing that's wrong is the thing you notice."},
+    {id:'respond',k:'t',date:'2026-06',lens:'c',title:'buildings that respond',lane:'macad',blurb:'Right now a building is a fixed guess, chosen years before you arrived.'},
+    {id:'cemetery',k:'a',date:'2022-06',title:'SHORTLIST · CEMETERY CHALLENGE',lane:'self'},
+    {id:'tamayouz',k:'a',date:'2023-09',title:'TAMAYOUZ · TOP 100',partner:'barch-grad',lane:'main'},
+    {id:'mars-top50',k:'a',date:'2024-03',title:'TOP 50 · MARSCEPTION',partner:'mars',lane:'self'},
+    {id:'huddle-award',k:'a',date:'2025-12',title:'STUDIO AWARD · ACESD',partner:'huddle',lane:'macad'},
+    {id:'lungs-award',k:'a',date:'2026-03',title:'STUDIO AWARD · BIMSC',partner:'lungs',lane:'macad'},
+    {id:'legoarch-jury',k:'a',date:'2026-05',title:'JURY AWARD · AIA GENERATIVE AI',partner:'legoarch',lane:'macad'},
+    {id:'sensi-macad-award',k:'a',date:'2026-06',title:'MACAD AWARDS · WINNER',partner:'sensi',lane:'macad'}
+  ];
+  var LINKS=[
+    ['xreal','xr'],['genai','drawiface'],['genai','evosearch'],['genai','legoarch'],['genai','heritage'],
+    ['evosearch','mars'],['evosearch','solvers'],['neuroaes','sensi'],['neuroaes','podcast'],['neuroaes','bim'],
+    ['bim','neurospace'],['bim','comfort'],['comfort','sensi'],['comfort','ballooning'],['comfort','respond'],
+    ['neuroaes','respond'],['solvers','cappelletti'],['heritage','huddle'],['genai','neurospace'],
+    ['tamayouz','barch-grad'],['mars-top50','mars'],['huddle-award','huddle'],['lungs-award','lungs'],
+    ['legoarch-jury','legoarch'],['sensi-macad-award','sensi']
+  ];
+
+  var W=3000,H=860,X0=150,X1=2870;
+  var byId={};CAST.forEach(function(c){byId[c.id]=c;});
+  var sorted=CAST.slice().sort(function(a,b){return a.date<b.date?-1:(a.date>b.date?1:(a.k<b.k?-1:1));});
+  sorted.forEach(function(c,i){c.baseX=X0+((i+0.5)/sorted.length)*(X1-X0);c.rank=i;});
+  var LANEY={main:660,self:600,soma:722,dyn:762,macad:560};
+
+  var LOSS={
+    nerve:'<b>WHAT DISAPPEARED:</b> the record. no lanes, no forks, no "which commitment, when". position is now art plus a left-to-right clock. the correlations still sing, but nothing grounds them.',
+    ruler:'<b>WHAT DISAPPEARED:</b> the mind. every fact is in its true lane, instantly credible, and not one idea can touch another. no reach, no synapse, no life. this is the record that has not convinced you twice.',
+    merge:'<b>NOTHING DROPPED:</b> ruler beneath (faint, geometric, true), nerve above (bright, organic, alive), the plumb line letting them converse. the contrast is the design.'
+  };
+
+  var STYLE={ p:{count:7,length:52,wobble:0.9,branch:0.6,depth:2,baseW:1.6,r:7.2},
+              t:{count:6,length:42,wobble:0.9,branch:0.55,depth:2,baseW:1.3,r:5.2},
+              a:{count:4,length:20,wobble:0.8,branch:0.3,depth:1,baseW:0.9,r:5.2},
+              m:{count:3,length:16,wobble:0.7,branch:0.2,depth:1,baseW:0.8,r:2.6} };
+  function growBranch(x,y,ang,len,rng,o,depth,out){var steps=3+Math.floor(rng()*2),seg=len/steps,a=ang,cx=x,cy=y,pts=[[x,y]];for(var s=0;s<steps;s++){a+=(rng()-0.5)*o.wobble;var g=seg*(1-s*0.14);cx+=Math.cos(a)*g;cy+=Math.sin(a)*g;pts.push([cx,cy]);if(depth<o.depth&&s>=1&&rng()<o.branch)growBranch(cx,cy,a+(rng()<0.5?0.7:-0.7),len*0.55,rng,o,depth+1,out);}out.push(pts);return out;}
+  function dendrites(cx,cy,seed,o){var out=[],rng=rngFrom(seed);if(!o.count)return out;for(var i=0;i<o.count;i++){var ang=(i/o.count)*Math.PI*2+(rng()-0.5)*0.6;growBranch(cx,cy,ang,o.length,rng,o,0,out);}return out;}
+
+  var svg=document.getElementById('world'),stage=document.getElementById('stage');
+  var gYears=document.getElementById('g-years'),gLanes=document.getElementById('g-lanes'),gConns=document.getElementById('g-conns'),gNodes=document.getElementById('g-nodes');
+  var defs=svg.querySelector('defs');
+  var nodeEls={},connEls=[],card=null,plumbEls=[];
+  var variant='merge';
+
+  function positions(){
+    if(variant==='ruler'){
+      /* everything snaps to its true lane; labels cycle 4 tiers to breathe */
+      var tier={};
+      sorted.forEach(function(c){c.x=c.baseX;c.y=LANEY[c.lane];
+        var n=(tier[c.lane]=(tier[c.lane]||0)+1);c.tier=n%4;});
+    } else {
+      sorted.forEach(function(c){
+        var r=rngFrom(c.rank*131+17)();
+        if(c.k==='t'){c.y=170+95*Math.sin(c.rank*1.05+0.4)+r*30;}
+        else if(c.k==='p'){c.y=380+85*Math.sin(c.rank*0.9+2.2)+r*26;}
+        else if(c.k==='a'){var p=c.partner&&byId[c.partner];c.y=p&&p.y?(p.k==='m'?p.y-74:p.y+64):520;}
+        else {c.y=(variant==='nerve')?600+70*Math.sin(c.rank*1.3)+r*24:LANEY[c.lane];}
+        c.x=c.baseX;
+        if(c.k==='a'&&c.partner&&byId[c.partner]&&byId[c.partner].x)c.x=byId[c.partner].x+42;
+        c.tier=0;
+      });
+    }
+  }
+
+  function build(){
+    gYears.innerHTML='';gLanes.innerHTML='';gConns.innerHTML='';gNodes.innerHTML='';defs.innerHTML='';nodeEls={};connEls=[];plumbEls=[];
+    var rg=make('radialGradient',{id:'w-glow'},defs);make('stop',{offset:'0%','stop-color':'var(--ink)','stop-opacity':0.32},rg);make('stop',{offset:'100%','stop-color':'var(--ink)','stop-opacity':0},rg);
+    var f=make('filter',{id:'w-soft',x:'-40%',y:'-40%',width:'180%',height:'180%'},defs);make('feGaussianBlur',{stdDeviation:1.4},f);
+    positions();
+
+    /* year columns (all variants: time is shared DNA) */
+    var seen={};
+    sorted.forEach(function(c){var yr=c.date.slice(0,4);if(seen[yr])return;seen[yr]=1;
+      make('line',{'class':'yearline',x1:c.baseX-34,y1:96,x2:c.baseX-34,y2:H-40},gYears);
+      var t=make('text',{'class':'yearlbl',x:c.baseX-26,y:H-46},gYears);t.textContent=yr;
+    });
+
+    /* the skeleton (ruler + merge) */
+    if(variant!=='nerve'){
+      var xSelf=byId['self-open'].baseX,xSoma=byId['soma-start'].baseX,xDyn=byId['dynamic-start'].baseX,xMacad=byId['macad-start'].baseX;
+      var Y=LANEY,XL=X0-90,XR=X1+80;
+      function lane(d,cls){return make('path',{'class':'lane'+(cls?' '+cls:''),d:d,'stroke-width':cls==='mainline'?1.7:1.2,'pathLength':1},gLanes);}
+      lane(spline([[XL,Y.main+6],[byId['xrlab-start'].baseX,Y.main],[byId['barch-grad'].baseX,Y.main-6],[xDyn,Y.main+4],[XR,Y.main-2]]),'mainline');
+      lane(spline([[xSelf-70,Y.main],[xSelf,Y.self+30],[xSelf+60,Y.self],[xMacad,Y.self-6],[XR-40,Y.self]]),'');
+      lane(spline([[xSoma-70,Y.main],[xSoma,Y.soma-22],[xSoma+70,Y.soma],[xDyn-90,Y.soma],[xDyn-10,Y.main+6]]),'');
+      lane(spline([[xDyn-70,Y.main],[xDyn,Y.dyn-22],[xDyn+80,Y.dyn],[XR,Y.dyn-4]]),'');
+      lane(spline([[xMacad-70,Y.self],[xMacad,Y.macad+26],[xMacad+70,Y.macad],[XR,Y.macad-4]]),'');
+      [['B.ARCH › NOW · THE MAIN LINE',XL+16,Y.main-12],['SELF-EMPLOYED · 2022 › NOW',xSelf+70,Y.self-12],['SOMA · 2023›24',xSoma+70,Y.soma-10],['DYNAMIC · 2024 › NOW',xDyn+86,Y.dyn-10],['MACAD · 2025 › NOW',xMacad+76,Y.macad-10]].forEach(function(L){var t=make('text',{'class':'lanelbl',x:L[1],y:L[2]},gLanes);t.textContent=L[0];});
+      var lt=make('g',{'class':'livetip'},gLanes);
+      make('line',{x1:XR-40,y1:Y.self,x2:XR-6,y2:Y.self,stroke:'var(--interaction)','stroke-width':1.7},lt);
+      make('circle',{cx:XR-6,cy:Y.self,r:4,fill:'var(--ground)',stroke:'var(--interaction)','stroke-width':1.8},lt);
+      var ltt=make('text',{'class':'livetag',x:XR-14,y:Y.self-12,'text-anchor':'end'},lt);ltt.textContent='LIVE · STILL GROWING';
+    } else {
+      /* nerve only: liveness moves to the newest piece (red ring, still red = live) */
+      var newest=sorted[sorted.length-1];
+      var lt2=make('g',{'class':'livetip'},gLanes);
+      make('circle',{cx:newest.baseX,cy:170,r:14,fill:'none',stroke:'var(--interaction)','stroke-width':1.6},lt2);
+      var lt2t=make('text',{'class':'livetag',x:newest.baseX-20,y:146,'text-anchor':'end'},lt2);lt2t.textContent='LIVE · STILL THINKING';
+    }
+
+    /* correlations (nerve + merge only: the ruler cannot draw them; that IS its weakness) */
+    if(variant!=='ruler'){
+      LINKS.forEach(function(L){
+        var a=byId[L[0]],b=byId[L[1]];if(!a||!b)return;
+        var later=(a.date>b.date)?a:b;
+        var col=later.lens?LENS[later.lens]:(a.lens?LENS[a.lens]:(b.lens?LENS[b.lens]:'var(--ink)'));
+        var mx=(a.x+b.x)/2+(a.rank%2?14:-14),my=(a.y+b.y)/2-(Math.abs(a.x-b.x)>260?46:22);
+        var g=make('g',{},gConns);
+        var rA=make('path',{'class':'reach',d:spline([[a.x,a.y],[(a.x+mx)/2,(a.y+my)/2-8],[mx,my]]),stroke:'var(--ink)','stroke-width':1.15,'pathLength':1},g);
+        var rB=make('path',{'class':'reach',d:spline([[b.x,b.y],[(b.x+mx)/2,(b.y+my)/2+8],[mx,my]]),stroke:'var(--ink)','stroke-width':1.15,'pathLength':1},g);
+        var syn=make('circle',{'class':'synapse',cx:mx,cy:my,r:2.6,fill:'var(--ground)',stroke:col,'stroke-width':1.5},g);
+        var pulse=make('path',{'class':'pulse',d:spline([[a.x,a.y],[mx,my],[b.x,b.y]]),stroke:col,'stroke-width':2.5,'pathLength':1,'stroke-dasharray':'0.12 1'},g);
+        connEls.push({a:L[0],b:L[1],later:later.id,els:[rA,rB],syn:syn,pulse:pulse});
+      });
+    }
+
+    /* the pieces */
+    sorted.forEach(function(c){
+      var o=STYLE[c.k],col=c.lens?LENS[c.lens]:'var(--ink)';
+      var g=make('g',{'class':'node',tabindex:0,role:'link','aria-label':c.title+' — '+KINDNAME[c.k]+', '+c.date+'. Open it.'},gNodes);
+      if(variant!=='ruler'){
+        var mo=(variant==='merge'&&c.k==='m')?{count:0}:o; /* merge: milestones are the ruler's */
+        dendrites(c.x,c.y,c.rank*97+11,mo.count?o:{count:0}).forEach(function(pts){
+          make('path',{'class':'dendrite',d:spline(pts),stroke:col,'stroke-width':o.baseW*2.2,opacity:0.09,'pathLength':1,filter:'url(#w-soft)'},g);
+          make('path',{'class':'dendrite',d:spline(pts),'stroke-width':o.baseW,'pathLength':1,stroke:'var(--ink)'},g);
+        });
+        if(c.k!=='m')make('circle',{'class':'soma-glow',cx:c.x,cy:c.y,r:o.r*3,fill:'url(#w-glow)'},g);
+      }
+      var rr=(variant==='ruler')?Math.max(3,o.r*0.72):o.r; /* ruler: calmer marks */
+      if(c.k==='p'){make('circle',{'class':'soma',cx:c.x,cy:c.y,r:rr,fill:'var(--ink)'},g);make('circle',{cx:c.x,cy:c.y,r:rr*0.36,fill:col},g);}
+      else if(c.k==='t'){make('circle',{'class':'soma',cx:c.x,cy:c.y,r:rr,fill:'var(--ground)',stroke:'var(--ink)','stroke-width':1.7},g);make('circle',{cx:c.x,cy:c.y,r:1.9,fill:col,opacity:0.8},g);}
+      else if(c.k==='a'){make('path',{'class':'soma',d:starPath(c.x,c.y,rr),fill:'var(--ink)'},g);}
+      else {make('circle',{'class':'soma',cx:c.x,cy:c.y,r:o.r,fill:'var(--ink-muted)'},g);}
+      make('circle',{'class':'hit',cx:c.x,cy:c.y,r:26},g);
+      var ly;
+      if(variant==='ruler'){var offs=[-16,24,-30,38];ly=c.y+offs[c.tier||0];}
+      else{var above=(c.k==='t')||(c.k==='p'&&c.rank%2===0);ly=c.k==='m'?c.y+18:(above?c.y-o.r-12:c.y+o.r+18);}
+      var lbl=make('text',{'class':'lbl '+c.k,x:c.x,y:ly,'text-anchor':'middle'},g);lbl.textContent=c.title;
+      var yr=make('text',{'class':'yr',x:c.x,y:ly+((variant!=='ruler'&&((c.k==='t')||(c.k==='p'&&c.rank%2===0))&&c.k!=='m')?-13:12),'text-anchor':'middle'},g);yr.textContent=c.date;
+      nodeEls[c.id]=g;bind(c,g);
+    });
+    document.getElementById('loss').innerHTML=LOSS[variant];
+  }
+
+  function firePulse(cn,delay,transient){
+    if(PRM.matches){cn.els.forEach(function(e){e.classList.add('lit');});cn.syn.classList.add('lit');
+      if(transient)setTimeout(function(){cn.els.forEach(function(e){e.classList.remove('lit');});cn.syn.classList.remove('lit');},900);return;}
+    setTimeout(function(){var p=cn.pulse;p.classList.remove('firing');void p.getBoundingClientRect();p.classList.add('firing');
+      cn.els.forEach(function(e){e.classList.add('lit');});cn.syn.classList.add('lit');
+      if(transient)setTimeout(function(){cn.els.forEach(function(e){e.classList.remove('lit');});cn.syn.classList.remove('lit');},1000);},delay||0);}
+  function light(id){stage.classList.add('is-focus');var g=nodeEls[id];if(g)g.classList.add('on');
+    connEls.forEach(function(cn){if(cn.a===id||cn.b===id){firePulse(cn,0,false);var other=cn.a===id?cn.b:cn.a;if(nodeEls[other])nodeEls[other].classList.add('near');}});
+    var c=byId[id];
+    if(variant==='merge'&&c&&c.k!=='m'){
+      plumbEls.push(make('line',{'class':'plumb',x1:c.x,y1:c.y+14,x2:c.x,y2:654,'stroke-width':1},gLanes));
+      plumbEls.push(make('circle',{cx:c.x,cy:660,r:3,fill:'var(--ink)'},gLanes));
+    }
+    if(variant==='ruler'&&c){ /* the ruler's own answer: light the lane */
+      sorted.forEach(function(o){if(o.lane===c.lane&&nodeEls[o.id]&&o.id!==id)nodeEls[o.id].classList.add('near');});
+    }
+    showCard(id);}
+  function clearLight(){stage.classList.remove('is-focus');Object.keys(nodeEls).forEach(function(k){nodeEls[k].classList.remove('on','near');});
+    connEls.forEach(function(cn){cn.els.forEach(function(e){e.classList.remove('lit');});cn.syn.classList.remove('lit');});
+    plumbEls.forEach(function(e){e.remove();});plumbEls=[];
+    if(card)card.classList.remove('show');}
+  function showCard(id){var c=byId[id];if(!c)return;
+    if(!card){card=document.createElement('aside');card.className='fieldcard glass-2';card.setAttribute('aria-hidden','true');document.body.appendChild(card);}
+    var kindLbl={p:'PROJECT',t:'THOUGHT',a:'RECOGNITION',m:'MILESTONE'}[c.k];
+    card.innerHTML='<div class="meta"><span>'+c.date+'</span><span>'+kindLbl+'</span></div><h3 class="'+(c.k==='t'?'':'up')+'">'+c.title+'</h3>'+(c.blurb?'<p>'+c.blurb+'</p>':'');
+    var soma=nodeEls[id].querySelector('.soma');var b=soma.getBoundingClientRect();
+    var left=Math.max(12,Math.min(b.left+b.width/2-150,innerWidth-312));
+    var top=(b.top<innerHeight*0.5)?(b.bottom+14):(b.top-170);
+    card.style.left=left+'px';card.style.top=Math.max(80,top)+'px';card.classList.add('show');}
+  function bind(c,g){g.addEventListener('mouseenter',function(){clearLight();light(c.id);});g.addEventListener('mouseleave',clearLight);
+    g.addEventListener('focus',function(){clearLight();light(c.id);g.scrollIntoView({block:'nearest',inline:'center',behavior:PRM.matches?'auto':'smooth'});});
+    g.addEventListener('blur',clearLight);
+    g.addEventListener('click',function(){console.log('open '+c.k+' '+c.id);});
+    g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();console.log('open '+c.k+' '+c.id);}});}
+
+  function develop(){
+    if(PRM.matches){stage.classList.remove('intro');return;}
+    stage.classList.remove('intro');void stage.getBoundingClientRect();stage.classList.add('intro');
+    Array.prototype.forEach.call(gLanes.querySelectorAll('.lane'),function(el,i){el.style.animationDelay=(i*120)+'ms';});
+    Array.prototype.forEach.call(gYears.querySelectorAll('*'),function(el){el.style.animationDelay='300ms';});
+    Array.prototype.forEach.call(gLanes.querySelectorAll('.lanelbl,.livetag'),function(el){el.style.animationDelay='700ms';});
+    sorted.forEach(function(c,i){var g=nodeEls[c.id];if(!g)return;var t=500+i*150;
+      Array.prototype.forEach.call(g.querySelectorAll('.dendrite'),function(el){el.style.animationDelay=t+'ms';});
+      Array.prototype.forEach.call(g.querySelectorAll('.soma,.soma-glow'),function(el){el.style.animationDelay=(t+230)+'ms';});
+      Array.prototype.forEach.call(g.querySelectorAll('.lbl,.yr'),function(el){el.style.animationDelay=(t+330)+'ms';});});
+    connEls.forEach(function(cn){var later=byId[cn.later];var ti=later?later.rank:0;var t=500+ti*150;
+      cn.els.forEach(function(el){el.style.animationDelay=(t+160)+'ms';});
+      cn.syn.style.animationDelay=(t+780)+'ms';
+      firePulse(cn,t+900,true);});
+    autopan(500+sorted.length*150+800);
+    setTimeout(function(){stage.classList.remove('intro');},500+sorted.length*150+1600);
+  }
+  var panRaf=null;
+  function autopan(dur){
+    if(PRM.matches)return;
+    if(panRaf)cancelAnimationFrame(panRaf);
+    var max=stage.scrollWidth-stage.clientWidth;if(max<=0)return;
+    var t0=performance.now();stage.scrollLeft=0;var stopped=false;
+    stage.addEventListener('pointerdown',function(){stopped=true;},{once:true});
+    (function step(now){if(stopped)return;var k=Math.min(1,(now-t0)/dur);stage.scrollLeft=max*(k<0.5?2*k*k:1-Math.pow(-2*k+2,2)/2);if(k<1)panRaf=requestAnimationFrame(step);})(t0);
+  }
+
+  var drag=null;
+  stage.addEventListener('pointerdown',function(e){if(e.target.closest('.node'))return;drag={x:e.clientX,s:stage.scrollLeft};stage.classList.add('dragging');});
+  window.addEventListener('pointermove',function(e){if(!drag)return;stage.scrollLeft=drag.s-(e.clientX-drag.x);});
+  window.addEventListener('pointerup',function(){drag=null;stage.classList.remove('dragging');});
+  stage.addEventListener('wheel',function(e){if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){stage.scrollLeft+=e.deltaY;e.preventDefault();}},{passive:false});
+
+  (function(){var ul=document.getElementById('sr-nav');sorted.forEach(function(c){var li=document.createElement('li');var a=document.createElement('a');a.href='#'+c.id;a.textContent=c.title+' ('+KINDNAME[c.k]+', '+c.date+')';li.appendChild(a);ul.appendChild(li);});})();
+
+  var segs={nerve:document.getElementById('v-nerve'),ruler:document.getElementById('v-ruler'),merge:document.getElementById('v-merge')};
+  function setVariant(v){variant=v;
+    Object.keys(segs).forEach(function(k){segs[k].setAttribute('aria-pressed',k===v);});
+    stage.classList.remove('v-nerve','v-ruler','v-merge');stage.classList.add('v-'+v);
+    clearLight();build();develop();}
+  segs.nerve.addEventListener('click',function(){setVariant('nerve');});
+  segs.ruler.addEventListener('click',function(){setVariant('ruler');});
+  segs.merge.addEventListener('click',function(){setVariant('merge');});
+  document.getElementById('replay').addEventListener('click',develop);
+  document.getElementById('mode').addEventListener('click',function(){var c=document.documentElement.dataset.theme;document.documentElement.dataset.theme=c==='light'?'dark':c==='dark'?'light':(window.matchMedia('(prefers-color-scheme: dark)').matches?'light':'dark');});
+
+  build();requestAnimationFrame(develop);
+})();
+</script>
+</body>
+</html>

@@ -34,7 +34,7 @@ export function Pill({
 // visual pill stays compact but the transparent hit area is >= 44px tall
 // (touch floor), extended invisibly the way the old header extended its
 // links. Active = solid ink; rest = raised glass. Renders as a button by
-// default or as any element via `as` (a router Link for hash facets).
+// default or as any element via `as` (a router Link, an anchor).
 export function FilterPill({
   as,
   active = false,

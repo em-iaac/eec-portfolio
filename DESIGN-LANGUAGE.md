@@ -59,6 +59,55 @@ re-skinned to this language in its own focused session (see §9).
 >    every transition is an instant swap. The Pen Table carbon-flood ceremony
 >    ("the light table switches off") retired with one mode: home navigations
 >    ride the same crossfade.
+>
+> **AMENDMENT (Emilie, 2026-07-11, the Neural Studio session; decided over
+> live animated prototypes; the concept ruling lives in REDESIGN-SPEC §6):**
+>
+> 7. **The NEURAL vocabulary (for the /thoughts WORLD; the landing is
+>    unchanged for now, and any landing adoption is /llm-council-gated).**
+>    Nodes may be drawn as ANATOMICAL NEURONS: a soma keeping the
+>    established mark grammar (filled dot = project [+ lens nucleus],
+>    hollow ring = thought, star = award, plain commit dot = milestone),
+>    with organic branching dendrites. A CONNECTION is TENSION + TOUCH: two
+>    reaches wander from their somas, meet at a synapse bud, and FIRE (a
+>    travelling pulse in the later piece's lens colour). Connection threads
+>    are anatomical too (wander, taper, twigs): the surface reads as ONE
+>    drawing. The career commit graph may ride beneath as the SKELETON in
+>    its shipped design language (straight runs, clean S-curve
+>    forks/merges, open ring tips, the one red LIVE tip): **the ruler is
+>    geometric and faint, the nerve is organic and bright; the contrast is
+>    the design; the mind owns all motion** (the skeleton never animates
+>    except the live tip's slow beat). Motion set: dendrite GROWTH
+>    (one-shot draw-in, chronological), synapse FIRE (hover/tap + the
+>    growth replay), idle DRIFT (slow sway, rare spontaneous fire;
+>    PRM-gated). Reduced motion renders the complete grown, connected,
+>    labelled still. Red stays liveness only; lens colour enters through
+>    nuclei and synapse buds; every neuron is a labelled reachable link
+>    with a 44px+ target.
+>
+> **AMENDMENT (Emilie, 2026-07-11, the meta build; every gate signed live;
+> the concept record lives in REDESIGN-SPEC §6):**
+>
+> 8. **The PROXIMITY REVEAL (built; the /thoughts world's motion law).**
+>    At REST the world is quiet points in time: somas + labels at 62% ink
+>    (the 55% dial fails AA on the light ground; the a11y floor binds:
+>    62% = 4.9:1 light / 6.4:1 dark, flagged for Emilie), the faint ruler
+>    beneath, NO fibres drawn. Attention is the only
+>    grower: neurons within the wake radius build (dendrites out of the
+>    soma, correlations to the synapse, which pops and fires once) and
+>    settle when it leaves. The signed feel: radius 180 canvas units ·
+>    build 1400ms · decay 3000ms · REACH OUT (a waking neuron's threads
+>    build to their far ends; the far label brightens and names the
+>    correlation). One anatomy: a connection fibre is a dendrite that found
+>    a partner (same widths, same twigs); a tie's strength 1..3 grows that
+>    many fibres from each end (the braid), and the synapse bud grows with
+>    the bond. On touch: tap-to-wake parks attention, a pan's grabbed spot
+>    glows in the hand, armed-tap opens. The chronological WATCH IT GROW
+>    replay is the one theatrical moment, opt-in. Reduced motion: the
+>    engine never runs; the world renders as the fully-grown, connected,
+>    labelled still. Amendment 7's "growth (one-shot draw-in,
+>    chronological)" reads through this: growth is attention-driven now;
+>    the chronological sweep lives in the replay.
 
 ---
 

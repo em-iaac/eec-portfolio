@@ -53,7 +53,7 @@ function ScrollToTop() {
     // resets as normal).
     const inWork = (p: string) => p === '/work' || p.startsWith('/work/')
     if (inWork(prev) && inWork(pathname)) return
-    // Same-path search-param navigations (the CV's ?view/?facet, G3) must
+    // Same-path search-param navigations (/thoughts <-> ?view=words) must
     // never reset scroll or steal focus; the effect re-runs on navType flips
     // (PUSH<->REPLACE) even when the pathname is unchanged.
     if (prev === pathname && !hash) return
@@ -90,19 +90,14 @@ function PageCount() {
   return null
 }
 
-// THE NOTEBOOK DOOR RETIRED (G3, 2026-07-10, Emilie): the career graph moved
-// onto the CV as its graph view. /notebook links are shared and citable, so
-// they redirect forever, never 404, and land on the view they meant: the
-// record. Old kind-facet hashes carry over as the ?facet= param; unknown
-// hashes (incl. the pre-G2 lens hashes) land as ALL, same as the old page.
+// THE NOTEBOOK DOOR RETIRED (G3; retargeted by the meta build, 2026-07-11):
+// the record's time view lives at /thoughts now — the neural world, which
+// shows every kind at once, so the old kind-facet hashes need no carrying.
+// /notebook links are shared and citable: they redirect forever, never 404.
+// (The G3 stop, /cv?view=graph, retired with the CV's graph view; those
+// URLs degrade to the plain CV list.)
 function NotebookRedirect() {
-  const { hash } = useLocation()
-  const f = hash.replace('#', '')
-  const search =
-    f === 'projects' || f === 'thoughts' || f === 'milestones'
-      ? `?view=graph&facet=${f}`
-      : '?view=graph'
-  return <Navigate to={{ pathname: '/cv', search }} replace />
+  return <Navigate to="/thoughts" replace />
 }
 
 // The pathless chrome route wrapping every page: scroll/focus handling +

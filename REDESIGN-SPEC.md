@@ -87,17 +87,21 @@ door retired; see §6). Nav (visible + scannable on every page):
 **WORK · THOUGHTS · CV · ABOUT**.
 
 ```
-/  (LANDING)            the mind graph, all-dark, full-bleed. The one showcase.
+/  (LANDING)            the mind graph, full-bleed. The mind AT REST, unchanged.
                         prerendered honest DOM hero paints < 1s over the drawing.
 ├── /work               THE GALLERY: grid of all projects; card-on-top opens a
 │   └── /work/:id         project's story; deep link to its full page.
-├── /projects/:id       THE PROJECT PAGE ("sheet"): proof-first; 5-template family.
-├── /thoughts           THE THOUGHTS index: the written notes, newest first,
-│   └── /thoughts/:id     quiet year groups (G3); a thought note (words-only leaf).
-├── /notebook           RETIRED at G3 → redirects to /cv?view=graph forever (the
-│                         record); old #kind hashes carry over as the facet param.
-├── /cv                 plain ATS-safe CV list, default; screen-only GRAPH VIEW
-│                         toggle carries the career commit graph (§6, §9).
+├── /thoughts           THE NEURAL WORLD (built at the meta build): the whole
+│   │                     record in time, one full-bleed proximity-revealed map
+│   │                     (§6); #<id> deep-links centre + wake a piece.
+│   ├── ?view=words     the G2 READING ROOM, one corridor away (editorial rows,
+│   │                     year spine; unchanged).
+│   └── /thoughts/:id   a thought note stays a words-only leaf.
+├── /notebook           RETIRED → redirects to /thoughts forever (the world
+│                         shows every kind; old #kind hashes need no carrying).
+├── /cv                 the plain ATS-safe list, nothing else (§9; the G3 graph
+│                         view + ghost rail retired at the meta build; old
+│                         ?view=graph URLs degrade to the list, never 404).
 ├── /about              the person; the pivot story; NOW; contact ("what's in yours?").
 └── (404)               a warm "this thought wandered off, back to the mind ›".
 ```
@@ -272,6 +276,115 @@ Family rules (bound into the spec, no extra sign-off):
 
 ## 6 · The notebook · the career commit graph
 
+> **THE META BUILD · THE NEURAL WORLD SHIPPED (2026-07-11, Emilie; every gate
+> decided live over the browser + AskUserQuestion; production code in
+> `site/src/thoughts/world/`).** The G3.5 world went to production as
+> /thoughts with one headline refinement signed at gate 1:
+> - **THE PROXIMITY REVEAL ("a simple way to show complexity").** At REST the
+>   world is quiet points in time: somas + labels at 62% ink (Emilie's dial
+>   said 55%, which fails AA on the light ground at 3.9:1; the a11y floor
+>   binds, so rest ink ships at 62% = 4.9:1 light / 6.4:1 dark — flagged in
+>   §14), real dates, year columns, the faint skeleton — NO dendrites, NO
+>   threads drawn. As
+>   the pointer moves, only neurons within the wake radius GROW (dendrites
+>   draw out of the soma) and their correlations BUILD to the synapse, which
+>   pops and fires once; leave, and it settles. Signed feel: **radius 180
+>   canvas units · build 1400ms · decay 3000ms · REACH OUT** semantics (a
+>   waking neuron's threads build all the way to their far ends; the far
+>   label brightens and names the correlation). The engine is one rAF loop
+>   writing stroke-dashoffset/opacity only; it self-suspends when settled.
+> - **ONE ANATOMY, STRENGTH AS THREADS (gate 1 refinement).** A connection
+>   fibre is drawn with the same dendrite grammar as the neuron's own
+>   branches (same widths, same twigs); a tie's strength 1..3 grows that
+>   many fibres from EACH end toward a bigger synapse bud (the braid).
+> - **THE CORRELATIONS ARE REGISTRY DATA (gate 4).** An appends-only
+>   `CORRELATIONS: [earlier, later, strength][]` block at the bottom of
+>   registry.ts, idea lineage only; award→work threads DERIVE from each
+>   award's refId, and Tamayouz (honouring the B.Arch milestone) anchors via
+>   the world-local override in `thoughts/world/skeletonIds.ts`. Validator
+>   clauses: ids resolve, idea kinds only, no self-links, no duplicate
+>   pairs, strength 1..3; plus census (the world covers every project,
+>   thought, milestone, award: 35 pieces, press stays off per gate 2) and
+>   the route model (below).
+> - **THE FROZEN LAYOUT, DONE RIGHT.** X is a fixed step (78) per
+>   chronological rank with the viewBox width DERIVED from the census, so
+>   new work appends to the right and no shipped coordinate moves;
+>   randomness seeds from the entry ID, never the rank. Snapshot-guarded
+>   (`worldGraph.test.ts`).
+> - **READING (gate 3).** A thought's ring opens its note, a project's soma
+>   its showcase, an award the showcase its refId names; milestones + the
+>   two unanchored awards are focusable card-only marks. Returning restores
+>   the world where you left it; `/thoughts#<id>` centres + wakes a piece
+>   (the notes' "SEE THIS THOUGHT IN TIME ›" corridor). The G2 reading room
+>   survives at **/thoughts?view=words** ("PREFER THE WORDS?"), rows +
+>   year spine + morphs intact.
+> - **TOUCH (gate 5).** Tap empty space = the region wakes and blooms fully
+>   (attention parks until you touch elsewhere); a pan's grabbed spot glows
+>   in your hand; tap a piece = wake + card (armed); second tap opens. 44px+
+>   targets held (49px at 375px).
+> - **THE LIVE TIP CARRIES NOW (gate 2).** Hover/focus on the red
+>   LIVE · STILL GROWING tip shows the now.ts lines (building / reading /
+>   thinking), so the record's open end answers "doing what?".
+> - **CHROME (gates 2 + 6, copy SIGNED in-session).** The floating glass
+>   pill header rides over the world (no footer; the stage is one frame).
+>   kicker "THOUGHTS · ONE WORLD · EVERYTHING, IN TIME" · h1 **"points in
+>   time"** (Emilie's own line) · sub "{n} PIECES · 2021 › NOW · PROJECTS +
+>   THOUGHTS + MILESTONES + AWARDS · EVERY PIECE OPENS" (count derived) ·
+>   hint "DRAG TO EXPLORE · IT WAKES WHERE YOU LOOK" · corridor "PREFER THE
+>   WORDS? THE READING ROOM ›" · tip tag "LIVE · STILL GROWING" · the
+>   ⟳ WATCH IT GROW replay ships (chronological sweep, then settles; hidden
+>   under PRM). Nav label stays **THOUGHTS** (gate 7).
+> - **FLOORS.** Reduced motion = the fully-grown, connected, labelled still
+>   (engine off); every piece focusable with a full SR nav; routed nodes are
+>   links (Enter/Space); the CV reverted to the plain §9 list (graph view +
+>   ghost rail + lazy chunk deleted); /notebook → /thoughts forever.
+
+> **G3.5 · THE NEURAL WORLD (2026-07-11, Emilie; decided over live animated
+> prototypes in the Neural Studio session; production build is a follow-on
+> session).** The time story leaves the CV and becomes **/thoughts: one
+> full-bleed, sideways-explorable WORLD** where EVERYTHING (all 11 projects,
+> 10 thoughts, 7 milestones, 7 awards; 35 pieces, 2021 › NOW) is drawn as a
+> NEURAL map: nodes are anatomical neurons whose dendrites reach toward each
+> other, meet at a synapse, and FIRE (tension + touch; a thought connecting
+> to an earlier one). Her rulings, each felt live before locking:
+> - **NO clusters** — one whole map of everything together, chronological
+>   left to right (rank-stepped like a commit graph; real dates printed,
+>   year columns mark the warp), correlations forming across it.
+> - **ANATOMICAL always** (the diagrammatic dial retired); the connection
+>   threads are anatomical too — organic, tapering, twigged — so the whole
+>   surface reads as ONE drawing.
+> - **KIND lives in the neuron** (the landing's mark grammar carried and
+>   elevated): project = largest filled soma + lens nucleus · thought =
+>   ring + lens core · award = small ink star hanging off its work ·
+>   milestone = a plain commit dot ON the career lane (no dendrites).
+>   Synapse = two reaches touching (legend names it).
+> - **THE COMMIT GRAPH DOES NOT RETIRE — it merges as the skeleton** (the
+>   drop-one test settled it: nerve-only is alive but unaccountable,
+>   ruler-only is credible but lifeless). It keeps the SHIPPED CareerGraph
+>   design language, transposed horizontal: straight lane runs, one clean
+>   S-curve per fork/merge, open ring tips, NOW on the main line, the ONE
+>   red LIVE tip on the self-employed lane. Faint beneath; the mind owns
+>   all motion. **The contrast is the design: the record is drawn with a
+>   ruler, the thinking is drawn by a nerve.** They converse: hovering a
+>   piece of the mind drops a plumb line to its moment on the record.
+> - **IA = TWO VIEWS OF ONE MIND, no duplicates:** the LANDING stays the
+>   mind AT REST (ideas, no time, the honest hero; unchanged for now; any
+>   neural re-skin of it is a later, /llm-council-gated move). /thoughts
+>   becomes the mind IN TIME (this world); the reading room's words stay
+>   reachable from it. The CV's G3 graph view + ghost rail retire and the
+>   CV reverts to the plain list (already ruled at the post-G3
+>   redirection; ATS unaffected).
+> - Floors held in the prototypes and binding for the build: every piece a
+>   labelled reachable link + a full SR nav, 44px+ touch targets, drag/
+>   wheel/keyboard panning, PRM = the complete grown static map (no
+>   growth, no drift, no pulses), honest registry data only (draft dates
+>   stay drafts; team credits woven; no invented claims).
+> Prototypes of record: `design-studio/neural-world.html` (the model) +
+> `neural-world-variants.html` (the drop-one test) + the exploration set
+> (`neural-lab`, `neural-thoughts`, `neural-landing`, `neural-merge`,
+> `neural-tension`, `neural-landing-variants`). The paragraphs below
+> describe the pre-neural notebook/CV states and read through this ruling.
+
 > **RETIRED AS A PAGE (G3, 2026-07-10, Emilie; decided over mockups + the
 > live build in-session).** The /notebook door closes; `/notebook` redirects
 > to the CV's GRAPH VIEW (`/cv?view=graph`) forever and never 404s; old
@@ -410,15 +523,13 @@ edge only, never the bound gutter. See Sections 9-10.
   / professional record ("Rhino Compute" spelled with a space once for ATS).
 - The ONLY non-plain touch: a small functional "updated <month year>" line for
   version clarity. NO drawing-set / "issued" language (Emilie's calibration).
-- The CV's DEFAULT stays the fully plain list: ATS-safe, zero novelty, exactly as
-  above. **The career commit graph now lives here, behind a screen-only GRAPH
-  VIEW toggle (Emilie, 2026-07-10, superseding the earlier "never on the CV"
-  line; the notebook door retired the same day, §2 + §6).** A reader who wants
-  the drawing flips to it (`/cv?view=graph`, LIST | GRAPH aria-pressed pills, a
-  faint ghost rail on the list face as the desktop invitation); the default
-  view, ATS parsing, print (`hidden` beaten by `print:block`, always the plain
-  light list, both modes, both views) and the build-time PDF are unaffected: no
-  toggle, no graph ever leaves the screen.
+- The CV is the fully plain list again, and ONLY that. **The G3 graph view,
+  the LIST | GRAPH pills, the ghost rail and the lazy graph chunk all RETIRED
+  at the meta build (Emilie, 2026-07-11): the time story lives at /thoughts
+  as the neural world (§6), and the plain list is better for ATS anyway.**
+  Old `/cv?view=graph` URLs degrade to the list (params ignored, never 404);
+  `/notebook` redirects to `/thoughts`. Print and the build-time PDF are the
+  same plain light list as ever.
 
 ---
 
@@ -546,6 +657,20 @@ object), contact invite completes the landing's "what's in yours?" line
 develop-once, the reading shelf SKIPPED for G3 · /thoughts gains the YEARS
 time-spine (picked over RAIL and NONE from live screenshots): quiet mono year
 labels group the rows, nothing else changes.
+**THE META BUILD (2026-07-11, seven gates, all Emilie's over the live browser):**
+gate 1 REST state locked (quiet points in time, no threads) + PROXIMITY REVEAL
+feel signed (radius 180 / build 1400ms / decay 3000ms / REACH OUT) + the braid
+(one dendrite anatomy; strength 1..3 = fibres per side) · gate 2 neuron/skeleton
+balance confirmed as prototyped; census stays 35 (press off); the LIVE tip
+carries the NOW card; the glass pill header floats over the world · gate 3
+reading interaction confirmed (milestones + unanchored awards = card-only
+marks; return recentres; the G2 reading room survives at /thoughts?view=words) ·
+gate 4 CORRELATIONS shape signed (registry block, idea lineage only, refId-
+derived award threads, Tamayouz anchor override) · gate 5 touch model shipped
+(tap-to-wake + grab-glow + armed-tap) · gate 6 copy SIGNED: h1 "points in time"
+(hers), LIVE · STILL GROWING, the kicker/sub/hint/corridor package, WATCH IT
+GROW ships · gate 7 the nav label stays THOUGHTS · the CV reverted to the plain
+list; /notebook → /thoughts.
 
 ---
 
@@ -556,20 +681,29 @@ labels group the rows, nothing else changes.
   all sheet/thought prose, the 404 line.
 - ~~The THOUGHTS index page form~~ DECIDED at G2 (see §6): contents-only
   editorial rows, no lead, no intro. Still needing her sign-off from G2: the
-  /thoughts h1 ("what i keep thinking about"), the "… SHOWCASES OPENED ›"
-  publish wording, the KindMark `✦` award glyph, the record rows dropping the
-  lens tick + IN-PREP status labels (quiet numbers only), and whether /work
-  (and the CV graph view's chrome) keep their mono kickers once the no-intro
-  ruling sweeps the site (G4). (The notebook h1 retired with its page at G3.)
+  reading room's h1 ("what i keep thinking about", now at /thoughts?view=words),
+  the "… SHOWCASES OPENED ›" publish wording (its KindMark rows retired with
+  the CV graph view; wording survives nowhere on screen today), and whether
+  /work keeps its mono kicker once the no-intro ruling sweeps the site (G4).
+  (The notebook h1 retired at G3; the CV graph chrome retired at the meta
+  build; the `✦` glyph question went with KindMark.)
 - From G3 (all shipped `draftCopy`, unsigned): the About kicker ("ABOUT · THE
-  PERSON") + the picked h1 wording · the NOW module's three lines (now.ts) +
-  the NOW row/field-card wording on the graph · the contact callback line
+  PERSON") + the picked h1 wording · the NOW module's three lines (now.ts,
+  now ALSO the world's live-tip card) · the contact callback line
   ("That's what's on my mind. What's in yours?") · the CV FOCUS line · the
-  SKILLS regroup wording · the ghost rail's "OPEN THE GRAPH ›" reveal line ·
-  the retargeted /thoughts corridor label ("SEE THE THOUGHTS IN TIME · THE CV,
-  DRAWN ›") · the YEARS spine refinement question (drop row dates to
-  month-only under the year labels?) · whether the NOW module ever gets a
-  "this feeds the record ›" corridor line (deferred, G4).
+  SKILLS regroup wording · the YEARS spine refinement question (drop row
+  dates to month-only under the year labels?) · whether the NOW module ever
+  gets a "this feeds the record ›" corridor line (deferred, G4). (The ghost
+  rail's reveal line and the "THE CV, DRAWN ›" corridor retired with the CV
+  graph view.)
+- From the meta build (drafts + floor deviations, hers to confirm): the
+  reading room's foot corridor label ("SEE THEM IN TIME · THE WHOLE MIND,
+  ONE WORLD ›") · the CORRELATIONS strengths (data in her hand: edit the
+  number, the braid follows) · REST INK at 62% not the dialled 55% (the AA
+  floor on light ground; see §6) · the world's kicker + hint emphasis moved
+  from red to ink (red = liveness/interaction only; the studio mock rode a
+  red kicker when she signed, so this is flagged, not silent) · the world's
+  final look on her real phone (the touch pass).
 - The EXPLORE-retirement redirect behaviour and the frozen-layout migration
   (F7) — confirmed at the landing session.
 - The book's spread copy and the flagship selection for the ~6 spreads.

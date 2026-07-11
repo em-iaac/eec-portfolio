@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE NEURAL STUDIO · tension + touch · connections that form (mockup)</title>
+<link rel="stylesheet" href="./glass.css">
+<style>
+  /* ---- THE REFINEMENT · TENSION + TOUCH ---------------------------------
+     Emilie's steer: a connection is not a long arc between far neurons. It is
+     TWO neurons' dendrites reaching toward each other across a small gap, the
+     tension building, until they TOUCH and a synapse forms and fires. So the
+     mind is drawn as loose CLUSTERS of related work; neighbours bridge the
+     short gaps between them. Anatomical, developing on load, both modes. A
+     single live red tip keeps the "still growing" (commit-graph) note. */
+  html, body { height: 100%; }
+  body { height: 100dvh; overflow: hidden; background: var(--ground); color: var(--ink); -webkit-font-smoothing: antialiased; position: relative; }
+  .stage { position: fixed; inset: 0; z-index: 0; }
+  .stage svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .scrim { position: fixed; inset: 0; z-index: 1; pointer-events: none; background:
+    radial-gradient(50% 64% at 22% 46%, color-mix(in srgb, var(--ground) 90%, transparent) 0%, color-mix(in srgb, var(--ground) 60%, transparent) 42%, color-mix(in srgb, var(--ground) 18%, transparent) 70%, transparent 100%); }
+  @media (max-width: 900px){ .scrim{ display:none; } }
+
+  .overlay { position: fixed; top: 0; left: 0; width: min(44vw, 520px); height: 100dvh; padding: 52px 54px; display: flex; flex-direction: column; z-index: 3; pointer-events: none; }
+  .overlay > * { pointer-events: auto; }
+  .idrow { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 40px; height: 40px; flex: none; }
+  .name { font-family: var(--display); font-weight: 600; font-size: clamp(25px, 2.9vw, 40px); letter-spacing: .01em; line-height: .98; white-space: nowrap; }
+  .adj { margin-top: 18px; font-family: var(--mono); font-size: 11px; letter-spacing: .02em; line-height: 1.7; color: var(--ink-muted); text-transform: lowercase; }
+  .voice { margin-top: 12px; font-family: var(--hand); font-size: clamp(21px, 2.3vw, 30px); line-height: 1.15; color: light-dark(#6d5f46, #d8d2c4); }
+  .fact { margin-top: 16px; font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--ink-muted); line-height: 1.9; }
+  .rule { margin-top: 22px; height: 1px; width: 100%; background: var(--hairline); }
+  nav.doors { margin-top: 20px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; }
+  nav.doors a { color: var(--ink); text-decoration: none; padding: 8px 6px; margin: -8px -6px; min-height: 44px; display: inline-flex; align-items: center; }
+  nav.doors a.primary { font-weight: 600; text-decoration: underline; text-decoration-color: var(--interaction); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+  nav.doors a:hover { color: var(--interaction); }
+  .jump { margin-top: 16px; }
+  .jump input { width: 100%; max-width: 300px; height: 42px; border-radius: var(--r-pill); background: var(--glass-1); border: .5px solid var(--glass-1-border); backdrop-filter: blur(var(--blur)); padding: 0 16px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink); }
+  .jump input::placeholder { color: var(--ink-muted); }
+  .wink { margin-top: auto; max-width: 300px; font-family: var(--hand); font-size: 17px; line-height: 1.3; color: color-mix(in srgb, var(--ink) 55%, var(--ink-muted)); transform: rotate(-2deg); transform-origin: left bottom; }
+  .wink .nb { color: var(--interaction); }
+  .caption { position: fixed; left: 54px; bottom: 24px; z-index: 3; font-family: var(--mono); font-size: 9px; letter-spacing: .12em; color: var(--ink-muted); }
+  .caption a { color: var(--interaction); text-decoration: underline; text-underline-offset: 3px; }
+
+  .studioctl { position: fixed; top: 14px; right: 16px; z-index: 20; display: flex; gap: 6px; }
+  .studioctl button { font-family: var(--mono); font-size: 9px; letter-spacing: .06em; min-height: 34px; padding: 6px 10px; border-radius: var(--r-pill); background: var(--glass-2); border: .5px solid var(--glass-2-border); backdrop-filter: blur(var(--blur)); color: var(--ink); cursor: pointer; }
+
+  /* neural pieces */
+  .freeD { fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; opacity: .34; }
+  .reach { fill: none; stroke: var(--ink); stroke-linecap: round; opacity: .6; }
+  .synapse { transition: r .25s, opacity .25s; }
+  .tension { stroke: var(--ink); stroke-linecap: round; opacity: .3; }
+  .pulse { fill: none; stroke-linecap: round; opacity: 0; }
+  .soma-glow { pointer-events: none; }
+  .node { cursor: pointer; outline: none; }
+  .node .hit { fill: transparent; }
+  .node:focus-visible .soma { stroke: var(--interaction); stroke-width: 2; }
+  .lbl { font-family: var(--mono); font-size: 8px; letter-spacing: .08em; fill: var(--ink); opacity: 0; transition: opacity .3s; }
+  .lbl.t { font-family: var(--serif); font-style: italic; font-size: 9.5px; fill: var(--ink-muted); letter-spacing: 0; }
+  .node.rest .lbl, .node.on .lbl, .node.near .lbl { opacity: 1; }
+  .stage.is-focus .node:not(.on):not(.near) { opacity: .28; }
+  .stage.is-focus .cluster:not(.lit) .reach, .stage.is-focus .cluster:not(.lit) .synapse { opacity: .1; }
+
+  .clusterlbl { font-family: var(--mono); font-size: 9px; letter-spacing: .16em; fill: var(--ink-faint); }
+  .livetag { font-family: var(--mono); font-size: 8px; letter-spacing: .1em; fill: var(--interaction); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* the reach grows, the synapse pops when the tips touch, then it fires */
+    .intro .reach { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 760ms var(--ease-soft) both; }
+    .intro .freeD { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 640ms var(--ease-soft) both; }
+    .intro .soma, .intro .soma-glow { animation: pop 360ms var(--ease-soft) both; }
+    .intro .synapse { animation: bloom 420ms var(--ease-soft) both; }
+    .intro .node.rest .lbl, .intro .clusterlbl { animation: fade 500ms ease-out both; animation-delay: 1.3s; }
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+  @keyframes bloom { 0%{ transform: scale(0); opacity: 0; } 70%{ transform: scale(1.5); opacity: 1; } 100%{ transform: scale(1); opacity: 1; } }
+  @keyframes fade { from { opacity: 0; } }
+  .soma, .soma-glow, .synapse { transform-box: fill-box; transform-origin: center; }
+  .pulse.firing { animation: travel 900ms linear both; }
+  @keyframes travel { 0%{opacity:0;stroke-dashoffset:1} 14%{opacity:.95} 86%{opacity:.95} 100%{opacity:0;stroke-dashoffset:0} }
+  /* the one live tip: a slow tension pulse (PRM-gated) */
+  @media (prefers-reduced-motion: no-preference) { .livetip { animation: livebeat 2.8s ease-in-out infinite; } }
+  @keyframes livebeat { 0%,100%{ opacity: .55; } 50%{ opacity: 1; } }
+
+  @media (max-width: 900px) {
+    body { overflow: auto; height: auto; display: flex; flex-direction: column; }
+    .overlay { order: 0; position: relative; width: 100%; height: auto; padding: 30px 24px 8px; }
+    .stage { order: 2; position: relative; height: 56dvh; min-height: 400px; }
+    .caption { order: 3; position: static; margin: 10px 24px; }
+    .wink { margin-top: 20px; }
+  }
+</style>
+</head>
+<body>
+<section class="stage intro" id="stage" aria-hidden="true">
+  <svg id="mind" viewBox="0 0 1440 860" preserveAspectRatio="xMidYMid slice"><defs></defs>
+    <g id="g-cluster-lbls"></g><g id="g-conns"></g><g id="g-nodes"></g></svg>
+</section>
+<div class="scrim" aria-hidden="true"></div>
+
+<main class="overlay">
+  <div class="idrow">
+    <svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="var(--interaction)" stroke-width="1.5"/><text x="20" y="25" text-anchor="middle" font-family="var(--mono)" font-size="11" fill="var(--ink)">EEC</text></svg>
+    <h1 class="name">EMILIE EL CHIDIAC</h1>
+  </div>
+  <p class="adj">architect · writer · researcher · creative technologist</p>
+  <p class="voice">I work with design, technology and minds.</p>
+  <p class="fact">MACAD AWARDS 2026 · WINNER · COMPUTATIONAL DESIGN · MACAD @ IAAC</p>
+  <div class="rule" aria-hidden="true"></div>
+  <nav class="doors" aria-label="Primary">
+    <a href="#work" class="primary">WORK</a>
+    <a href="#thoughts">THOUGHTS</a>
+    <a href="#cv">CV</a>
+    <a href="#about">ABOUT</a>
+  </nav>
+  <div class="jump"><input type="text" placeholder="/  jump to anything" aria-label="Jump to any project or thought"></div>
+  <p class="wink"><span class="nb">n.b.</span> watch the pieces reach for each other. that touch is a thought forming.</p>
+</main>
+
+<div class="caption">THIS IS WHAT'S ON MY MIND · <a href="#about">WHAT'S IN YOURS? ›</a></div>
+
+<nav class="sr-only" aria-label="All projects and thoughts"><ul id="sr-nav"></ul></nav>
+
+<div class="studioctl">
+  <button id="replay" type="button">⟳ WATCH IT CONNECT</button>
+  <button id="mode" type="button">◐ MODE</button>
+</div>
+<a class="studio-link" href="./index.html">&lt; STUDIO INDEX</a>
+<div class="mockup-note">MOCKUP · NOT PRODUCTION</div>
+
+<script>
+(function () {
+  'use strict';
+  var NS='http://www.w3.org/2000/svg';
+  var PRM=window.matchMedia('(prefers-reduced-motion: reduce)');
+  function make(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;}
+  function rngFrom(seed){var a=seed>>>0;return function(){a|=0;a=(a+0x6D2B79F5)|0;var t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
+  function spline(pts,k){k=k||0.2;var d='M '+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);for(var i=0;i<pts.length-1;i++){var p0=pts[Math.max(i-1,0)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(i+2,pts.length-1)];var c1x=p1[0]+(p2[0]-p0[0])*k,c1y=p1[1]+(p2[1]-p0[1])*k,c2x=p2[0]-(p3[0]-p1[0])*k,c2y=p2[1]-(p3[1]-p1[1])*k;d+=' C '+c1x.toFixed(1)+' '+c1y.toFixed(1)+', '+c2x.toFixed(1)+' '+c2y.toFixed(1)+', '+p2[0].toFixed(1)+' '+p2[1].toFixed(1);}return d;}
+
+  var LENS={c:'var(--cyan)',p:'var(--magenta)',e:'var(--yellow)',t:'var(--ink)'};
+  /* three loose clusters of the real work; related neighbours sit close so the
+     reach across the gap is SHORT (the tension reads). cx/cy = cluster centre. */
+  var CLUSTERS=[
+    {id:'MIND', lbl:'THE MIND', cx:965, cy:295, r:150},
+    {id:'MAKING', lbl:'THE MAKING', cx:1075, cy:645, r:165},
+    {id:'TOOLS', lbl:'THE TOOLS', cx:690, cy:600, r:150}
+  ];
+  var NODES=[
+    // MIND
+    {n:'SENSI',k:'p',lens:'c',cl:'MIND',award:true,live:true},
+    {n:'NEUROSPACE',k:'p',lens:'c',cl:'MIND'},
+    {n:'neuroaesthetics',k:'t',lens:'t',cl:'MIND'},
+    {n:'comfort as data',k:'t',lens:'t',cl:'MIND'},
+    {n:'buildings that respond',k:'t',lens:'t',cl:'MIND'},
+    {n:'behavior information modeling',k:'t',lens:'t',cl:'MIND',rest:true},
+    {n:'OPTIMIZING FOR THE MIND',k:'p',lens:'c',cl:'MIND'},
+    // MAKING
+    {n:'LEGOARCH',k:'p',lens:'c',cl:'MAKING',award:true},
+    {n:'THE HUDDLE',k:'p',lens:'c',cl:'MAKING',award:true},
+    {n:'THE LUNGS',k:'p',lens:'c',cl:'MAKING',award:true},
+    {n:'A BALLOONING MARKET',k:'p',lens:'c',cl:'MAKING'},
+    {n:'physics solvers',k:'t',lens:'t',cl:'MAKING'},
+    {n:'heritage meets new tech',k:'t',lens:'t',cl:'MAKING'},
+    {n:'CAPPELLETTI PAVILION',k:'p',lens:'e',cl:'MAKING'},
+    {n:'TOWERS AT SOMA',k:'p',lens:'p',cl:'MAKING'},
+    // TOOLS
+    {n:'RING 4000',k:'p',lens:'p',cl:'TOOLS',award:true},
+    {n:'generative ai',k:'t',lens:'t',cl:'TOOLS',rest:true},
+    {n:'evolutionary search',k:'t',lens:'t',cl:'TOOLS'},
+    {n:'XR FOR EDUCATION',k:'p',lens:'e',cl:'TOOLS'},
+    {n:'drawing as interface',k:'t',lens:'t',cl:'TOOLS'},
+    {n:'extended reality',k:'t',lens:'t',cl:'TOOLS'}
+  ];
+
+  var svg=document.getElementById('mind'),stage=document.getElementById('stage'),defs=svg.querySelector('defs');
+  var gCL=document.getElementById('g-cluster-lbls'),gConns=document.getElementById('g-conns'),gNodes=document.getElementById('g-nodes');
+  var O={count:5,length:30,wobble:0.9,branch:0.5,depth:2,baseW:1.5};
+  var nodeEls={}, conns=[], nodePos={};
+
+  function growBranch(x,y,ang,len,rng,depth,out){var steps=3+Math.floor(rng()*2),seg=len/steps,a=ang,cx=x,cy=y,pts=[[x,y]];for(var s=0;s<steps;s++){a+=(rng()-0.5)*O.wobble;var g=seg*(1-s*0.14);cx+=Math.cos(a)*g;cy+=Math.sin(a)*g;pts.push([cx,cy]);if(depth<O.depth&&s>=1&&rng()<O.branch)growBranch(cx,cy,a+(rng()<0.5?0.7:-0.7),len*0.55,rng,depth+1,out);}out.push(pts);return out;}
+  function freeDendrites(cx,cy,seed,avoidAng){var out=[],rng=rngFrom(seed);for(var i=0;i<O.count;i++){var ang=(i/O.count)*Math.PI*2+(rng()-0.5)*0.7;growBranch(cx,cy,ang,O.length*(0.7+rng()*0.5),rng,0,out);}return out;}
+
+  function layout(){
+    // place nodes jittered around cluster centres (seeded, deterministic)
+    var byCl={};CLUSTERS.forEach(function(c){byCl[c.id]=[];});
+    NODES.forEach(function(nd,i){byCl[nd.cl].push(i);});
+    CLUSTERS.forEach(function(c){
+      var ids=byCl[c.id];var rng=rngFrom(c.id.length*131+7);
+      ids.forEach(function(idx,k){
+        var ang=(k/ids.length)*Math.PI*2+(rng()-0.5)*0.8;
+        var rad=c.r*(0.35+rng()*0.7);
+        nodePos[idx]={x:c.cx+Math.cos(ang)*rad, y:c.cy+Math.sin(ang)*rad};
+      });
+    });
+  }
+  function dist(a,b){var dx=nodePos[a].x-nodePos[b].x,dy=nodePos[a].y-nodePos[b].y;return Math.hypot(dx,dy);}
+  function buildConns(){
+    conns=[];var seen={};
+    NODES.forEach(function(nd,i){
+      var mates=NODES.map(function(m,j){return j;}).filter(function(j){return j!==i && NODES[j].cl===nd.cl;}).sort(function(a,b){return dist(i,a)-dist(i,b);}).slice(0,2);
+      mates.forEach(function(j){var key=Math.min(i,j)+'-'+Math.max(i,j);if(seen[key])return;seen[key]=1;conns.push([i,j]);});
+    });
+  }
+
+  function build(){
+    gCL.innerHTML='';gConns.innerHTML='';gNodes.innerHTML='';defs.innerHTML='';nodeEls={};
+    var rg=make('radialGradient',{id:'t-glow'},defs);make('stop',{offset:'0%','stop-color':'var(--ink)','stop-opacity':0.32},rg);make('stop',{offset:'100%','stop-color':'var(--ink)','stop-opacity':0},rg);
+    var f=make('filter',{id:'t-soft',x:'-50%',y:'-50%',width:'200%',height:'200%'},defs);make('feGaussianBlur',{stdDeviation:1.5},f);
+
+    layout();buildConns();
+
+    /* cluster labels */
+    CLUSTERS.forEach(function(c){var t=make('text',{'class':'clusterlbl',x:c.cx,y:c.cy-c.r-6,'text-anchor':'middle'},gCL);t.textContent=c.lbl;});
+
+    /* TENSION + TOUCH connections: two reaches meeting at a synapse */
+    conns.forEach(function(pair,ci){
+      var A=nodePos[pair[0]], B=nodePos[pair[1]];
+      var dx=B.x-A.x, dy=B.y-A.y, dd=Math.hypot(dx,dy)||1; var ux=dx/dd, uy=dy/dd; var perp=[-uy,ux];
+      var gap=Math.min(20, dd*0.22);
+      var aEnd=[A.x+ux*(dd/2-gap/2), A.y+uy*(dd/2-gap/2)];
+      var bEnd=[B.x-ux*(dd/2-gap/2), B.y-uy*(dd/2-gap/2)];
+      var bend=((ci%2)?1:-1)*Math.min(16,dd*0.14);
+      var aMid=[(A.x+aEnd[0])/2+perp[0]*bend, (A.y+aEnd[1])/2+perp[1]*bend];
+      var bMid=[(B.x+bEnd[0])/2+perp[0]*bend, (B.y+bEnd[1])/2+perp[1]*bend];
+      var M=[(aEnd[0]+bEnd[0])/2, (aEnd[1]+bEnd[1])/2];
+      var colA=LENS[NODES[pair[0]].lens]==='var(--ink)'?LENS[NODES[pair[1]].lens]:LENS[NODES[pair[0]].lens];
+      var g=make('g',{'class':'conn-g','data-a':pair[0],'data-b':pair[1]},gConns);
+      make('path',{'class':'reach',d:spline([[A.x,A.y],aMid,aEnd]),'stroke-width':O.baseW},g);
+      make('path',{'class':'reach',d:spline([[B.x,B.y],bMid,bEnd]),'stroke-width':O.baseW},g);
+      make('line',{'class':'tension',x1:aEnd[0],y1:aEnd[1],x2:bEnd[0],y2:bEnd[1],'stroke-width':0.8,'stroke-dasharray':'1 2'},g);
+      make('circle',{'class':'synapse',cx:M[0],cy:M[1],r:2.4,fill:colA,opacity:0.85},g);
+      var pulse=make('path',{'class':'pulse',d:spline([[A.x,A.y],aMid,M,bMid,[B.x,B.y]]),stroke:colA,'stroke-width':2.4,'pathLength':1,'stroke-dasharray':'0.14 1'},g);
+      conns[ci]={a:pair[0],b:pair[1],g:g,pulse:pulse};
+    });
+
+    /* neurons */
+    NODES.forEach(function(nd,i){
+      var p=nodePos[i], col=LENS[nd.lens];
+      var g=make('g',{'class':'node'+(nd.rest?' rest':''),tabindex:0,role:'link','aria-label':nd.n+' — '+(nd.k==='p'?'project':'thought')+(nd.award?' (award-winning)':'')+', in the '+CLUSTERS.filter(function(c){return c.id===nd.cl;})[0].lbl.toLowerCase()+' cluster'},gNodes);
+      freeDendrites(p.x,p.y,i*61+13).forEach(function(pts){
+        make('path',{'class':'freeD',d:spline(pts),stroke:col,'stroke-width':O.baseW*2.2,opacity:0.09,filter:'url(#t-soft)'},g);
+        make('path',{'class':'freeD',d:spline(pts),'stroke-width':O.baseW*0.9},g);
+      });
+      make('circle',{'class':'soma-glow',cx:p.x,cy:p.y,r:16,fill:'url(#t-glow)'},g);
+      if(nd.k==='p'){ make('circle',{'class':'soma',cx:p.x,cy:p.y,r:nd.award?5.4:4.4,fill:'var(--ink)'},g); if(nd.award)make('circle',{cx:p.x,cy:p.y,r:1.7,fill:'var(--ground)'},g); }
+      else make('circle',{'class':'soma',cx:p.x,cy:p.y,r:4,fill:'var(--ground)',stroke:'var(--ink)','stroke-width':1.6},g);
+      make('circle',{cx:p.x,cy:p.y,r:1.7,fill:col,opacity:0.8},g);
+      /* the ONE live tip: a small red 'still growing' dendrite off SENSI */
+      if(nd.live){ var lt=make('g',{'class':'livetip'},g); make('path',{d:spline([[p.x,p.y],[p.x-18,p.y-22],[p.x-30,p.y-46]]),fill:'none',stroke:'var(--interaction)','stroke-width':1.4,'stroke-linecap':'round'},lt); make('circle',{cx:p.x-30,cy:p.y-46,r:2.8,fill:'var(--ground)',stroke:'var(--interaction)','stroke-width':1.5},lt); var ltx=make('text',{'class':'livetag',x:p.x-36,y:p.y-52,'text-anchor':'end'},lt); ltx.textContent='STILL GROWING'; }
+      make('circle',{'class':'hit',cx:p.x,cy:p.y,r:22},g);
+      var lbl=make('text',{'class':'lbl '+nd.k,x:p.x,y:p.y-(nd.k==='p'?10:9),'text-anchor':'middle'},g);lbl.textContent=nd.n;
+      nodeEls[i]=g;
+      bind(i,g);
+    });
+  }
+
+  /* firing + focus */
+  function firePulse(pulse,delay){ if(PRM.matches)return; setTimeout(function(){pulse.classList.remove('firing');void pulse.getBoundingClientRect();pulse.classList.add('firing');},delay||0); }
+  function lightNode(i){
+    stage.classList.add('is-focus');
+    nodeEls[i].classList.add('on');
+    conns.forEach(function(c){ if(c.a===i||c.b===i){ c.g.classList.add('lit'); var other=c.a===i?c.b:c.a; nodeEls[other].classList.add('near'); firePulse(c.pulse); } });
+    /* the cluster containing i lights */
+    var cl=NODES[i].cl;
+    Array.prototype.forEach.call(document.querySelectorAll('.conn-g'),function(g){ var a=+g.getAttribute('data-a'); if(NODES[a].cl===cl) g.classList.add('lit'); });
+  }
+  function clearLight(){ stage.classList.remove('is-focus'); Object.keys(nodeEls).forEach(function(k){nodeEls[k].classList.remove('on','near');}); Array.prototype.forEach.call(document.querySelectorAll('.conn-g'),function(g){g.classList.remove('lit');}); }
+  function bind(i,g){ g.addEventListener('mouseenter',function(){clearLight();lightNode(i);}); g.addEventListener('mouseleave',clearLight); g.addEventListener('focus',function(){clearLight();lightNode(i);}); g.addEventListener('blur',clearLight); g.addEventListener('click',function(){console.log('open',NODES[i].n);}); }
+
+  /* develop: cluster by cluster, reaches grow then touch (synapse blooms) then fire */
+  function develop(){
+    if(PRM.matches){stage.classList.remove('intro');return;}
+    stage.classList.remove('intro');void stage.getBoundingClientRect();stage.classList.add('intro');
+    /* stagger reach growth by cluster, then fire each synapse right after it forms */
+    var order={MIND:0,TOOLS:1,MAKING:2};
+    conns.forEach(function(c){ var base=order[NODES[c.a].cl]*700; c.g.querySelectorAll('.reach').forEach(function(r){r.style.animationDelay=base+'ms';}); var syn=c.g.querySelector('.synapse'); syn.style.animationDelay=(base+560)+'ms'; firePulse(c.pulse, base+680); });
+    NODES.forEach(function(nd,i){ var base=order[nd.cl]*700; nodeEls[i].querySelectorAll('.soma,.soma-glow').forEach(function(s){s.style.animationDelay=base+'ms';}); });
+    setTimeout(function(){stage.classList.remove('intro');},2900);
+  }
+
+  function buildSrNav(){var ul=document.getElementById('sr-nav');ul.innerHTML='';NODES.forEach(function(nd){var li=document.createElement('li');var a=document.createElement('a');a.href=nd.k==='p'?'#work':'#thoughts';a.textContent=nd.n+(nd.award?' (award-winning project)':(nd.k==='p'?' (project)':' (thought)'));li.appendChild(a);ul.appendChild(li);});}
+
+  document.getElementById('replay').addEventListener('click',develop);
+  document.getElementById('mode').addEventListener('click',function(){var c=document.documentElement.dataset.theme;document.documentElement.dataset.theme=c==='light'?'dark':c==='dark'?'light':(window.matchMedia('(prefers-color-scheme: dark)').matches?'light':'dark');});
+
+  build();buildSrNav();requestAnimationFrame(develop);
+})();
+</script>
+</body>
+</html>

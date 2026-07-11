@@ -613,3 +613,37 @@ export const EXPLORE_NODES: ExploreNode[] = ENTRIES.filter(
 export const AWARD_WINNER_IDS: ReadonlySet<string> = new Set(
   ENTRIES.filter((e) => e.kind === 'award' && e.refId).map((e) => e.refId!),
 )
+
+// ---- THE CORRELATIONS · which piece builds on which (the meta build) -------
+// The neural world's threads. One line per real relation, APPENDS ONLY.
+// [earlier, later, strength] · strength 1..3 = how much the two build on each
+// other = how many fibres grow from each end toward their synapse (the braid).
+// Idea lineage only (thought<->thought, thought<->project): award->work
+// threads are NOT listed here, they derive from each award's refId, and the
+// one award that honours a milestone (Tamayouz -> the B.Arch) anchors via
+// the world's override map (thoughts/world/skeletonIds.ts). Validator-guarded:
+// ids resolve, ends are thoughts/projects, no self-links, no duplicate pairs.
+// Strengths are Emilie's to tune: edit the number, the braid follows.
+export type Correlation = readonly [string, string, 1 | 2 | 3]
+
+export const CORRELATIONS: readonly Correlation[] = [
+  ['xreal', 'xr', 2], // the XR thought grew out of the lab work
+  ['genai', 'drawiface', 1],
+  ['genai', 'evosearch', 1],
+  ['genai', 'legoarch', 2], // the diffusion half of lEgoarCh
+  ['genai', 'heritage', 1],
+  ['genai', 'neurospace', 1],
+  ['evosearch', 'mars', 1],
+  ['evosearch', 'solvers', 2],
+  ['neuroaes', 'sensi', 2],
+  ['neuroaes', 'podcast', 2],
+  ['neuroaes', 'bim', 2],
+  ['neuroaes', 'respond', 1],
+  ['bim', 'neurospace', 3], // NeuroSpace = the first crack at BIM
+  ['bim', 'comfort', 2],
+  ['comfort', 'sensi', 3], // Sensi = comfort-as-data made real
+  ['comfort', 'ballooning', 1],
+  ['comfort', 'respond', 2],
+  ['solvers', 'cappelletti', 2],
+  ['heritage', 'huddle', 1],
+]

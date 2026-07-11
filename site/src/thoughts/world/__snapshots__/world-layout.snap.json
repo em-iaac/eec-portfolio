@@ -1,0 +1,286 @@
+{
+  "w": 3090,
+  "h": 860,
+  "nodes": [
+    {
+      "id": "xrlab-start",
+      "kind": "milestone",
+      "date": "2021-09",
+      "x": 189,
+      "y": 660,
+      "route": null
+    },
+    {
+      "id": "self-open",
+      "kind": "milestone",
+      "date": "2022-01",
+      "x": 267,
+      "y": 600,
+      "route": null
+    },
+    {
+      "id": "cemetery",
+      "kind": "award",
+      "date": "2022-06",
+      "x": 345,
+      "y": 520,
+      "route": null
+    },
+    {
+      "id": "xr",
+      "kind": "project",
+      "date": "2022-06",
+      "x": 423,
+      "y": 310.9,
+      "route": "/work/xr"
+    },
+    {
+      "id": "xreal",
+      "kind": "thought",
+      "date": "2022-09",
+      "x": 501,
+      "y": 89.1,
+      "route": "/thoughts/xreal"
+    },
+    {
+      "id": "barch-grad",
+      "kind": "milestone",
+      "date": "2023-06",
+      "x": 579,
+      "y": 660,
+      "route": null
+    },
+    {
+      "id": "soma-start",
+      "kind": "milestone",
+      "date": "2023-08",
+      "x": 657,
+      "y": 722,
+      "route": null
+    },
+    {
+      "id": "tamayouz",
+      "kind": "award",
+      "date": "2023-09",
+      "x": 621,
+      "y": 586,
+      "route": null
+    },
+    {
+      "id": "mars",
+      "kind": "project",
+      "date": "2023-10",
+      "x": 813,
+      "y": 390.5,
+      "route": "/work/mars"
+    },
+    {
+      "id": "soma",
+      "kind": "project",
+      "date": "2024-02",
+      "x": 891,
+      "y": 335.6,
+      "route": "/work/soma"
+    },
+    {
+      "id": "mars-top50",
+      "kind": "award",
+      "date": "2024-03",
+      "x": 855,
+      "y": 454.5,
+      "route": "/work/mars"
+    },
+    {
+      "id": "genai",
+      "kind": "thought",
+      "date": "2024-06",
+      "x": 1047,
+      "y": 132.1,
+      "route": "/thoughts/genai"
+    },
+    {
+      "id": "dynamic-start",
+      "kind": "milestone",
+      "date": "2024-08",
+      "x": 1125,
+      "y": 762,
+      "route": null
+    },
+    {
+      "id": "macad-start",
+      "kind": "milestone",
+      "date": "2025-10",
+      "x": 1203,
+      "y": 560,
+      "route": null
+    },
+    {
+      "id": "cappelletti",
+      "kind": "project",
+      "date": "2025-11",
+      "x": 1281,
+      "y": 452.4,
+      "route": "/work/cappelletti"
+    },
+    {
+      "id": "evosearch",
+      "kind": "thought",
+      "date": "2025-11",
+      "x": 1359,
+      "y": 154.9,
+      "route": "/thoughts/evosearch"
+    },
+    {
+      "id": "huddle-award",
+      "kind": "award",
+      "date": "2025-12",
+      "x": 1557,
+      "y": 375.5,
+      "route": "/work/huddle"
+    },
+    {
+      "id": "huddle",
+      "kind": "project",
+      "date": "2025-12",
+      "x": 1515,
+      "y": 311.5,
+      "route": "/work/huddle"
+    },
+    {
+      "id": "neuroaes",
+      "kind": "thought",
+      "date": "2025-12",
+      "x": 1593,
+      "y": 212.6,
+      "route": "/thoughts/neuroaes"
+    },
+    {
+      "id": "podcast",
+      "kind": "project",
+      "date": "2026-01",
+      "x": 1671,
+      "y": 438,
+      "route": "/work/podcast"
+    },
+    {
+      "id": "bim",
+      "kind": "thought",
+      "date": "2026-01",
+      "x": 1749,
+      "y": 228.6,
+      "route": "/thoughts/bim"
+    },
+    {
+      "id": "neurospace",
+      "kind": "project",
+      "date": "2026-02",
+      "x": 1827,
+      "y": 448,
+      "route": "/work/neurospace"
+    },
+    {
+      "id": "lungs-award",
+      "kind": "award",
+      "date": "2026-03",
+      "x": 2025,
+      "y": 385.4,
+      "route": "/work/lungs"
+    },
+    {
+      "id": "lungs",
+      "kind": "project",
+      "date": "2026-03",
+      "x": 1983,
+      "y": 321.4,
+      "route": "/work/lungs"
+    },
+    {
+      "id": "drawiface",
+      "kind": "thought",
+      "date": "2026-03",
+      "x": 2061,
+      "y": 238.4,
+      "route": "/thoughts/drawiface"
+    },
+    {
+      "id": "ballooning",
+      "kind": "project",
+      "date": "2026-04",
+      "x": 2139,
+      "y": 356.5,
+      "route": "/work/ballooning"
+    },
+    {
+      "id": "heritage",
+      "kind": "thought",
+      "date": "2026-04",
+      "x": 2217,
+      "y": 244.8,
+      "route": "/thoughts/heritage"
+    },
+    {
+      "id": "solvers",
+      "kind": "thought",
+      "date": "2026-04",
+      "x": 2295,
+      "y": 152.4,
+      "route": "/thoughts/solvers"
+    },
+    {
+      "id": "legoarch-jury",
+      "kind": "award",
+      "date": "2026-05",
+      "x": 2493,
+      "y": 459.4,
+      "route": "/work/legoarch"
+    },
+    {
+      "id": "legoarch",
+      "kind": "project",
+      "date": "2026-05",
+      "x": 2451,
+      "y": 395.4,
+      "route": "/work/legoarch"
+    },
+    {
+      "id": "comfort",
+      "kind": "thought",
+      "date": "2026-05",
+      "x": 2529,
+      "y": 241.2,
+      "route": "/thoughts/comfort"
+    },
+    {
+      "id": "sensi-macad-award",
+      "kind": "award",
+      "date": "2026-06",
+      "x": 2805,
+      "y": 499.9,
+      "route": "/work/sensi"
+    },
+    {
+      "id": "macad-y1",
+      "kind": "milestone",
+      "date": "2026-06",
+      "x": 2685,
+      "y": 560,
+      "route": null
+    },
+    {
+      "id": "sensi",
+      "kind": "project",
+      "date": "2026-06",
+      "x": 2763,
+      "y": 435.9,
+      "route": "/work/sensi"
+    },
+    {
+      "id": "respond",
+      "kind": "thought",
+      "date": "2026-06",
+      "x": 2841,
+      "y": 89.1,
+      "route": "/thoughts/respond"
+    }
+  ]
+}
