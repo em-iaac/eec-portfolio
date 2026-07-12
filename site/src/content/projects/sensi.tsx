@@ -5,7 +5,7 @@
 // read on the blog. Attribution woven per the Session 7 ceiling: project
 // lead, team credited, team of four, no percentages, never a labeled line.
 // Verb rule: Sensi SCORES and ESTIMATES comfort, never measures.
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import NB from '../../components/ui/NB'
 import type { ProjectMaster } from './types'
 
@@ -20,7 +20,6 @@ const sensi: ProjectMaster = {
   dekSigned: true,
   myPart: 'Project lead, A to Z. Built with a team of four.',
   stat: 'LLM BENCH · 2 PROVIDERS × 3 SCENES',
-  draftCopy: true, // covers myPart only (approved live; Session 18 retires the flag)
   blurb:
     "Comfort is usually the thing we hope shows up after the design is done. Sensi makes it a design layer: a copilot that reads your floor plan and scores it across six senses (thermal, visual, acoustic, spatial, olfactory, tactile), calibrated to a person, not an average. Because you don't walk into a room and average your experience; the thing that's wrong is the thing you notice.",
   tech: 'PYTHON · LANGGRAPH · FASTAPI · REACT',
@@ -73,7 +72,7 @@ const sensi: ProjectMaster = {
       and kept every disagreement as data.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default sensi

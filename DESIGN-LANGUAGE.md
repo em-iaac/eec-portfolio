@@ -108,6 +108,25 @@ re-skinned to this language in its own focused session (see §9).
 >    labelled still. Amendment 7's "growth (one-shot draw-in,
 >    chronological)" reads through this: growth is attention-driven now;
 >    the chronological sweep lives in the replay.
+>
+> **AMENDMENT (Emilie, 2026-07-12, G4 the final sweep; decided over the
+> findings board + sign-off ledger):**
+>
+> 9. **One room-sign grammar + the cover's control tier (G4).** Every
+>    interior room opens kicker › h1: a mono 10px uppercase room sign
+>    (`X · THE Y`) above a plain or voiced h1. Signed set: WORK · THE
+>    PROOF, THOUGHTS · ONE WORLD · EVERYTHING, IN TIME (the world),
+>    THOUGHTS · THE WRITING (the reading room), CV · THE RECORD (screen
+>    only, never prints), ABOUT · THE PERSON, 404 · NOT A PAGE. The About
+>    pivot h1 retired (plain "About"). The LANDING keeps its identity
+>    chrome (no pill header; the hero carries the name) but gains the same
+>    44px ModeToggle every room carries, seated in the jump-pill row; the
+>    jump bar itself is 44px. The warm 404 is a room like any other.
+>    Floors clarified at G4: text that renders at rest holds at least the
+>    62% rest ink (the world's date labels ride the same rest as titles;
+>    hierarchy comes from size, never sub-AA ink); "faint" ink is reserved
+>    for non-text decoration. The CV consumes `--lang-*` tokens like every
+>    surface (the Pen Table utility classes left their last live page).
 
 ---
 

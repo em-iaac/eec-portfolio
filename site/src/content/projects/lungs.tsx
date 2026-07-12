@@ -3,7 +3,7 @@
 // public blog post. Framing rules bind: "designed to filter" (proposal
 // tense, never built performance); DATA TEAM OF 3 is deliberate (Emilie's
 // ruling: three people did not design the whole hyperbuilding).
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import type { ProjectMaster } from './types'
 
 const lungs: ProjectMaster = {
@@ -25,10 +25,8 @@ const lungs: ProjectMaster = {
   ),
   tech: 'VUE 3 · VITE · TAILWIND · SPECKLE',
   // The cold-start label "LIVE APP · WAKES IN ~30S" is APPROVED (Session 11,
-  // batch #1); free-tier Railway sleeps and the label says so. draftCopy
-  // stays because it still guards the myPart line (Session 7, unsigned);
-  // the blurb above stays locked.
-  draftCopy: true,
+  // batch #1); free-tier Railway sleeps and the label says so. The myPart
+  // credit line signed at G4 (2026-07-12); the blurb above stays locked.
   links: [
     { label: 'LIVE APP · WAKES IN ~30S', href: 'https://bimscstudiohb1-production.up.railway.app/' },
     { label: 'BLOG', href: 'https://blog.iaac.net/building-the-nervous-system-how-we-turned-a-hyper-building-studio-into-a-web-app/' },
@@ -68,7 +66,7 @@ const lungs: ProjectMaster = {
       building breathes, so does the app.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default lungs

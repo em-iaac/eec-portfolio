@@ -9,6 +9,7 @@ import {
 import Home from './pages/Home'
 import About from './pages/About'
 import CV from './pages/CV'
+import NotFound from './pages/NotFound'
 import SheetRoute from './pages/SheetRoute'
 
 // Split out of the landing chunk so the perf-budgeted cover stays lean: the
@@ -179,7 +180,10 @@ export const routes: RouteObject[] = [
       // are shared and citable, so they redirect to the landing, never 404.
       { path: '/explore', element: <Navigate to="/" replace /> },
       { path: '/explore/:nodeId', element: <Navigate to="/" replace /> },
-      { path: '*', element: <Navigate to="/" replace /> },
+      // Everything else is honestly not a page (G4): the warm 404 replaces
+      // the silent teleport home. Every RETIRED route above keeps its
+      // redirect; only truly unknown addresses land here.
+      { path: '*', element: <NotFound /> },
     ],
   },
 ]

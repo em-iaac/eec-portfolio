@@ -657,6 +657,29 @@ object), contact invite completes the landing's "what's in yours?" line
 develop-once, the reading shelf SKIPPED for G3 · /thoughts gains the YEARS
 time-spine (picked over RAIL and NONE from live screenshots): quiet mono year
 labels group the rows, nothing else changes.
+**G4 · THE FINAL SWEEP (2026-07-12, two gates, all Emilie's over the findings
+board + the sign-off ledger):** gate 1 — the LANDING judged beside the glass
+world: verdict "not old" (already on the tokens; chrome divergence is
+intentional), Emilie chose **(b) light glass polish**: the cover gains the
+44px ModeToggle (in the jump-pill row), the jump bar grows to 44px, the
+thread-legend labels gain real 26px hit rects; no layout/motion/copy change;
+the neural re-skin NOT queued · **KICKERS: every room gets one** (one
+room-sign grammar sitewide; WORK · THE PROOF + CV · THE RECORD added, both
+signed at gate 2; the CV's never prints) · **the WARM 404 built** (spec §2's
+line; all copy signed; retired routes keep their redirects, only truly
+unknown URLs land there) · floors fixed: the world's date labels + NOW lane
+label to AA in both modes (dates ride the 62% rest ink), card micro-labels
+muted-not-faint; CV re-skinned off the last Pen Table utilities; dead code
+deleted (ProjectCard, Kicker, RevisionWord + their CSS + two orphan tokens);
+source-comment hygiene swept · gate 2 — **the great sign-off:** rest ink 62%
+SIGNED · world kicker/hint ink SIGNED · all 19 correlation strengths KEPT ·
+reading-room h1 SIGNED, its corridor SHORTENED to "SEE THEM IN TIME ›" and
+signed · ALL landing lines signed · About kicker + callback signed, the
+pivot h1 REMOVED (plain "About" + room sign carry the page) · CV SKILLS
+signed · both new kickers + the whole 404 set signed · ALL 11 spines + all
+8 woven credits + ALL 10 note bodies SIGNED · ALL 31 draft months CONFIRMED.
+Left flagged by her: the NOW module's three lines + the CV FOCUS line. The
+real-phone touch pass moved to after the push, on the live site.
 **THE META BUILD (2026-07-11, seven gates, all Emilie's over the live browser):**
 gate 1 REST state locked (quiet points in time, no threads) + PROXIMITY REVEAL
 feel signed (radius 180 / build 1400ms / decay 3000ms / REACH OUT) + the braid
@@ -674,42 +697,33 @@ list; /notebook → /thoughts.
 
 ---
 
-## 14 · Still needs Emilie's sign-off (during the build sessions)
+## 14 · Still needs Emilie's sign-off
 
-- The exact wording of drafted copy (all `draftCopy`): the subtitle, the margin
-  wink, the "what's on my mind / in yours" lines, every project's one-line dek,
-  all sheet/thought prose, the 404 line.
-- ~~The THOUGHTS index page form~~ DECIDED at G2 (see §6): contents-only
-  editorial rows, no lead, no intro. Still needing her sign-off from G2: the
-  reading room's h1 ("what i keep thinking about", now at /thoughts?view=words),
-  the "… SHOWCASES OPENED ›" publish wording (its KindMark rows retired with
-  the CV graph view; wording survives nowhere on screen today), and whether
-  /work keeps its mono kicker once the no-intro ruling sweeps the site (G4).
-  (The notebook h1 retired at G3; the CV graph chrome retired at the meta
-  build; the `✦` glyph question went with KindMark.)
-- From G3 (all shipped `draftCopy`, unsigned): the About kicker ("ABOUT · THE
-  PERSON") + the picked h1 wording · the NOW module's three lines (now.ts,
-  now ALSO the world's live-tip card) · the contact callback line
-  ("That's what's on my mind. What's in yours?") · the CV FOCUS line · the
-  SKILLS regroup wording · the YEARS spine refinement question (drop row
-  dates to month-only under the year labels?) · whether the NOW module ever
-  gets a "this feeds the record ›" corridor line (deferred, G4). (The ghost
-  rail's reveal line and the "THE CV, DRAWN ›" corridor retired with the CV
-  graph view.)
-- From the meta build (drafts + floor deviations, hers to confirm): the
-  reading room's foot corridor label ("SEE THEM IN TIME · THE WHOLE MIND,
-  ONE WORLD ›") · the CORRELATIONS strengths (data in her hand: edit the
-  number, the braid follows) · REST INK at 62% not the dialled 55% (the AA
-  floor on light ground; see §6) · the world's kicker + hint emphasis moved
-  from red to ink (red = liveness/interaction only; the studio mock rode a
-  red kicker when she signed, so this is flagged, not silent) · the world's
-  final look on her real phone (the touch pass).
-- The EXPLORE-retirement redirect behaviour and the frozen-layout migration
-  (F7) — confirmed at the landing session.
-- The book's spread copy and the flagship selection for the ~6 spreads.
-- Final draft-flag sweep (all `dateDraft` / `draftCopy`) at the last session.
-- FLAG-03: the MaCAD award still needs a public anchor (a link the award line can
-  point to); surfaced whenever the landing or a card renders the award.
+> **THE GREAT SIGN-OFF (G4, 2026-07-12) cleared this section.** Every landing
+> line, every showcase spine, every woven credit, all ten thought notes, the
+> reading-room strings, the About kicker + callback, the CV SKILLS wording,
+> the two new kickers, the whole 404 set, the rest-ink 62%, the world's ink
+> kicker/hint, all 19 correlation strengths and all 31 draft months were
+> SIGNED or CONFIRMED (decision log, §13). What remains:
+
+- The NOW module's three lines (`now.ts`, also the world's live-tip card) —
+  kept flagged by Emilie at G4; they update whenever life moves anyway.
+- The CV FOCUS line — kept flagged by Emilie at G4.
+- The two sheet-issue events' `draftCopy` in the registry (P-101/P-102) —
+  inert: they render on no surface today; retire or reword if a surface ever
+  reads them.
+- The real-phone touch pass on the neural world — after the push, on the
+  live site (Emilie's call at G4).
+- The book's spread copy and the flagship selection for the ~6 spreads (G5).
+- FLAG-03: the MaCAD award still needs a public anchor (a link the award line
+  can point to); surfaced whenever the landing or a card renders the award.
+- (Perf notes for the record, measured at G4 on the production build:
+  landing entry JS 108.7 KB gzip vs the 150 KB budget; local FCP/LCP 108 ms,
+  CLS 0, LCP element = the DOM hero's positioning line; the world holds
+  60fps under a continuous wake sweep and through the replay, worst frame
+  32 ms, unthrottled desktop — a throttled-device Lighthouse run on the live
+  URL after deploy is the remaining datapoint. Per-route prerender + OG
+  cards + the jump bar's full site index remain R9 scope.)
 
 ---
 

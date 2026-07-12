@@ -6,7 +6,7 @@
 // Verb rule (dossier): NeuroSpace ESTIMATES and SCORES cortisol / circadian /
 // cognitive-load effects, never MEASURES; no clinical claims. NO stat by
 // ruling: the live app is the stronger proof than any digit.
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import NB from '../../components/ui/NB'
 import type { ProjectMaster } from './types'
 
@@ -73,7 +73,7 @@ const neurospace: ProjectMaster = {
       free to overrule it.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default neurospace

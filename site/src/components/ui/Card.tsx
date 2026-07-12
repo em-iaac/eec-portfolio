@@ -41,7 +41,8 @@ export default function Card({
       <div className="relative min-h-0 flex-[4] overflow-hidden">
         {image ?? (
           <div className="flex h-full w-full items-center justify-center bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)]">
-            <span className="font-mono text-[10px] tracking-[0.14em] text-[var(--lang-ink-faint)]">
+            {/* muted, not faint (G4): faint fell to 3.2:1 on the dark ground */}
+            <span className="font-mono text-[10px] tracking-[0.14em] text-[var(--lang-ink-muted)]">
               PHOTO PENDING
             </span>
           </div>

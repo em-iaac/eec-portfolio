@@ -5,7 +5,7 @@
 // describes the instructive intermediate FAILURE: the fail is narrated
 // WITHOUT its percentage and never as a result (the anti-claim ruling).
 // Duo credit woven: built with Charles Abi Chahine, end to end as a pair.
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import type { ProjectMaster } from './types'
 
 const legoarch: ProjectMaster = {
@@ -18,7 +18,6 @@ const legoarch: ProjectMaster = {
   dek: 'A render is only a promise until the bricks fit: AI imagines the set, code makes it actually buildable.',
   dekSigned: true,
   stat: 'LORA · 40 IMAGES · 3 BENCHMARKS',
-  draftCopy: true, // covers myPart only (approved live; Session 18 retires the flag)
   blurb:
     'A render is a promise, not a product: you cannot snap a JPEG together on your living-room floor. lEgoarCh takes a text prompt and returns a LEGO set that actually builds: AI imagines it, deterministic code makes it buildable, brick by brick.',
   tech: 'FLUX.2 KLEIN · TRELLIS-2 · LORA · LDRAW',
@@ -63,7 +62,7 @@ const legoarch: ProjectMaster = {
       buildings, and the jury gave it their award.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default legoarch

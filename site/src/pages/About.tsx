@@ -29,7 +29,7 @@ function nowStamp(date: string): string {
 // same data that renders as the red commit at the CV graph's live tip), and
 // the contact invite now opens with a callback line completing the landing's
 // "what's on my mind / what's in yours" split. The reading shelf was skipped
-// for G3 (Emilie). No public availability status anywhere (FLAG-01).
+// for G3 (Emilie). The contact block is the invitation + mailto, nothing else.
 export default function About() {
   // The headshot joins the sitewide develop-once ceremony (grayscale -> color
   // once, on first sight; reduced motion = color immediately). Hover-colorize
@@ -40,17 +40,18 @@ export default function About() {
   return (
     <SheetPage title="About">
       <section className="pt-10 sm:pt-14" aria-labelledby="about-heading">
-        {/* draftCopy: the kicker wording, unsigned. */}
+        {/* The kicker, SIGNED (G4, 2026-07-12). */}
         <p className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
           ABOUT · THE PERSON
         </p>
-        {/* draftCopy: the h1 carries the pivot (Emilie picked draft 1 of 3,
-            2026-07-10); unsigned until she signs the final wording. */}
+        {/* The pivot h1 ("the architect who asked one question too many")
+            REMOVED at G4 (Emilie, 2026-07-12); the page rides the plain
+            title + room-sign grammar the other doors use. */}
         <h1
           id="about-heading"
-          className="mt-3 font-serif text-[30px] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
+          className="mt-3 text-3xl font-semibold tracking-[-0.01em] text-[var(--lang-ink)]"
         >
-          the architect who asked one question too many
+          About
         </h1>
       </section>
 
@@ -80,13 +81,12 @@ export default function About() {
           </div>
 
           <div id="contact" className="order-4 border-t-[0.5px] border-[var(--lang-hairline)] pt-6 md:order-none md:mt-10">
-            {/* draftCopy: the callback line completes the landing's split
-                ("this is what's on my mind · what's in yours?"), unsigned. */}
+            {/* The callback line completes the landing's split ("this is
+                what's on my mind · what's in yours?"). SIGNED (G4). */}
             <p className="font-serif text-[17px] italic leading-relaxed text-[var(--lang-ink)]">
               That's what's on my mind. What's in yours?
             </p>
-            {/* FLAG-01: invitation without a status. Approved Session 11
-                (batch #1), verbatim. */}
+            {/* The invitation, approved Session 11 (batch #1), verbatim. */}
             <p className="mt-3 max-w-[62ch] font-serif text-[17px] leading-relaxed">
               This is the kind of problem I want to spend the next decade on. If your team is trying to make buildings
               answer harder questions, whether that means a role, a research collaboration, or a hand with a computational
@@ -113,7 +113,7 @@ export default function About() {
               height={1192}
               loading="lazy"
               decoding="async"
-              className={`w-full border border-ink/35 transition-[filter] duration-500 ease-out motion-reduce:transition-none ${
+              className={`w-full border border-[color-mix(in_srgb,var(--lang-ink)_35%,transparent)] transition-[filter] duration-500 ease-out motion-reduce:transition-none ${
                 developed ? 'grayscale-0' : 'grayscale'
               }`}
             />

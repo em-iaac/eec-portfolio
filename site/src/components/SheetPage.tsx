@@ -21,7 +21,7 @@ export default function SheetPage({
     <div className="flex min-h-dvh flex-col">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-redline focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-mylar"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-[var(--lang-interaction)] focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-[var(--lang-ground)]"
       >
         Skip to content
       </a>

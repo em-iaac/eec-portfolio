@@ -13,15 +13,13 @@
 // the glass-2 sheet, and the card <-> sheet <-> page morphs ride the DL-1
 // naming convention (lib/viewTransition.ts).
 //
-// Copy: the intro line + all 11 deks were SIGNED by Emilie in the DL-2 copy
-// pass (in chat, 2026-07-10; dekSigned in projects.tsx). New copy on this
-// surface ships draftCopy until she signs it, as always (Section 14).
+// Copy: all 11 deks were SIGNED by Emilie in the DL-2 copy pass (in chat,
+// 2026-07-10; dekSigned in the content files); the page's intro line retired
+// at G2 (no page intros, sitewide). New copy on this surface ships draftCopy
+// until she signs it, as always (Section 14).
 import { useEffect, useRef } from 'react'
 // G1 (2026-07-10): the opened card IS the showcase now (WorkOverlay grew the
 // signed spine; the Pen Table sheet tier retired, /sheets/* redirects here).
-// The intro line was reworded for the model change ("a few open all the way
-// to their full page" stopped being true): the NEW wording is draftCopy
-// until Emilie signs it; the deks stay signed (dekSigned, content/projects).
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import WorkCard from '../components/work/WorkCard'
@@ -113,9 +111,14 @@ export default function Work() {
   return (
     <SheetPage title="Work">
       <section className="pt-10 pb-5" aria-labelledby="work-heading">
+        {/* The kicker, SIGNED (G4, 2026-07-12: one room-sign grammar
+            sitewide, Emilie's ruling). */}
+        <p className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
+          WORK · THE PROOF
+        </p>
         <h1
           id="work-heading"
-          className="mb-4 text-3xl font-semibold tracking-[-0.01em] text-[var(--lang-ink)]"
+          className="mt-3 mb-4 text-3xl font-semibold tracking-[-0.01em] text-[var(--lang-ink)]"
         >
           Work
         </h1>

@@ -1,6 +1,6 @@
 // THE NOW FILE (G3, 2026-07-10, Emilie's ruling): the one file to edit when
 // life moves. NOW renders as the About page's NOW module AND emits as the
-// newest entry in the registry timeline, so the CV career graph's live tip
+// newest entry in the registry timeline, so the neural world's live red tip
 // always answers "doing what?". Bump `date` when editing; the registry
 // validator enforces that NOW stays the newest dated thing in the record.
 //

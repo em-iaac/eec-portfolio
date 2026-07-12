@@ -3,7 +3,7 @@
 // time; neurons NEAR the pointer wake (their dendrites draw out, their
 // correlations build to the synapse and fire once), and settle again as
 // attention leaves. Emilie's signed feel: RADIUS 180 · BUILD 1400ms ·
-// DECAY 3000ms · REST INK 55% · REACH OUT semantics (a waking neuron's
+// DECAY 3000ms · REST INK 62% · REACH OUT semantics (a waking neuron's
 // threads build all the way to their far ends; the far label brightens and
 // names the correlation).
 //
@@ -23,7 +23,8 @@ export const TUNE = {
   decay: 3000, // ms from grown back to rest
   // Label ink at rest. Emilie's dial said 55%, which holds AA on the dark
   // ground (5.4:1) but lands 3.9:1 on light; the a11y floor is binding, so
-  // rest ink is 62% (4.9:1 light / 6.4:1 dark). Flagged in the sign-offs.
+  // rest ink is 62% (4.9:1 light / 6.4:1 dark). SIGNED by Emilie (G4,
+  // 2026-07-12); the date labels ride the same rest since G4.
   restInk: 0.62,
 } as const
 
@@ -168,8 +169,12 @@ export function useProximityEngine(opts: {
       n.appliedShow = qs
       const rest = TUNE.restInk
       const e = ease(n.shown)
-      if (n.lbl) n.lbl.style.opacity = (rest + (1 - rest) * e).toFixed(3)
-      if (n.yr) n.yr.style.opacity = (rest * 0.8 + (1 - rest * 0.8) * e).toFixed(3)
+      const ink = (rest + (1 - rest) * e).toFixed(3)
+      if (n.lbl) n.lbl.style.opacity = ink
+      // dates ride the same rest ink as the titles (G4: the old x 0.8 dip
+      // landed 2.2:1, under the AA floor on both grounds; the smaller size
+      // alone keeps them quieter)
+      if (n.yr) n.yr.style.opacity = ink
     }
 
     const applyConn = (c: ConnHandle) => {

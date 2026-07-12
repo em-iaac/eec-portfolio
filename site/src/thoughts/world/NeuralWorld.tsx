@@ -670,8 +670,9 @@ export default function NeuralWorld() {
                       )}
                     </g>
                     <circle className="nw-hit" cx={n.x} cy={n.y} r={HIT_R} />
-                    {/* initial inline opacities = TUNE.restInk (and *0.8 for
-                        the year): the first paint IS the rest state */}
+                    {/* initial inline opacities = TUNE.restInk for BOTH texts
+                        (G4: dates ride the same rest as titles): the first
+                        paint IS the rest state, no post-mount pop */}
                     <text
                       className={`nw-lbl ${kindClass}`}
                       x={n.x}
@@ -686,7 +687,7 @@ export default function NeuralWorld() {
                       x={n.x}
                       y={yy}
                       textAnchor="middle"
-                      style={{ opacity: TUNE.restInk * 0.8 }}
+                      style={{ opacity: TUNE.restInk }}
                     >
                       {n.date}
                     </text>

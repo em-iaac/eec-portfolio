@@ -2,7 +2,7 @@
 // data/projects.tsx (dek signed 2026-07-10). No public artifact exists
 // (dossier), so this is the thinnest showcase on the site, on purpose:
 // WHAT + WHY, no photo, no numbers, nothing padded.
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import type { ProjectMaster } from './types'
 
 const xrLab: ProjectMaster = {
@@ -12,7 +12,6 @@ const xrLab: ProjectMaster = {
   meta: 'LAU XR LAB · RESEARCH ASSISTANT · 2021-23',
   dek: 'Where the XR thread started: point a phone at a molecule and watch it react in the room.',
   dekSigned: true,
-  draftCopy: true,
   blurb:
     'Point a phone at a molecule and watch the reaction happen in the room: AR chemistry lessons built at the LAU XR Lab, plus contributions to research on VR in education. Where the XR thread in my work started.',
   tech: 'AR · VR · 3D ANIMATION',
@@ -32,7 +31,7 @@ const xrLab: ProjectMaster = {
       front of them.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default xrLab

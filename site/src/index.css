@@ -25,8 +25,7 @@
       live annotations on sheets. Handwriting (--font-hand) sets margin
       notes ONLY: never UI, never above 19px, five notes per sheet max.
    9. The timeline NOW marker: redline as liveness at the live edge of
-      the record, the same liveness sanction as the ISSUED FOR stamp. (The
-      public open-to status line retired in Session 5, FLAG-01.)
+      the record, the same liveness sanction as the ISSUED FOR stamp.
    ============================================================ */
 @theme {
   /* THE DL-1 BRIDGE (Emilie 2026-07-10, one mode whole site): the light-ground
@@ -59,8 +58,6 @@
   /* Dark ground */
   --color-carbon: #0b0e13; /* EXPLORE ground / dark strips */
   --color-ink-dark: #e8eaed; /* ink on carbon, 15.9:1 */
-  --color-ink-bright: #c7cbd1; /* landing type ramp: adjective line (between ink-dark and anno, AA on carbon) */
-  --color-prose-dark: #b4bac2; /* landing type ramp: serif voice line (brighter than anno so prose is not a ghost) */
   --color-anno-dark: #8a919c; /* annotation on carbon */
 
   /* Type */
@@ -80,56 +77,6 @@ body {
   background: color-mix(in srgb, var(--color-redline) 18%, transparent);
 }
 
-/* Exactly two width tokens: no ad-hoc widths. */
-.font-expanded {
-  font-stretch: 120%;
-}
-
-.font-condensed {
-  font-stretch: 80%;
-}
-
-/* The one revision-cloud flourish (governance rule 6): a hand-wobbled
-   redline ellipse around a single word. Draws in once; final state under
-   reduced motion. Stroke is redline-stroke at 3px (legacy hue, legal). */
-.revision-word {
-  position: relative;
-  display: inline-block;
-}
-
-.revision-word svg {
-  position: absolute;
-  left: -9%;
-  top: -22%;
-  width: 118%;
-  height: 148%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.revision-word svg path {
-  fill: none;
-  stroke: var(--color-redline-stroke);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-dasharray: 340;
-  stroke-dashoffset: 340;
-  animation: revision-ink 0.6s var(--revision-delay, 0.5s) ease-out forwards;
-}
-
-@keyframes revision-ink {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .revision-word svg path {
-    animation: none;
-    stroke-dashoffset: 0;
-  }
-}
-
 /* Anchored lens sections scroll below the sticky-free header comfortably */
 section[id] {
   scroll-margin-top: 1.5rem;
@@ -138,9 +85,9 @@ section[id] {
 /* Header draw-in ceremony retired at DL-0 (2026-07-10): the drawing-set
    title block gave way to the floating glass pill (DESIGN-LANGUAGE.md). */
 
-/* EXPLORE info-card entrance (Session 5 bundle): the focused word's card
-   fades and rises 8px, ~280ms. Keyed per focused node in ExplorePage so
-   switching words replays it. Reduced motion: final state, no motion. */
+/* Field-card entrance (Session 5 bundle; today the neural world's field card
+   rides it): the card fades and rises 8px, ~280ms, keyed per focused piece so
+   switching replays it. Reduced motion: final state, no motion. */
 .infocard-enter {
   animation: infocard-in 280ms ease-out both;
 }
@@ -152,57 +99,14 @@ section[id] {
   }
 }
 
-/* (The meta build: the nb-fade-in keyframes retired with the CV graph view;
-   the career drawing lives on as the neural world's skeleton below.) */
-
-/* Kicker leader-line draw-in (Session 5 bundle): the SVG line inks in, then
-   the dot and arrowhead arrive, one-shot. Sequenced after the header rule via
-   --kicker-delay. Reduced motion: final state, nothing animates. */
-.kicker-draw .k-line {
-  stroke-dasharray: 60;
-  stroke-dashoffset: 60;
-  animation: kicker-line 420ms var(--kicker-delay, 900ms) ease-out forwards;
-}
-
-.kicker-draw .k-dot,
-.kicker-draw .k-head {
-  opacity: 0;
-  animation: kicker-mark 200ms calc(var(--kicker-delay, 900ms) + 320ms)
-    ease-out forwards;
-}
-
-@keyframes kicker-line {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes kicker-mark {
-  to {
-    opacity: 1;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .infocard-enter,
-  .kicker-draw .k-line,
-  .kicker-draw .k-dot,
-  .kicker-draw .k-head {
+  .infocard-enter {
     animation: none;
   }
-
-  .kicker-draw .k-line {
-    stroke-dashoffset: 0;
-  }
-
-  .kicker-draw .k-dot,
-  .kicker-draw .k-head {
-    opacity: 1;
-  }
 }
 
-/* (G3: the bench roll's .bench-scroll / .bench-fade retired with the dead
-   BenchRoll component.) */
+/* (The meta build: the nb-fade-in keyframes retired with the CV graph view;
+   the career drawing lives on as the neural world's skeleton below.) */
 
 /* Route transitions moved to the DL v2 language (DL-1, 2026-07-10): the old
    Pen Table sheet-lift retired; the soft crossfade + shared-element morphs +
@@ -293,13 +197,24 @@ section[id] {
   stroke-width: 2;
 }
 
+/* the thread label control (G4): the focusable group carries an invisible
+   hit rect because SVG text hit-tests only its glyph cells, which left the
+   8px labels a ~9px-tall target */
+.mg-edge {
+  cursor: pointer;
+  outline: none;
+}
+.mg-edge-hit {
+  fill: transparent;
+  stroke: none;
+  pointer-events: all;
+}
 .mg-edge-lbl {
   font-family: var(--font-mono);
   font-size: 8px;
   letter-spacing: 0.14em;
   fill: var(--lang-ink-muted);
-  cursor: pointer;
-  outline: none;
+  pointer-events: none;
   transition: opacity 0.3s ease, fill 0.3s ease;
 }
 .mg-edge-lbl.active {
@@ -308,7 +223,7 @@ section[id] {
 .mg-stage.is-focus .mg-edge-lbl:not(.active) {
   opacity: 0.22;
 }
-.mg-edge-lbl:focus-visible {
+.mg-edge:focus-visible .mg-edge-lbl {
   fill: var(--lang-interaction);
 }
 
@@ -485,7 +400,9 @@ section[id] {
   font-family: var(--font-mono);
   font-size: 8px;
   letter-spacing: 0.12em;
-  fill: var(--lang-ink-faint);
+  /* muted, not faint (G4): NOW is wayfinding text, so it holds the same
+     ink the year columns hold (AA on both grounds) */
+  fill: var(--lang-ink-muted);
 }
 .nw-livetag {
   font-family: var(--font-mono);
@@ -606,9 +523,11 @@ section[id] {
   font-family: var(--font-mono);
   font-size: 7.5px;
   letter-spacing: 0.06em;
-  /* muted, not faint: these are real dates (each is also in its node's
-     aria-label and on the field card, but what renders should hold ink) */
-  fill: var(--lang-ink-muted);
+  /* full ink, dimmed by the engine to the SAME 62% rest as the titles (G4:
+     the old muted fill x 0.8 rest multiplier landed 2.2:1, under the AA
+     floor; dates are real rendered text, so they hold the rest ink and the
+     size difference alone keeps them quieter than titles) */
+  fill: var(--lang-ink);
   pointer-events: none;
 }
 /* the plumb line: a waking piece of the mind shows its moment on the record */

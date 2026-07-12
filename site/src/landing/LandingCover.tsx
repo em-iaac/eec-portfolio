@@ -6,29 +6,30 @@
 // artwork; the mind-graph is progressive enhancement layered under it.
 // Non-scrolling on tablet/desktop
 // (the cover is one frame); on phones the text band sits above an interactive
-// field so the ten-second scan and the tap-to-bloom both stay first-class.
+// field so the first-glance read and the tap-to-bloom both stay first-class.
 //
-// Copy in Emilie's voice ships draftCopy until she signs it: the adjective line,
-// the positioning line, and the margin wink are drafts. The "Behavior Information
-// Modeling" spine is LOCKED content (reachable via the graph's nodes).
+// Copy: the adjective line, the positioning line, and the margin wink were all
+// SIGNED by Emilie at G4 (2026-07-12). The "Behavior Information Modeling"
+// spine is LOCKED content (reachable via the graph's nodes).
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ExploreErrorBoundary from '../components/ExploreErrorBoundary'
 import LogoMark from '../components/LogoMark'
+import ModeToggle from '../components/ui/ModeToggle'
 import MindGraph from './MindGraphView'
 import MindGraphSrNav from './MindGraphSrNav'
 import { MIND, nodeRoute, starPath } from './mindGraph'
 import { assertPaletteMatchesTheme } from './palette'
 
-// draftCopy — pending Emilie's sign-off. The role adjectives (Emilie's example
-// set); the positioning line whose "minds" carries the red pen.
+// SIGNED (G4, 2026-07-12). The role adjectives; the positioning line whose
+// "minds" carries the niche; the margin wink.
 const ADJECTIVES = 'architect · writer · researcher · creative technologist'
 const VOICE = 'I work with design, technology and minds.'
 const WINK = 'this whole mess is my head. touch a piece of it.'
 
-// Top-page doors. WORK is the emphasized proof path (the recruiter's one clear
-// route into the work): it opens the R2 gallery at /work. THOUGHTS opens the
-// reading room (its own surface since G2).
+// Top-page doors. WORK is the emphasized proof path (the one clear route into
+// the work for a first-time visitor): it opens the R2 gallery at /work.
+// THOUGHTS opens the neural world (the whole record since the meta build).
 const DOORS: { label: string; to: string; primary?: boolean }[] = [
   { label: 'WORK', to: '/work', primary: true },
   { label: 'THOUGHTS', to: '/thoughts' },
@@ -180,13 +181,13 @@ function JumpBar() {
         aria-expanded={open && matches.length > 0}
         aria-controls="jump-list"
         role="combobox"
-        className="lang-glass-1 h-10 w-full rounded-[var(--r-pill)] px-4 font-mono text-[12px] tracking-[0.06em] text-[var(--lang-ink)] placeholder:text-[var(--lang-ink-muted)] focus:border-[var(--lang-interaction)] focus:outline-none"
+        className="lang-glass-1 h-11 w-full rounded-[var(--r-pill)] px-4 font-mono text-[12px] tracking-[0.06em] text-[var(--lang-ink)] placeholder:text-[var(--lang-ink-muted)] focus:border-[var(--lang-interaction)] focus:outline-none"
       />
       {open && matches.length > 0 && (
         <ul
           id="jump-list"
           role="listbox"
-          className="lang-glass-2 absolute left-0 top-11 z-20 max-h-[280px] w-full overflow-y-auto rounded-[var(--r-control)] py-1"
+          className="lang-glass-2 absolute left-0 top-12 z-20 max-h-[280px] w-full overflow-y-auto rounded-[var(--r-control)] py-1"
         >
           {matches.map((m, i) => (
             <li key={m.to + m.label} role="option" aria-selected={false}>
@@ -241,7 +242,7 @@ export default function LandingCover() {
             </h1>
           </div>
 
-          {/* TIER 2a — the role adjectives (draftCopy). One line on the name-row
+          {/* TIER 2a — the role adjectives (signed). One line on the name-row
               measure on sm+ (10px keeps all four inside it); wraps calmly on phones. */}
           <p className="mt-5 font-mono text-[11px] leading-relaxed tracking-[0.08em] text-[light-dark(#565b63,#c7cbd1)] lowercase sm:whitespace-nowrap sm:text-[11px] sm:tracking-[0.02em]">
             {ADJECTIVES}
@@ -278,9 +279,14 @@ export default function LandingCover() {
             ))}
           </nav>
 
-          {/* TIER 3 — the jump pill, full measure */}
-          <div className="mt-4">
-            <JumpBar />
+          {/* TIER 3 — the jump pill + the mode toggle (G4, Emilie's option b:
+              the cover gains the same 44px control every room carries, in the
+              pressable-controls tier; no layout, motion, or copy changes). */}
+          <div className="mt-4 flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <JumpBar />
+            </div>
+            <ModeToggle />
           </div>
         </header>
       </div>

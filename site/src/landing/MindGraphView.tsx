@@ -136,7 +136,7 @@ export default function MindGraph() {
   function onPointerDown(e: React.PointerEvent<SVGSVGElement>) {
     lastPointer.current = e.pointerType as 'mouse' | 'touch' | 'pen'
     if (e.pointerType !== 'touch') return
-    if ((e.target as Element).closest('.mg-edge-lbl')) return // let thread labels bloom themselves
+    if ((e.target as Element).closest('.mg-edge')) return // let thread labels bloom themselves
     const p = canvasPoint(e.clientX, e.clientY)
     if (!p) return
     const n = nearest(p.x, p.y)
@@ -192,15 +192,15 @@ export default function MindGraph() {
         ))}
       </g>
 
-      {/* thread edge labels */}
+      {/* thread edge labels. Each rides inside a focusable group with an
+          invisible hit rect (G4): SVG text hit-tests only its glyph cells,
+          so the 8px glyphs alone were a ~9px-tall target; the rect pads the
+          control to ~26px rendered without changing what is drawn. */}
       <g>
         {THREADS.filter((t) => t.label).map((t) => (
-          <text
+          <g
             key={t.id}
-            className={`mg-edge-lbl${litThreads.has(t.id) ? ' active' : ''}`}
-            x={t.label![0]}
-            y={t.label![1]}
-            textAnchor={t.anchor}
+            className="mg-edge"
             tabIndex={0}
             role="button"
             aria-label={`${t.id} thread. Highlight its projects and thoughts.`}
@@ -209,9 +209,36 @@ export default function MindGraph() {
             onFocus={() => activateThread(t.id)}
             onBlur={clear}
             onClick={() => activateThread(t.id)}
+            onKeyDown={(e) => {
+              // role=button on an SVG group gets no native key activation
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                activateThread(t.id)
+              }
+            }}
           >
-            {t.id}
-          </text>
+            <rect
+              className="mg-edge-hit"
+              x={
+                t.anchor === 'end'
+                  ? t.label![0] - (t.id.length * 7.5 + 12)
+                  : t.anchor === 'middle'
+                    ? t.label![0] - (t.id.length * 7.5 + 18) / 2
+                    : t.label![0] - 6
+              }
+              y={t.label![1] - 17}
+              width={t.id.length * 7.5 + 18}
+              height={28}
+            />
+            <text
+              className={`mg-edge-lbl${litThreads.has(t.id) ? ' active' : ''}`}
+              x={t.label![0]}
+              y={t.label![1]}
+              textAnchor={t.anchor}
+            >
+              {t.id}
+            </text>
+          </g>
         ))}
       </g>
 

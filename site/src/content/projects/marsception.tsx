@@ -2,7 +2,7 @@
 // from data/projects.tsx (dek signed 2026-07-10). Duo credit per the public
 // results page (dossier AWD-05): Charles Abi Chahine, Top 50 stands. A thin
 // showcase on purpose: WHAT + WHY, honestly short.
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import type { ProjectMaster } from './types'
 
 const marsception: ProjectMaster = {
@@ -14,7 +14,6 @@ const marsception: ProjectMaster = {
   dekSigned: true,
   award: 'TOP 50',
   myPart: 'A two-person entry with Charles Abi Chahine.',
-  draftCopy: true,
   blurb:
     'A habitat ring for Mars, designed with AI-driven workflows back when that still raised eyebrows. My first proof that generative tools and architecture could share a desk.',
   tech: 'AI WORKFLOWS · RHINO · V-RAY',
@@ -34,7 +33,7 @@ const marsception: ProjectMaster = {
       it aged well.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default marsception

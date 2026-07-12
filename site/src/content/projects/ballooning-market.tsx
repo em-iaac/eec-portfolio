@@ -3,7 +3,7 @@
 // TRIMMED from the retired P-104 sheet: the solver-goals listing did not
 // migrate (the blog tells the long version). The instructive fail stays
 // filed as the outcome, on purpose.
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import NB from '../../components/ui/NB'
 import type { ProjectMaster } from './types'
 
@@ -54,7 +54,7 @@ const ballooningMarket: ProjectMaster = {
       thermostat.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default ballooningMarket

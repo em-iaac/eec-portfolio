@@ -2,7 +2,7 @@
 // (dek signed 2026-07-10). The spine is authored fresh from the public blog
 // post (content/blog-catalog.json): no sheet ever existed. Attribution woven
 // per the Session 7 ruling: team of four, all hands on everything.
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import type { ProjectMaster } from './types'
 
 const huddle: ProjectMaster = {
@@ -14,7 +14,6 @@ const huddle: ProjectMaster = {
   myPart: 'Team of four, all hands on everything.',
   dek: 'Stop fighting the wind and build with it: modules that grow along the gusts instead of bracing against them.',
   dekSigned: true,
-  draftCopy: true, // covers myPart only (approved live; Session 18 retires the flag)
   blurb:
     'In Punta Arenas the wind never stops, so we stopped fighting it. The Huddle aggregates 4×4×4 m modules along the wind itself: WASP grows the cluster, Kangaroo settles it, and a three-panel envelope (Shields, Lenses, Gills) turns the facade into a readable map of climatic forces.',
   tech: 'WASP · KANGAROO · ALPACA4D',
@@ -59,7 +58,7 @@ const huddle: ProjectMaster = {
       problem, ends up the project's material.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default huddle

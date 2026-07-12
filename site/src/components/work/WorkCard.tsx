@@ -24,7 +24,8 @@ function QuietTile({ entry }: { entry: WorkEntry }) {
   const hint = entry.hero === 'audio' ? 'LISTEN' : 'PHOTO PENDING'
   return (
     <div className="flex h-full w-full items-center justify-center bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)]">
-      <span className="font-mono text-[10px] tracking-[0.14em] text-[var(--lang-ink-faint)]">{hint}</span>
+      {/* muted, not faint (G4): faint fell to 3.2:1 on the dark ground */}
+      <span className="font-mono text-[10px] tracking-[0.14em] text-[var(--lang-ink-muted)]">{hint}</span>
     </div>
   )
 }

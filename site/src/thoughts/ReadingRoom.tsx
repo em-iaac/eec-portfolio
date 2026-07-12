@@ -78,7 +78,7 @@ export default function ReadingRoom() {
           <p className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
             THOUGHTS · THE WRITING
           </p>
-          {/* The room's title in the thinking voice (draftCopy until signed). */}
+          {/* The room's title in the thinking voice (SIGNED, G4 2026-07-12). */}
           <h1
             id="thoughts-heading"
             className="mt-3 mb-2 font-serif text-[30px] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
@@ -112,13 +112,13 @@ export default function ReadingRoom() {
         </ol>
 
         {/* The corridor back into the world (retargeted by the meta build;
-            the label is draftCopy, unsigned). */}
+            Emilie shortened + SIGNED the label at G4, 2026-07-12). */}
         <p className="mt-8 border-t-[0.5px] border-[var(--lang-hairline)] pt-4 pb-12 font-mono text-[9px] tracking-[0.08em]">
           <Link
             to="/thoughts"
             className="-m-2 p-2 text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
           >
-            SEE THEM IN TIME · THE WHOLE MIND, ONE WORLD ›
+            SEE THEM IN TIME ›
           </Link>
         </p>
       </div>

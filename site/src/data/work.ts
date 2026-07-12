@@ -66,7 +66,6 @@ export interface WorkEntry {
   why: ReactNode
   how?: ReactNode[]
   outcome?: ReactNode
-  draftCopy: boolean // the dek is unsigned until Emilie approves it
   showcaseDraft: boolean // the spine prose is unsigned until Emilie signs it
 }
 
@@ -163,9 +162,9 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     why: p.why,
     how: p.how,
     outcome: p.outcome,
-    // A dek ships unsigned (Section 14) until Emilie signs it in a copy pass
-    // (dekSigned); the G1 spine prose carries its own flag the same way.
-    draftCopy: !p.dekSigned,
+    // The G1 spine prose ships flagged until Emilie signs it. (The dek flag
+    // left this object at G4: every dek is dekSigned in its content file, and
+    // nothing ever consumed the derived field.)
     showcaseDraft: p.showcaseDraft,
   }
 }

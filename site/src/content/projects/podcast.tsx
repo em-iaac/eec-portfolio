@@ -5,7 +5,7 @@
 // The quantified research (qEEG etc.) is Dr. Valentine's, never Emilie's:
 // the spine stays on the conversation and the coined term. No HOW: it is a
 // conversation, not a pipeline, and the slot is not padded.
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import type { ProjectMaster } from './types'
 
 const podcast: ProjectMaster = {
@@ -54,7 +54,7 @@ const podcast: ProjectMaster = {
       the thesis keeps circling it.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default podcast

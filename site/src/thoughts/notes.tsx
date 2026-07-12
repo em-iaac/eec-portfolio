@@ -2,11 +2,11 @@
 // rendered by ThoughtRoute inside ThoughtLeaf. Words only: plain <p> (the leaf
 // styles them) plus optional inline <NB> hover dots under rule 8's
 // five-per-leaf cap (G1: the Pen Table NBDot retired with the sheet tier;
-// the glass NB is a drop-in with the same props and mechanics). ALL copy
-// here is a DRAFT in Emilie's voice pending her sign-off (each thought entry
-// carries draftCopy in the registry).
+// the glass NB is a drop-in with the same props and mechanics). ALL ten
+// notes were SIGNED by Emilie at G4 (2026-07-12); new notes ship draftCopy
+// in the registry until she signs them.
 //
-// Binding copy rules (Session 11 + the calibration dossier): no em dashes; no
+// Binding copy rules (Session 11): no em dashes; no
 // '{' anywhere; the verbs are score / estimate / model, never "measure", and
 // no clinical claims (this matters most in bim, comfort, respond); tier-3
 // domain terms (neuroarchitecture, evidence-based design) are woven in, and
@@ -15,8 +15,8 @@
 import { type ReactNode } from 'react'
 import NBDot from '../components/ui/NB'
 
-// THE OPENINGS (G2) live in openings.ts (JSX-free so the CV career graph can
-// import them without pulling this prose into its chunk). Each string there
+// THE OPENINGS (G2) live in openings.ts (JSX-free so index surfaces can
+// import them without pulling this prose into their chunk). Each string there
 // is the VERBATIM opening of its note here; update both together or the
 // index lies about the note.
 export { THOUGHT_OPENINGS } from './openings'

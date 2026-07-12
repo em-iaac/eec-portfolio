@@ -2,7 +2,7 @@
 // data/projects.tsx (dek signed 2026-07-10). A thin showcase ON PURPOSE:
 // professional record, NDA check on imagery still open (dossier), so the
 // spine is WHAT + WHY only, honestly short. myPart woven into WHAT.
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import type { ProjectMaster } from './types'
 
 const somaTowers: ProjectMaster = {
@@ -13,7 +13,6 @@ const somaTowers: ProjectMaster = {
   myPart: 'My part: facade and massing studies in Rhino and Grasshopper, carried into the BIM set.',
   dek: 'A parametric study only counts once it survives a drawing set: four towers carried from Grasshopper into BIM.',
   dekSigned: true,
-  draftCopy: true,
   blurb:
     'Four towers between Dubai and Beirut: Verve at City Walk, Enara, Saria, District O. Facade and massing studies in Rhino and Grasshopper, carried into BIM for delivery. The years where I learned that a parametric study only matters if it survives contact with a drawing set.',
   tech: 'RHINO · GRASSHOPPER · REVIT',
@@ -34,7 +33,7 @@ const somaTowers: ProjectMaster = {
       schedule, and both have to win.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default somaTowers

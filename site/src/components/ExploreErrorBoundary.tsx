@@ -9,10 +9,10 @@ const WIRE_LINK =
   '-m-2 p-2 text-redline-wire underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline-wire'
 
 export default class ExploreErrorBoundary extends Component<
-  // `fallback` (Session 13): when the surface is EMBEDDED (the landing hero), a
-  // chunk-load or scene throw must degrade to the static poster underneath, not
-  // the full-screen carbon message. The full-page /explore route omits it and
-  // keeps the message.
+  // `fallback` (Session 13; the landing passes null today): when the surface
+  // is EMBEDDED (the landing hero), a chunk-load or scene throw must degrade
+  // quietly (no graph, the honest DOM hero still painted), never the
+  // full-screen carbon message. Standalone use omits it and keeps the message.
   { children: ReactNode; fallback?: ReactNode },
   { error: Error | null }
 > {

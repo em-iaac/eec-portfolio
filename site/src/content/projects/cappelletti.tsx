@@ -3,7 +3,7 @@
 // the public blog post. Duo credit woven: Ahmad Baltaji, shared end to end.
 // Numbers per the dossier: ~160 kg and the two lattice topologies are the
 // blog's own, nothing else claimed.
-// Spine prose is showcaseDraft until Emilie signs it (Section 14).
+// Spine prose SIGNED by Emilie (G4, 2026-07-12).
 import type { ProjectMaster } from './types'
 
 const cappelletti: ProjectMaster = {
@@ -14,7 +14,6 @@ const cappelletti: ProjectMaster = {
   myPart: 'A duo with Ahmad Baltaji, shared end to end.',
   dek: 'A pasta shape is quietly structural: evolutionary optimization scaled a cappelletti shell to a 160 kg pavilion.',
   dekSigned: true,
-  draftCopy: true,
   blurb:
     'Look closely at a piece of pasta: the curves and hollows are structural engineering in miniature. We scaled up dinner: evolutionary optimization and finite element analysis in Grasshopper brought a cappelletti shell to human scale at roughly 160 kg of material.',
   tech: 'GRASSHOPPER · GALAPAGOS · CRYSTALLON · ALPACA4D',
@@ -50,7 +49,7 @@ const cappelletti: ProjectMaster = {
       happy to disagree with itself.
     </>
   ),
-  showcaseDraft: true,
+  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
 export default cappelletti
