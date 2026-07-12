@@ -242,6 +242,38 @@ not the dominant texture it was in Pen Table.
 
 ---
 
+## 4.5 · The emblem (CE, the constellation cube; approved 2026-07-12)
+
+The EEC mark is a graph cube: the 2022 iso cube rebuilt as a small constellation,
+chosen from a three-direction exploration (neuron / cube / "em" monogram) and
+three cube rounds. It supersedes the A1 graph cube (2026-07-06).
+`site/src/components/LogoMark.tsx` is the geometry of record; `public/favicon.svg`
+carries the same geometry with beefed weights for tab sizes.
+
+- **Letter anatomy** (Emilie's canonical mapping, unchanged): E1 = left face,
+  E2 = top face, C = right face. New in CE: E2's spine sits on the edge it
+  shares with E1 (the two E's grow from one stroke), and E2's far bar is the
+  same stroke as the C's top arm.
+- **Three depths of line**: the outer shell heavy (w7); every thread that
+  touches the redline node thin (w4); the two back-right edges that only close
+  the cube as a 45% ghost (w3.2). The object converges into its live point.
+- **Nodes**: 6 corner nodes (r13) + 2 dash-tip nodes (r8), ink. The redline
+  node (r15) stays at the vertex where all three letters meet, and rides
+  `--lang-interaction` (red = interaction/liveness, §6; the mark's one red).
+- **Mode-aware always**: ink is `--lang-ink`, red is `--lang-interaction`.
+  There is no tone prop and no ground-pinned variant; the mark is correct on
+  both grounds everywhere (the old `tone="wire"` pin is what made the landing
+  mark vanish in light mode).
+- **Static always**: no plot-in, no hover ceremony (unchanged since Session 4).
+- **Derivatives**: `favicon.svg` self-themes via `prefers-color-scheme`;
+  `favicon-16/32.png` fallbacks + `apple-touch-icon.png` (light ground) ship
+  the light-mode pair; `og.png` (1200x630) sets the mark at 360px on the light
+  ground next to the name. Regenerate all of them together if the geometry
+  ever changes.
+- `aria-label="EEC"`, `role="img"` (a11y floor).
+
+---
+
 ## 5 · Components (specs; primitives ship in `site/src/components/ui/`)
 
 - **Pill** (`Pill.tsx`) — the compact metadata unit, `--r-pill`. Variants:

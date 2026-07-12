@@ -1,17 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-108 -222 216 244">
+  <!-- The EEC constellation cube (CE, 2026-07-12): same geometry as
+       LogoMark.tsx, weights beefed up for tab sizes. Self-theming: light-mode
+       ink/red by default, dark-mode pair under prefers-color-scheme. -->
   <style>
-    line { stroke: #16181D; }
-    @media (prefers-color-scheme: dark) { line { stroke: #E8EAED; } }
+    .k { stroke: #16181D; } .n { fill: #16181D; } .r { fill: #BE123C; }
+    @media (prefers-color-scheme: dark) {
+      .k { stroke: #E8EAED; } .n { fill: #E8EAED; } .r { fill: #FF4D6D; }
+    }
   </style>
-  <g stroke-width="13" stroke-linecap="round" fill="none">
-    <line x1="-86.6" y1="-150" x2="0" y2="-100"/>
-    <line x1="-86.6" y1="-100" x2="-52" y2="-80"/>
+  <g class="k" stroke-width="11" stroke-linecap="round" fill="none">
+    <line x1="-86.6" y1="-150" x2="0" y2="-200"/>
+    <line x1="-86.6" y1="-150" x2="-86.6" y2="-50"/>
     <line x1="-86.6" y1="-50" x2="0" y2="0"/>
-    <line x1="0" y1="-200" x2="-86.6" y2="-150"/>
-    <line x1="-29" y1="-132" x2="5.6" y2="-152"/>
-    <line x1="0" y1="-200" x2="86.6" y2="-150"/>
-    <line x1="0" y1="-100" x2="0" y2="0"/>
     <line x1="0" y1="0" x2="86.6" y2="-50"/>
   </g>
-  <circle cx="0" cy="-100" r="17" fill="#E11D48"/>
+  <g class="k" stroke-width="7" stroke-linecap="round" fill="none">
+    <line x1="-86.6" y1="-150" x2="0" y2="-100"/>
+    <line x1="0" y1="-100" x2="86.6" y2="-150"/>
+    <line x1="0" y1="-100" x2="0" y2="0"/>
+    <line x1="-86.6" y1="-100" x2="-48.5" y2="-78"/>
+    <line x1="-43.3" y1="-125" x2="-5.2" y2="-147"/>
+  </g>
+  <g class="k" stroke-width="5.5" stroke-linecap="round" fill="none" opacity="0.45">
+    <line x1="0" y1="-200" x2="86.6" y2="-150"/>
+    <line x1="86.6" y1="-150" x2="86.6" y2="-50"/>
+  </g>
+  <g class="n">
+    <circle cx="0" cy="-200" r="16"/><circle cx="86.6" cy="-150" r="16"/>
+    <circle cx="-86.6" cy="-150" r="16"/><circle cx="-86.6" cy="-50" r="16"/>
+    <circle cx="0" cy="0" r="16"/><circle cx="86.6" cy="-50" r="16"/>
+    <circle cx="-48.5" cy="-78" r="10"/><circle cx="-5.2" cy="-147" r="10"/>
+  </g>
+  <circle class="r" cx="0" cy="-100" r="19"/>
 </svg>

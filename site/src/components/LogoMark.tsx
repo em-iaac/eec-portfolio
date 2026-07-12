@@ -1,63 +1,63 @@
-// The EEC graph cube (A1, approved 2026-07-06).
-// Geometry is the 2022 mark rebuilt on a true 30-degree isometric grid:
-// 8 strokes, 7 vertex nodes, one redline node where the three letters meet.
-// Letter anatomy (Emilie's canonical mapping): E1 = left face (spine is the
-// implied left edge), E2 = top face, C = right face. The implied edge
-// between center and right corner is shared: E2's bottom bar + C's top arm.
-// The mark is always static (the plot-in ceremony was retired in Session 4:
-// no caller ever animated it).
-
-const s = 100
-const ux = 86.6
-const P = {
-  B: [0, 0], P1: [ux, -50], P2: [-ux, -50], P3: [0, -s],
-  P4: [ux, -150], P5: [-ux, -150], T: [0, -2 * s],
-} as const
+// THE EEC CONSTELLATION CUBE (CE, approved 2026-07-12; supersedes the A1
+// graph cube of 2026-07-06). Same true 30-degree isometric grid, same
+// canonical letter mapping (Emilie's): E1 = left face, E2 = top face,
+// C = right face. E2's spine sits on the edge it shares with E1 (the two
+// E's grow from one stroke), and E2's far bar is the same stroke as the
+// C's top arm. The mark draws at three depths:
+//   shell  (heavy) - the outer letter strokes: E2's near bar, E1's spine
+//                    and bottom bar, C's bottom arm;
+//   thread (thin)  - every stroke that touches the redline node: the
+//                    shared spines, the C's own spine, both middle dashes;
+//   ghost  (faint) - the two back-right edges that only close the cube.
+// 6 corner nodes + 2 dash-tip nodes; the redline node stays at the vertex
+// where all three letters meet (red = interaction/liveness only, DL v2).
+// Mode-aware ALWAYS: ink rides --lang-ink, red rides --lang-interaction,
+// so the mark is correct on both grounds with no per-caller tone (the
+// tone prop retired with this mark; it caused the light-mode vanishing).
+// The mark is always static (the plot-in ceremony was retired in Session 4).
 
 type Pt = readonly [number, number]
-const dash = (start: Pt, dir: Pt, len: number): [Pt, Pt] =>
-  [start, [start[0] + dir[0] * len, start[1] + dir[1] * len]]
+const P = {
+  T: [0, -200], P4: [86.6, -150], P5: [-86.6, -150], P3: [0, -100],
+  P2: [-86.6, -50], P1: [86.6, -50], B: [0, 0],
+} as const
 
-const dashTop = dash([-29, -132], [0.866, -0.5], 40)
-const dashLeft = dash([-ux, -100], [0.866, 0.5], 40)
+// Middle dashes: from the midpoint of each E's spine, 44 units along the
+// bar direction; their tips are nodes (the constellation's small stars).
+const M1: Pt = [-48.5, -78]
+const M2: Pt = [-5.2, -147]
 
-// Reading order: E1 (left), E2 (top), C (right)
-const STROKES: [Pt, Pt][] = [
-  [P.P5, P.P3], dashLeft, [P.P2, P.B], // E1
-  [P.T, P.P5], dashTop, [P.T, P.P4], // E2
-  [P.P3, P.B], [P.B, P.P1], // C
+const SHELL: [Pt, Pt][] = [
+  [P.P5, P.T], [P.P5, P.P2], [P.P2, P.B], [P.B, P.P1],
 ]
-const VERTS: Pt[] = [P.T, P.P4, P.P5, P.P3, P.P2, P.B, P.P1]
+const THREAD: [Pt, Pt][] = [
+  [P.P5, P.P3], [P.P3, P.P4], [P.P3, P.B],
+  [[-86.6, -100], M1], [[-43.3, -125], M2],
+]
+const GHOST: [Pt, Pt][] = [[P.T, P.P4], [P.P4, P.P1]]
+const CORNERS: Pt[] = [P.T, P.P4, P.P5, P.P2, P.B, P.P1]
 
 export interface LogoMarkProps {
   /** rendered height in px */
   size?: number
-  /** ink = light ground, wire = dark ground, lang = mode-aware (DL v2 tokens) */
-  tone?: 'ink' | 'wire' | 'lang'
-  /** vertex nodes (off for very small sizes) */
-  nodes?: boolean
-  /** the redline vertex where the three letters meet */
-  redNode?: boolean
   className?: string
 }
 
-export default function LogoMark({
-  size = 32,
-  tone = 'ink',
-  nodes = true,
-  redNode = true,
-  className,
-}: LogoMarkProps) {
-  const ink =
-    tone === 'lang' ? 'var(--lang-ink)' : tone === 'ink' ? 'var(--color-ink)' : 'var(--color-ink-dark)'
-  const red =
-    tone === 'lang'
-      ? 'var(--lang-interaction)'
-      : tone === 'ink'
-        ? 'var(--color-redline-stroke)'
-        : 'var(--color-redline-wire)'
-  const r = 11
+const strokeGroup = (lines: [Pt, Pt][], width: number, opacity?: number) => (
+  <g
+    stroke="var(--lang-ink)"
+    strokeWidth={width}
+    strokeLinecap="round"
+    fill="none"
+    opacity={opacity}
+  >
+    {lines.map(([a, b], i) => (
+      <line key={i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} />
+    ))}
+  </g>
+)
 
+export default function LogoMark({ size = 32, className }: LogoMarkProps) {
   return (
     <svg
       height={size}
@@ -67,23 +67,15 @@ export default function LogoMark({
       aria-label="EEC"
       className={className}
     >
-      <g stroke={ink} strokeWidth={8} strokeLinecap="round" fill="none">
-        {STROKES.map(([a, b], i) => (
-          <line key={i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} pathLength={100} />
-        ))}
-      </g>
-      {nodes &&
-        VERTS.map((p, i) => {
-          const isRed = redNode && p === P.P3
-          return (
-            <circle
-              key={i}
-              cx={p[0]} cy={p[1]}
-              r={isRed ? r * 1.15 : r}
-              fill={isRed ? red : ink}
-            />
-          )
-        })}
+      {strokeGroup(SHELL, 7)}
+      {strokeGroup(THREAD, 4)}
+      {strokeGroup(GHOST, 3.2, 0.45)}
+      {CORNERS.map((p, i) => (
+        <circle key={i} cx={p[0]} cy={p[1]} r={13} fill="var(--lang-ink)" />
+      ))}
+      <circle cx={M1[0]} cy={M1[1]} r={8} fill="var(--lang-ink)" />
+      <circle cx={M2[0]} cy={M2[1]} r={8} fill="var(--lang-ink)" />
+      <circle cx={P.P3[0]} cy={P.P3[1]} r={15} fill="var(--lang-interaction)" />
     </svg>
   )
 }

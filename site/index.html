@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- DL v2 mode system: re-apply a persisted toggle choice BEFORE first
          paint so a forced mode never flashes the other ground. The default
@@ -30,19 +33,18 @@
       crossorigin
       href="/src/assets/fonts/martian-mono-400.woff2"
     />
+    <!-- LCP pass (2026-07-12): only the fonts the landing hero actually sets
+         are preloaded. The two Source Serif files (~246KB) moved off the
+         critical path (prose pages swap them in on first navigation); Caveat
+         joined at low priority because the handwritten positioning line IS
+         the landing's LCP element, and its late swap was the LCP. -->
     <link
       rel="preload"
       as="font"
       type="font/woff2"
       crossorigin
-      href="/src/assets/fonts/source-serif-var.woff2"
-    />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      crossorigin
-      href="/src/assets/fonts/source-serif-var-italic.woff2"
+      fetchpriority="low"
+      href="/src/assets/fonts/caveat-var.woff2"
     />
     <title>Emilie El Chidiac | Design Technology Architect</title>
     <meta
@@ -61,7 +63,7 @@
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="Emilie El Chidiac, Design Technology Architect: the EEC cube mark drawn as a graph with one red node"
+      content="Emilie El Chidiac, Design Technology Architect: the EEC constellation cube mark, a graph cube with one red node"
     />
     <meta name="twitter:card" content="summary_large_image" />
     <!-- GoatCounter: cookieless page counting, opted in 2026-07-07 (see

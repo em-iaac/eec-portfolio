@@ -11,15 +11,20 @@
 // Copy: the adjective line, the positioning line, and the margin wink were all
 // SIGNED by Emilie at G4 (2026-07-12). The "Behavior Information Modeling"
 // spine is LOCKED content (reachable via the graph's nodes).
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ExploreErrorBoundary from '../components/ExploreErrorBoundary'
 import LogoMark from '../components/LogoMark'
 import ModeToggle from '../components/ui/ModeToggle'
-import MindGraph from './MindGraphView'
 import MindGraphSrNav from './MindGraphSrNav'
 import { MIND, nodeRoute, starPath } from './mindGraph'
 import { assertPaletteMatchesTheme } from './palette'
+
+// The artwork is split out of the entry chunk (LCP, 2026-07-12): the honest
+// DOM hero paints without it, and the draw-in work stays out of the first
+// paint's window. The chunk failing to load degrades through the same error
+// boundary as a render throw: the no-graph state, hero intact.
+const MindGraph = lazy(() => import('./MindGraphView'))
 
 // SIGNED (G4, 2026-07-12). The role adjectives; the positioning line whose
 // "minds" carries the niche; the margin wink.
@@ -236,7 +241,7 @@ export default function LandingCover() {
         <header className="flex flex-col">
           {/* TIER 1 — name */}
           <div className="flex items-center gap-3">
-            <LogoMark size={40} tone="wire" className="shrink-0" />
+            <LogoMark size={40} className="shrink-0" />
             <h1 className="font-display text-[27px] font-semibold leading-[0.98] tracking-[0.01em] whitespace-nowrap text-[var(--lang-ink)] sm:text-[41.83px]">
               EMILIE EL CHIDIAC
             </h1>
@@ -308,7 +313,9 @@ export default function LandingCover() {
           still lists everything) while the honest hero above stays painted. */}
       <div className="relative z-0 min-h-[46svh] flex-1 sm:absolute sm:inset-0 sm:min-h-0">
         <ExploreErrorBoundary fallback={null}>
-          <MindGraph />
+          <Suspense fallback={null}>
+            <MindGraph />
+          </Suspense>
         </ExploreErrorBoundary>
       </div>
 

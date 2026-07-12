@@ -35,7 +35,7 @@ export default function TitleBlock() {
           aria-label="Home"
           className="flex size-11 shrink-0 items-center justify-center rounded-[var(--r-pill)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
         >
-          <LogoMark size={26} tone="lang" />
+          <LogoMark size={26} />
         </Link>
         <nav
           aria-label="Primary"

@@ -7,17 +7,21 @@ import {
   type RouteObject,
 } from 'react-router-dom'
 import Home from './pages/Home'
-import About from './pages/About'
-import CV from './pages/CV'
 import NotFound from './pages/NotFound'
 import SheetRoute from './pages/SheetRoute'
 
 // Split out of the landing chunk so the perf-budgeted cover stays lean: the
 // gallery (with its overlay + video code) and the note prose only load when
-// someone actually opens /work or /thoughts/:id.
+// someone actually opens /work or /thoughts/:id. About + CV joined them at
+// the LCP pass (2026-07-12): they pull SheetPage/Surface and their data
+// files, none of which the landing needs. NotFound stays eager (a chunk
+// error on the error page is the worst failure mode); SheetRoute is a
+// 15-line redirect whose registry import ships in the entry anyway.
 const Work = lazy(() => import('./pages/Work'))
 const Thoughts = lazy(() => import('./pages/Thoughts'))
 const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
+const About = lazy(() => import('./pages/About'))
+const CV = lazy(() => import('./pages/CV'))
 
 // THE PRIMITIVES LAB (DL-0): dev-only verification surface for the DL v2
 // foundation. The DEV gate makes the whole chunk unreachable in prod, so it
@@ -153,8 +157,22 @@ export const routes: RouteObject[] = [
         ),
       },
       { path: '/notebook', element: <NotebookRedirect /> },
-      { path: '/about', element: <About /> },
-      { path: '/cv', element: <CV /> },
+      {
+        path: '/about',
+        element: (
+          <Suspense fallback={<MylarScreen />}>
+            <About />
+          </Suspense>
+        ),
+      },
+      {
+        path: '/cv',
+        element: (
+          <Suspense fallback={<MylarScreen />}>
+            <CV />
+          </Suspense>
+        ),
+      },
       { path: '/sheets/:sheetId', element: <SheetRoute /> },
       {
         path: '/thoughts/:id',
