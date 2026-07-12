@@ -127,6 +127,25 @@ re-skinned to this language in its own focused session (see §9).
 >    hierarchy comes from size, never sub-AA ink); "faint" ink is reserved
 >    for non-text decoration. The CV consumes `--lang-*` tokens like every
 >    surface (the Pen Table utility classes left their last live page).
+>
+> **AMENDMENT (Emilie, 2026-07-12, the contact-sheet session; five gates
+> decided over in-chat mockups; the concept record lives in REDESIGN-SPEC):**
+>
+> 10. **About = THE CONTACT SHEET + the NODE CURSOR (§4.6).** About re-skins
+>     from the G3 two-column story page to ONE SCREEN, NO SCROLL: an open-air
+>     column centred on BOTH axes (fits every viewport >= ~634px tall), room
+>     sign › a VOICED h1 ("Say hi", signed; the one room whose h1 is not the
+>     room's name, so sign and title never repeat) with the constellation
+>     cube beside it › the signed short bio › the callback + invitation. On
+>     roomy viewports the sheet steps up one size via the `tall:` variant
+>     (index.css: min-height 760px AND min-width 1024px — height protects
+>     short laptops, width protects phones): 17px›19px prose, 3xl›4xl h1,
+>     64px›88px cube, 62ch›66ch measure. The page carries NO pill row and no glass of its
+>     own: **the FOOTER is the contact row** (name lockup + the three pills
+>     as the sheet's signature line; `footerCompact` on SheetPage/Footer
+>     pulls it close). The headshot, the NOW module and the CV pointer leave
+>     the page (now.ts renders only as the registry/CV live tip). And the
+>     site gains its one pointer ceremony: the sitewide node cursor, §4.6.
 
 ---
 
@@ -271,6 +290,29 @@ carries the same geometry with beefed weights for tab sizes.
   ground next to the name. Regenerate all of them together if the geometry
   ever changes.
 - `aria-label="EEC"`, `role="img"` (a11y floor).
+
+---
+
+## 4.6 · The cursor (the node cursor; approved 2026-07-12, sitewide)
+
+The pointer is part of the drawing: a **soma** (ink node, r5 core with a
+ground-contrast outline + a 55% halo ring, 24px, hotspot-centred) at rest, and
+the **red live node** (`--lang-interaction` hue per mode) over anything
+clickable — red = interaction, the same law as the graph. The visitor is a
+point in time moving through the mind.
+
+- **Tokens**: `--cursor-rest` / `--cursor-live` in `language.css`, mode-aware
+  (explicit `prefers-color-scheme` + `[data-theme]` blocks; `light-dark()`
+  cannot wrap `url()`). Each carries its native keyword fallback
+  (`default` / `pointer`), so unsupporting browsers and forced-colors users
+  keep the OS cursor.
+- **Scope**: sitewide (Emilie's call over world-only, 2026-07-12, with the
+  a11y trade-off stated: a custom cursor overrides OS cursor-size schemes).
+- **Semantics survive, non-negotiable**: text fields keep the I-beam, the
+  world keeps grab/grabbing, /work's lightbox keeps zoom-in. Touch devices
+  are unaffected.
+- Consumers: `body` rides rest; `a/button/[role=button]/select/summary/
+  .cursor-pointer` + `.mg-node/.mg-edge/.nw-node` ride live.
 
 ---
 

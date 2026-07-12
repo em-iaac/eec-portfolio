@@ -71,6 +71,62 @@
   }
 }
 
+/* ============================================================
+   THE NODE CURSOR (Emilie, 2026-07-12, the contact-sheet session; chosen
+   SITEWIDE over world-only with the a11y trade-off stated). The pointer is
+   a soma: an ink node with a contrast halo at rest, the red live node over
+   anything clickable (red = interaction, the same law as the graph). The
+   visitor becomes a point in time moving through the mind.
+
+   - Mode-aware: light-dark() cannot wrap url(), so the pair is set per mode
+     with the same resolution the rest of the system uses (OS preference,
+     overridable by [data-theme]).
+   - Semantics survive: text fields keep the I-beam, the world keeps
+     grab/grabbing, /work's zoom keeps zoom-in. Each token carries its
+     native keyword fallback, so a browser that rejects SVG cursors (or
+     forced-colors users) get the normal arrow/hand. Touch devices are
+     untouched (no cursor exists there).
+   - Hotspot 12 12 = the node's centre. ============================================================ */
+:root {
+  --cursor-rest: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%2316181d' stroke-width='1.5' opacity='.55'/%3E%3Ccircle cx='12' cy='12' r='5' fill='%2316181d' stroke='%23f5f6f7' stroke-width='1.5'/%3E%3C/svg%3E") 12 12, default;
+  --cursor-live: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke='%23be123c' stroke-width='1.5' opacity='.6'/%3E%3Ccircle cx='12' cy='12' r='5.5' fill='%23be123c' stroke='%23f5f6f7' stroke-width='1.5'/%3E%3C/svg%3E") 12 12, pointer;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --cursor-rest: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%23e8eaed' stroke-width='1.5' opacity='.55'/%3E%3Ccircle cx='12' cy='12' r='5' fill='%23e8eaed' stroke='%230b0e13' stroke-width='1.5'/%3E%3C/svg%3E") 12 12, default;
+    --cursor-live: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke='%23ff4d6d' stroke-width='1.5' opacity='.6'/%3E%3Ccircle cx='12' cy='12' r='5.5' fill='%23ff4d6d' stroke='%230b0e13' stroke-width='1.5'/%3E%3C/svg%3E") 12 12, pointer;
+  }
+}
+[data-theme='dark'] {
+  --cursor-rest: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%23e8eaed' stroke-width='1.5' opacity='.55'/%3E%3Ccircle cx='12' cy='12' r='5' fill='%23e8eaed' stroke='%230b0e13' stroke-width='1.5'/%3E%3C/svg%3E") 12 12, default;
+  --cursor-live: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke='%23ff4d6d' stroke-width='1.5' opacity='.6'/%3E%3Ccircle cx='12' cy='12' r='5.5' fill='%23ff4d6d' stroke='%230b0e13' stroke-width='1.5'/%3E%3C/svg%3E") 12 12, pointer;
+}
+
+body {
+  cursor: var(--cursor-rest);
+}
+/* Everything clickable wakes the live node. The .cursor-pointer utility is
+   layered (Tailwind); these unlayered rules win the cascade by design. */
+a,
+button,
+[role='button'],
+select,
+summary,
+.cursor-pointer {
+  cursor: var(--cursor-live);
+}
+/* Semantic states stay native: typing, grabbing, zooming. The zoom rule
+   re-states the layered Tailwind utility unlayered, because /work's zoom
+   targets are <button>s and would otherwise catch the live-node rule above. */
+input,
+textarea,
+[contenteditable='true'] {
+  cursor: auto;
+}
+.cursor-zoom-in {
+  cursor: zoom-in;
+}
+
 /* The glass primitive base. backdrop-blur where supported (incl. the -webkit
    prefix, old Safari); everywhere else the translucent fill is REPLACED by the
    solid tier fill, so text never sits on a see-through mush. Blur stays capped

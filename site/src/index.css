@@ -2,6 +2,13 @@
 @import './styles/fonts.css';
 @import './styles/language.css';
 
+/* `tall:` = viewports with room to breathe (>= 760px high AND >= 1024px
+   wide). One-screen compositions (About's contact sheet) step their
+   type/mark up one size here. Height keeps the no-scroll promise on the
+   wide-but-short 1366x664 laptop class; width keeps phones (tall but
+   narrow) on the compact fit. */
+@custom-variant tall (@media (min-height: 760px) and (min-width: 1024px));
+
 /* ============================================================
    PEN TABLE · design tokens (Tailwind v4 CSS-first config)
 
@@ -143,7 +150,7 @@ section[id] {
 }
 
 .mg-node {
-  cursor: pointer;
+  cursor: var(--cursor-live);
   outline: none;
 }
 .mg-core {
@@ -201,7 +208,7 @@ section[id] {
    hit rect because SVG text hit-tests only its glyph cells, which left the
    8px labels a ~9px-tall target */
 .mg-edge {
-  cursor: pointer;
+  cursor: var(--cursor-live);
   outline: none;
 }
 .mg-edge-hit {
@@ -467,11 +474,11 @@ section[id] {
 }
 
 .nw-node {
-  cursor: pointer;
+  cursor: var(--cursor-live);
   outline: none;
 }
 .nw-node.still {
-  cursor: default;
+  cursor: var(--cursor-rest);
 }
 /* the focus ring rides the big hit circle: one unambiguous indicator for
    every kind (a 2px red edge on a 2.6-radius milestone dot reads as nothing,

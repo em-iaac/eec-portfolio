@@ -12,9 +12,12 @@ const LINKS = [
   { label: 'GITHUB', href: 'https://github.com/hi-em' },
 ]
 
-export default function Footer() {
+// `compact` pulls the footer close for one-screen pages (About's contact
+// sheet, 2026-07-12): there the footer IS the sheet's signature line, so the
+// long-page breathing margin would just push it past the fold.
+export default function Footer({ compact = false }: { compact?: boolean }) {
   return (
-    <footer className="mt-16 px-3 pb-4 sm:px-5">
+    <footer className={`${compact ? 'mt-6' : 'mt-16'} px-3 pb-4 sm:px-5`}>
       <div className="lang-glass-1 mx-auto flex max-w-5xl flex-wrap items-center gap-x-8 gap-y-3 rounded-[var(--r-card)] px-5 py-4 sm:px-7">
         <div className="flex min-w-[180px] flex-1 flex-col">
           <span className="text-[13px] font-semibold tracking-[0.02em] text-[var(--lang-ink)]">

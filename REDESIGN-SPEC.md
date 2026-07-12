@@ -102,7 +102,10 @@ door retired; see §6). Nav (visible + scannable on every page):
 ├── /cv                 the plain ATS-safe list, nothing else (§9; the G3 graph
 │                         view + ghost rail retired at the meta build; old
 │                         ?view=graph URLs degrade to the list, never 404).
-├── /about              the person; the pivot story; NOW; contact ("what's in yours?").
+├── /about              the person; THE CONTACT SHEET (2026-07-12): ONE SCREEN,
+│                         no scroll · "Say hi" h1 + cube + short signed bio +
+│                         invitation ("what's in yours?"); THE FOOTER IS the
+│                         contact row; story, headshot + NOW module retired.
 └── (404)               a warm "this thought wandered off, back to the mind ›".
 ```
 
@@ -694,6 +697,32 @@ derived award threads, Tamayouz anchor override) · gate 5 touch model shipped
 (hers), LIVE · STILL GROWING, the kicker/sub/hint/corridor package, WATCH IT
 GROW ships · gate 7 the nav label stays THOUGHTS · the CV reverted to the plain
 list; /notebook → /thoughts.
+**THE CONTACT SHEET (2026-07-12, five gates, all Emilie's over in-chat
+mockups):** About rebuilt from the G3 person page into a designed contact
+sheet · gate 1 LAYOUT = "the stack" (one open-air column, no page glass; the
+pills are the only glass; chosen over the all-on-one-card and the half/half
+split) · gate 2 the CONSTELLATION CUBE stands in for the face (72px beside the
+title; the mind, not the headshot; placeholder photo + develop-once ceremony
+retired from the page, real headshot no longer blocking) · gate 3 the NOW
+module DROPPED from About (now.ts keeps feeding the registry/CV red tip, its
+only renderer now) · gate 4 the short BIO SIGNED (option 2 "the point in
+time": map of my head / shakes your hand / the question won't; replaces the
+long approved story; Biennale line holds the "a project featured at" ceiling;
+the stray ">" left with the old prose) · gate 5 the NODE CURSOR ships
+SITEWIDE (her call over world-only, trade-off stated): soma at rest, red live
+node over interactive targets, native I-beam/grab/zoom survive, keyword
+fallbacks everywhere (DL §4.6). The signed callback carries over verbatim.
+**Round 2 (same session, Emilie): ONE SCREEN, NO SCROLL + kill the echoes.**
+The sheet centres in the shell's leftover space and fits every viewport
+>= ~634px tall (768p laptops included); h1 = **"Say hi" (SIGNED)** so the
+room sign and title stop repeating (the About-page h1 no longer reads
+"About"); the CV pointer line RETIRED (the header's CV door covers it); the
+page's own pill row RETIRED — **THE FOOTER IS THE CONTACT ROW** (name lockup
++ EMAIL/LINKEDIN/GITHUB as the sheet's signature line; `SheetPage
+footerCompact` pulls it close, new Footer/SheetPage prop); the Session-11
+invitation SHORTENED to "If your team is trying to make buildings answer
+harder questions, let's talk." — INTERIM draftCopy, the page's whole text
+gets its own revisit session (Emilie's ruling).
 
 ---
 

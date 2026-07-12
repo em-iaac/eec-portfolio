@@ -9,9 +9,12 @@ import Footer from './Footer'
 export default function SheetPage({
   title,
   children,
+  footerCompact = false,
 }: {
   title: string
   children: ReactNode
+  /** One-screen pages pull the footer close (no long-page margin). */
+  footerCompact?: boolean
 }) {
   useEffect(() => {
     document.title = title ? `${title} | Emilie El Chidiac` : 'Emilie El Chidiac | Design Technology Architect'
@@ -29,7 +32,7 @@ export default function SheetPage({
       <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-5 outline-none sm:px-8">
         {children}
       </main>
-      <Footer />
+      <Footer compact={footerCompact} />
     </div>
   )
 }
