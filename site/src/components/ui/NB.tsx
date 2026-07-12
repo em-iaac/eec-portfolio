@@ -9,6 +9,7 @@
 // the line rhythm is untouched).
 import { useEffect, useRef, useState } from 'react'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
+import { useIsPrint } from '../../print/PrintContext'
 
 // Must match the tip's w-[218px] and left-[-60px] classes below.
 const TIP_W = 218
@@ -22,6 +23,7 @@ export default function NB({
   note: string
   align?: 'left' | 'right'
 }) {
+  const isPrint = useIsPrint()
   const prm = usePrefersReducedMotion()
   const [hover, setHover] = useState(false)
   const [pinned, setPinned] = useState(false)
@@ -71,6 +73,15 @@ export default function NB({
       document.removeEventListener('pointerdown', onOutside)
     }
   }, [pinned])
+
+  // G5 · the print rendition: hover is dead on paper, so the wink steps
+  // into the line as a small handwritten aside (Caveat, the margin-note
+  // register; the note text is the same signed content). All hooks above
+  // have run by here, and the context value never changes within a tree,
+  // so the branch is hook-safe.
+  if (isPrint) {
+    return <span className="pr-wink"> n.b. {note}</span>
+  }
 
   return (
     <span ref={anchorRef} className="relative inline-block">

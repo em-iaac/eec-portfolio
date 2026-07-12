@@ -21,6 +21,8 @@ const ballooningMarket: ProjectMaster = {
     { label: 'BLOG', href: 'https://blog.iaac.net/a-ballooning-market-why-i-decided-to-fill-a-historic-market-with-balloons-and-how-i-almost-failed/' },
   ],
   image: { slug: 'ballooning-market', name: 'render-1', alt: 'CMY balloons packed into the steel frame of Bab al-Luq market' },
+  // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
+  spreadAssets: [{ slug: 'ballooning-market', name: 'render-1' }],
 
   what: (
     <>

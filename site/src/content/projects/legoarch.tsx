@@ -26,6 +26,8 @@ const legoarch: ProjectMaster = {
     { label: 'BLOG', href: 'https://blog.iaac.net/legoarch-behind-the-sets/' },
   ],
   image: { slug: 'legoarch', name: 'sagrada-render', alt: 'lEgoarCh generated LEGO set of the Sagrada Familia' },
+  // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
+  spreadAssets: [{ slug: 'legoarch', name: 'sagrada-render' }],
 
   what: (
     <>

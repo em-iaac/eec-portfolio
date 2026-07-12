@@ -41,6 +41,14 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: site/package-lock.json
+      # G5: puppeteer's Chrome (~170MB) lives outside the npm cache; caching
+      # it keyed to the lockfile lets its postinstall skip the CDN download
+      # on every deploy after the first.
+      - name: Cache Puppeteer Chrome
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: puppeteer-${{ runner.os }}-${{ hashFiles('site/package-lock.json') }}
       - run: npm ci
         working-directory: site
       # Registry guardrails (snapshot + validator) fail the deploy here, with

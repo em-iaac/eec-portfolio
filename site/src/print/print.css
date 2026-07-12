@@ -1,0 +1,534 @@
+/* ============================================================
+   G5 · PRINT (the A4 book + the CV PDF) · the print register
+   (REDESIGN-SPEC §8 + §10, re-designed in DESIGN LANGUAGE v2 for paper)
+
+   Ink on paper, not glass on glass: the ground is the PAPER (white; the
+   #f5f6f7 screen tint never floods a printed page), hairlines print at
+   100% ink / 0.5pt (ink/10 vanishes at 300dpi), mono floors at 7.5pt,
+   redline collapses to ink (interaction is dead in print; the emblem's
+   one red node survives as identity and reads by size in greyscale).
+   Fillets survive as the shape signature: inset images keep a small
+   radius, pills print as hairline-outlined capsules. Lens colour prints
+   natively (cyan/magenta/yellow are the printer's own process inks) and
+   never means alone: every chip keeps its shape tick.
+
+   Each print ROUTE injects its own @page rule (size differs: the book is
+   297x210 landscape, the CV 210x297 portrait; @page is document-global,
+   so it cannot live in this shared file).
+   ============================================================ */
+
+.pr-doc {
+  /* Print tokens. Scoped so nothing leaks into the screen site. */
+  --pr-ink: #16181d;
+  --pr-ink-muted: #565b63;
+  --pr-hairline: #16181d; /* hairlines print 100% ink, weight carries the quiet */
+  --pr-cyan: #0e7490;
+  --pr-magenta: #a8186b;
+  --pr-yellow: #7a5e00;
+  --pr-red: #be123c; /* the emblem's one red node only; never text, never category */
+
+  color: var(--pr-ink);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- The page box -------------------------------------------------------
+   Exact A4 boxes; overflow hidden + break-after keep Chrome from minting
+   the classic blank trailing page. Everything on the page positions
+   against this box, so bleed = touching the box edge. */
+.pr-page {
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+  break-after: page;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+.pr-page:last-child {
+  break-after: auto;
+}
+.pr-page--landscape {
+  width: 297mm;
+  height: 210mm;
+}
+.pr-page--portrait {
+  width: 210mm;
+  height: 297mm;
+}
+
+/* ---- Screen preview chrome (never prints) -------------------------------
+   On screen the document reads as true-size sheets on a neutral desk;
+   under print media (page.pdf renders print media) the desk vanishes and
+   only the page boxes remain. */
+@media screen {
+  .pr-doc {
+    background: #23262b;
+    padding: 12mm 0;
+    min-height: 100vh;
+  }
+  .pr-page {
+    margin: 0 auto 12mm;
+    box-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+  }
+  .pr-page:last-child {
+    margin-bottom: 0;
+  }
+}
+@media print {
+  .pr-doc {
+    background: none;
+  }
+  .pr-page {
+    margin: 0;
+    box-shadow: none;
+  }
+}
+
+/* The greyscale proof pass (?bw=1): the office-printer truth. */
+.pr-bw .pr-page {
+  filter: grayscale(1);
+}
+
+/* ---- Type scale (print-native, pt) -------------------------------------- */
+.pr-kicker {
+  font-family: var(--font-mono);
+  font-size: 7.5pt; /* the mono floor */
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pr-ink-muted);
+}
+.pr-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 26pt;
+  letter-spacing: -0.01em;
+  line-height: 1.06;
+  color: var(--pr-ink);
+}
+.pr-dek {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 11.5pt;
+  line-height: 1.4;
+  color: var(--pr-ink);
+}
+.pr-body {
+  font-family: var(--font-serif);
+  font-size: 9pt;
+  line-height: 1.45;
+  color: var(--pr-ink);
+}
+.pr-mono {
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  letter-spacing: 0.06em;
+  color: var(--pr-ink);
+}
+.pr-mono--muted {
+  color: var(--pr-ink-muted);
+}
+.pr-wink {
+  /* The NB hover dot's print rendition: the wink steps into the line as a
+     small handwritten aside (hover is dead on paper). */
+  font-family: var(--font-hand);
+  font-style: normal;
+  font-size: 10.5pt;
+  color: var(--pr-ink-muted);
+}
+
+/* ---- Rules + pills ------------------------------------------------------- */
+.pr-rule {
+  border: 0;
+  border-top: 0.5pt solid var(--pr-hairline);
+  margin: 0;
+}
+.pr-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.6mm;
+  border: 0.5pt solid var(--pr-hairline);
+  border-radius: 999px;
+  padding: 1mm 2.6mm;
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pr-ink);
+  white-space: nowrap;
+}
+
+/* ---- The spread ---------------------------------------------------------
+   One A4-landscape page per project. The dominant image bleeds the OUTSIDE
+   edge only (never the bound gutter): recto pages (odd) bind left and bleed
+   right; verso pages (even) mirror. Two layouts for the gate:
+   STRIP (default) = a full-height vertical plate; PLATE = the image across
+   the top (kind to wide screenshots), spine in three columns below. */
+.pr-spread {
+  position: relative;
+  display: grid;
+  height: 100%;
+}
+.pr-spread--recto {
+  grid-template-columns: 1fr 118mm;
+}
+.pr-spread--verso {
+  grid-template-columns: 118mm 1fr;
+}
+.pr-spread__figure {
+  position: relative;
+  height: 210mm;
+  overflow: hidden;
+}
+/* The plate keeps its edge on light images (design-critique fix): a
+   hairline on the two INNER edges only — the seam and the foot — so the
+   plate reads as a plate on any ground; the bleed edges stay clean. */
+.pr-spread--recto .pr-spread__figure {
+  border-left: 0.5pt solid var(--pr-hairline);
+}
+.pr-spread--verso .pr-spread__figure {
+  border-right: 0.5pt solid var(--pr-hairline);
+}
+.pr-spread--plate .pr-spread__figure {
+  border-bottom: 0.5pt solid var(--pr-hairline);
+}
+.pr-spread__figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* The plate caption stands in the seam between text and image, vertical,
+   ink on paper: legible over any plate, on any office printer. */
+.pr-spread__caption {
+  position: absolute;
+  bottom: 12mm;
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  letter-spacing: 0.08em;
+  color: var(--pr-ink-muted);
+}
+.pr-spread--recto .pr-spread__caption {
+  right: 120.5mm;
+}
+.pr-spread--verso .pr-spread__caption {
+  left: 120.5mm;
+}
+
+/* PLATE layout: the title block sits beside the figure in the top zone
+   (the figure bleeds top + outside, kind to wide screenshots); the whole
+   spine runs below in three columns with the full page height to breathe. */
+.pr-spread--plate {
+  display: flex;
+  flex-direction: column;
+}
+.pr-plate__top {
+  display: grid;
+  height: 96mm;
+  flex: none;
+}
+.pr-spread--plate.pr-spread--recto .pr-plate__top {
+  grid-template-columns: 1fr 145mm;
+}
+.pr-spread--plate.pr-spread--verso .pr-plate__top {
+  grid-template-columns: 145mm 1fr;
+}
+.pr-plate__head {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 14mm 8mm 5mm;
+}
+.pr-spread--plate.pr-spread--recto .pr-plate__head {
+  padding-left: 18mm;
+}
+.pr-spread--plate.pr-spread--verso .pr-plate__head {
+  padding-right: 18mm;
+}
+.pr-plate__top .pr-spread__figure {
+  height: 96mm;
+  width: 100%;
+}
+.pr-plate__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 6mm 10mm 12mm;
+}
+.pr-spread--plate.pr-spread--recto .pr-plate__body {
+  padding-left: 18mm;
+}
+.pr-spread--plate.pr-spread--verso .pr-plate__body {
+  padding-right: 18mm;
+}
+.pr-plate__body .pr-spine {
+  columns: 3;
+  flex: 1;
+  min-height: 0;
+}
+.pr-spread--plate .pr-spread__caption {
+  bottom: auto;
+  top: 14mm;
+}
+.pr-spread--plate.pr-spread--recto .pr-spread__caption {
+  right: 146.5mm;
+}
+.pr-spread--plate.pr-spread--verso .pr-spread__caption {
+  left: 146.5mm;
+}
+.pr-spread__content {
+  display: flex;
+  flex-direction: column;
+  padding: 14mm 10mm 12mm;
+}
+/* The imageless fallback page: content spans the whole sheet. */
+.pr-spread__content--solo {
+  grid-column: 1 / -1;
+}
+/* the bound edge gets the wider margin */
+.pr-spread--recto .pr-spread__content {
+  padding-left: 18mm;
+}
+.pr-spread--verso .pr-spread__content {
+  padding-right: 18mm;
+}
+.pr-spread__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.8mm 3mm;
+  margin-bottom: 4mm;
+}
+.pr-spread__meta > * {
+  white-space: nowrap;
+}
+/* The plate head column is narrow; long credits wrap as whole items. */
+.pr-plate__head .pr-spread__meta > .pr-mono {
+  white-space: normal;
+}
+/* The recognition line: ink, ✦, its own full line (never a box, never red,
+   never squeezed into a corner). */
+.pr-spread__award {
+  display: block;
+  margin: 0 0 3mm;
+}
+.pr-spread__title {
+  margin: 0 0 3mm;
+}
+.pr-spread__dek {
+  margin: 0 0 6mm;
+  max-width: 138mm;
+}
+.pr-spine {
+  columns: 2;
+  column-gap: 8mm;
+  flex: 1;
+  min-height: 0;
+}
+.pr-spine section {
+  break-inside: avoid-column;
+  margin-bottom: 4mm;
+}
+.pr-spine h3 {
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pr-ink-muted);
+  margin: 0 0 1.6mm;
+  break-after: avoid-column;
+}
+.pr-spine p {
+  margin: 0 0 2.2mm;
+}
+.pr-spine ol {
+  margin: 0;
+  padding-left: 4.5mm;
+}
+.pr-spine ol li {
+  margin-bottom: 1.8mm;
+}
+.pr-spread__foot {
+  margin-top: 4mm;
+  padding-top: 3mm;
+  border-top: 0.5pt solid var(--pr-hairline);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6mm;
+}
+.pr-spread__foot > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+.pr-spread__foot > :last-child {
+  white-space: nowrap;
+}
+/* The strip's content column is narrow; the foot stacks into two quiet
+   rows there instead of fighting for one line. */
+.pr-spread--recto > .pr-spread__content .pr-spread__foot,
+.pr-spread--verso > .pr-spread__content .pr-spread__foot {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2mm;
+}
+
+/* ---- The index ----------------------------------------------------------- */
+.pr-index {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 14mm 12mm 12mm;
+}
+.pr-index--recto {
+  padding-left: 18mm;
+}
+.pr-index--verso {
+  padding-right: 18mm;
+}
+.pr-index__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4mm 5mm;
+}
+.pr-tile__img {
+  aspect-ratio: 4 / 3;
+  border-radius: 2mm; /* the fillet, in print */
+  overflow: hidden;
+  background: #eceef0;
+}
+.pr-tile__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pr-row {
+  display: grid;
+  grid-template-columns: 8mm 1fr;
+  align-items: baseline;
+  padding: 1.2mm 0;
+  border-bottom: 0.5pt solid rgba(22, 24, 29, 0.35);
+  break-inside: avoid;
+}
+.pr-row:last-child {
+  border-bottom: 0;
+}
+.pr-row .pr-row__dek {
+  font-size: 7.6pt;
+  line-height: 1.32;
+  font-style: italic;
+  color: var(--pr-ink-muted);
+}
+
+/* The lens legend: the ticks named once per page, so colour + shape never
+   carry meaning alone (the same rule as every screen surface). */
+.pr-legend {
+  display: flex;
+  gap: 5mm;
+  align-items: baseline;
+}
+.pr-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.4mm;
+  white-space: nowrap;
+}
+
+/* The mark grammar, printed: filled dot = project · hollow ring = thought.
+   (The same grammar as the mind graph; the index is the mind, indexed.) */
+.pr-mark {
+  display: inline-block;
+  width: 2.4mm;
+  height: 2.4mm;
+  border-radius: 50%;
+}
+.pr-mark--project {
+  background: var(--pr-ink);
+}
+.pr-mark--thought {
+  border: 0.5pt solid var(--pr-ink);
+  background: transparent;
+}
+
+/* ---- Lens ticks (shape + colour, colour never alone) --------------------- */
+.pr-tick {
+  display: inline-block;
+  flex: none;
+}
+
+/* ---- The CV pages (tail + the standalone portrait PDF) ------------------- */
+.pr-cv {
+  height: 100%;
+  padding: 14mm 12mm 12mm;
+  display: flex;
+  flex-direction: column;
+}
+.pr-cv--recto {
+  padding-left: 18mm;
+}
+.pr-cv--verso {
+  padding-right: 18mm;
+}
+.pr-cv__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8mm;
+  flex: 1;
+  min-height: 0;
+}
+.pr-cv h3 {
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pr-ink-muted);
+  margin: 0 0 2.4mm;
+  padding-top: 2.4mm;
+  border-top: 0.5pt solid var(--pr-hairline);
+}
+.pr-cv__entry {
+  margin-bottom: 1.8mm;
+}
+.pr-cv__entry .pr-body {
+  font-size: 8.5pt;
+  line-height: 1.34;
+}
+
+/* ---- The standalone ATS CV (fully plain; single column) ------------------ */
+.pr-ats {
+  height: 100%;
+  padding: 13mm 18mm;
+  font-family: var(--font-serif);
+}
+.pr-ats h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15pt;
+  letter-spacing: 0; /* NEVER letter-spaced: the text layer must read contiguously */
+  margin: 0;
+}
+.pr-ats h2 {
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  margin: 3.4mm 0 1.6mm;
+  padding-top: 1.6mm;
+  border-top: 0.5pt solid var(--pr-hairline);
+  color: var(--pr-ink-muted);
+}
+.pr-ats p,
+.pr-ats li {
+  font-size: 8.6pt;
+  line-height: 1.34;
+  margin: 0 0 1mm;
+}
+.pr-ats ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

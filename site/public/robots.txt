@@ -1,0 +1,5 @@
+# The print surface exists for the build-time PDF renderer, not for
+# crawlers (the SPA cannot per-route noindex; the routes also inject a
+# robots meta as the belt to this braces).
+User-agent: *
+Disallow: /print/

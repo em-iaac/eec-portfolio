@@ -28,6 +28,9 @@ const sensi: ProjectMaster = {
     { label: 'GITHUB', href: 'https://github.com/sclebow/AIA26_Studio/tree/main/team_02' },
   ],
   image: { slug: 'sensi', name: 'app-shape', alt: 'Sensi interface scoring a floor plan across six senses' },
+  // G5: the book spread's dominant plate; scripts/print-assets.mjs bakes the
+  // committed print-resolution rung from the local original.
+  spreadAssets: [{ slug: 'sensi', name: 'app-shape' }],
 
   what: (
     <>

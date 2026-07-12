@@ -26,6 +26,8 @@ const neurospace: ProjectMaster = {
     { label: 'BLOG', href: 'https://blog.iaac.net/the-data-pipeline-behind-neurospace-from-sliders-to-synapses/' },
   ],
   image: { slug: 'neurospace', name: 'landing', alt: 'NeuroSpace landing page with parametric room and live scores' },
+  // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
+  spreadAssets: [{ slug: 'neurospace', name: 'landing' }],
 
   what: (
     <>

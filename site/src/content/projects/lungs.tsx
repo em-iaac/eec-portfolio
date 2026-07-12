@@ -32,6 +32,8 @@ const lungs: ProjectMaster = {
     { label: 'BLOG', href: 'https://blog.iaac.net/building-the-nervous-system-how-we-turned-a-hyper-building-studio-into-a-web-app/' },
   ],
   image: { slug: 'lungs', name: 'tower', alt: 'The Lungs hyperbuilding tower over Santiago' },
+  // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
+  spreadAssets: [{ slug: 'lungs', name: 'tower' }],
 
   what: (
     <>

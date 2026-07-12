@@ -125,13 +125,25 @@ export default function Work() {
         {/* The intro line retired at G2 (Emilie: no page intros, sitewide;
             titles are self-explanatory). */}
         <FilterBar active={activeLens} />
-        <p
-          className="mt-4 font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)]"
-          aria-live="polite"
-        >
-          {entries.length} {entries.length === 1 ? 'PROJECT' : 'PROJECTS'}
-          {activeLens ? ` · ${LENSES[activeLens].label.toUpperCase()}` : ' · ALL'}
-        </p>
+        <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+          <p
+            className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)]"
+            aria-live="polite"
+          >
+            {entries.length} {entries.length === 1 ? 'PROJECT' : 'PROJECTS'}
+            {activeLens ? ` · ${LENSES[activeLens].label.toUpperCase()}` : ' · ALL'}
+          </p>
+          {/* THE BOOK (G5): the proof room hands out its printed rendition
+              (Emilie's placement pick, 2026-07-12). The PDF regenerates on
+              every build from the same master content files as this grid. */}
+          <a
+            href={`${import.meta.env.BASE_URL}assets/portfolio-emilie-el-chidiac.pdf`}
+            download="Emilie-El-Chidiac-Portfolio.pdf"
+            className="-m-2 p-2 font-mono text-[10px] tracking-[0.12em] text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+          >
+            DOWNLOAD THE BOOK (PDF)
+          </a>
+        </div>
       </section>
 
       <ul className="grid list-none grid-cols-1 gap-5 p-0 pb-4 sm:grid-cols-2 lg:grid-cols-3">

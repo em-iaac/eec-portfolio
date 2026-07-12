@@ -1,0 +1,38 @@
+{
+  "sensi": {
+    "app-shape": {
+      "file": "assets/print/sensi/app-shape-print.jpg",
+      "w": 1388
+    }
+  },
+  "neurospace": {
+    "landing": {
+      "file": "assets/print/neurospace/landing-print.jpg",
+      "w": 2400
+    }
+  },
+  "legoarch": {
+    "sagrada-render": {
+      "file": "assets/print/legoarch/sagrada-render-print.jpg",
+      "w": 1024
+    }
+  },
+  "lungs": {
+    "tower": {
+      "file": "assets/print/lungs/tower-print.jpg",
+      "w": 2400
+    }
+  },
+  "huddle": {
+    "axonometric": {
+      "file": "assets/print/huddle/axonometric-print.jpg",
+      "w": 2400
+    }
+  },
+  "ballooning-market": {
+    "render-1": {
+      "file": "assets/print/ballooning-market/render-1-print.jpg",
+      "w": 2400
+    }
+  }
+}

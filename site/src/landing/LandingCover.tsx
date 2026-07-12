@@ -27,10 +27,9 @@ import { assertPaletteMatchesTheme } from './palette'
 const MindGraph = lazy(() => import('./MindGraphView'))
 
 // SIGNED (G4, 2026-07-12). The role adjectives; the positioning line whose
-// "minds" carries the niche; the margin wink.
-const ADJECTIVES = 'architect · writer · researcher · creative technologist'
-const VOICE = 'I work with design, technology and minds.'
-const WINK = 'this whole mess is my head. touch a piece of it.'
+// "minds" carries the niche; the margin wink. Moved to landing/identity.ts
+// at G5 so the printed book's cover quotes the same source.
+import { ADJECTIVES, VOICE, WINK } from './identity'
 
 // Top-page doors. WORK is the emphasized proof path (the one clear route into
 // the work for a first-time visitor): it opens the R2 gallery at /work.

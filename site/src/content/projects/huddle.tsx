@@ -19,6 +19,8 @@ const huddle: ProjectMaster = {
   tech: 'WASP · KANGAROO · ALPACA4D',
   links: [{ label: 'BLOG', href: 'https://blog.iaac.net/the-huddle-wind-adaptive-research-hub-in-punta-arenas-chile/' }],
   image: { slug: 'huddle', name: 'axonometric', alt: 'Axonometric of The Huddle wind-adaptive module cluster' },
+  // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
+  spreadAssets: [{ slug: 'huddle', name: 'axonometric' }],
 
   what: (
     <>

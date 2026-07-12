@@ -29,6 +29,14 @@ const CV = lazy(() => import('./pages/CV'))
 // prerendered.
 const Lab = import.meta.env.DEV ? lazy(() => import('./pages/Lab')) : null
 
+// THE PRINT SURFACE (G5): the chrome-less routes headless Chrome renders to
+// the A4 book + CV PDFs at build time (scripts/render-pdfs.mjs). They must
+// exist in the PROD build (the script prints the built dist), but they are
+// unlinked, noindexed (robots.txt + a meta), and lazy so the site never
+// pays for them.
+const PrintBookRoute = lazy(() => import('./print/BookRoute'))
+const PrintCvRoute = lazy(() => import('./print/CvRoute'))
+
 // Ground-coloured hold while a lazy READ-mode chunk resolves (matches
 // SheetRoute); bg-mylar is mode-aware since the DL-1 token bridge.
 function MylarScreen() {
@@ -123,6 +131,27 @@ function Chrome() {
 // <BrowserRouter> and even a descendant <Routes> under RouterProvider drop
 // it), and the soft crossfade + morphs ride that flag.
 export const routes: RouteObject[] = [
+  // The print surface rides OUTSIDE the Chrome wrapper: no scroll/focus
+  // management, no page counting; the document is the whole page. The blank
+  // Suspense hold is honest here (the render script waits for the
+  // [data-print-ready] marker, and a human visitor gets the page a beat
+  // later).
+  {
+    path: '/print/book',
+    element: (
+      <Suspense fallback={null}>
+        <PrintBookRoute />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/print/cv',
+    element: (
+      <Suspense fallback={null}>
+        <PrintCvRoute />
+      </Suspense>
+    ),
+  },
   {
     element: <Chrome />,
     children: [
