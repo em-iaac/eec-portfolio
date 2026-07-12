@@ -1,7 +1,7 @@
 # eec-portfolio
 
 Emilie El Chidiac | Design Technology Architect. Live at
-[hi-em.github.io/eec-portfolio](https://hi-em.github.io/eec-portfolio/).
+[emiliechidiac.com](https://emiliechidiac.com/).
 
 The site lives in [`site/`](site/) (React + Vite + Tailwind v4) and deploys to
 GitHub Pages via `.github/workflows/deploy.yml` on every push to `main`.
@@ -27,5 +27,4 @@ by the registry.
 
 Design governance (tokens, redline rules, motion tiers) lives in
 [`site/DESIGN-SYSTEM.md`](site/DESIGN-SYSTEM.md) and the `@theme` block of
-[`site/src/index.css`](site/src/index.css). The Session 3 design contract is
-in [`design_handoff_eec_portfolio/`](design_handoff_eec_portfolio/).
+[`site/src/index.css`](site/src/index.css).

@@ -9,12 +9,13 @@ content/*.local.*
 incoming/
 
 # Local archive of the pre-rebrand site and working files (not repo content)
-old material/
+archive/
 
 # Claude Code local session config
 .claude/
 
 # Build output + deps
+node_modules/
 site/node_modules/
 site/dist/
 *.tsbuildinfo
