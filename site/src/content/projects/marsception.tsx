@@ -18,7 +18,9 @@ const marsception: ProjectMaster = {
     'A habitat ring for Mars, designed with AI-driven workflows back when that still raised eyebrows. My first proof that generative tools and architecture could share a desk.',
   tech: 'AI WORKFLOWS · RHINO · V-RAY',
   links: [],
-  image: { slug: 'professional', name: 'marsception', alt: 'Rings of Mars competition entry visualization' },
+  // Alt enriched for context + keywords (S1 alt pass, DRAFT pending Emilie's
+  // eye on the image): 80-140 chars, describes what is shown, no overclaim.
+  image: { slug: 'professional', name: 'marsception', alt: 'Rings of Mars, Ring 4000: a white orbital ring form rendered on black, the Marsception competition entry' },
 
   what: (
     <>

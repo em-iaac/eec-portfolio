@@ -1,5 +1,11 @@
 # The print surface exists for the build-time PDF renderer, not for
 # crawlers (the SPA cannot per-route noindex; the routes also inject a
-# robots meta as the belt to this braces).
+# robots meta as the belt to this braces). Nothing else is blocked: the
+# SPA's JS and image assets stay fully crawlable.
 User-agent: *
 Disallow: /print/
+
+# The sitemap is generated per-route in S3 (the searchability build); this
+# reference is wired now and confirmed at the site root. Submitting it in
+# Google Search Console is the fastest path to per-route indexing.
+Sitemap: https://emiliechidiac.com/sitemap.xml

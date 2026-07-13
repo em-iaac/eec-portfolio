@@ -249,7 +249,7 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['geometry', 'practice', 'heritage'],
     sheet: sheet('P-108', 'in-preparation', 'soma'),
     project: 'soma-towers',
-    image: { slug: 'professional', name: 'citywalk', alt: 'City Walk tower facade study, Dubai' },
+    image: { slug: 'professional', name: 'citywalk', alt: 'Towers at SOMA: a dusk view of the City Walk high-rise cluster in Dubai, a facade and massing study' },
     explore: { label: 'TOWERS AT SOMA', nodeKind: 'project', order: 7 },
   },
   {
@@ -261,7 +261,7 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['ai', 'practice', 'future'],
     sheet: sheet('P-109', 'in-preparation', 'mars'),
     project: 'marsception',
-    image: { slug: 'professional', name: 'marsception', alt: 'Rings of Mars competition entry visualization' },
+    image: { slug: 'professional', name: 'marsception', alt: 'Rings of Mars, Ring 4000: a white orbital ring form rendered on black, the Marsception competition entry' },
     explore: { label: 'RING 4000', nodeKind: 'project', order: 8 },
   },
   {
@@ -454,6 +454,11 @@ export const ENTRIES: RegistryEntry[] = [
     lens: 'computation',
     tags: ['ai', 'research'],
     refId: 'sensi',
+    // FLAG-03 (CONTENT-STRATEGY.md §3): the award has no public anchor yet.
+    // The showcase award pill already reads this entry's refId; the moment
+    // Emilie's announcement (LinkedIn post or an IAAC page) is live, add its
+    // URL here and the pill LIGHTS UP as a link everywhere, no code change:
+    //   links: [{ label: 'ANNOUNCEMENT', href: 'https://...' }],
   },
   {
     id: 'legoarch-jury',
@@ -575,6 +580,14 @@ export const EXPLORE_NODES: ExploreNode[] = ENTRIES.filter(
 export const AWARD_WINNER_IDS: ReadonlySet<string> = new Set(
   ENTRIES.filter((e) => e.kind === 'award' && e.refId).map((e) => e.refId!),
 )
+
+// FLAG-03 anchor hook: the public URL a project's award links to, or undefined
+// while none exists (grade C until Emilie posts). Derived from the SAME award
+// entries as the star above, so the record stays the single source: give the
+// award entry a `links` href and the showcase pill becomes a link on its own.
+export function awardHrefFor(projectId: string): string | undefined {
+  return ENTRIES.find((e) => e.kind === 'award' && e.refId === projectId)?.links?.[0]?.href
+}
 
 // ---- THE CORRELATIONS · which piece builds on which (the meta build) -------
 // The neural world's threads. One line per real relation, APPENDS ONLY.

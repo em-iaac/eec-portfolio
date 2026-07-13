@@ -9,6 +9,7 @@ import {
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import SheetRoute from './pages/SheetRoute'
+import { useRouteHead } from './lib/routeHead'
 
 // Split out of the landing chunk so the perf-budgeted cover stays lean: the
 // gallery (with its overlay + video code) and the note prose only load when
@@ -113,9 +114,12 @@ function NotebookRedirect() {
   return <Navigate to="/thoughts" replace />
 }
 
-// The pathless chrome route wrapping every page: scroll/focus handling +
-// page counting travel with the outlet.
+// The pathless chrome route wrapping every page: scroll/focus handling, page
+// counting, and the per-route <head> stopgap (lib/routeHead.ts) travel with
+// the outlet. The print routes sit OUTSIDE this wrapper, so they never get the
+// public head rewrite (they keep their own noindex meta).
 function Chrome() {
+  useRouteHead()
   return (
     <>
       <ScrollToTop />

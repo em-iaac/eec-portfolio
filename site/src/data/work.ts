@@ -25,7 +25,7 @@
 // the Pen Table sheet tier retired with G1 (/sheets/* redirects here).
 import type { ReactNode } from 'react'
 import type { Lens } from '../components/Lens'
-import { ENTRIES, type RegistryEntry, type SheetStatus } from './registry'
+import { ENTRIES, awardHrefFor, type RegistryEntry, type SheetStatus } from './registry'
 import { PROJECTS_BY_SLUG, type Project } from './projects'
 import images from './images.json'
 import videos from './videos.json'
@@ -51,6 +51,7 @@ export interface WorkEntry {
   tech: string // the mono tech row
   recognition?: string // award wording where real; ink, no box, never red
   awardFace?: string // the face's corner-pill short wording (DL-2; falls back to recognition)
+  awardHref?: string // FLAG-03: the announcement/IAAC URL once it exists; the pill becomes a link (registry is the single source)
   // hero + supporting slots, resolved by the hero rule above
   hero: HeroKind
   cover?: WorkPicture // the 4:3 grid tile (undefined -> typographic tile)
@@ -150,6 +151,7 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     // face carries the least); the showcase renders the full line verbatim.
     recognition: p.award,
     awardFace: p.awardShort ?? p.award,
+    awardHref: awardHrefFor(entry.id),
     hero,
     cover,
     heroVideo,

@@ -197,12 +197,27 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
             {entry.title}
           </h2>
           <LensPill lens={entry.lens} />
-          {entry.awardFace && (
-            <span className="font-mono text-[9px] font-medium tracking-[0.1em] text-[var(--lang-ink)]">
-              <span aria-hidden="true">✦ </span>
-              {entry.awardFace}
-            </span>
-          )}
+          {entry.awardFace &&
+            // FLAG-03: recognition, ink, no box (rule 1). It renders as plain
+            // text until the award has a public URL (registry.awardHrefFor);
+            // the moment Emilie adds the announcement link it lights up here.
+            (entry.awardHref ? (
+              <a
+                href={entry.awardHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[9px] font-medium tracking-[0.1em] text-[var(--lang-ink)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+              >
+                <span aria-hidden="true">✦ </span>
+                {entry.awardFace}
+                <span className="sr-only"> (opens in new tab)</span>
+              </a>
+            ) : (
+              <span className="font-mono text-[9px] font-medium tracking-[0.1em] text-[var(--lang-ink)]">
+                <span aria-hidden="true">✦ </span>
+                {entry.awardFace}
+              </span>
+            ))}
         </div>
         <button
           type="button"

@@ -17,7 +17,9 @@ const somaTowers: ProjectMaster = {
     'Four towers between Dubai and Beirut: Verve at City Walk, Enara, Saria, District O. Facade and massing studies in Rhino and Grasshopper, carried into BIM for delivery. The years where I learned that a parametric study only matters if it survives contact with a drawing set.',
   tech: 'RHINO · GRASSHOPPER · REVIT',
   links: [],
-  image: { slug: 'professional', name: 'citywalk', alt: 'City Walk tower facade study, Dubai' },
+  // Alt enriched for context + keywords (S1 alt pass, DRAFT pending Emilie's
+  // eye on the image): 80-140 chars, describes the view, no overclaim.
+  image: { slug: 'professional', name: 'citywalk', alt: 'Towers at SOMA: a dusk view of the City Walk high-rise cluster in Dubai, a facade and massing study' },
 
   what: (
     <>
