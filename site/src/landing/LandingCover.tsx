@@ -214,7 +214,6 @@ function JumpBar() {
 
 export default function LandingCover() {
   useEffect(() => {
-    document.title = 'Emilie El Chidiac | Design Technology Architect'
     assertPaletteMatchesTheme()
     // Paint the whole document with the mode's ground so any
     // overscroll/rubber-band matches the cover.

@@ -48,6 +48,7 @@ export interface WorkEntry {
   lens: Lens
   tags: string[]
   dek: string // the one authored "what it proves" line; the showcase's claim
+  question?: string // D4 (S4/S5): the one question the project answers; headData prefers it as the meta description
   tech: string // the mono tech row
   recognition?: string // award wording where real; ink, no box, never red
   awardFace?: string // the face's corner-pill short wording (DL-2; falls back to recognition)
@@ -144,6 +145,7 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     lens: entry.lens,
     tags: entry.tags,
     dek: p.dek,
+    question: p.question,
     tech: p.tech,
     // Recognition wording lives with the card copy; membership is guaranteed
     // to agree with AWARD_WINNER_IDS by the registry validator (never drifts).

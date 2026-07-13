@@ -72,7 +72,7 @@ export default function ReadingRoom() {
   const notes = noteEntries()
 
   return (
-    <SheetPage title="Thoughts · the reading room">
+    <SheetPage>
       <div className="mx-auto w-full max-w-[760px]">
         <section className="pt-10 pb-2" aria-labelledby="thoughts-heading">
           <p className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">

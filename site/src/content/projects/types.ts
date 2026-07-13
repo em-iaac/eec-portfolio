@@ -44,6 +44,12 @@ export interface ProjectMaster {
   // The card's ONE authored "what it proves" line; the showcase's claim.
   dek?: string
   dekSigned?: boolean
+  // THE QUESTION (D4, authored in S4/S5, signed before it ships): the one
+  // plain-language question this project answers. The moment it exists it
+  // automatically becomes the route's <meta name="description"> and the
+  // JSON-LD description (lib/headData.ts prefers it over the dek); S4 also
+  // makes it the on-screen claim. Until then the signed dek serves.
+  question?: string
   // The listening member's hero line (the podcast leads with a pull-quote).
   pullQuote?: { text: string; source: string }
 

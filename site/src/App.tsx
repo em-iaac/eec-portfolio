@@ -23,6 +23,9 @@ const Thoughts = lazy(() => import('./pages/Thoughts'))
 const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
 const About = lazy(() => import('./pages/About'))
 const CV = lazy(() => import('./pages/CV'))
+// THE PILLAR (S3): the one Behavior Information Modeling definition surface
+// (CONTENT-STRATEGY.md D6, topical authority). Lazy like every interior page.
+const Pillar = lazy(() => import('./pages/Pillar'))
 
 // THE PRIMITIVES LAB (DL-0): dev-only verification surface for the DL v2
 // foundation. The DEV gate makes the whole chunk unreachable in prod, so it
@@ -37,6 +40,10 @@ const Lab = import.meta.env.DEV ? lazy(() => import('./pages/Lab')) : null
 // pays for them.
 const PrintBookRoute = lazy(() => import('./print/BookRoute'))
 const PrintCvRoute = lazy(() => import('./print/CvRoute'))
+// THE SHARE CARDS (S3): /print/og/:cardKey is the 1200x630 surface the
+// prerender script screenshots into /og/<key>.png, one per project /
+// thought / the pillar. Same print rules: unlinked, noindexed, lazy.
+const PrintOgRoute = lazy(() => import('./print/OgRoute'))
 
 // Ground-coloured hold while a lazy READ-mode chunk resolves (matches
 // SheetRoute); bg-mylar is mode-aware since the DL-1 token bridge.
@@ -157,6 +164,14 @@ export const routes: RouteObject[] = [
     ),
   },
   {
+    path: '/print/og/:cardKey',
+    element: (
+      <Suspense fallback={null}>
+        <PrintOgRoute />
+      </Suspense>
+    ),
+  },
+  {
     element: <Chrome />,
     children: [
       { path: '/', element: <Home /> },
@@ -203,6 +218,15 @@ export const routes: RouteObject[] = [
         element: (
           <Suspense fallback={<MylarScreen />}>
             <CV />
+          </Suspense>
+        ),
+      },
+      {
+        // THE PILLAR (S3): the exact phrase IS the slug (D6).
+        path: '/behavior-information-modeling',
+        element: (
+          <Suspense fallback={<MylarScreen />}>
+            <Pillar />
           </Suspense>
         ),
       },

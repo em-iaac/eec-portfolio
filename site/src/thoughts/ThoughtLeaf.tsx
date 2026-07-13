@@ -14,6 +14,7 @@ import SheetPage from '../components/SheetPage'
 import { LensPill } from '../components/ui/Pill'
 import { type Lens } from '../components/Lens'
 import { vtName } from '../lib/viewTransition'
+import { PILLAR_PATH } from '../lib/pillar'
 
 const RED_LINK =
   '-m-2 p-2 text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
@@ -24,6 +25,7 @@ export default function ThoughtLeaf({
   date,
   lens,
   next,
+  pillarDoor = false,
   children,
 }: {
   number?: string
@@ -31,6 +33,9 @@ export default function ThoughtLeaf({
   date: string
   lens: Lens
   next?: { title: string; route: string }
+  /** S3 (D6 topical authority): a neuro-tagged note carries a door to the
+   *  Behavior Information Modeling pillar; the pillar links back. */
+  pillarDoor?: boolean
   children: ReactNode
 }) {
   // The morph target: /thoughts/:id names its title so the index row (or the
@@ -38,7 +43,7 @@ export default function ThoughtLeaf({
   const { id } = useParams()
 
   return (
-    <SheetPage title={number ? `${title} · ${number}` : title}>
+    <SheetPage>
       <article className="mx-auto w-full max-w-[680px] pt-10 pb-16">
         {/* The note knows its place in the record: kind + date, the lens
             (shape + label, never colour alone), the quiet T-number. */}
@@ -68,6 +73,11 @@ export default function ThoughtLeaf({
           <Link to={`/thoughts#${id ?? ''}`} className={RED_LINK}>
             SEE THIS THOUGHT IN TIME ›
           </Link>
+          {pillarDoor && (
+            <Link to={PILLAR_PATH} viewTransition className={RED_LINK}>
+              BEHAVIOR INFORMATION MODELING ›
+            </Link>
+          )}
           {next && (
             <Link to={next.route} viewTransition className={RED_LINK}>
               NEXT THOUGHT ›

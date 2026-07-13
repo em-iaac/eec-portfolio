@@ -39,7 +39,7 @@ function Entry({ dates, title, org, notes }: { dates: string; title: string; org
 // CV header string is LOCKED: "Emilie El Chidiac | Design Technology Architect"
 export default function CV() {
   return (
-    <SheetPage title="CV">
+    <SheetPage>
       <div className="pt-10 pb-4 sm:pt-14">
         <div>
           {/* The kicker, SIGNED (G4, 2026-07-12: one room-sign grammar

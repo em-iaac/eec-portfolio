@@ -24,7 +24,7 @@ const PROSE = 'font-serif text-[17px] leading-relaxed tall:text-[19px]'
 // into the registry (the CV's red live tip).
 export default function About() {
   return (
-    <SheetPage title="About" footerCompact>
+    <SheetPage footerCompact>
       <div className="flex h-full flex-col justify-center py-4">
         <section aria-labelledby="about-heading" className="mx-auto w-full max-w-[62ch] tall:max-w-[66ch]">
           <div className="flex items-start justify-between gap-6">

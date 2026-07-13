@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "vite",
     "test": "vitest run",
-    "build": "vitest run && tsc -b && node scripts/generate-landing-fallback.mjs && vite build && node scripts/render-pdfs.mjs",
+    "build": "vitest run && tsc -b && node scripts/generate-landing-fallback.mjs && vite build && node scripts/prerender.mjs && node scripts/render-pdfs.mjs",
     "preview": "vite preview",
     "images": "node scripts/optimize-images.mjs",
     "videos": "node scripts/optimize-videos.mjs",
     "landing-fallback": "node scripts/generate-landing-fallback.mjs",
     "pdfs": "node scripts/render-pdfs.mjs",
+    "prerender": "node scripts/prerender.mjs",
     "print-assets": "node scripts/print-assets.mjs"
   },
   "dependencies": {

@@ -92,15 +92,8 @@ export default function Work() {
     prevId.current = id
   }, [id, selected, navigate])
 
-  // The showcase IS the project's page (G1), so the document title follows
-  // the open entry. Runs after SheetPage's own title effect (parent effects
-  // fire after children), so this wins while a showcase is open and
-  // SheetPage's "Work" returns when it closes via the selected -> undefined
-  // pass below.
-  useEffect(() => {
-    if (selected) document.title = `${selected.title} | Emilie El Chidiac`
-    else document.title = 'Work | Emilie El Chidiac'
-  }, [selected])
+  // (S3: the title-follows-the-showcase effect retired; lib/routeHead.ts
+  // sets the title from the /work/:id pathname, same single source.)
 
   // viewTransition: the card face morphs into the showcase sheet and back
   // (shared view-transition-name, lib/viewTransition.ts); browsers without
@@ -109,7 +102,7 @@ export default function Work() {
   const close = () => navigate(`/work${hash}`, { replace: true, viewTransition: true })
 
   return (
-    <SheetPage title="Work">
+    <SheetPage>
       <section className="pt-10 pb-5" aria-labelledby="work-heading">
         {/* The kicker, SIGNED (G4, 2026-07-12: one room-sign grammar
             sitewide, Emilie's ruling). */}

@@ -8,7 +8,7 @@ import SheetPage from '../components/SheetPage'
 
 export default function NotFound() {
   return (
-    <SheetPage title="Not found">
+    <SheetPage>
       <section className="pt-10 pb-16 sm:pt-14" aria-labelledby="lost-heading">
         {/* All 404 copy SIGNED by Emilie (G4, 2026-07-12). */}
         <p className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">

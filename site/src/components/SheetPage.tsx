@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import TitleBlock from './TitleBlock'
 import Footer from './Footer'
 
@@ -6,20 +6,16 @@ import Footer from './Footer'
 // light pin retired with the carbon-flood ceremony; the shell follows the
 // mode via the token bridge (index.css) until each page re-skins (DL-2..5),
 // and navigation runs on the universal soft crossfade (language.css).
+// (S3, 2026-07-13: the document.title effect and its title prop retired;
+// lib/routeHead.ts is the one title writer, fed by lib/headData.ts.)
 export default function SheetPage({
-  title,
   children,
   footerCompact = false,
 }: {
-  title: string
   children: ReactNode
   /** One-screen pages pull the footer close (no long-page margin). */
   footerCompact?: boolean
 }) {
-  useEffect(() => {
-    document.title = title ? `${title} | Emilie El Chidiac` : 'Emilie El Chidiac | Design Technology Architect'
-  }, [title])
-
   return (
     <div className="flex min-h-dvh flex-col">
       <a

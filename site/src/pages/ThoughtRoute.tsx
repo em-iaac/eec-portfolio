@@ -8,6 +8,7 @@ import { Navigate, useParams } from 'react-router-dom'
 import { ENTRIES, byDateDesc } from '../data/registry'
 import ThoughtLeaf from '../thoughts/ThoughtLeaf'
 import { THOUGHT_NOTES } from '../thoughts/notes'
+import { isPillarRelated } from '../lib/pillar'
 
 export default function ThoughtRoute() {
   const { id = '' } = useParams()
@@ -31,6 +32,7 @@ export default function ThoughtRoute() {
       date={entry.date}
       lens={entry.lens}
       next={after ? { title: after.title, route: after.note!.route } : undefined}
+      pillarDoor={isPillarRelated(entry.tags)}
     >
       {body}
     </ThoughtLeaf>

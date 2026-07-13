@@ -14,11 +14,13 @@
 // Scrolling is native but bar-less (.no-scrollbar); the filmstrip is the
 // one sideways scroll.
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import Img from '../Img'
 import SheetVideo from '../sheet/SheetVideo'
 import Lightbox from './Lightbox'
 import { LensPill } from '../ui/Pill'
 import { vtName } from '../../lib/viewTransition'
+import { PILLAR_PATH, isPillarRelated } from '../../lib/pillar'
 import type { WorkEntry, WorkPicture } from '../../data/work'
 
 const ACCENT_LINK =
@@ -260,6 +262,17 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
         <div className="mt-3 font-mono text-[9px] tracking-[0.06em] text-[var(--lang-ink-muted)]">
           {entry.tech}
         </div>
+
+        {/* THE SPINE DOOR (S3, D6 topical authority): a neuro-tagged project
+            links to the Behavior Information Modeling pillar, and the pillar
+            links back. Internal, so it sits apart from the links OUT below. */}
+        {isPillarRelated(entry.tags) && (
+          <p className="mt-3 font-mono text-[10px] tracking-[0.1em]">
+            <Link to={PILLAR_PATH} viewTransition className={ROW_LINK}>
+              BEHAVIOR INFORMATION MODELING ›
+            </Link>
+          </p>
+        )}
 
         {/* GO DEEPER: the depth lives in the linked repo / blog / live app,
             not reproduced here (a portfolio, not a blog). */}

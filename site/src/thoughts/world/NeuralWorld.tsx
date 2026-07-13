@@ -107,7 +107,6 @@ export default function NeuralWorld() {
   })
 
   useEffect(() => {
-    document.title = 'Thoughts | Emilie El Chidiac'
     // Paint the whole document with the mode's ground so overscroll matches.
     const html = document.documentElement
     const prev = html.style.background
