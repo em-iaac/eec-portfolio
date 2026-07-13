@@ -17,7 +17,7 @@
 // order races.
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { headForRoute, type RouteHead } from './headData'
+import { headForRoute, SITE_NAME, type RouteHead } from './headData'
 
 function setMeta(attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`)
@@ -64,6 +64,7 @@ function applyHead(head: RouteHead) {
   setMeta('property', 'og:title', head.title)
   setMeta('property', 'og:description', head.description)
   setMeta('property', 'og:type', head.ogType)
+  setMeta('property', 'og:site_name', SITE_NAME)
   setMeta('property', 'og:url', head.canonical)
   setMeta('property', 'og:image', head.ogImage)
   setMeta('property', 'og:image:alt', head.ogImageAlt)

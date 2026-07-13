@@ -6,10 +6,9 @@
 // here, and each of those surfaces carries a door back (ThoughtLeaf
 // endmatter, WorkOverlay), so the coined term has one canonical source.
 //
-// draftCopy: true — ALL prose on this page is an S3 placeholder in Emilie's
-// voice, shipped so the surface exists and can be indexed; S5 writes and
-// signs the definitive pillar copy (D7). The kicker + door labels are
-// flagged with it. Structure (the shell) is the S3 deliverable.
+// COPY SIGNED AS INTERIM (Emilie, 2026-07-13): the kicker, both paragraphs,
+// and the door labels stand as signed copy; S5 still owes this page its
+// definitive rewrite (D7). Structure (the shell) was the S3 deliverable.
 import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import { ENTRIES } from '../data/registry'
@@ -50,7 +49,7 @@ export default function Pillar() {
           behavior information modeling
         </h1>
 
-        {/* draftCopy: S3 placeholder prose, S5 signs the definitive version. */}
+        {/* Signed interim (2026-07-13); S5 writes the definitive version. */}
         <div className="max-w-[62ch] font-serif text-[16.5px] leading-[1.75] text-[var(--lang-ink)] [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
           <p>
             Behavior information modeling is the bet this whole site makes: that how a space

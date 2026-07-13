@@ -36,6 +36,10 @@ export interface RouteHead {
 
 const SUFFIX = ' | Emilie El Chidiac'
 
+// og:site_name (Emilie's call, 2026-07-13): the small site-name line chat
+// apps (Discord, Slack) print above a shared link's title.
+export const SITE_NAME = 'Emilie El Chidiac'
+
 // The landing strings. index.html carries the same values statically (the
 // pre-JS first paint); lib/headData.test.ts asserts the two never drift.
 export const LANDING_TITLE = 'Emilie El Chidiac | Design Technology Architect'
@@ -45,10 +49,10 @@ const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og.png`
 const DEFAULT_OG_ALT =
   'Emilie El Chidiac, Design Technology Architect: the EEC constellation cube mark, a graph cube with one red node'
 
-// The four index-page descriptions (authored in S1, still DRAFT pending
-// Emilie's sign-off) + the pillar's placeholder line (S3 DRAFT; S5 writes
-// the definitive pillar copy). Standard-vocabulary keywords in natural
-// prose; verbs score / model, never measure; no em dashes.
+// The four index-page descriptions (authored in S1, SIGNED by Emilie
+// 2026-07-13) + the pillar's line (SIGNED as interim 2026-07-13; S5 still
+// writes the definitive pillar copy). Standard-vocabulary keywords in
+// natural prose; verbs score / model, never measure; no em dashes.
 const PAGE_DESCRIPTIONS: Record<string, string> = {
   '/work':
     'Selected computational design and design-technology work by Emilie El Chidiac: comfort copilots, neuroarchitecture tools, and parametric studies, each linked to its live app, repo, or writeup.',
@@ -87,7 +91,18 @@ const PERSON = {
   alternateName: ['Emilie Chidiac', 'Emilie El Chidiac'],
   url: SITE_ORIGIN + '/',
   jobTitle: 'Design Technology Architect',
-  knowsAbout: ['neuroarchitecture', 'computational design', 'behavior information modeling'],
+  // The three D6 terms + the tool vocabulary screeners filter for (Emilie's
+  // extension ruling, 2026-07-13; every term honestly hers).
+  knowsAbout: [
+    'neuroarchitecture',
+    'computational design',
+    'behavior information modeling',
+    'parametric design',
+    'design technology',
+    'Grasshopper',
+    'Rhino',
+    'generative AI',
+  ],
   email: 'mailto:chidiacemilie@gmail.com',
   sameAs: [
     'https://www.linkedin.com/in/EmilieElChidiac',
