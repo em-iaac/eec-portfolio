@@ -52,6 +52,94 @@ export const MANIFEST = {
     { src: 'ballooning-market/GIFS/process.gif', role: 'gif', name: 'process' },
     { src: 'ballooning-market/GIFS/epic-fails.gif', role: 'gif', name: 'epic-fails' },
   ],
+  // S4b · THE FIVE (2026-07-14): sources are Emilie's public IAAC blog posts,
+  // downloaded into incoming/<slug>/ (her approval at the session gate). New
+  // items carry an authored `alt` (80-140 chars, context not contents); it
+  // rides images.json into the strip alts (data/work.ts prefers it over the
+  // derived name). Older items keep their derived alts untouched.
+  narkomfin: [
+    {
+      src: 'narkomfin/Blog_GraphML_G02_Maria_Lakzhmy_Charles_Emilie.png', role: 'hero', name: 'voxel-graph',
+      alt: 'The Narkomfin building rebuilt as translucent voxel volumes on black, spatial graph nodes and edges reaching out of the massing',
+    },
+    {
+      src: 'narkomfin/building-graph_.5.png', role: 'gallery', name: 'plan-graph',
+      alt: 'Narkomfin floor plates grid-sampled in red wireframe, stair links tying the levels into one walkable spatial graph',
+    },
+    {
+      src: 'narkomfin/Ftype_building-graph_.5.png', role: 'gallery', name: 'type-f-graph',
+      alt: 'Type F duplex levels of Narkomfin stacked as sampled grids, corridor connections running between the floors',
+    },
+    {
+      src: 'narkomfin/simplified-3d-exploded.png', role: 'gallery', name: 'exploded-axo',
+      alt: 'Simplified Narkomfin massing exploded level by level, the geometry the team sampled into spatial graphs',
+    },
+  ],
+  'urban-risk': [
+    {
+      src: 'urban-risk/ui-gif.gif', role: 'gif', name: 'assessment-ui',
+      alt: "The team's street safety assessment interface scoring a neighborhood's segments from OpenStreetMap features",
+    },
+    {
+      src: 'urban-risk/Group01_RiskAssessment_Charles-Emilie-Lakzhmy-Maria_page-0018-scaled.jpg', role: 'gallery', name: 'model-performance',
+      alt: 'Three regression models flatlining on crime prediction, the run that showed spatial form alone predicts crime poorly',
+    },
+    {
+      src: 'urban-risk/Group01_RiskAssessment_Charles-Emilie-Lakzhmy-Maria_page-0012-scaled.jpg', role: 'gallery', name: 'london-data',
+      alt: 'The London training data: 921,753 police incidents mapped citywide and broken down by crime type',
+    },
+    {
+      src: 'urban-risk/Group01_RiskAssessment_Charles-Emilie-Lakzhmy-Maria_page-0024-scaled.jpg', role: 'gallery', name: 'risk-score',
+      alt: 'The composite risk score weighting lighting, visibility, connectivity, enclosure and transit per street segment',
+    },
+    {
+      src: 'urban-risk/Group01_RiskAssessment_Charles-Emilie-Lakzhmy-Maria_page-0005-scaled.jpg', role: 'gallery', name: 'safety-theories',
+      alt: 'Six urban safety theories, Jacobs to Space Syntax, that the team encoded into measurable spatial features',
+    },
+  ],
+  'data-geometry': [
+    {
+      src: 'data-geometry/image-301.png', role: 'hero', name: 'workflow',
+      alt: "The data team's workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
+    },
+    {
+      src: 'data-geometry/image-302.png', role: 'gallery', name: 'thermal-family',
+      alt: 'A parametric Revit family for the thermal panel, shared parameters carrying analysis results into the model',
+    },
+    {
+      src: 'data-geometry/image-308.png', role: 'gallery', name: 'data-team',
+      alt: "The data team's four roles on Hyperbuilding 01: process, information structure, data translation and communication",
+    },
+    {
+      src: 'data-geometry/image-310.png', role: 'gallery', name: 'control-room',
+      alt: 'The web app control room: KPI dashboards, an interactive timeline and a health check the studio reported into',
+    },
+  ],
+  tsukiji: [
+    {
+      src: 'tsukiji/1-6-scaled.jpg', role: 'hero', name: 'site-maps',
+      alt: 'The 19-hectare Tsukiji site in Tokyo: location maps, the nearest weather data hub and the 1979 land use plan',
+    },
+    {
+      src: 'tsukiji/3-5-scaled.jpg', role: 'gallery', name: 'site-model',
+      alt: 'The Tsukiji development brief and the Rhino site model, the venue massed at 74 m among Chuo City towers',
+    },
+    {
+      src: 'tsukiji/2-4-scaled.jpg', role: 'gallery', name: 'market-visit',
+      alt: 'A rainy visit to the Tsukiji outer market, the crowds and food stalls the redevelopment has to live beside',
+    },
+    {
+      src: 'tsukiji/ea-blogpost-design-exploration.gif', role: 'gif', name: 'form-iterations',
+      alt: 'Design exploration iterations reshaping the market hall after small tweaks barely moved environmental performance',
+    },
+    {
+      src: 'tsukiji/ea-blogpost-galapagos-scaled.gif', role: 'gif', name: 'galapagos',
+      alt: "Galapagos evolutionary search running on the roof form, hunting a geometry that performs in Tokyo's humid climate",
+    },
+  ],
+  // (Pelagñou was ingested here in S4b then pulled at Emilie's gate call:
+  // parked as a THOUGHT candidate, see data/registry.ts. Its sources stay in
+  // incoming/pelagnou/ for that future session.)
 }
 
 // Output size ladder per role (max widths; smaller sources stay at native width).

@@ -111,6 +111,56 @@ interface Geom {
   rest?: boolean
 }
 
+// THE APPEND RECIPE (S4b, Emilie's ruling 2026-07-14: metadata decides how a
+// new piece connects). Time and idea lineage already derive from the registry
+// (`date` places it in the /thoughts world; CORRELATIONS braid it); on THIS
+// artwork a new node declares WHICH thread it rides (from its registry tags:
+// ai -> AI, data -> DATA, geometry/simulation -> GEOMETRY, neuro -> NEURO,
+// comfort -> COMFORT, xr -> XR) and HOW FAR ALONG (arc-length t, 0..1), via
+// pointOnThread below, instead of hand-typed pixels. The frozen prefix keeps
+// its literal coords; appends only, the shipped composition never reflows.
+
+// Sample the thread's drawn spline (the same cardinal cubics as spline(), so
+// the mark sits exactly ON the ink) at arc-length fraction t. Pure and
+// deterministic: safe for the frozen snapshot and the Node fallback bundle.
+export function pointOnThread(threadId: string, t: number): { x: number; y: number } {
+  const thread = THREADS.find((th) => th.id === threadId)
+  if (!thread) throw new Error(`pointOnThread: unknown thread '${threadId}'.`)
+  const pts = thread.pts
+  const k = 0.18
+  // The same control points spline() emits, sampled densely.
+  const samples: [number, number][] = []
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(i - 1, 0)]!
+    const p1 = pts[i]!
+    const p2 = pts[i + 1]!
+    const p3 = pts[Math.min(i + 2, pts.length - 1)]!
+    const c1x = p1[0] + (p2[0] - p0[0]) * k
+    const c1y = p1[1] + (p2[1] - p0[1]) * k
+    const c2x = p2[0] - (p3[0] - p1[0]) * k
+    const c2y = p2[1] - (p3[1] - p1[1]) * k
+    for (let s = 0; s <= 64; s++) {
+      const u = s / 64
+      const v = 1 - u
+      samples.push([
+        v * v * v * p1[0] + 3 * v * v * u * c1x + 3 * v * u * u * c2x + u * u * u * p2[0],
+        v * v * v * p1[1] + 3 * v * v * u * c1y + 3 * v * u * u * c2y + u * u * u * p2[1],
+      ])
+    }
+  }
+  let total = 0
+  const acc = [0]
+  for (let i = 1; i < samples.length; i++) {
+    total += Math.hypot(samples[i]![0] - samples[i - 1]![0], samples[i]![1] - samples[i - 1]![1])
+    acc.push(total)
+  }
+  const want = Math.min(Math.max(t, 0), 1) * total
+  let lo = acc.findIndex((a) => a >= want)
+  if (lo < 0) lo = acc.length - 1
+  const p = samples[lo]!
+  return { x: Math.round(p[0]), y: Math.round(p[1]) }
+}
+
 const GEOM: Record<string, Geom> = {
   // projects
   sensi: { x: 560, y: 300, th: ['NEURO', 'AI', 'COMFORT'], a: 'middle', d: [0, -15], rest: true },
@@ -137,6 +187,16 @@ const GEOM: Record<string, Geom> = {
   evosearch: { x: 1300, y: 470, th: ['AI'], a: 'end', d: [-14, 18] },
   heritage: { x: 1136, y: 519, th: ['GEOMETRY'], a: 'start', d: [12, -12] },
   respond: { x: 625, y: 720, th: ['COMFORT'], a: 'start', d: [13, 4] },
+  // ---- S4b appends (2026-07-14, placements Emilie's over the proposal
+  // board): the five blog projects ride existing threads via the append
+  // recipe above. Narkomfin sits at the literal DATA×AI crossing waypoint
+  // (ML + graph analysis, her wording at the gate); the rest declare
+  // thread + arc-length t. The lower left, empty until now, is where the
+  // record grows.
+  narkomfin: { x: 470, y: 700, th: ['DATA', 'AI'], a: 'middle', d: [0, -15] },
+  'urban-risk': { ...pointOnThread('AI', 0.04), th: ['AI'], a: 'start', d: [13, 5] },
+  'data-geometry': { ...pointOnThread('DATA', 0.28), th: ['DATA'], a: 'start', d: [12, 20] },
+  tsukiji: { ...pointOnThread('GEOMETRY', 0.18), th: ['GEOMETRY'], a: 'middle', d: [0, -16] },
 }
 
 export interface MindNode {

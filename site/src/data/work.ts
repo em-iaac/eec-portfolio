@@ -74,7 +74,7 @@ export interface WorkEntry {
   featured: boolean // S4 (D2): in the /work featured tier (leads, larger)
 }
 
-type ImgRow = { name: string }
+type ImgRow = { name: string; alt?: string }
 
 // Slugs referenced by more than one project (only 'professional' today: SOMA +
 // Marsception share a folder). A shared slug shows NO strip, so one project
@@ -110,13 +110,15 @@ const featuredRank = (slug: string): number => {
 const humanize = (name: string) => name.replace(/-/g, ' ')
 
 // The supporting strip: every other frame in the cover's own folder, hero
-// excluded, shared folders suppressed. Alt text is derived, never blank.
+// excluded, shared folders suppressed. Alt text prefers the manifest's
+// authored line (S4b: 80-140 chars, context not contents) and derives from
+// the frame name otherwise; never blank.
 function stripFor(slug: string | undefined, coverName: string | undefined, title: string): WorkPicture[] {
   if (!slug || SHARED_SLUGS.has(slug)) return []
   const all = (images as Record<string, ImgRow[]>)[slug] ?? []
   return all
     .filter((i) => i.name !== coverName)
-    .map((i) => ({ slug, name: i.name, alt: `${title}: ${humanize(i.name)}` }))
+    .map((i) => ({ slug, name: i.name, alt: i.alt ?? `${title}: ${humanize(i.name)}` }))
 }
 
 // The hero rule, applied to one project's assets. Returns the winning member

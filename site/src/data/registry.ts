@@ -57,10 +57,10 @@ export interface ExploreRef {
   label: string
   nodeKind: 'project' | 'thought'
   order: number
-  // Session 12: an APPENDED node (order past the frozen 21) opts out of the
-  // implied-edge correction, so it can float unconnected instead of being
-  // force-wired to degree 2. Ignored for the frozen prefix (their edges are
-  // baked into frozen-layout.generated.ts).
+  // Session 12 relic: nothing consumes this since the EXPLORE constellation
+  // retired (verified S4b, 2026-07-14). An appended node connects on the
+  // landing by riding a thread instead: give it a GEOM entry in
+  // landing/mindGraph.ts via the append recipe there (thread + arc-length t).
   standalone?: boolean
 }
 
@@ -287,6 +287,85 @@ export const ENTRIES: RegistryEntry[] = [
     project: 'xr-lab',
     explore: { label: 'XR FOR EDUCATION', nodeKind: 'project', order: 10 },
   },
+
+  // ---- S4b · THE FOUR (2026-07-14): the blog projects join the record -----
+  // APPENDS ONLY, per the contract note above: explore orders continue at 21,
+  // sheet numbers at P-112. Sources are Emilie's public IAAC blog posts
+  // (content/blog-catalog.json); team framing per her session-gate rulings
+  // (all shared credit, no individual slice). Dates are the blogs' publish
+  // months, CONFIRMED by Emilie at the S4b copy gate; deks + spines + credit
+  // rows SIGNED at the same gate (2026-07-14).
+  {
+    id: 'narkomfin',
+    kind: 'project',
+    date: '2026-06',
+    title: 'Narkomfin as a Graph',
+    lens: 'computation',
+    tags: ['data', 'ai', 'heritage', 'research'],
+    sheet: sheet('P-112', 'in-preparation', 'narkomfin'),
+    project: 'narkomfin',
+    image: {
+      slug: 'narkomfin',
+      name: 'voxel-graph',
+      alt: 'The Narkomfin building rebuilt as translucent voxel volumes on black, spatial graph nodes and edges reaching out of the massing',
+    },
+    explore: { label: 'NARKOMFIN', nodeKind: 'project', order: 21 },
+  },
+  {
+    id: 'urban-risk',
+    kind: 'project',
+    date: '2026-06',
+    title: 'Encoding Urban Risk',
+    lens: 'computation',
+    tags: ['data', 'ai', 'research'],
+    sheet: sheet('P-113', 'in-preparation', 'urban-risk'),
+    project: 'urban-risk',
+    image: {
+      slug: 'urban-risk',
+      name: 'assessment-ui',
+      alt: "The team's street safety assessment interface scoring a neighborhood's segments from OpenStreetMap features",
+    },
+    explore: { label: 'URBAN RISK', nodeKind: 'project', order: 22 },
+  },
+  {
+    id: 'data-geometry',
+    kind: 'project',
+    date: '2026-03',
+    title: 'Data into Geometry',
+    lens: 'computation',
+    tags: ['data', 'geometry'],
+    sheet: sheet('P-114', 'in-preparation', 'data-geometry'),
+    project: 'data-geometry',
+    image: {
+      slug: 'data-geometry',
+      name: 'workflow',
+      alt: "The data team's workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
+    },
+    explore: { label: 'DATA INTO GEOMETRY', nodeKind: 'project', order: 23 },
+  },
+  {
+    id: 'tsukiji',
+    kind: 'project',
+    date: '2025-12',
+    title: 'Tsukiji Fish Market',
+    lens: 'computation',
+    tags: ['climate', 'simulation', 'geometry'],
+    sheet: sheet('P-115', 'in-preparation', 'tsukiji'),
+    project: 'tsukiji',
+    image: {
+      slug: 'tsukiji',
+      name: 'site-maps',
+      alt: 'The 19-hectare Tsukiji site in Tokyo: location maps, the nearest weather data hub and the 1979 land use plan',
+    },
+    explore: { label: 'TSUKIJI', nodeKind: 'project', order: 24 },
+  },
+  // PARKED (S4b gate, Emilie 2026-07-14): Pelagñou (the AI-theory slide piece
+  // with Aditya Kossambe + Eleni Maglari, blog.iaac.net/?p=166653) was pulled
+  // OUT of the work room at her call: "maybe just a thought, not a project,
+  // because it was exploring the work of someone else" (Ari Melenciano's
+  // residency essay). Candidate for a future words session: a THOUGHT entry
+  // whose note reads her take on the essay (opacity, desire paths, AGI
+  // tensions). P-116 was never shipped; the next free sheet number is P-116.
 
   // ---- Thoughts (explore order 11-20; labels verbatim from data.js;
   //      dates are Emilie-pending drafts) ----------------------------------
@@ -632,4 +711,9 @@ export const CORRELATIONS: readonly Correlation[] = [
   ['comfort', 'respond', 2],
   ['solvers', 'cappelletti', 2],
   ['heritage', 'huddle', 1],
+  // S4b appends (2026-07-14, the set Emilie confirmed at the constellation
+  // gate; urban-risk stands alone, no honest thread found):
+  ['heritage', 'narkomfin', 2], // a 1930 monument read with new tools
+  ['evosearch', 'tsukiji', 1], // Galapagos drove the form hunt
+  ['bim', 'data-geometry', 1], // building data made legible inside the model
 ]

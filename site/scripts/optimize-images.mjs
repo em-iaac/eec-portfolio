@@ -28,7 +28,10 @@ for (const [slug, items] of Object.entries(MANIFEST)) {
   for (const item of items) {
     const src = join(INCOMING, item.src)
     const isGif = item.role === 'gif'
-    const img = sharp(src, { animated: isGif })
+    // limitInputPixels: a long animated gif's frames count toward sharp's
+    // default pixel cap (S4b hit it); outputs stay bounded by the resize
+    // ladder, so lifting the INPUT cap is safe for our own curated sources.
+    const img = sharp(src, { animated: isGif, limitInputPixels: false })
     const meta = await img.metadata()
     const widths = SIZES[item.role].filter(w => w <= meta.width)
     if (widths.length === 0) widths.push(meta.width)
@@ -37,7 +40,7 @@ for (const [slug, items] of Object.entries(MANIFEST)) {
     for (const w of widths) {
       const name = `${item.name}-${w}.webp`
       const out = join(outDir, name)
-      const r = await sharp(src, { animated: isGif })
+      const r = await sharp(src, { animated: isGif, limitInputPixels: false })
         .resize(w, null, { withoutEnlargement: true })
         .webp({ quality: isGif ? 74 : 80, effort: 4 })
         .toFile(out)
@@ -53,7 +56,7 @@ for (const [slug, items] of Object.entries(MANIFEST)) {
       for (const w of widths) {
         const name = `${item.name}-static-${w}.webp`
         const out = join(outDir, name)
-        const r = await sharp(src) // omitting the animated option reads frame one only
+        const r = await sharp(src, { limitInputPixels: false }) // omitting the animated option reads frame one only
           .resize(w, null, { withoutEnlargement: true })
           .webp({ quality: 80, effort: 4 })
           .toFile(out)
@@ -65,6 +68,9 @@ for (const [slug, items] of Object.entries(MANIFEST)) {
     results[slug].push({
       name: item.name,
       role: item.role,
+      // S4b: authored alt (80-140 chars) rides the manifest into images.json;
+      // data/work.ts prefers it over the derived strip alt.
+      ...(item.alt ? { alt: item.alt } : {}),
       aspect: +(meta.width / (isGif ? meta.pageHeight ?? meta.height : meta.height)).toFixed(4),
       animated: isGif || undefined,
       variants,

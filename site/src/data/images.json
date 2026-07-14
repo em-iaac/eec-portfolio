@@ -592,5 +592,341 @@
         }
       ]
     }
+  ],
+  "narkomfin": [
+    {
+      "name": "voxel-graph",
+      "role": "hero",
+      "alt": "The Narkomfin building rebuilt as translucent voxel volumes on black, spatial graph nodes and edges reaching out of the massing",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/voxel-graph-640.webp",
+          "kb": 7
+        }
+      ]
+    },
+    {
+      "name": "plan-graph",
+      "role": "gallery",
+      "alt": "Narkomfin floor plates grid-sampled in red wireframe, stair links tying the levels into one walkable spatial graph",
+      "aspect": 1.5,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/plan-graph-640.webp",
+          "kb": 15
+        }
+      ]
+    },
+    {
+      "name": "type-f-graph",
+      "role": "gallery",
+      "alt": "Type F duplex levels of Narkomfin stacked as sampled grids, corridor connections running between the floors",
+      "aspect": 1.5,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/type-f-graph-640.webp",
+          "kb": 26
+        }
+      ]
+    },
+    {
+      "name": "exploded-axo",
+      "role": "gallery",
+      "alt": "Simplified Narkomfin massing exploded level by level, the geometry the team sampled into spatial graphs",
+      "aspect": 1.7777,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/exploded-axo-640.webp",
+          "kb": 20
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/narkomfin/exploded-axo-1024.webp",
+          "kb": 36
+        }
+      ]
+    }
+  ],
+  "urban-risk": [
+    {
+      "name": "assessment-ui",
+      "role": "gif",
+      "alt": "The team's street safety assessment interface scoring a neighborhood's segments from OpenStreetMap features",
+      "aspect": 1.5342,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/assessment-ui-640.webp",
+          "kb": 956
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/assessment-ui-static-640.webp",
+          "kb": 26
+        }
+      ]
+    },
+    {
+      "name": "model-performance",
+      "role": "gallery",
+      "alt": "Three regression models flatlining on crime prediction, the run that showed spatial form alone predicts crime poorly",
+      "aspect": 2.1549,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/model-performance-640.webp",
+          "kb": 16
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/model-performance-1024.webp",
+          "kb": 30
+        }
+      ]
+    },
+    {
+      "name": "london-data",
+      "role": "gallery",
+      "alt": "The London training data: 921,753 police incidents mapped citywide and broken down by crime type",
+      "aspect": 2.1531,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/london-data-640.webp",
+          "kb": 18
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/london-data-1024.webp",
+          "kb": 43
+        }
+      ]
+    },
+    {
+      "name": "risk-score",
+      "role": "gallery",
+      "alt": "The composite risk score weighting lighting, visibility, connectivity, enclosure and transit per street segment",
+      "aspect": 1.9321,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/risk-score-640.webp",
+          "kb": 22
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/risk-score-1024.webp",
+          "kb": 40
+        }
+      ]
+    },
+    {
+      "name": "safety-theories",
+      "role": "gallery",
+      "alt": "Six urban safety theories, Jacobs to Space Syntax, that the team encoded into measurable spatial features",
+      "aspect": 2.4381,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/safety-theories-640.webp",
+          "kb": 13
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/safety-theories-1024.webp",
+          "kb": 26
+        }
+      ]
+    }
+  ],
+  "data-geometry": [
+    {
+      "name": "workflow",
+      "role": "hero",
+      "alt": "The data team's workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
+      "aspect": 2.0502,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/data-geometry/workflow-640.webp",
+          "kb": 19
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/data-geometry/workflow-1024.webp",
+          "kb": 37
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/data-geometry/workflow-1600.webp",
+          "kb": 61
+        }
+      ]
+    },
+    {
+      "name": "thermal-family",
+      "role": "gallery",
+      "alt": "A parametric Revit family for the thermal panel, shared parameters carrying analysis results into the model",
+      "aspect": 3.5836,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/data-geometry/thermal-family-640.webp",
+          "kb": 6
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/data-geometry/thermal-family-1024.webp",
+          "kb": 13
+        }
+      ]
+    },
+    {
+      "name": "data-team",
+      "role": "gallery",
+      "alt": "The data team's four roles on Hyperbuilding 01: process, information structure, data translation and communication",
+      "aspect": 2.0562,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/data-geometry/data-team-640.webp",
+          "kb": 23
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/data-geometry/data-team-1024.webp",
+          "kb": 43
+        }
+      ]
+    },
+    {
+      "name": "control-room",
+      "role": "gallery",
+      "alt": "The web app control room: KPI dashboards, an interactive timeline and a health check the studio reported into",
+      "aspect": 1.9775,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/data-geometry/control-room-640.webp",
+          "kb": 14
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/data-geometry/control-room-1024.webp",
+          "kb": 27
+        }
+      ]
+    }
+  ],
+  "tsukiji": [
+    {
+      "name": "site-maps",
+      "role": "hero",
+      "alt": "The 19-hectare Tsukiji site in Tokyo: location maps, the nearest weather data hub and the 1979 land use plan",
+      "aspect": 2.0529,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/site-maps-640.webp",
+          "kb": 38
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/tsukiji/site-maps-1024.webp",
+          "kb": 80
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/tsukiji/site-maps-1600.webp",
+          "kb": 155
+        }
+      ]
+    },
+    {
+      "name": "site-model",
+      "role": "gallery",
+      "alt": "The Tsukiji development brief and the Rhino site model, the venue massed at 74 m among Chuo City towers",
+      "aspect": 2.0398,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/site-model-640.webp",
+          "kb": 25
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/tsukiji/site-model-1024.webp",
+          "kb": 52
+        }
+      ]
+    },
+    {
+      "name": "market-visit",
+      "role": "gallery",
+      "alt": "A rainy visit to the Tsukiji outer market, the crowds and food stalls the redevelopment has to live beside",
+      "aspect": 2.1035,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/market-visit-640.webp",
+          "kb": 45
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/tsukiji/market-visit-1024.webp",
+          "kb": 92
+        }
+      ]
+    },
+    {
+      "name": "form-iterations",
+      "role": "gif",
+      "alt": "Design exploration iterations reshaping the market hall after small tweaks barely moved environmental performance",
+      "aspect": 2.0386,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/form-iterations-640.webp",
+          "kb": 441
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/form-iterations-static-640.webp",
+          "kb": 34
+        }
+      ]
+    },
+    {
+      "name": "galapagos",
+      "role": "gif",
+      "alt": "Galapagos evolutionary search running on the roof form, hunting a geometry that performs in Tokyo's humid climate",
+      "aspect": 1.9753,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/galapagos-640.webp",
+          "kb": 20
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/galapagos-static-640.webp",
+          "kb": 23
+        }
+      ]
+    }
   ]
 }

@@ -22,7 +22,7 @@
 //   wrapper so the wake dim NEVER multiplies into the label's rest ink
 //   (0.62 group x 0.62 label would land below the AA floor);
 // - the fixed chrome sits BEFORE the stage in the DOM (readers meet the
-//   page identity before 36 canvas stops);
+//   page identity before 40 canvas stops);
 // - Escape or a tap on empty field dismisses the card and releases the
 //   wake (WCAG 1.4.13); arming on touch is announced via a polite live
 //   region so a double-tap that arms is never silent.
@@ -374,7 +374,7 @@ export default function NeuralWorld() {
       </a>
       <TitleBlock />
       <main id="main" tabIndex={-1} className="outline-none">
-        {/* the page chrome FIRST in the DOM (identity before the 36 canvas
+        {/* the page chrome FIRST in the DOM (identity before the 40 canvas
             stops); everything is position:fixed, so the paint is identical */}
         {/* max-width leaves room for the WATCH IT GROW button on its right;
             kicker in ink-muted (red = liveness/interaction only, DL am.7) */}

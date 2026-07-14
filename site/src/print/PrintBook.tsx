@@ -359,8 +359,10 @@ function IndexPage({ side }: { side: PageSide }) {
             EVERYTHING · {WORK_ENTRIES.length} PROJECTS + {THOUGHTS.length} THOUGHTS · {SITE}
           </span>
         </div>
-        {/* Colour never means alone: the ticks are named once per page. */}
-        <div className="pr-legend pr-kicker" style={{ marginBottom: '5mm' }}>
+        {/* Colour never means alone: the ticks are named once per page.
+            (S4b: 15 projects = a third tile row; the legend + THE THOUGHTS
+            margins each gave back ~1.75mm so the page keeps its box.) */}
+        <div className="pr-legend pr-kicker" style={{ marginBottom: '3.5mm' }}>
           {(Object.keys(LENSES) as Lens[]).map(l => (
             <span key={l}>
               <LensTick lens={l} size={6} /> {LENSES[l].label.toUpperCase()}
@@ -400,7 +402,7 @@ function IndexPage({ side }: { side: PageSide }) {
             )
           })}
         </div>
-        <h3 className="pr-kicker" style={{ margin: '7mm 0 2.4mm' }}>THE THOUGHTS</h3>
+        <h3 className="pr-kicker" style={{ margin: '5mm 0 2.4mm' }}>THE THOUGHTS</h3>
         <ThoughtRows />
       </div>
     </A4Page>
