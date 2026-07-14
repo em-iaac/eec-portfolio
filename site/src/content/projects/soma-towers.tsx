@@ -13,6 +13,9 @@ const somaTowers: ProjectMaster = {
   myPart: 'My part: facade and massing studies in Rhino and Grasshopper, carried into the BIM set.',
   dek: 'A parametric study only counts once it survives a drawing set: four towers carried from Grasshopper into BIM.',
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
+  // 2026-07-13). Candidate parked: "What survives when a parametric study
+  // meets a real drawing set?". The signed dek serves meanwhile.
   blurb:
     'Four towers between Dubai and Beirut: Verve at City Walk, Enara, Saria, District O. Facade and massing studies in Rhino and Grasshopper, carried into BIM for delivery. The years where I learned that a parametric study only matters if it survives contact with a drawing set.',
   tech: 'RHINO · GRASSHOPPER · REVIT',

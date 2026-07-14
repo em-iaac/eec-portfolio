@@ -15,6 +15,10 @@ const podcast: ProjectMaster = {
   meta: 'MACAD PODCAST · CO-HOSTED WITH CHARLES ABI CHAHINE',
   dek: 'Where Behavior Information Modeling got its name: why no standard yet asks if a building is good for your brain.',
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
+  // 2026-07-13). Candidate parked: "Why does no building code ask whether a
+  // space is good for your brain?" ("ask", not "measure": the quantified
+  // research is Dr. Valentine's). The signed dek serves meanwhile.
   pullQuote: {
     text: 'There is no standard, anywhere in the world, that measures whether a building is good for your brain.',
     source: 'Dr. Cleo Valentine, Cambridge',

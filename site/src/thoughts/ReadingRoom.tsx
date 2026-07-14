@@ -12,6 +12,7 @@ import SheetPage from '../components/SheetPage'
 import { LensTick, LENSES } from '../components/Lens'
 import { ENTRIES, byDateDesc, type RegistryEntry } from '../data/registry'
 import { THOUGHT_OPENINGS } from './openings'
+import ViewToggle from './ViewToggle'
 import { vtName } from '../lib/viewTransition'
 
 function noteEntries(): RegistryEntry[] {
@@ -88,6 +89,11 @@ export default function ReadingRoom() {
           <p className="mt-4 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]">
             {notes.length} NOTES · NEWEST FIRST
           </p>
+          {/* THE SWITCH (S4a): the same graph<->words control the world carries,
+              up by the title here too, so the two views read as one switch. */}
+          <div className="mt-4">
+            <ViewToggle current="words" />
+          </div>
         </section>
 
         {/* list-none strips list semantics in WebKit; the role restores it */}
@@ -111,16 +117,10 @@ export default function ReadingRoom() {
           })}
         </ol>
 
-        {/* The corridor back into the world (retargeted by the meta build;
-            Emilie shortened + SIGNED the label at G4, 2026-07-12). */}
-        <p className="mt-8 border-t-[0.5px] border-[var(--lang-hairline)] pt-4 pb-12 font-mono text-[9px] tracking-[0.08em]">
-          <Link
-            to="/thoughts"
-            className="-m-2 p-2 text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
-          >
-            SEE THEM IN TIME ›
-          </Link>
-        </p>
+        {/* The old one-way "SEE THEM IN TIME" corridor retired at S4a: the
+            graph<->words switch up by the title now carries the trip both ways.
+            A closing hairline keeps the list from ending flush. */}
+        <div className="mt-8 border-t-[0.5px] border-[var(--lang-hairline)] pb-12" />
       </div>
     </SheetPage>
   )

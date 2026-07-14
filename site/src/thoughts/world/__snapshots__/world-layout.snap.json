@@ -1,5 +1,5 @@
 {
-  "w": 3090,
+  "w": 3168,
   "h": 860,
   "nodes": [
     {
@@ -281,6 +281,14 @@
       "x": 2841,
       "y": 89.1,
       "route": "/thoughts/respond"
+    },
+    {
+      "id": "site-live",
+      "kind": "milestone",
+      "date": "2026-07",
+      "x": 2919,
+      "y": 600,
+      "route": null
     }
   ]
 }

@@ -37,6 +37,7 @@ export const MILESTONE_LANE: Record<string, WorldLane> = {
   'dynamic-start': 'dyn',
   'macad-start': 'macad',
   'macad-y1': 'macad',
+  'site-live': 'self',
 }
 
 // The soma lane merges back into the main line at this milestone's column.

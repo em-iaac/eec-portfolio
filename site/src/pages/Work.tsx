@@ -73,6 +73,14 @@ export default function Work() {
 
   const entries = activeLens ? WORK_ENTRIES.filter((w) => w.lens === activeLens) : WORK_ENTRIES
 
+  // THE FEATURED TIER (S4, D2): in the unfiltered ALL view the grid splits into
+  // FEATURED (leads, larger) + MORE WORK (the rest). A lens-filtered view shows
+  // ONE grid (its subset is small; a two-tier split there reads as clutter), in
+  // the same featured-first order WORK_ENTRIES already carries.
+  const showTiers = !activeLens
+  const featured = entries.filter((w) => w.featured)
+  const supporting = entries.filter((w) => !w.featured)
+
   const selected = id ? workEntryById(id) : undefined
 
   // A bad /work/:id (renamed or typo'd) cleans itself back to the grid rather
@@ -100,6 +108,24 @@ export default function Work() {
   // the API just swap.
   const open = (entryId: string) => navigate(`/work/${entryId}${hash}`, { viewTransition: true })
   const close = () => navigate(`/work${hash}`, { replace: true, viewTransition: true })
+
+  // One card in a list item; `priorityCount` eager-loads the first images of a
+  // tier (they are above the fold). morphSource yields the entry's
+  // view-transition-name to the open overlay (one element per name per state).
+  const cards = (list: typeof entries, priorityCount: number) =>
+    list.map((entry, i) => (
+      <li key={entry.id} className="flex">
+        <WorkCard
+          entry={entry}
+          onOpen={() => open(entry.id)}
+          priority={i < priorityCount}
+          morphSource={selected?.id !== entry.id}
+        />
+      </li>
+    ))
+
+  const SECTION_LABEL =
+    'font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase'
 
   return (
     <SheetPage>
@@ -139,20 +165,35 @@ export default function Work() {
         </div>
       </section>
 
-      <ul className="grid list-none grid-cols-1 gap-5 p-0 pb-4 sm:grid-cols-2 lg:grid-cols-3">
-        {entries.map((entry, i) => (
-          <li key={entry.id} className="flex">
-            {/* morphSource yields the entry's view-transition-name to the open
-                overlay (one element per name per state, lib/viewTransition.ts) */}
-            <WorkCard
-              entry={entry}
-              onOpen={() => open(entry.id)}
-              priority={i < 3}
-              morphSource={selected?.id !== entry.id}
-            />
-          </li>
-        ))}
-      </ul>
+      {showTiers ? (
+        <>
+          {/* FEATURED: the strongest work leads at full size (two per row on
+              desktop, so each card is large). */}
+          <section aria-labelledby="featured-heading" className="pb-2">
+            <h2 id="featured-heading" className={SECTION_LABEL}>
+              Featured
+            </h2>
+            <ul className="mt-3 grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2">
+              {cards(featured, 2)}
+            </ul>
+          </section>
+          {/* MORE WORK: the rest, smaller (three per row on desktop). */}
+          {supporting.length > 0 && (
+            <section aria-labelledby="more-heading" className="pt-6 pb-4">
+              <h2 id="more-heading" className={SECTION_LABEL}>
+                More work
+              </h2>
+              <ul className="mt-3 grid list-none grid-cols-2 gap-4 p-0 lg:grid-cols-3">
+                {cards(supporting, 0)}
+              </ul>
+            </section>
+          )}
+        </>
+      ) : (
+        <ul className="grid list-none grid-cols-1 gap-5 p-0 pb-4 sm:grid-cols-2 lg:grid-cols-3">
+          {cards(entries, 3)}
+        </ul>
+      )}
 
       {selected && <WorkOverlay key={selected.id} entry={selected} onClose={close} />}
     </SheetPage>

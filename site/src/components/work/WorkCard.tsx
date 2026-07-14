@@ -49,6 +49,7 @@ export default function WorkCard({
       lens={entry.lens}
       tags={entry.tags.map(tagLabel)}
       award={entry.awardFace}
+      aspect="wide"
       onOpen={onOpen}
       data-work-card={entry.id}
       // The shared-element source: the card face morphs into the preview

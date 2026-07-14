@@ -49,7 +49,9 @@ export interface WorkEntry {
   tags: string[]
   dek: string // the one authored "what it proves" line; the showcase's claim
   question?: string // D4 (S4/S5): the one question the project answers; headData prefers it as the meta description
+  meta: string // the plate's credit/context row (e.g. 'MACAD STUDIO · TEAM OF 4')
   tech: string // the mono tech row
+  stat?: string // Session 7: the one defensible number, data-plate style
   recognition?: string // award wording where real; ink, no box, never red
   awardFace?: string // the face's corner-pill short wording (DL-2; falls back to recognition)
   awardHref?: string // FLAG-03: the announcement/IAAC URL once it exists; the pill becomes a link (registry is the single source)
@@ -69,6 +71,7 @@ export interface WorkEntry {
   how?: ReactNode[]
   outcome?: ReactNode
   showcaseDraft: boolean // the spine prose is unsigned until Emilie signs it
+  featured: boolean // S4 (D2): in the /work featured tier (leads, larger)
 }
 
 type ImgRow = { name: string }
@@ -83,6 +86,26 @@ const SHARED_SLUGS = (() => {
   }
   return new Set([...count].filter(([, n]) => n > 1).map(([slug]) => slug))
 })()
+
+// THE FEATURED TIER (S4, D2; Emilie signed the set + the order at the gate,
+// 2026-07-13). ONE source of truth for "featured", by slug (not "top N by
+// date"), so it stays stable when S4b appends the supporting blog projects.
+// The award + live-app + research core, strongest three first. The gallery
+// leads with these at full size; the landing mind-graph and the /thoughts
+// world still show EVERYTHING (this is a /work reading order only).
+const FEATURED_SLUGS: readonly string[] = [
+  'sensi',
+  'neurospace',
+  'legoarch',
+  'lungs',
+  'huddle',
+  'podcast',
+]
+// rank within the tier; Infinity = supporting (sorts after, by date).
+const featuredRank = (slug: string): number => {
+  const i = FEATURED_SLUGS.indexOf(slug)
+  return i === -1 ? Infinity : i
+}
 
 const humanize = (name: string) => name.replace(/-/g, ' ')
 
@@ -146,7 +169,11 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     tags: entry.tags,
     dek: p.dek,
     question: p.question,
+    // The plate rows (S4a): the showcase now mirrors the printed spread, so
+    // it reads the same meta credit line + stat the book plate prints.
+    meta: p.meta,
     tech: p.tech,
+    stat: p.stat,
     // Recognition wording lives with the card copy; membership is guaranteed
     // to agree with AWARD_WINNER_IDS by the registry validator (never drifts).
     // The face's corner pill takes the short form where one exists (DL-2: the
@@ -170,15 +197,24 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     // left this object at G4: every dek is dekSigned in its content file, and
     // nothing ever consumed the derived field.)
     showcaseDraft: p.showcaseDraft,
+    featured: featuredRank(p.slug) !== Infinity,
   }
 }
 
-// The gallery's single export: every project, newest first. Consumed by the
-// /work grid and (R7) the book index page unchanged.
+// The gallery's single export, in READING ORDER (S4, D2): the featured tier
+// first (by its signed rank), then everything else newest-first. The /work
+// grid splits it into the two tiers; the book index reuses it in this same
+// strongest-first order. When both entries are supporting, featuredRank is
+// Infinity for each, so the rank branch is skipped and date decides.
 export const WORK_ENTRIES: WorkEntry[] = ENTRIES.filter((e) => e.kind === 'project')
   .map(toWorkEntry)
   .filter((w): w is WorkEntry => w !== null)
-  .sort((a, b) => b.date.localeCompare(a.date))
+  .sort((a, b) => {
+    const ra = featuredRank(a.slug)
+    const rb = featuredRank(b.slug)
+    if (ra !== rb) return ra - rb
+    return b.date.localeCompare(a.date)
+  })
 
 export function workEntryById(id: string): WorkEntry | undefined {
   return WORK_ENTRIES.find((w) => w.id === id)

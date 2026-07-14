@@ -15,6 +15,10 @@ const lungs: ProjectMaster = {
   myPart: 'Data team of three: we built the app that ran the studio.',
   dek: "The studio's data was the architecture: a live app running a hyperbuilding designed to filter a city's air.",
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
+  // 2026-07-13). Candidate parked: "What if the data running a studio was the
+  // architecture?" (leads with the ownable claim, the data team's app, not the
+  // building's filtration). The signed dek serves meanwhile.
   stat: 'TRACKED · 3 TEAMS × 10 WEEKS',
   blurb: (
     <>

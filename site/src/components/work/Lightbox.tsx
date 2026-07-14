@@ -28,9 +28,11 @@ export default function Lightbox({
   const pic = pictures[index]
   const many = pictures.length > 1
 
-  // Modal on mount, over the already-open showcase dialog. Same 'cancel'
-  // rationale as the sheet (WorkOverlay): Escape fires cancel on the TOP
-  // dialog only, so the sheet below stays open.
+  // Modal on mount, over the already-open showcase dialog. Escape is handled
+  // directly on keydown (below; this Chromium never fires the native 'cancel'
+  // on Esc). The 'cancel' listener stays as the fallback for close requests
+  // that arrive WITHOUT a keydown (Android's back gesture); the top layer
+  // routes those to this, the topmost dialog, so the sheet stays open.
   useLayoutEffect(() => {
     const dlg = ref.current
     if (!dlg) return
@@ -58,6 +60,16 @@ export default function Lightbox({
         if (e.target === ref.current) onClose()
       }}
       onKeyDown={(e) => {
+        // Escape closes THIS layer only, back to the plate (S4a round 3:
+        // this Chromium delivers the keydown but never the native <dialog>
+        // 'cancel' close request, so the key is handled here directly;
+        // stopPropagation keeps the plate underneath from also closing).
+        if (e.key === 'Escape') {
+          e.preventDefault()
+          e.stopPropagation()
+          onClose()
+          return
+        }
         if (!many) return
         if (e.key === 'ArrowLeft') prev()
         if (e.key === 'ArrowRight') next()

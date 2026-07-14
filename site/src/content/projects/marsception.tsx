@@ -12,6 +12,10 @@ const marsception: ProjectMaster = {
   meta: 'MARSCEPTION COMPETITION · WITH CHARLES ABI CHAHINE',
   dek: "An early bet that generative tools belonged on an architect's desk, back when that still raised eyebrows.",
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
+  // 2026-07-13). Candidate parked: "Could generative tools and architecture
+  // share a desk, years before that was normal?" (duo credit binds; the
+  // question claims the bet, never a solo placement). The dek serves meanwhile.
   award: 'TOP 50',
   myPart: 'A two-person entry with Charles Abi Chahine.',
   blurb:

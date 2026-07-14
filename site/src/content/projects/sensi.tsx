@@ -18,6 +18,11 @@ const sensi: ProjectMaster = {
   awardShort: "MACAD '26 WINNER",
   dek: 'Comfort, designed on purpose: a copilot scores a plan across six senses, calibrated to a person, not an average.',
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to its own discovery session (Emilie,
+  // 2026-07-13) — read the blogposts, map the set of questions each project
+  // answers, then pick the one a person would naturally ask. Candidate parked:
+  // "Can a copilot score how a floor plan will feel?" (verb = SCORE, never
+  // measure). Until then the signed dek serves on screen and in search.
   myPart: 'Project lead, A to Z. Built with a team of four.',
   stat: 'LLM BENCH · 2 PROVIDERS × 3 SCENES',
   blurb:

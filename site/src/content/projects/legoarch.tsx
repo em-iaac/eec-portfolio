@@ -17,6 +17,10 @@ const legoarch: ProjectMaster = {
   myPart: 'Built with Charles Abi Chahine, end to end as a pair.',
   dek: 'A render is only a promise until the bricks fit: AI imagines the set, code makes it actually buildable.',
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
+  // 2026-07-13). Candidate parked: "Can AI dream up a LEGO set that provably
+  // snaps together?" (ceiling: digitally verified buildable, never physical
+  // assembly; no 93%). The signed dek serves meanwhile.
   stat: 'LORA · 40 IMAGES · 3 BENCHMARKS',
   blurb:
     'A render is a promise, not a product: you cannot snap a JPEG together on your living-room floor. lEgoarCh takes a text prompt and returns a LEGO set that actually builds: AI imagines it, deterministic code makes it buildable, brick by brick.',

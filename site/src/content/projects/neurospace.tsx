@@ -17,6 +17,10 @@ const neurospace: ProjectMaster = {
   meta: 'MACAD · SOLO · LIVE APP',
   dek: 'Your room is doing something to you right now: move a slider and watch a browser score it live.',
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
+  // 2026-07-13). Candidate parked: "What if a room could tell you what it's
+  // doing to you, while you design it?" (verbs stay score/estimate, never
+  // "measure", never "makes you feel"). The signed dek serves meanwhile.
   blurb:
     "You're sitting in a room right now, and its defaults are quietly shaping your cortisol, your circadian rhythm, your cognitive load. NeuroSpace makes those effects visible: move a slider, watch the score respond · Rhino.Compute geometry on the server, behavioral scoring live in the browser. It's BIM, reframed as Behavior Information Modeling.",
   tech: 'GRASSHOPPER · RHINO.COMPUTE · VUE 3 · THREE.JS',

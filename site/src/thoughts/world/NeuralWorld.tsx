@@ -27,11 +27,12 @@
 //   wake (WCAG 1.4.13); arming on touch is announced via a polite live
 //   region so a double-tap that arms is never silent.
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import TitleBlock from '../../components/TitleBlock'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import { NOW } from '../../data/now'
 import { THOUGHT_OPENINGS } from '../openings'
+import ViewToggle from '../ViewToggle'
 import { WORLD, starPath, type WorldNode } from './worldGraph'
 import { useProximityEngine, TUNE, type ConnHandle, type NodeHandle } from './useProximityEngine'
 import WorldSrNav from './WorldSrNav'
@@ -388,6 +389,11 @@ export default function NeuralWorld() {
             {pieces} PIECES · 2021 › <span className="text-[var(--lang-interaction)]">NOW</span> · PROJECTS +
             THOUGHTS + MILESTONES + AWARDS · EVERY PIECE OPENS
           </p>
+          {/* THE SWITCH (S4a): the graph<->words control, up by the title, so
+              the words are a switch away, not a one-way corridor. */}
+          <div className="pointer-events-auto mt-3">
+            <ViewToggle current="graph" />
+          </div>
         </header>
 
         {!prm && (
@@ -435,15 +441,9 @@ export default function NeuralWorld() {
           <span className="text-[var(--lang-interaction)]">ONE RED TIP = LIVE</span>
         </div>
 
+        {/* The words are now reached by the switch up by the title (S4a); this
+            corner keeps only the drag hint. */}
         <div className="pointer-events-none fixed right-6 bottom-5 z-[3] max-w-[44vw] text-right font-mono text-[9px] tracking-[0.12em] text-[var(--lang-ink-muted)] sm:right-9">
-          <p className="mb-2">
-            <Link
-              to="/thoughts?view=words"
-              className="pointer-events-auto -m-2 inline-block p-2 text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
-            >
-              PREFER THE WORDS? THE READING ROOM ›
-            </Link>
-          </p>
           {/* emphasis in ink, not red: red = liveness/interaction only */}
           <p aria-hidden="true">
             <b className="font-normal text-[var(--lang-ink)]">DRAG</b> TO EXPLORE ·{' '}

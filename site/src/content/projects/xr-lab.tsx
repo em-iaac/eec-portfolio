@@ -12,6 +12,9 @@ const xrLab: ProjectMaster = {
   meta: 'LAU XR LAB · RESEARCH ASSISTANT · 2021-23',
   dek: 'Where the XR thread started: point a phone at a molecule and watch it react in the room.',
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
+  // 2026-07-13). Candidate parked: "What if the lesson could stand in the room
+  // with you?". The signed dek serves meanwhile.
   blurb:
     'Point a phone at a molecule and watch the reaction happen in the room: AR chemistry lessons built at the LAU XR Lab, plus contributions to research on VR in education. Where the XR thread in my work started.',
   tech: 'AR · VR · 3D ANIMATION',

@@ -443,6 +443,17 @@ export const ENTRIES: RegistryEntry[] = [
     title: 'MaCAD Year 1 complete · the technical year',
     tags: ['research'],
   },
+  {
+    // S4a append (Emilie signed the wording at the gate, 2026-07-13): the
+    // portfolio itself joins the record. It rides the self-employed lane (her
+    // own thing), the newest milestone, sitting just under the live red tip.
+    // The world census derives, so {pieces} and the snapshots grow by one.
+    id: 'site-live',
+    kind: 'milestone',
+    date: '2026-07',
+    title: 'emiliechidiac.com goes live',
+    tags: ['practice'],
+  },
 
   // ---- Awards + press (the credibility layer; years from cv.ts,
   //      months are drafts) ------------------------------------------------

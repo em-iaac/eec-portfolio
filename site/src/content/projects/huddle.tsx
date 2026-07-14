@@ -14,6 +14,10 @@ const huddle: ProjectMaster = {
   myPart: 'Team of four, all hands on everything.',
   dek: 'Stop fighting the wind and build with it: modules that grow along the gusts instead of bracing against them.',
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
+  // 2026-07-13). Candidate parked: "What if you built with the wind instead of
+  // bracing against it?" (team of four; the question claims the idea, never an
+  // individual slice). The signed dek serves meanwhile.
   blurb:
     'In Punta Arenas the wind never stops, so we stopped fighting it. The Huddle aggregates 4×4×4 m modules along the wind itself: WASP grows the cluster, Kangaroo settles it, and a three-panel envelope (Shields, Lenses, Gills) turns the facade into a readable map of climatic forces.',
   tech: 'WASP · KANGAROO · ALPACA4D',

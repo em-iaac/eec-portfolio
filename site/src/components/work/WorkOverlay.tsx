@@ -1,18 +1,37 @@
-// THE SHOWCASE (R2 card-on-top → DL-2 glass → G1 whole-page → G1.1
-// restructure, all Emilie's rulings in chat 2026-07-10): a glass-2 FLOATING
-// SHEET lifted over the dimmed grid, deep-linkable at /work/:id, bottom
-// sheet on phones. Mechanics unchanged: native <dialog>, URL-addressable,
-// focus returned to the card by Work.tsx.
+// THE SHOWCASE (R2 card-on-top → DL-2 glass → G1 whole-page → S4a THE BOOK
+// PLATE, Emilie's rulings in chat 2026-07-13, round 2): a glass-2 FLOATING
+// SHEET lifted over the dimmed grid, deep-linkable at /work/:id, bottom sheet
+// on phones. Mechanics unchanged: native <dialog>, URL-addressable, focus
+// returned to the card by Work.tsx, the card-face morph on the dialog.
 //
-// G1.1 ORDER (her restructure, visualised + confirmed): the top bar carries
-// the identity (title + lens + award; the P-number and IN PREPARATION left
-// the sheet), then the PROOF stack: hero (the video>live>photo>audio>text
-// rule), a sideways filmstrip where EVERY frame opens full size (Lightbox),
-// the claim line, the mono tools row, the links out. The signed spine
-// (WHAT · WHY · HOW · WHAT CAME OF IT) folds behind THE STORY, collapsed by
-// default: the closed sheet is pure proof, the words are one tap away.
-// Scrolling is native but bar-less (.no-scrollbar); the filmstrip is the
-// one sideways scroll.
+// S4a ROUND 2 (her pick over an A/B board: "the book plate" over the
+// side-by-side split; first round's full-width thin stage retired — the
+// asset was "too horizontal and thin"): the sheet now mirrors the printed
+// plate (print/PrintBook.tsx) so card ⇄ showcase ⇄ book are ONE logic:
+//   1. THE TOP ROW, divided in two like the printed page: the ASSET side
+//      (left on desktop) is a tall 4:3 flip-through gallery — hero first
+//      (video>live>photo>audio>text), then every supporting frame; ‹ ›
+//      arrows flip, tapping a picture opens it full size in the Lightbox
+//      (her pick: arrows flip, tap zooms). The TITLE/INFO side carries the
+//      identity the old top bar held: title, lens + award, the claim (the
+//      question slot when D4's discovery session fills it, then the signed
+//      dek), the plate's meta credit row, the mono tech + stat line, and the
+//      LINKS (pillar door + links out; her round-3 ruling: the links live
+//      with the project identity, next to the asset — the foot retired).
+//      Depth stays in the linked repo/blog (a portfolio, not a blog).
+//   2. THE SPINE below, straight down in two wide columns (no "THE STORY"
+//      collapse): WHAT · WHY · HOW · WHAT CAME OF IT.
+// On phones the plate stacks: title/info, then the asset, then the story
+// (T1 proof-first reading order), scrolling invisibly — a landscape plate
+// honestly cannot fit a phone. Desktop stays everything-at-a-glance.
+//
+// ESCAPE (her round-3 report, reproduced live: this Chromium delivers the
+// Escape keydown but never fires the native <dialog> 'cancel' close request,
+// so Esc silently did nothing). Both dialogs now handle Escape themselves on
+// keydown, peeling ONE layer per press: full-size picture › the plate › the
+// grid. The 'cancel' listeners stay as the fallback for close requests that
+// arrive WITHOUT a keydown (Android's back gesture), with a guard so the
+// plate never closes underneath a stacked Lightbox.
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import Img from '../Img'
@@ -26,83 +45,81 @@ import type { WorkEntry, WorkPicture } from '../../data/work'
 const ACCENT_LINK =
   'text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
 // Text links wear a transparent >= 44px hit box (the touch floor, a FLOORS
-// rule): the visible link stays a quiet mono line, the box does the catching;
-// negative vertical margin keeps the row rhythm compact.
+// rule): the visible link stays a quiet mono line, the box does the catching.
 const ROW_LINK = `inline-flex min-h-11 min-w-11 items-center ${ACCENT_LINK}`
 
-const PROSE = 'max-w-[62ch] font-serif text-[15px] leading-[1.65] text-[var(--lang-ink)]'
+// Compact serif for the two-column spine (tighter than the old single-column
+// prose, so the whole plate fits without scrolling).
+const PROSE = 'font-serif text-[13px] leading-[1.5] text-[var(--lang-ink)]'
 
-function HeroMedia({ entry, onZoom }: { entry: WorkEntry; onZoom?: () => void }) {
-  if (entry.hero === 'video' && entry.heroVideo) {
+// The ‹ › page-turn buttons (shared style with the Lightbox nav).
+const FLIP_BTN =
+  'absolute top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-[var(--r-pill)] bg-[rgba(11,14,19,0.55)] font-mono text-[15px] leading-none text-white transition-colors hover:bg-[rgba(11,14,19,0.8)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
+
+// ---- THE ASSET SIDE (the flip-through gallery) ----------------------------
+// One page per piece of media: the hero first, then every supporting frame.
+// Image pages open the Lightbox; the video/live/audio heroes are their own
+// interactive surfaces and do not.
+type MediaPage =
+  | { kind: 'video'; video: NonNullable<WorkEntry['heroVideo']> }
+  | { kind: 'live'; cover: WorkPicture; live: NonNullable<WorkEntry['live']> }
+  | { kind: 'audio'; audio: NonNullable<WorkEntry['audio']>; quote: NonNullable<WorkEntry['pullQuote']> }
+  | { kind: 'image'; pic: WorkPicture; imgIndex: number }
+
+function buildPages(entry: WorkEntry): { pages: MediaPage[]; images: WorkPicture[] } {
+  const pages: MediaPage[] = []
+  const images: WorkPicture[] = []
+  const pushImage = (pic: WorkPicture) => {
+    pages.push({ kind: 'image', pic, imgIndex: images.length })
+    images.push(pic)
+  }
+  if (entry.hero === 'video' && entry.heroVideo) pages.push({ kind: 'video', video: entry.heroVideo })
+  else if (entry.hero === 'live' && entry.live && entry.cover)
+    pages.push({ kind: 'live', cover: entry.cover, live: entry.live })
+  else if (entry.hero === 'photo' && entry.cover) pushImage(entry.cover)
+  else if (entry.hero === 'audio' && entry.audio && entry.pullQuote)
+    pages.push({ kind: 'audio', audio: entry.audio, quote: entry.pullQuote })
+  for (const pic of entry.strip) pushImage(pic)
+  return { pages, images }
+}
+
+function StageContent({ page, onZoom }: { page: MediaPage; onZoom: (imgIndex: number) => void }) {
+  if (page.kind === 'video') {
     return (
-      <div className="aspect-video overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)]">
-        <SheetVideo slug={entry.heroVideo.slug} name={entry.heroVideo.name} ariaLabel={entry.heroVideo.ariaLabel} />
-      </div>
+      <SheetVideo slug={page.video.slug} name={page.video.name} ariaLabel={page.video.ariaLabel} />
     )
   }
-  if (entry.hero === 'live' && entry.live && entry.cover) {
-    const wakes = /wakes/i.test(entry.live.label)
+  if (page.kind === 'live') {
+    const wakes = /wakes/i.test(page.live.label)
     // The scrim + launch stay fixed light-on-dark in BOTH modes: they sit on
-    // the photograph, not on the ground, so mode tokens do not apply. The
-    // launch is this hero's one action: no zoom competes with it.
+    // the photograph, not on the ground. The launch is this page's one action;
+    // no zoom competes with it.
     return (
-      <div className="relative aspect-video overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)]">
-        <Img
-          slug={entry.cover.slug}
-          name={entry.cover.name}
-          alt={entry.cover.alt}
-          develop
-          priority
-          className="block h-full w-full object-cover"
-        />
+      <div className="relative h-full w-full">
+        <Img slug={page.cover.slug} name={page.cover.name} alt={page.cover.alt} develop priority className="block h-full w-full object-cover" />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[rgba(11,14,19,0.45)]">
           <a
-            href={entry.live.href}
+            href={page.live.href}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex min-h-11 items-center rounded-[var(--r-pill)] border-[0.5px] border-white/70 bg-[rgba(11,14,19,0.35)] px-5 font-mono text-[11px] tracking-[0.12em] text-white no-underline backdrop-blur-sm hover:bg-[rgba(11,14,19,0.55)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
           >
             TRY IT LIVE &gt;<span className="sr-only"> (opens in new tab)</span>
           </a>
-          {wakes && (
-            <span className="font-mono text-[9px] tracking-[0.1em] text-white/85">WAKES IN ~30S</span>
-          )}
+          {wakes && <span className="font-mono text-[9px] tracking-[0.1em] text-white/85">WAKES IN ~30S</span>}
         </div>
       </div>
     )
   }
-  if (entry.hero === 'photo' && entry.cover) {
-    // The photo hero is itself media: it opens full size like every frame
-    // (G1.1: "all media clickable to see as a bigger size").
+  if (page.kind === 'audio') {
     return (
-      <button
-        type="button"
-        onClick={onZoom}
-        aria-label={`View larger: ${entry.cover.alt}`}
-        className="block aspect-video w-full cursor-zoom-in overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] p-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
-      >
-        <Img
-          slug={entry.cover.slug}
-          name={entry.cover.name}
-          alt={entry.cover.alt}
-          develop
-          priority
-          className="block h-full w-full object-cover"
-        />
-      </button>
-    )
-  }
-  if (entry.hero === 'audio' && entry.audio && entry.pullQuote) {
-    return (
-      <div className="lang-glass-1 rounded-[var(--r-image)] px-5 py-6 sm:px-7 sm:py-8">
-        <blockquote className="max-w-[46ch] font-serif text-[19px] leading-snug text-[var(--lang-ink)]">
-          “{entry.pullQuote.text}”
+      <div className="flex h-full w-full flex-col justify-center bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)] px-5 py-6 sm:px-7">
+        <blockquote className="max-w-[40ch] font-serif text-[17px] leading-snug text-[var(--lang-ink)]">
+          “{page.quote.text}”
         </blockquote>
-        <p className="mt-3 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]">
-          {entry.pullQuote.source}
-        </p>
+        <p className="mt-3 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]">{page.quote.source}</p>
         <a
-          href={entry.audio.href}
+          href={page.audio.href}
           target="_blank"
           rel="noopener noreferrer"
           className={`mt-2 font-mono text-[10px] tracking-[0.12em] ${ROW_LINK}`}
@@ -112,17 +129,25 @@ function HeroMedia({ entry, onZoom }: { entry: WorkEntry; onZoom?: () => void })
       </div>
     )
   }
-  return null
+  // image: tap zooms (arrows flip — Emilie's pick)
+  return (
+    <button
+      type="button"
+      onClick={() => onZoom(page.imgIndex)}
+      aria-label={`View larger: ${page.pic.alt}`}
+      className="block h-full w-full cursor-zoom-in p-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+    >
+      <Img slug={page.pic.slug} name={page.pic.name} alt={page.pic.alt} develop priority className="block h-full w-full object-cover" />
+    </button>
+  )
 }
 
-// One spine beat: the quiet mono label over serif prose (the label grammar
-// the sheets used, softened to the glass ink tokens).
+// One spine beat: the quiet mono label over serif prose. In the two-column
+// spine it must not split across the column break (break-inside-avoid).
 function SpineBeat({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <section className="mt-4 first:mt-0">
-      <h3 className="font-mono text-[9px] font-normal tracking-[0.12em] text-[var(--lang-ink-muted)]">
-        {label}
-      </h3>
+    <section className="mb-3 break-inside-avoid">
+      <h3 className="font-mono text-[9px] font-normal tracking-[0.12em] text-[var(--lang-ink-muted)]">{label}</h3>
       {children}
     </section>
   )
@@ -131,36 +156,40 @@ function SpineBeat({ label, children }: { label: string; children: ReactNode }) 
 export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null)
   const titleId = `work-title-${entry.id}`
-  const storyId = `work-story-${entry.id}`
-  // THE STORY starts folded (G1.1 ruling): the closed sheet is pure proof.
-  const [storyOpen, setStoryOpen] = useState(false)
   const [lightbox, setLightbox] = useState<number | null>(null)
+  // The cancel listener is bound once (layout effect below) and must read the
+  // CURRENT lightbox state, not its mount-time closure: a ref carries it.
+  const lightboxRef = useRef(lightbox)
+  lightboxRef.current = lightbox
+  const [page, setPage] = useState(0)
 
-  // The lightbox set: the photo hero leads it (it is media too); heroes that
-  // are their own surface (video controls, the live launch, the pull-quote)
-  // contribute nothing, so the set is just the strip.
-  const zoomable: WorkPicture[] =
-    entry.hero === 'photo' && entry.cover ? [entry.cover, ...entry.strip] : entry.strip
-  const stripOffset = zoomable.length - entry.strip.length
+  const { pages, images } = buildPages(entry)
+  const many = pages.length > 1
+  const current = pages[Math.min(page, pages.length - 1)]
+  const prevPage = () => setPage((p) => (p - 1 + pages.length) % pages.length)
+  const nextPage = () => setPage((p) => (p + 1) % pages.length)
 
   // Open as a true modal on mount (top layer, focus trap, background inert).
   // A LAYOUT effect since DL-1: react-router runs the route update inside
   // document.startViewTransition's flushSync, so the dialog must be [open]
-  // synchronously for the new-state capture to see the morph target; a
-  // passive effect would land after the capture and break the pair.
-  // Escape is handled via the 'cancel' event, NOT 'close': the native 'close'
-  // event is dispatched asynchronously, so under StrictMode the close() from
-  // the first cleanup lands after the remount has reattached a listener and
-  // fires a phantom close. 'cancel' only fires on real user dismissal (Escape),
-  // never on a programmatic close(), so it survives the double-invoke. When
-  // the Lightbox is stacked on top, Escape cancels THAT dialog instead (the
-  // top layer routes it), so the sheet stays open underneath. The X and the
-  // backdrop route through onClose directly (below).
+  // synchronously for the new-state capture to see the morph target. Escape is
+  // handled via 'cancel' (fires only on real user dismissal, so it survives
+  // StrictMode's double-invoke and, when the Lightbox is stacked, cancels THAT
+  // top dialog first, leaving the sheet open).
   useLayoutEffect(() => {
     const dlg = ref.current
     if (!dlg) return
     if (!dlg.open) dlg.showModal()
-    const onCancel = () => onClose()
+    // The keydown-less fallback (Android back gesture): close the plate,
+    // UNLESS the Lightbox is stacked on top — that close request is the
+    // Lightbox's to consume, and the plate must stay open underneath.
+    const onCancel = (e: Event) => {
+      if (lightboxRef.current !== null) {
+        e.preventDefault()
+        return
+      }
+      onClose()
+    }
     dlg.addEventListener('cancel', onCancel)
     return () => {
       dlg.removeEventListener('cancel', onCancel)
@@ -170,174 +199,188 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry.id])
 
-  // Closing navigates (onClose); React unmounts the overlay and its cleanup
-  // takes the dialog out of the top layer and returns focus to the card.
   const close = () => onClose()
+
+  const spineBeats = (
+    <>
+      <SpineBeat label="WHAT">
+        <p className={`mt-1.5 ${PROSE}`}>{entry.what}</p>
+      </SpineBeat>
+      <SpineBeat label="WHY">
+        <p className={`mt-1.5 ${PROSE}`}>{entry.why}</p>
+      </SpineBeat>
+      {entry.how && entry.how.length > 0 && (
+        <SpineBeat label="HOW">
+          <ol className={`mt-1.5 ${PROSE} list-decimal space-y-1 pl-5`}>
+            {entry.how.map((step, i) => (
+              <li key={i}>{step}</li>
+            ))}
+          </ol>
+        </SpineBeat>
+      )}
+      {entry.outcome && (
+        <SpineBeat label="WHAT CAME OF IT">
+          <p className={`mt-1.5 ${PROSE}`}>{entry.outcome}</p>
+        </SpineBeat>
+      )}
+    </>
+  )
+
+  const hasLinks = isPillarRelated(entry.tags) || entry.links.length > 0
 
   return (
     <dialog
       ref={ref}
       aria-labelledby={titleId}
       className="work-dialog lang-glass-2"
-      // The shared-element destination: the opened card's face morphs into
-      // this sheet and back on close (page-work-<id>, lib/viewTransition.ts).
       style={{ viewTransitionName: vtName(`/work/${entry.id}`) }}
-      // A click on the backdrop (the dialog element itself, outside the inner
-      // panel) closes; clicks inside the panel do not bubble to here.
       onClick={(e) => {
         if (e.target === ref.current) close()
       }}
+      // Escape, handled here because this Chromium never delivers the native
+      // 'cancel' close request (reproduced live; header comment). A stacked
+      // Lightbox handles its own Escape FIRST and stops propagation, so this
+      // only ever fires when the plate is the top layer.
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault()
+          e.stopPropagation()
+          close()
+        }
+      }}
     >
-      {/* The identity bar (G1.1): title + lens + award moved up here; the
-          quiet number + status left the sheet (they live on in the registry
-          and the CV career graph). Award = recognition, ink, no box, never
-          red (rule 1); the bar carries the short wording, the pill grammar
-          of the card face. */}
-      <div className="flex items-center justify-between gap-3 border-b border-[var(--lang-hairline)] px-5 py-2.5">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1">
-          <h2 id={titleId} className="text-[17px] leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)]">
-            {entry.title}
-          </h2>
-          <LensPill lens={entry.lens} />
-          {entry.awardFace &&
-            // FLAG-03: recognition, ink, no box (rule 1). It renders as plain
-            // text until the award has a public URL (registry.awardHrefFor);
-            // the moment Emilie adds the announcement link it lights up here.
-            (entry.awardHref ? (
-              <a
-                href={entry.awardHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-[9px] font-medium tracking-[0.1em] text-[var(--lang-ink)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
-              >
-                <span aria-hidden="true">✦ </span>
-                {entry.awardFace}
-                <span className="sr-only"> (opens in new tab)</span>
-              </a>
-            ) : (
-              <span className="font-mono text-[9px] font-medium tracking-[0.1em] text-[var(--lang-ink)]">
-                <span aria-hidden="true">✦ </span>
-                {entry.awardFace}
-              </span>
-            ))}
-        </div>
-        <button
-          type="button"
-          onClick={close}
-          aria-label="Close project"
-          className="-my-1 -mr-2 flex size-11 shrink-0 items-center justify-center rounded-[var(--r-pill)] font-mono text-[13px] leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
-        >
-          ✕
-        </button>
-      </div>
+      {/* The plate has no top bar (the title lives beside the asset, like the
+          printed page); the close control floats the sheet's corner. */}
+      <button
+        type="button"
+        onClick={close}
+        aria-label="Close project"
+        className="absolute top-2.5 right-2.5 z-10 flex size-11 items-center justify-center rounded-[var(--r-pill)] font-mono text-[13px] leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+      >
+        ✕
+      </button>
 
       <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-7 sm:py-5">
-        <HeroMedia entry={entry} onZoom={() => setLightbox(0)} />
+        {/* THE TOP ROW: asset side + title/info side (the printed plate's
+            head-beside-figure). Phones stack info first (T1: title › claim ›
+            proof); desktop puts the asset left (sm:order-first). */}
+        <div className={current ? 'grid grid-cols-1 gap-x-7 gap-y-4 sm:grid-cols-[1.05fr_1fr]' : ''}>
+          <div className="pr-9 sm:pr-8">
+            <h2 id={titleId} className="text-[21px] leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)]">
+              {entry.title}
+            </h2>
+            <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              <LensPill lens={entry.lens} />
+              {entry.awardFace &&
+                (entry.awardHref ? (
+                  <a
+                    href={entry.awardHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-mono text-[9px] font-medium tracking-[0.1em] text-[var(--lang-ink)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+                  >
+                    <span aria-hidden="true">✦ </span>
+                    {entry.awardFace}
+                    <span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                ) : (
+                  <span className="font-mono text-[9px] font-medium tracking-[0.1em] text-[var(--lang-ink)]">
+                    <span aria-hidden="true">✦ </span>
+                    {entry.awardFace}
+                  </span>
+                ))}
+            </div>
 
-        {/* The filmstrip: every supporting frame, sideways, each one a
-            44px+ button into the Lightbox. */}
-        {entry.strip.length > 0 && (
-          <div className="no-scrollbar -mx-1 mt-2 flex gap-2 overflow-x-auto px-1 py-1" role="group" aria-label="Project pictures">
-            {entry.strip.map((pic, i) => (
-              <button
-                key={pic.name}
-                type="button"
-                onClick={() => setLightbox(stripOffset + i)}
-                aria-label={`View larger: ${pic.alt}`}
-                className="block h-20 w-[106px] shrink-0 cursor-zoom-in overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] p-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
-              >
-                <Img slug={pic.slug} name={pic.name} alt={pic.alt} develop className="block h-full w-full object-cover" />
-              </button>
-            ))}
+            {/* THE CLAIM: the question slot (D4, when its discovery session
+                fills it) over the signed dek — the site asks, then answers. */}
+            {entry.question && (
+              <p className="mt-3.5 max-w-[48ch] font-serif text-[16px] leading-snug italic text-[var(--lang-ink)]">
+                {entry.question}
+              </p>
+            )}
+            <p className={`${entry.question ? 'mt-1.5' : 'mt-3.5'} max-w-[48ch] font-serif text-[14.5px] leading-snug text-[var(--lang-ink)]`}>
+              {entry.dek}
+            </p>
+
+            {/* The plate's meta credit row + the mono tech (+ stat) line. */}
+            <p className="mt-3.5 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
+              {entry.meta}
+            </p>
+            <p className="mt-1.5 font-mono text-[9px] tracking-[0.06em] text-[var(--lang-ink-muted)]">
+              {entry.tech}
+              {entry.stat && <span> · {entry.stat}</span>}
+            </p>
+
+            {/* THE LINKS, with the identity (her round-3 ruling): the pillar
+                door first (internal), then the links OUT. The negative margin
+                keeps the 44px hit boxes from inflating the row rhythm. */}
+            {hasLinks && (
+              <div className="mt-2 flex flex-wrap items-center gap-x-5 font-mono text-[10px] tracking-[0.1em]">
+                {isPillarRelated(entry.tags) && (
+                  <Link to={PILLAR_PATH} viewTransition className={`-my-2 ${ROW_LINK}`}>
+                    BEHAVIOR INFORMATION MODELING ›
+                  </Link>
+                )}
+                {entry.links.map((l) => (
+                  <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className={`-my-2 ${ROW_LINK}`}>
+                    {l.label}
+                    <span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
-        )}
 
-        {/* The claim (the signed dek) stays in the closed state: the sheet
-            is never mute, even with the story folded. */}
-        <p className="mt-3 max-w-[58ch] font-serif text-[16px] leading-snug text-[var(--lang-ink)]">
-          {entry.dek}
-        </p>
-
-        {/* The tools row (mono, the quiet research accent). */}
-        <div className="mt-3 font-mono text-[9px] tracking-[0.06em] text-[var(--lang-ink-muted)]">
-          {entry.tech}
+          {/* THE ASSET SIDE: tall 4:3 (never the thin strip), flip-through. */}
+          {current && (
+            <div className="sm:order-first">
+              <div className="relative aspect-[4/3] max-h-[46vh] w-full overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)]">
+                <StageContent page={current} onZoom={(i) => setLightbox(i)} />
+                {many && (
+                  <>
+                    <button type="button" onClick={prevPage} aria-label="Previous picture" className={`${FLIP_BTN} left-2`}>
+                      &lsaquo;
+                    </button>
+                    <button type="button" onClick={nextPage} aria-label="Next picture" className={`${FLIP_BTN} right-2`}>
+                      &rsaquo;
+                    </button>
+                    <span className="absolute right-3 bottom-2 rounded-[var(--r-pill)] bg-[rgba(11,14,19,0.55)] px-2.5 py-1 font-mono text-[9px] tracking-[0.1em] text-white">
+                      {Math.min(page, pages.length - 1) + 1} / {pages.length}
+                    </span>
+                  </>
+                )}
+              </div>
+              {many && (
+                <div className="mt-2 flex justify-center gap-1.5" aria-hidden="true">
+                  {pages.map((_, i) => (
+                    <span
+                      key={i}
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        i === Math.min(page, pages.length - 1)
+                          ? 'bg-[var(--lang-ink)]'
+                          : 'bg-[var(--lang-ink-faint)]'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* THE SPINE DOOR (S3, D6 topical authority): a neuro-tagged project
-            links to the Behavior Information Modeling pillar, and the pillar
-            links back. Internal, so it sits apart from the links OUT below. */}
-        {isPillarRelated(entry.tags) && (
-          <p className="mt-3 font-mono text-[10px] tracking-[0.1em]">
-            <Link to={PILLAR_PATH} viewTransition className={ROW_LINK}>
-              BEHAVIOR INFORMATION MODELING ›
-            </Link>
-          </p>
-        )}
-
-        {/* GO DEEPER: the depth lives in the linked repo / blog / live app,
-            not reproduced here (a portfolio, not a blog). */}
-        {entry.links.length > 0 && (
-          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[var(--lang-hairline)] pt-3 font-mono text-[10px] tracking-[0.1em]">
-            {entry.links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`-my-3 ${ROW_LINK}`}
-              >
-                {l.label}
-                <span className="sr-only"> (opens in new tab)</span>
-              </a>
-            ))}
-          </div>
-        )}
-
-        {/* THE STORY: the signed spine (WHAT · WHY · HOW · WHAT CAME OF IT),
-            folded by default. Instant expand/collapse (no height ceremony:
-            nothing to gate under reduced motion). */}
-        <button
-          type="button"
-          onClick={() => setStoryOpen((o) => !o)}
-          aria-expanded={storyOpen}
-          aria-controls={storyId}
-          className="mt-4 flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-[var(--r-pill)] border-[0.5px] border-[var(--lang-hairline)] bg-transparent font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
-        >
-          THE STORY
-          <span aria-hidden="true" className="text-[9px]">
-            {storyOpen ? '▲' : '▼'}
-          </span>
-        </button>
-        {storyOpen && (
-          <div id={storyId} className="mt-4 pb-1">
-            <SpineBeat label="WHAT">
-              <p className={`mt-1.5 ${PROSE}`}>{entry.what}</p>
-            </SpineBeat>
-            <SpineBeat label="WHY">
-              <p className={`mt-1.5 ${PROSE}`}>{entry.why}</p>
-            </SpineBeat>
-            {entry.how && entry.how.length > 0 && (
-              <SpineBeat label="HOW">
-                <ol className={`mt-1.5 ${PROSE} list-decimal space-y-1 pl-5`}>
-                  {entry.how.map((step, i) => (
-                    <li key={i}>{step}</li>
-                  ))}
-                </ol>
-              </SpineBeat>
-            )}
-            {entry.outcome && (
-              <SpineBeat label="WHAT CAME OF IT">
-                <p className={`mt-1.5 ${PROSE}`}>{entry.outcome}</p>
-              </SpineBeat>
-            )}
-          </div>
-        )}
+        {/* THE SPINE, straight down in two book columns (no collapse; balanced
+            CSS columns pack tighter than a grid, so the plate fits without
+            scrolling). Each beat avoids splitting across the column break.
+            (The links left the foot for the info side, her round-3 ruling.) */}
+        <div className="mt-4 sm:[column-gap:2.25rem] sm:[columns:2]">
+          {spineBeats}
+        </div>
       </div>
 
-      {lightbox !== null && zoomable.length > 0 && (
+      {lightbox !== null && images.length > 0 && (
         <Lightbox
-          pictures={zoomable}
-          index={Math.min(lightbox, zoomable.length - 1)}
+          pictures={images}
+          index={Math.min(lightbox, images.length - 1)}
           onNavigate={setLightbox}
           onClose={() => setLightbox(null)}
         />

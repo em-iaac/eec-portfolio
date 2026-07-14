@@ -104,6 +104,15 @@ the on-screen claim/dek, the per-route `<meta name="description">` seed, and the
 question-style search. It echoes Emilie's own hero question, so the whole site asks and answers.
 Questions are drafted in S4/S5 in her voice and ship flagged until she signs them.
 
+**Amendment (2026-07-13, S4a): the questions get their OWN discovery session.** In S4a Emilie
+deferred the on-screen question. Drafting the candidates made clear the real work is *choosing*
+the question a normal person would actually ask, which needs a collaborative pass: read each
+project's blog, map the SET of questions it answers, quiz her, then pick the human one. So the
+per-project candidates are PARKED as comments in the master files and the signed dek serves on
+screen and as the `<meta name="description">` meanwhile (the head already prefers `question`
+whenever one exists, so nothing regresses). One dedicated QUESTION-DISCOVERY session authors and
+signs the questions for ALL projects at once, best run after S4b so the five new projects are in.
+
 ### D5 · The fluff bar (the minimal-words rule)
 Every sentence must do at least one of: (a) state what / why / how / what-came-of-it, (b)
 credit honestly, or (c) carry a real keyword in natural prose. If a sentence does none of
@@ -241,3 +250,13 @@ mini-exploration assets + podcast script), it serves the top goal (rank for the 
 compounds with time — so run it early while the gated inputs are gathered. S4 before S5 stays
 right: rebuild the container, then pour the final content into it. Each session is one sitting
 and ends by handing Emilie a commit summary to paste; no session runs git writes.
+
+**Amendment (2026-07-13): S4 SPLIT + a questions session inserted.** The work rework proved too
+big to sign off well in one sitting, so S4 split into **S4a · The Work Room** (DONE 2026-07-13:
+the book-plate showcase, the featured tier, the three UI wins) and **S4b · The Five** (the five
+new blog projects). Emilie also deferred the per-project questions (D4 amendment above) to a
+dedicated **question-discovery** session. Live order now: **S1 ✓ → S3 ✓ → S4a ✓ → S4b →
+THE QUESTIONS (all projects) → S5.** The reasoning is unchanged (build the container, then fill
+it; one bounded sign-off per sitting). S4b's gates before it runs: the image-ingestion path for
+the five (their public IAAC blog images) and Emilie's exact role on the three with no calibration
+ceiling yet (Data-Geometry, Tsukiji, Pelagñou).

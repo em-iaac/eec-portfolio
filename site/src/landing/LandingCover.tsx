@@ -31,11 +31,12 @@ const MindGraph = lazy(() => import('./MindGraphView'))
 // at G5 so the printed book's cover quotes the same source.
 import { ADJECTIVES, VOICE, WINK } from './identity'
 
-// Top-page doors. WORK is the emphasized proof path (the one clear route into
-// the work for a first-time visitor): it opens the R2 gallery at /work.
-// THOUGHTS opens the neural world (the whole record since the meta build).
-const DOORS: { label: string; to: string; primary?: boolean }[] = [
-  { label: 'WORK', to: '/work', primary: true },
+// Top-page doors. S4a (Emilie, 2026-07-13): WORK's emphasised red underline
+// retired here too, matching the header ruling — every door reads the same,
+// and /work's featured tier now carries the proof-path job. THOUGHTS opens
+// the neural world (the whole record since the meta build).
+const DOORS: { label: string; to: string }[] = [
+  { label: 'WORK', to: '/work' },
   { label: 'THOUGHTS', to: '/thoughts' },
   { label: 'CV', to: '/cv' },
   { label: 'ABOUT', to: '/about' },
@@ -271,11 +272,7 @@ export default function LandingCover() {
                 key={d.label}
                 to={d.to}
                 viewTransition
-                className={
-                  d.primary
-                    ? '-m-1.5 p-1.5 font-semibold text-[var(--lang-ink)] underline decoration-[var(--lang-interaction)] decoration-2 underline-offset-[6px] hover:decoration-[3px] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
-                    : '-m-1.5 p-1.5 text-[var(--lang-ink)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
-                }
+                className="-m-1.5 p-1.5 text-[var(--lang-ink)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
               >
                 {d.label}
               </Link>

@@ -14,6 +14,9 @@ const ballooningMarket: ProjectMaster = {
   meta: 'MACAD · SOLO',
   dek: 'Physics is the difference between a mess and a roof: the balloons ghosted through each other until Kangaroo gave them awareness.',
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
+  // 2026-07-13). Candidate parked: "What turns a mess of balloons into a
+  // roof?". The signed dek serves meanwhile.
   blurb:
     'I decided to fill a historic Cairo market with balloons, and I almost failed: at first they had no physical awareness of each other, just ghosting through one another in a chaotic, colorful mess. Kangaroo gave them physics; pneumatic parasitism gave Bab al-Luq a new roof without touching its bones.',
   tech: 'GRASSHOPPER · KANGAROO · DENDRO · D5',

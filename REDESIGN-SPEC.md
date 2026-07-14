@@ -723,6 +723,48 @@ footerCompact` pulls it close, new Footer/SheetPage prop); the Session-11
 invitation SHORTENED to "If your team is trying to make buildings answer
 harder questions, let's talk." — INTERIM draftCopy, the page's whole text
 gets its own revisit session (Emilie's ruling).
+**S4a · THE WORK ROOM (2026-07-13, all seven gates Emilie's over the visualize
+widget + the live build; uncommitted, no git run per contract):** the
+work-rework session, split off from S5 as the container-finishing pass.
+- **THE SHOWCASE IS THE BOOK PLATE** (§5 amended). The opened card no longer
+  reads as a scrolling sheet with a folded story: it mirrors the printed
+  spread. No top identity bar (the ✕ floats); the TOP ROW splits in two — a
+  tall 4:3 FLIP-THROUGH asset (‹ › arrows flip, a tap zooms via the Lightbox;
+  counter + dots) on the left, the title / lens / award / claim / woven credit
+  / tech + stat / links-out on the right — and the signed spine runs straight
+  down in TWO columns below. **The "THE STORY" collapse is retired** (the words
+  are never a tap away now). No scroll on desktop (Sensi, the richest, fits
+  0px at 1280×900; only sub-780px-tall + phones take an honest invisible
+  scroll, phones stacking title-first). The card↔plate morph survives; a
+  keydown Escape handler peels one layer per press (lightbox › plate › grid),
+  because this Chromium delivers the Escape keydown but never fires the native
+  `<dialog>` 'cancel'.
+- **/work GAINS THE FEATURED TIER (§4).** FEATURED (Sensi, NeuroSpace, lEgoarCh,
+  the Lungs, the Huddle, the podcast) leads larger, then MORE WORK; single-
+  sourced by slug in `data/work.ts` (`FEATURED_SLUGS`). Cards went LANDSCAPE
+  (`Card aspect="wide"`; the DL-0 square default now holds only for the dev Lab).
+  The mind graph + the world still show EVERYTHING; the tier is a /work
+  reading-order idea only.
+- **WORK IS A PLAIN DOOR SITEWIDE.** The emphasised-WORK proof-path underline
+  (§3.2 / §7 / council F-fix in §12) is RETIRED from the header AND the landing
+  (Emilie's direct instruction): every door reads the same, and the ACTIVE
+  page wears a soft filled "you are here" pill in the header instead of an
+  underline. (The proof-path job is carried by the landing composition + the
+  tappable nodes + the jump bar, as it already was.)
+- **THE THOUGHTS SWITCH IS A TWO-STATE CONTROL.** The one-way "prefer the
+  words ›" corridor becomes a GRAPH | WORDS segmented control (Links +
+  `aria-current`, 44px) up by the title in BOTH the world and the reading room
+  (`site/src/thoughts/ViewToggle.tsx`).
+- **THE RECORD GAINS "emiliechidiac.com goes live" (2026-07).** A milestone on
+  the self lane; the world census moved 35 → 36 and `world-layout.snap.json`
+  refreshed.
+- **D4 DEFERRED — the questions get their own discovery session.** Authoring
+  the eleven candidates showed the real task is choosing the question a normal
+  person would actually ask, which needs a collaborative pass. The candidates
+  are PARKED as comments in the master files; the signed dek serves on screen
+  and as the meta description meanwhile (`headData` already prefers `question`
+  when one exists, so nothing regresses). A dedicated question-discovery
+  session authors + signs them for all projects at once, best after S4b.
 
 ---
 

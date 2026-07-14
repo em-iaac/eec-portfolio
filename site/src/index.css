@@ -565,10 +565,14 @@ section[id] {
    shows the final state with no motion (the honest-fallback floor). Native
    dialog is display:none until open, so the flex column only applies [open].
    ============================================================ */
+/* S4a (Emilie 2026-07-13): the showcase is now a LANDSCAPE book spread that
+   fits without scrolling — image on top, the story in two columns below, all
+   at a glance. Wider + a viewport-bounded height; the body fits on standard
+   desktop, and degrades to an invisible-bar scroll only on short screens. */
 .work-dialog {
   width: 100%;
-  max-width: 44rem;
-  max-height: min(88vh, 60rem);
+  max-width: min(66rem, 94vw);
+  max-height: min(92vh, 54rem);
   margin: auto;
   padding: 0;
   border-radius: var(--r-sheet);

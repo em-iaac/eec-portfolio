@@ -14,6 +14,9 @@ const cappelletti: ProjectMaster = {
   myPart: 'A duo with Ahmad Baltaji, shared end to end.',
   dek: 'A pasta shape is quietly structural: evolutionary optimization scaled a cappelletti shell to a 160 kg pavilion.',
   dekSigned: true,
+  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
+  // 2026-07-13). Candidate parked: "Is a piece of pasta secretly a
+  // structure?". The signed dek serves meanwhile.
   blurb:
     'Look closely at a piece of pasta: the curves and hollows are structural engineering in miniature. We scaled up dinner: evolutionary optimization and finite element analysis in Grasshopper brought a cappelletti shell to human scale at roughly 160 kg of material.',
   tech: 'GRASSHOPPER · GALAPAGOS · CRYSTALLON · ALPACA4D',
