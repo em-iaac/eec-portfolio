@@ -17,10 +17,17 @@ const legoarch: ProjectMaster = {
   myPart: 'Built with Charles Abi Chahine, end to end as a pair.',
   dek: 'A render is only a promise until the bricks fit: AI imagines the set, code makes it actually buildable.',
   dekSigned: true,
-  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
-  // 2026-07-13). Candidate parked: "Can AI dream up a LEGO set that provably
-  // snaps together?" (ceiling: digitally verified buildable, never physical
-  // assembly; no 93%). The signed dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie's direction 2026-07-14): her "how can AI
+  // turn text into lego sets" shape. HONESTY: input is a TEXT prompt (her
+  // "or images" trimmed: images are the pipeline's intermediate, not its
+  // input); ceiling stays digitally verified buildable. DRAFT until signed.
+  question: 'How can AI turn a text prompt into a LEGO set that actually snaps together?',
+  alsoAnswers: [
+    { q: 'What does it take to turn a render into a parts list and a booklet?', beat: 'what' },
+    { q: 'How do you verify an AI-generated LEGO design is actually buildable?', beat: 'how' },
+    { q: 'What happens when a set comes back structurally sound but visually wrong?', beat: 'outcome' },
+    { q: 'Can generative AI and deterministic code share one brick pipeline?', beat: 'why' },
+  ],
   stat: 'LORA · 40 IMAGES · 3 BENCHMARKS',
   blurb:
     'A render is a promise, not a product: you cannot snap a JPEG together on your living-room floor. lEgoarCh takes a text prompt and returns a LEGO set that actually builds: AI imagines it, deterministic code makes it buildable, brick by brick.',
@@ -29,7 +36,11 @@ const legoarch: ProjectMaster = {
     { label: 'GITHUB', href: 'https://github.com/hi-em/genai-legoarch' },
     { label: 'BLOG', href: 'https://blog.iaac.net/legoarch-behind-the-sets/' },
   ],
-  image: { slug: 'legoarch', name: 'sagrada-render', alt: 'lEgoarCh generated LEGO set of the Sagrada Familia' },
+  // THE COVER = THE SOLVE, ALIVE (Emilie's ask, 2026-07-15): Saint Basil's
+  // solving into its brick layout, still at rest, playing on hover; cut from
+  // her sfx demo recording inside the app frame. The golden Sagrada render
+  // moved into the flip-through (and stays the book plate below).
+  image: { slug: 'legoarch', name: 'demo-cover', alt: "Saint Basil's Cathedral solving into a brick layout in lEgoarCh, the stage with no AI in it on purpose" },
   // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
   spreadAssets: [{ slug: 'legoarch', name: 'sagrada-render' }],
 

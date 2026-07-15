@@ -112,7 +112,8 @@ export default function Work() {
   // One card in a list item; `priorityCount` eager-loads the first images of a
   // tier (they are above the fold). morphSource yields the entry's
   // view-transition-name to the open overlay (one element per name per state).
-  const cards = (list: typeof entries, priorityCount: number) =>
+  // `dense` renders the compact index face (G-GRID, Emilie 2026-07-14).
+  const cards = (list: typeof entries, priorityCount: number, dense = false) =>
     list.map((entry, i) => (
       <li key={entry.id} className="flex">
         <WorkCard
@@ -120,6 +121,7 @@ export default function Work() {
           onOpen={() => open(entry.id)}
           priority={i < priorityCount}
           morphSource={selected?.id !== entry.id}
+          dense={dense}
         />
       </li>
     ))
@@ -144,14 +146,14 @@ export default function Work() {
         {/* The intro line retired at G2 (Emilie: no page intros, sitewide;
             titles are self-explanatory). */}
         <FilterBar active={activeLens} />
-        <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-          <p
-            className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)]"
-            aria-live="polite"
-          >
-            {entries.length} {entries.length === 1 ? 'PROJECT' : 'PROJECTS'}
-            {activeLens ? ` · ${LENSES[activeLens].label.toUpperCase()}` : ' · ALL'}
-          </p>
+        {/* The count line retired (G-FLUFF, Emilie 2026-07-14: the grid
+            already says it). An invisible announcer keeps the filter change
+            audible for screen readers; the book link keeps the row. */}
+        <p className="sr-only" aria-live="polite">
+          {entries.length} {entries.length === 1 ? 'project' : 'projects'}
+          {activeLens ? ` · ${LENSES[activeLens].label}` : ''}
+        </p>
+        <div className="mt-4 flex flex-wrap items-baseline justify-end gap-x-6 gap-y-2">
           {/* THE BOOK (G5): the proof room hands out its printed rendition
               (Emilie's placement pick, 2026-07-12). The PDF regenerates on
               every build from the same master content files as this grid. */}
@@ -167,30 +169,32 @@ export default function Work() {
 
       {showTiers ? (
         <>
-          {/* FEATURED: the strongest work leads at full size (two per row on
-              desktop, so each card is large). */}
+          {/* FEATURED (G-GRID "full index", Emilie 2026-07-14): the strongest
+              six still lead the page, three per row on desktop. */}
           <section aria-labelledby="featured-heading" className="pb-2">
             <h2 id="featured-heading" className={SECTION_LABEL}>
               Featured
             </h2>
-            <ul className="mt-3 grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2">
-              {cards(featured, 2)}
+            <ul className="mt-3 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
+              {cards(featured, 3)}
             </ul>
           </section>
-          {/* MORE WORK: the rest, smaller (three per row on desktop). */}
+          {/* MORE WORK: the index tail — four per row on desktop, compact
+              faces (title + lens), tight gaps, like the printed book's index
+              page (her pick over "tighter tail"). */}
           {supporting.length > 0 && (
             <section aria-labelledby="more-heading" className="pt-6 pb-4">
               <h2 id="more-heading" className={SECTION_LABEL}>
                 More work
               </h2>
-              <ul className="mt-3 grid list-none grid-cols-2 gap-4 p-0 lg:grid-cols-3">
-                {cards(supporting, 0)}
+              <ul className="mt-3 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-4">
+                {cards(supporting, 0, true)}
               </ul>
             </section>
           )}
         </>
       ) : (
-        <ul className="grid list-none grid-cols-1 gap-5 p-0 pb-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid list-none grid-cols-1 gap-4 p-0 pb-4 sm:grid-cols-2 lg:grid-cols-3">
           {cards(entries, 3)}
         </ul>
       )}

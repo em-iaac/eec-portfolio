@@ -16,11 +16,24 @@ const OUT = join(here, '..', 'public', 'assets', 'projects')
 const DATA = join(here, '..', 'src', 'data')
 
 const only = process.argv.slice(2)
-const results = only.length ? JSON.parse(readFileSync(join(DATA, 'images.json'), 'utf8')) : {}
+const existing = JSON.parse(readFileSync(join(DATA, 'images.json'), 'utf8'))
+const results = only.length ? existing : {}
 let totalBytes = 0
+
+// Slugs whose ORIGINAL sources left the repo (the old-site /images folder was
+// removed in the 2026-07-12 hygiene cleanup): their baked webps + manifest
+// entries carry forward untouched on every run. Re-cutting them means
+// restaging sources into incoming/ and removing the slug from this set.
+const FROZEN = new Set(['professional'])
 
 for (const [slug, items] of Object.entries(MANIFEST)) {
   if (only.length && !only.includes(slug)) continue
+  if (FROZEN.has(slug)) {
+    if (!existing[slug]) throw new Error(`frozen slug ${slug} has no entries in images.json to carry forward`)
+    results[slug] = existing[slug]
+    console.log(slug, '(frozen: sources archived, entries carried forward)')
+    continue
+  }
   const outDir = join(OUT, slug)
   mkdirSync(outDir, { recursive: true })
   results[slug] = []
@@ -36,13 +49,31 @@ for (const [slug, items] of Object.entries(MANIFEST)) {
     const widths = SIZES[item.role].filter(w => w <= meta.width)
     if (widths.length === 0) widths.push(meta.width)
 
+    // frame16x9 (Emilie's fit ruling, 2026-07-15): a cover that is not
+    // 16:9-native composites onto an exact 16:9 canvas filled with its OWN
+    // background color (item.bg), so the 16:9 grid card shows the whole
+    // asset with no crop and no visible letterbox. Applies to every rung
+    // including the static first-frame ladders.
+    const frameBg = item.frame16x9
+      ? {
+          r: parseInt(item.bg.slice(1, 3), 16),
+          g: parseInt(item.bg.slice(3, 5), 16),
+          b: parseInt(item.bg.slice(5, 7), 16),
+          alpha: 1,
+        }
+      : undefined
+    const resizeArgs = (w) =>
+      item.frame16x9
+        ? [w, Math.round((w * 9) / 16), { fit: 'contain', background: frameBg }]
+        : [w, null, { withoutEnlargement: true }]
+
     const variants = []
     for (const w of widths) {
       const name = `${item.name}-${w}.webp`
       const out = join(outDir, name)
       const r = await sharp(src, { animated: isGif, limitInputPixels: false })
-        .resize(w, null, { withoutEnlargement: true })
-        .webp({ quality: isGif ? 74 : 80, effort: 4 })
+        .resize(...resizeArgs(w))
+        .webp({ quality: isGif ? 74 : 82, effort: 4 })
         .toFile(out)
       totalBytes += r.size
       variants.push({ w, file: `assets/projects/${slug}/${name}`, kb: Math.round(r.size / 1024) })
@@ -57,12 +88,18 @@ for (const [slug, items] of Object.entries(MANIFEST)) {
         const name = `${item.name}-static-${w}.webp`
         const out = join(outDir, name)
         const r = await sharp(src, { limitInputPixels: false }) // omitting the animated option reads frame one only
-          .resize(w, null, { withoutEnlargement: true })
+          .resize(...resizeArgs(w))
           .webp({ quality: 80, effort: 4 })
           .toFile(out)
         totalBytes += r.size
         statics.push({ w, file: `assets/projects/${slug}/${name}`, kb: Math.round(r.size / 1024) })
       }
+    }
+
+    // Every animated entry MUST carry a static first-frame ladder: it is the
+    // reduced-motion rendering AND the grid's still-at-rest cover (Img.tsx).
+    if (isGif && (!statics || statics.length === 0)) {
+      throw new Error(`${slug}/${item.name}: animated entry has no static ladder`)
     }
 
     results[slug].push({
@@ -71,7 +108,9 @@ for (const [slug, items] of Object.entries(MANIFEST)) {
       // S4b: authored alt (80-140 chars) rides the manifest into images.json;
       // data/work.ts prefers it over the derived strip alt.
       ...(item.alt ? { alt: item.alt } : {}),
-      aspect: +(meta.width / (isGif ? meta.pageHeight ?? meta.height : meta.height)).toFixed(4),
+      aspect: item.frame16x9
+        ? 1.7778
+        : +(meta.width / (isGif ? meta.pageHeight ?? meta.height : meta.height)).toFixed(4),
       animated: isGif || undefined,
       variants,
       ...(statics ? { static: statics } : {}),

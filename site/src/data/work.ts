@@ -49,6 +49,9 @@ export interface WorkEntry {
   tags: string[]
   dek: string // the one authored "what it proves" line; the showcase's claim
   question?: string // D4 (S4/S5): the one question the project answers; headData prefers it as the meta description
+  // The question dot (Emilie, 2026-07-14): the other questions the project
+  // answers; `beat` names the spine section a press highlights.
+  alsoAnswers?: { q: string; beat?: 'what' | 'why' | 'how' | 'outcome' }[]
   meta: string // the plate's credit/context row (e.g. 'MACAD STUDIO · TEAM OF 4')
   tech: string // the mono tech row
   stat?: string // Session 7: the one defensible number, data-plate style
@@ -58,6 +61,7 @@ export interface WorkEntry {
   // hero + supporting slots, resolved by the hero rule above
   hero: HeroKind
   cover?: WorkPicture // the 4:3 grid tile (undefined -> typographic tile)
+  coverMontage?: boolean // cover is a reel of the strip; not a plate page
   heroVideo?: { slug: string; name: string; ariaLabel: string }
   live?: { href: string; label: string } // TRY IT LIVE launch (live hero)
   audio?: { href: string; label: string } // Spotify (audio hero)
@@ -171,6 +175,7 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     tags: entry.tags,
     dek: p.dek,
     question: p.question,
+    alsoAnswers: p.alsoAnswers,
     // The plate rows (S4a): the showcase now mirrors the printed spread, so
     // it reads the same meta credit line + stat the book plate prints.
     meta: p.meta,
@@ -185,6 +190,7 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     awardHref: awardHrefFor(entry.id),
     hero,
     cover,
+    coverMontage: p.coverMontage,
     heroVideo,
     live,
     audio,

@@ -15,10 +15,16 @@ const lungs: ProjectMaster = {
   myPart: 'Data team of three: we built the app that ran the studio.',
   dek: "The studio's data was the architecture: a live app running a hyperbuilding designed to filter a city's air.",
   dekSigned: true,
-  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
-  // 2026-07-13). Candidate parked: "What if the data running a studio was the
-  // architecture?" (leads with the ownable claim, the data team's app, not the
-  // building's filtration). The signed dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie's direction 2026-07-14): the dashboard /
+  // data-management vocabulary she asked for, still the data team's ownable
+  // claim, never the building's filtration. DRAFT until signed.
+  question: 'Can a dashboard run an architecture studio?',
+  alsoAnswers: [
+    { q: 'What if the data running a studio was the architecture?', beat: 'why' },
+    { q: 'Can a web app run a ten-week studio without the spreadsheets?', beat: 'what' },
+    { q: 'How do you put performance data on the geometry instead of beside it?', beat: 'how' },
+    { q: 'What does it take to keep three design teams honest for ten weeks?', beat: 'outcome' },
+  ],
   stat: 'TRACKED · 3 TEAMS × 10 WEEKS',
   blurb: (
     <>
@@ -28,14 +34,19 @@ const lungs: ProjectMaster = {
     </>
   ),
   tech: 'VUE 3 · VITE · TAILWIND · SPECKLE',
-  // The cold-start label "LIVE APP · WAKES IN ~30S" is APPROVED (Session 11,
-  // batch #1); free-tier Railway sleeps and the label says so. The myPart
-  // credit line signed at G4 (2026-07-12); the blurb above stays locked.
+  // The cold-start wording retired on Emilie's instruction (2026-07-15): the
+  // link is plain LIVE APP and wears the liveness dot in the links row (the
+  // film now carries the tour; the app itself is IAAC-gated anyway). The
+  // myPart credit line signed at G4 (2026-07-12); the blurb stays locked.
   links: [
-    { label: 'LIVE APP · WAKES IN ~30S', href: 'https://bimscstudiohb1-production.up.railway.app/' },
+    { label: 'LIVE APP', href: 'https://bimscstudiohb1-production.up.railway.app/' },
     { label: 'BLOG', href: 'https://blog.iaac.net/building-the-nervous-system-how-we-turned-a-hyper-building-studio-into-a-web-app/' },
   ],
-  image: { slug: 'lungs', name: 'tower', alt: 'The Lungs hyperbuilding tower over Santiago' },
+  // THE COVER = THE KPI MAP, ALIVE (Emilie's pick, 2026-07-15): the platform's
+  // dependency network at rest, breathing on hover; cut from her StudioDemo
+  // edit below the app header (the teammate login chip never ships). The
+  // collage moved out of the web gallery; it stays the book plate below.
+  image: { slug: 'lungs', name: 'demo-cover', alt: 'The KPI dependency map of the live studio platform, data, program and structure indicators wired into one network' },
   // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
   spreadAssets: [{ slug: 'lungs', name: 'tower' }],
 

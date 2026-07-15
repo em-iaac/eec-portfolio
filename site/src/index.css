@@ -345,6 +345,24 @@ section[id] {
   }
 }
 
+/* THE QUESTION DOT's press-to-highlight (2026-07-14): the spine section that
+   answers a pressed question wears a brief redline tint (interaction accent,
+   governance rule 1: red = interaction only). The box-shadow spread paints a
+   halo without moving a single pixel of layout. The tint is a state, not a
+   motion, so it appears under reduced motion too; only the fade is gated. */
+[data-beat].beat-flash {
+  background: color-mix(in srgb, var(--lang-interaction) 8%, transparent);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--lang-interaction) 8%, transparent);
+  border-radius: 2px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-beat] {
+    transition:
+      background-color 400ms var(--ease-soft),
+      box-shadow 400ms var(--ease-soft);
+  }
+}
+
 /* ============================================================
    THE NEURAL WORLD (/thoughts, the meta build 2026-07-11): the whole record
    drawn as one anatomical neural map over the career skeleton, horizontal,

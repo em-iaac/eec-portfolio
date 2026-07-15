@@ -14,9 +14,16 @@ const dataGeometry: ProjectMaster = {
   myPart: 'Data team of three, shared end to end.',
   dek: 'The data team does not produce geometry, so we turned the numbers into it: KPIs you can stand inside the Revit model and see.',
   dekSigned: true, // Emilie, S4b copy gate, 2026-07-14
-  // THE QUESTION (D4): DEFERRED to the question-discovery session. Candidate
-  // parked: "How does a spreadsheet become something you can stand inside?"
-  // The dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie 2026-07-14: "good" to the Revit tune).
+  // alsoAnswers feed the question dot; data-team framing binds. DRAFT until
+  // signed.
+  question: 'How do you turn a spreadsheet into Revit geometry you can stand inside?',
+  alsoAnswers: [
+    { q: 'Can a KPI be a building component instead of a row you have to believe?', beat: 'what' },
+    { q: 'What happens when the data team has to show up in the model?', beat: 'why' },
+    { q: 'How do Rhino.Inside Revit workflows turn performance data into parametric families?', beat: 'how' },
+    { q: 'How does analysis data stay visible all the way to RVT, IFC, and PDF?', beat: 'outcome' },
+  ],
   blurb:
     'On Hyperbuilding 01, the data team’s numbers lived in spreadsheets while everyone else made form. Rhino.Inside Revit workflows turned the performance metrics into parametric Revit families: thermal, acoustic, and air KPIs as visible components of the model, exportable as RVT, IFC, or PDF.',
   tech: 'RHINO.INSIDE REVIT · GRASSHOPPER · SPECKLE',

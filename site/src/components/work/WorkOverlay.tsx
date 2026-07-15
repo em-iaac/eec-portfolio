@@ -37,6 +37,7 @@ import { Link } from 'react-router-dom'
 import Img from '../Img'
 import SheetVideo from '../sheet/SheetVideo'
 import Lightbox from './Lightbox'
+import QuestionsDot from './QuestionsDot'
 import { LensPill } from '../ui/Pill'
 import { vtName } from '../../lib/viewTransition'
 import { PILLAR_PATH, isPillarRelated } from '../../lib/pillar'
@@ -51,6 +52,21 @@ const ROW_LINK = `inline-flex min-h-11 min-w-11 items-center ${ACCENT_LINK}`
 // Compact serif for the two-column spine (tighter than the old single-column
 // prose, so the whole plate fits without scrolling).
 const PROSE = 'font-serif text-[13px] leading-[1.5] text-[var(--lang-ink)]'
+
+// The stage's true rendered size (Emilie's quality pass, 2026-07-14): without
+// this hint the browser assumed the Img default (~640px) and loaded the soft
+// 640 rung on every retina screen. The stage runs ~480 CSS px on desktop and
+// ~92vw in the phone bottom sheet, so retina now pulls the 1024/1600 rungs.
+const STAGE_SIZES = '(max-width: 640px) 92vw, 480px'
+
+// THE BULLETPROOF FIT (Emilie's final ruling, 2026-07-15, round 3): the
+// stage is a 16:9 WHITE MAT and EVERY asset shows complete on it,
+// object-contain, no exceptions (her earlier hybrid still shaved the edges
+// off near-16:9 screenshots). The mat pins white in both modes like the
+// printed book's paper: most assets are white-backed captures that blend
+// seamlessly, and dark frames sit on it like plates in a book. 16:9-native
+// media (and the pipeline-framed covers, image-manifest frame16x9) fills it
+// exactly, so the mat only ever shows where an asset genuinely is not 16:9.
 
 // The ‹ › page-turn buttons (shared style with the Lightbox nav).
 const FLIP_BTN =
@@ -76,7 +92,9 @@ function buildPages(entry: WorkEntry): { pages: MediaPage[]; images: WorkPicture
   if (entry.hero === 'video' && entry.heroVideo) pages.push({ kind: 'video', video: entry.heroVideo })
   else if (entry.hero === 'live' && entry.live && entry.cover)
     pages.push({ kind: 'live', cover: entry.cover, live: entry.live })
-  else if (entry.hero === 'photo' && entry.cover) pushImage(entry.cover)
+  // A montage cover (a reel of the strip) plays on the card face only; the
+  // plate skips it and opens on the first real frame (2026-07-16).
+  else if (entry.hero === 'photo' && entry.cover && !entry.coverMontage) pushImage(entry.cover)
   else if (entry.hero === 'audio' && entry.audio && entry.pullQuote)
     pages.push({ kind: 'audio', audio: entry.audio, quote: entry.pullQuote })
   for (const pic of entry.strip) pushImage(pic)
@@ -85,8 +103,16 @@ function buildPages(entry: WorkEntry): { pages: MediaPage[]; images: WorkPicture
 
 function StageContent({ page, onZoom }: { page: MediaPage; onZoom: (imgIndex: number) => void }) {
   if (page.kind === 'video') {
+    // Videos ALWAYS show whole (Emilie, 2026-07-15: a demo never loses its
+    // edges to the crop); at the stage's own 16:9 that means most fill it
+    // exactly and only wider-than-16:9 clips wear thin quiet bars.
     return (
-      <SheetVideo slug={page.video.slug} name={page.video.name} ariaLabel={page.video.ariaLabel} />
+      <SheetVideo
+        slug={page.video.slug}
+        name={page.video.name}
+        ariaLabel={page.video.ariaLabel}
+        fit="contain"
+      />
     )
   }
   if (page.kind === 'live') {
@@ -96,7 +122,7 @@ function StageContent({ page, onZoom }: { page: MediaPage; onZoom: (imgIndex: nu
     // no zoom competes with it.
     return (
       <div className="relative h-full w-full">
-        <Img slug={page.cover.slug} name={page.cover.name} alt={page.cover.alt} develop priority className="block h-full w-full object-cover" />
+        <Img slug={page.cover.slug} name={page.cover.name} alt={page.cover.alt} develop priority sizes={STAGE_SIZES} className="block h-full w-full object-cover" />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[rgba(11,14,19,0.45)]">
           <a
             href={page.live.href}
@@ -137,16 +163,18 @@ function StageContent({ page, onZoom }: { page: MediaPage; onZoom: (imgIndex: nu
       aria-label={`View larger: ${page.pic.alt}`}
       className="block h-full w-full cursor-zoom-in p-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
     >
-      <Img slug={page.pic.slug} name={page.pic.name} alt={page.pic.alt} develop priority className="block h-full w-full object-cover" />
+      <Img slug={page.pic.slug} name={page.pic.name} alt={page.pic.alt} develop priority sizes={STAGE_SIZES} className="block h-full w-full object-contain" />
     </button>
   )
 }
 
 // One spine beat: the quiet mono label over serif prose. In the two-column
 // spine it must not split across the column break (break-inside-avoid).
-function SpineBeat({ label, children }: { label: string; children: ReactNode }) {
+// `beat` anchors the section for the question dot's press-to-highlight
+// (QuestionsDot looks up [data-beat] inside the dialog).
+function SpineBeat({ label, beat, children }: { label: string; beat: string; children: ReactNode }) {
   return (
-    <section className="mb-3 break-inside-avoid">
+    <section data-beat={beat} className="mb-3 break-inside-avoid">
       <h3 className="font-mono text-[9px] font-normal tracking-[0.12em] text-[var(--lang-ink-muted)]">{label}</h3>
       {children}
     </section>
@@ -203,14 +231,14 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
 
   const spineBeats = (
     <>
-      <SpineBeat label="WHAT">
+      <SpineBeat label="WHAT" beat="what">
         <p className={`mt-1.5 ${PROSE}`}>{entry.what}</p>
       </SpineBeat>
-      <SpineBeat label="WHY">
+      <SpineBeat label="WHY" beat="why">
         <p className={`mt-1.5 ${PROSE}`}>{entry.why}</p>
       </SpineBeat>
       {entry.how && entry.how.length > 0 && (
-        <SpineBeat label="HOW">
+        <SpineBeat label="HOW" beat="how">
           <ol className={`mt-1.5 ${PROSE} list-decimal space-y-1 pl-5`}>
             {entry.how.map((step, i) => (
               <li key={i}>{step}</li>
@@ -219,7 +247,7 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
         </SpineBeat>
       )}
       {entry.outcome && (
-        <SpineBeat label="WHAT CAME OF IT">
+        <SpineBeat label="WHAT CAME OF IT" beat="outcome">
           <p className={`mt-1.5 ${PROSE}`}>{entry.outcome}</p>
         </SpineBeat>
       )}
@@ -291,11 +319,19 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                 ))}
             </div>
 
-            {/* THE CLAIM: the question slot (D4, when its discovery session
-                fills it) over the signed dek — the site asks, then answers. */}
+            {/* THE CLAIM: the question slot (D4) over the signed dek — the
+                site asks, then answers. The dot (Emilie, 2026-07-14) reveals
+                the other questions the project answers; pressing one lights
+                the spine section that holds the answer. */}
             {entry.question && (
               <p className="mt-3.5 max-w-[48ch] font-serif text-[16px] leading-snug italic text-[var(--lang-ink)]">
                 {entry.question}
+                {entry.alsoAnswers && entry.alsoAnswers.length > 0 && (
+                  <>
+                    {' '}
+                    <QuestionsDot also={entry.alsoAnswers} dialogRef={ref} />
+                  </>
+                )}
               </p>
             )}
             <p className={`${entry.question ? 'mt-1.5' : 'mt-3.5'} max-w-[48ch] font-serif text-[14.5px] leading-snug text-[var(--lang-ink)]`}>
@@ -323,6 +359,12 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                 )}
                 {entry.links.map((l) => (
                   <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className={`-my-2 ${ROW_LINK}`}>
+                    {/* A live deployment wears the liveness dot (Emilie,
+                        2026-07-15: clearer than words; red = liveness,
+                        governance rule 1). */}
+                    {/\blive\b/i.test(l.label) && (
+                      <span aria-hidden="true" className="mr-1.5 inline-block size-1.5 rounded-full bg-[var(--lang-interaction)]" />
+                    )}
                     {l.label}
                     <span className="sr-only"> (opens in new tab)</span>
                   </a>
@@ -331,10 +373,13 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
             )}
           </div>
 
-          {/* THE ASSET SIDE: tall 4:3 (never the thin strip), flip-through. */}
+          {/* THE ASSET SIDE: a 16:9 WHITE MAT (Emilie's bulletproof ruling,
+              2026-07-15): every asset shows whole on the plate's paper, like
+              the printed book. The mat pins white in both modes on purpose
+              (a content surface, not chrome; same family as the print pin). */}
           {current && (
             <div className="sm:order-first">
-              <div className="relative aspect-[4/3] max-h-[46vh] w-full overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)]">
+              <div className="relative aspect-video max-h-[46vh] w-full overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] bg-white">
                 <StageContent page={current} onZoom={(i) => setLightbox(i)} />
                 {many && (
                   <>
@@ -350,20 +395,8 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                   </>
                 )}
               </div>
-              {many && (
-                <div className="mt-2 flex justify-center gap-1.5" aria-hidden="true">
-                  {pages.map((_, i) => (
-                    <span
-                      key={i}
-                      className={`h-1.5 w-1.5 rounded-full ${
-                        i === Math.min(page, pages.length - 1)
-                          ? 'bg-[var(--lang-ink)]'
-                          : 'bg-[var(--lang-ink-faint)]'
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
+              {/* The dot row retired (G-FLUFF, Emilie 2026-07-14): with the
+                  fuller galleries the counter + arrows carry the job alone. */}
             </div>
           )}
         </div>

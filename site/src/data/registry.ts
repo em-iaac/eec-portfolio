@@ -189,7 +189,7 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['geometry', 'simulation', 'climate'],
     sheet: sheet('P-103', 'in-preparation', 'huddle'),
     project: 'huddle',
-    image: { slug: 'huddle', name: 'axonometric', alt: 'Axonometric of The Huddle wind-adaptive module cluster' },
+    image: { slug: 'huddle', name: 'wasp-growth', alt: 'Animated WASP growth study for The Huddle: modules aggregating along the wind across the Punta Arenas plot' },
     explore: { label: 'THE HUDDLE', nodeKind: 'project', order: 2 },
   },
   {
@@ -201,7 +201,9 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['data', 'climate', 'web'],
     sheet: sheet('P-105', 'in-preparation', 'lungs'),
     project: 'lungs',
-    image: { slug: 'lungs', name: 'tower', alt: 'The Lungs hyperbuilding tower over Santiago' },
+    // 2026-07-15: the cover is the live KPI-map cut (the collage left the
+    // web manifest; it remains the BOOK plate via its print rung).
+    image: { slug: 'lungs', name: 'demo-cover', alt: 'The KPI dependency map of the live studio platform, data, program and structure indicators wired into one network' },
     explore: { label: 'THE LUNGS', nodeKind: 'project', order: 3 },
   },
   {
@@ -213,7 +215,9 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['ai', 'geometry', 'play'],
     sheet: sheet('P-106', 'in-preparation', 'legoarch'),
     project: 'legoarch',
-    image: { slug: 'legoarch', name: 'sagrada-render', alt: 'lEgoarCh generated LEGO set of the Sagrada Familia' },
+    // 2026-07-15: the cover is the live solve cut (the golden sagrada-render
+    // left the web manifest; it remains the BOOK plate via its print rung).
+    image: { slug: 'legoarch', name: 'demo-cover', alt: "Saint Basil's Cathedral solving into a brick layout in lEgoarCh, the stage with no AI in it on purpose" },
     explore: { label: 'LEGOARCH', nodeKind: 'project', order: 4 },
   },
   {
@@ -225,7 +229,7 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['simulation', 'geometry', 'heritage', 'play'],
     sheet: sheet('P-104', 'issued', 'ballooning'),
     project: 'ballooning-market',
-    image: { slug: 'ballooning-market', name: 'render-1', alt: 'CMY balloons packed into the steel frame of Bab al-Luq market' },
+    image: { slug: 'ballooning-market', name: 'process', alt: 'The Kangaroo inflation running: balloons seeding, anchoring and settling into a roof over Bab al-Luq market' },
     explore: { label: 'A BALLOONING MARKET', nodeKind: 'project', order: 5 },
   },
   {
@@ -273,7 +277,7 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['geometry', 'simulation', 'play', 'research'],
     sheet: sheet('P-110', 'in-preparation', 'cappelletti'),
     project: 'cappelletti',
-    image: { slug: 'cappelletti', name: 'poster', alt: 'Cappelletti Pavilion poster with pasta-derived shell structure' },
+    image: { slug: 'cappelletti', name: 'galapagos-run', alt: "Galapagos optimization running live on the Cappelletti lattice, displacement traded against mass for the shell" },
     explore: { label: 'CAPPELLETTI PAVILION', nodeKind: 'project', order: 9 },
   },
   {
@@ -354,8 +358,8 @@ export const ENTRIES: RegistryEntry[] = [
     project: 'tsukiji',
     image: {
       slug: 'tsukiji',
-      name: 'site-maps',
-      alt: 'The 19-hectare Tsukiji site in Tokyo: location maps, the nearest weather data hub and the 1979 land use plan',
+      name: 'form-iterations',
+      alt: 'Design exploration iterations reshaping the Tsukiji market hall after small tweaks barely moved environmental performance',
     },
     explore: { label: 'TSUKIJI', nodeKind: 'project', order: 24 },
   },

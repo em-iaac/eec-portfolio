@@ -14,14 +14,24 @@ const cappelletti: ProjectMaster = {
   myPart: 'A duo with Ahmad Baltaji, shared end to end.',
   dek: 'A pasta shape is quietly structural: evolutionary optimization scaled a cappelletti shell to a 160 kg pavilion.',
   dekSigned: true,
-  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
-  // 2026-07-13). Candidate parked: "Is a piece of pasta secretly a
-  // structure?". The signed dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie 2026-07-14: "good" to the pavilion
+  // phrasing; aligns with the blog title that already ranks). DRAFT until
+  // signed.
+  question: 'Can a pasta shape hold up a pavilion?',
+  alsoAnswers: [
+    { q: 'Is a piece of pasta secretly a structure?', beat: 'what' },
+    { q: 'What happens when you scale dinner up to architecture?', beat: 'how' },
+    { q: 'Can evolutionary optimization turn pasta math into a standing shell?', beat: 'how' },
+    { q: 'How much material does a pasta pavilion actually need?', beat: 'outcome' },
+  ],
   blurb:
     'Look closely at a piece of pasta: the curves and hollows are structural engineering in miniature. We scaled up dinner: evolutionary optimization and finite element analysis in Grasshopper brought a cappelletti shell to human scale at roughly 160 kg of material.',
   tech: 'GRASSHOPPER · GALAPAGOS · CRYSTALLON · ALPACA4D',
   links: [{ label: 'BLOG', href: 'https://blog.iaac.net/how-a-pasta-shape-became-a-pavilion-cappelletti/' }],
-  image: { slug: 'cappelletti', name: 'poster', alt: 'Cappelletti Pavilion poster with pasta-derived shell structure' },
+  // THE COVER = THE OPTIMIZATION, ALIVE (Emilie, 2026-07-15): the Galapagos
+  // run gif, still at rest, playing on hover; the poster render moved into
+  // the strip.
+  image: { slug: 'cappelletti', name: 'galapagos-run', alt: "Galapagos optimization running live on the Cappelletti lattice, displacement traded against mass for the shell" },
 
   what: (
     <>

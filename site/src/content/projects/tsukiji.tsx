@@ -13,9 +13,15 @@ const tsukiji: ProjectMaster = {
   myPart: 'Team of four, all hands on everything.',
   dek: 'Tokyo’s climate stress-tested a 19-hectare market hall, and the polite tweaks changed nothing: the form itself had to give.',
   dekSigned: true, // Emilie, S4b copy gate, 2026-07-14
-  // THE QUESTION (D4): DEFERRED to the question-discovery session. Candidate
-  // parked: "What does it take to design for weather that changes its mind by
-  // lunch?" The dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie 2026-07-14: "okay" to the fusion; the
+  // field's name + her lunch line). Team framing binds. DRAFT until signed.
+  question: 'Can environmental analysis keep up with weather that changes its mind by lunch?',
+  alsoAnswers: [
+    { q: 'Can thermal, daylight, and wind simulation reshape a building form?', beat: 'what' },
+    { q: "How do you keep 19 hectares of market comfortable in Tokyo's climate?", beat: 'why' },
+    { q: 'What happens when the simulations say your polite fixes changed nothing?', beat: 'how' },
+    { q: 'When does environmental analysis get to change the design, not just grade it?', beat: 'outcome' },
+  ],
   stat: 'SIMULATED · 19 HECTARES',
   blurb:
     'An environmental analysis of the Tsukiji fish market redevelopment: thermal comfort, daylight, wind, and heat under Tokyo’s swing-everything climate. The team’s first hypothesis, that minor modifications to the form would suffice, failed the simulations, so the building form itself was reshaped.',
@@ -26,10 +32,13 @@ const tsukiji: ProjectMaster = {
       href: 'https://blog.iaac.net/revitalizing-the-tsukiji-fish-market-an-environmental-analysis-of-tokyo/',
     },
   ],
+  // THE COVER = THE FORM GIVING, ALIVE (Emilie, 2026-07-15): the design
+  // exploration gif, still at rest, playing on hover; the site-maps board
+  // moved into the strip.
   image: {
     slug: 'tsukiji',
-    name: 'site-maps',
-    alt: 'The 19-hectare Tsukiji site in Tokyo: location maps, the nearest weather data hub and the 1979 land use plan',
+    name: 'form-iterations',
+    alt: 'Design exploration iterations reshaping the Tsukiji market hall after small tweaks barely moved environmental performance',
   },
 
   what: (

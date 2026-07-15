@@ -16,9 +16,16 @@ const narkomfin: ProjectMaster = {
   myPart: 'Team of four, all hands on everything.',
   dek: 'Read a 1930 experiment in communal living as a graph and its real spatial units turn out to be vertical slices, not rooms.',
   dekSigned: true, // Emilie, S4b copy gate, 2026-07-14
-  // THE QUESTION (D4): DEFERRED to the question-discovery session. Candidate
-  // parked: "What does a building's plan look like as a graph?" (the
-  // CONTENT-STRATEGY example for this project). The dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie 2026-07-14: "okay" to the one-word tune;
+  // "floor plan" is the literature's own search token). alsoAnswers feed the
+  // question dot; team framing binds every wording. DRAFT until signed.
+  question: "What does a building's floor plan look like as a graph?",
+  alsoAnswers: [
+    { q: 'Can a machine tell what a room is for just from where it sits?', beat: 'how' },
+    { q: "What does a floor plan know that it isn't telling you?", beat: 'why' },
+    { q: 'What happens when a rule-following classifier meets a building built to break the rules of home?', beat: 'outcome' },
+    { q: 'How do centrality and community detection read a 1930 experiment in communal living?', beat: 'how' },
+  ],
   blurb:
     'Moscow’s Narkomfin building, read as a graph: grid-sampled plans, stair links, centrality, community detection. A pretrained room classifier scored the communal units as rule-breaking, which is the point: Ginzburg meant them to break the rules of home.',
   tech: 'PYTHON · GRAPHSAGE · LOUVAIN',

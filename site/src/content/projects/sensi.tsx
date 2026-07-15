@@ -18,11 +18,17 @@ const sensi: ProjectMaster = {
   awardShort: "MACAD '26 WINNER",
   dek: 'Comfort, designed on purpose: a copilot scores a plan across six senses, calibrated to a person, not an average.',
   dekSigned: true,
-  // THE QUESTION (D4): DEFERRED to its own discovery session (Emilie,
-  // 2026-07-13) — read the blogposts, map the set of questions each project
-  // answers, then pick the one a person would naturally ask. Candidate parked:
-  // "Can a copilot score how a floor plan will feel?" (verb = SCORE, never
-  // measure). Until then the signed dek serves on screen and in search.
+  // THE QUESTION (D4 round 2, Emilie's direction 2026-07-14): the lead is the
+  // RIPPLE, the coupling of the senses, "understudied in the field" (her
+  // words); the searchable people-question moved into alsoAnswers (the
+  // question dot). Verb rule holds: score, never measure. DRAFT until signed.
+  question: 'When you fix one sense in a floor plan, what happens to the other five?',
+  alsoAnswers: [
+    { q: 'Can a copilot score how a floor plan will feel, before anyone builds it?', beat: 'what' },
+    { q: 'What does comfort look like when it is scored for you, not the average?', beat: 'why' },
+    { q: 'Can AI read a floor plan and tell you where the comfort breaks?', beat: 'how' },
+    { q: 'How do you bench an LLM’s judgment before trusting its comfort scores?', beat: 'outcome' },
+  ],
   myPart: 'Project lead, A to Z. Built with a team of four.',
   stat: 'LLM BENCH · 2 PROVIDERS × 3 SCENES',
   blurb:
@@ -32,9 +38,12 @@ const sensi: ProjectMaster = {
     { label: 'BLOG', href: 'https://blog.iaac.net/sensi-making-comfort-a-design-layer/' },
     { label: 'GITHUB', href: 'https://github.com/sclebow/AIA26_Studio/tree/main/team_02' },
   ],
-  image: { slug: 'sensi', name: 'app-shape', alt: 'Sensi interface scoring a floor plan across six senses' },
-  // G5: the book spread's dominant plate; scripts/print-assets.mjs bakes the
-  // committed print-resolution rung from the local original.
+  // THE COVER = THE GALAXY (Emilie's pick at the desk, 2026-07-14): the sense
+  // constellation sits still on the card and ripples on hover, rhyming with
+  // the landing mind-graph. app-shape moved into the flip-through.
+  image: { slug: 'sensi', name: 'galaxy-cover', alt: "Sensi's relationship galaxy: six senses as glowing constellations, every thread a coupling between two comfort scores" },
+  // G5: the book spread's dominant plate stays app-shape; scripts/
+  // print-assets.mjs bakes the committed print-resolution rung.
   spreadAssets: [{ slug: 'sensi', name: 'app-shape' }],
 
   what: (

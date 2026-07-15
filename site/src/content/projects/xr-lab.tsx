@@ -12,9 +12,17 @@ const xrLab: ProjectMaster = {
   meta: 'LAU XR LAB · RESEARCH ASSISTANT · 2021-23',
   dek: 'Where the XR thread started: point a phone at a molecule and watch it react in the room.',
   dekSigned: true,
-  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
-  // 2026-07-13). Candidate parked: "What if the lesson could stand in the room
-  // with you?". The signed dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie 2026-07-14: "this is about how XR and VR
+  // can help in education"; she will expand this project eventually). The
+  // question asks; the thin spine answers only from her lab years, no
+  // measured-outcome claims. WHAT + WHY beats only. DRAFT until signed.
+  question: 'Can AR and VR change how we learn?',
+  alsoAnswers: [
+    { q: 'What if the lesson could stand in the room with you?', beat: 'what' },
+    { q: 'Can a phone camera make a chemistry reaction visible?', beat: 'what' },
+    { q: 'What changes when the molecule is in the room, not on the screen?', beat: 'why' },
+    { q: 'How do you build an AR lesson a student can walk around?', beat: 'what' },
+  ],
   blurb:
     'Point a phone at a molecule and watch the reaction happen in the room: AR chemistry lessons built at the LAU XR Lab, plus contributions to research on VR in education. Where the XR thread in my work started.',
   tech: 'AR · VR · 3D ANIMATION',

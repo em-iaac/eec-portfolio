@@ -77,7 +77,9 @@ for (const [slug, items] of Object.entries(VIDEOS)) {
         // MAX_W is a CEILING: min(iw, MAX_W) so a sub-1280 source is not
         // lanczos-upscaled (mirrors sharp's withoutEnlargement on posters).
         // Single quotes keep the comma inside min() from splitting the arg.
-        '-vf', `scale='min(iw,${MAX_W})':-2:flags=lanczos`,
+        // item.vf runs FIRST (e.g. a crop that removes recorded browser
+        // chrome, the 2026-07-15 neurospace privacy fix), then the scale.
+        '-vf', `${item.vf ? `${item.vf},` : ''}scale='min(iw,${MAX_W})':-2:flags=lanczos`,
         '-r', '30',
         '-c:v', 'libx264',
         '-crf', String(item.crf ?? 25),

@@ -1,25 +1,71 @@
 {
   "sensi": [
     {
-      "name": "app-shape",
-      "role": "hero",
-      "aspect": 1.8757,
+      "name": "galaxy-cover",
+      "role": "gif",
+      "alt": "Sensi's relationship galaxy at rest: six senses as glowing constellations, every thread a coupling between two scores",
+      "aspect": 1.7778,
+      "animated": true,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/sensi/app-shape-640.webp",
-          "kb": 18
+          "file": "assets/projects/sensi/galaxy-cover-640.webp",
+          "kb": 471
         },
         {
           "w": 1024,
-          "file": "assets/projects/sensi/app-shape-1024.webp",
-          "kb": 38
+          "file": "assets/projects/sensi/galaxy-cover-1024.webp",
+          "kb": 902
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/galaxy-cover-static-640.webp",
+          "kb": 11
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/galaxy-cover-static-1024.webp",
+          "kb": 21
+        }
+      ]
+    },
+    {
+      "name": "demo-onboarding",
+      "role": "gif",
+      "alt": "Onboarding demo: the copilot interviews one person and reveals the persona it will design for, comfort with a subject",
+      "aspect": 1.8723,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/demo-onboarding-640.webp",
+          "kb": 298
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/demo-onboarding-1024.webp",
+          "kb": 678
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/demo-onboarding-static-640.webp",
+          "kb": 1
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/demo-onboarding-static-1024.webp",
+          "kb": 3
         }
       ]
     },
     {
       "name": "onboarding",
       "role": "gallery",
+      "alt": "Sensi's onboarding chat calibrating the comfort copilot to one person: their noise tolerance, their thermal grudges",
       "aspect": 1.8619,
       "variants": [
         {
@@ -30,49 +76,232 @@
         {
           "w": 1024,
           "file": "assets/projects/sensi/onboarding-1024.webp",
-          "kb": 16
+          "kb": 17
+        }
+      ]
+    },
+    {
+      "name": "app-shape",
+      "role": "hero",
+      "alt": "The Sensi workspace mid-edit: a floor plan scored across six senses, conflicts flagged while the layout is still soft",
+      "aspect": 1.8757,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/app-shape-640.webp",
+          "kb": 19
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/app-shape-1024.webp",
+          "kb": 41
+        }
+      ]
+    },
+    {
+      "name": "green-lens",
+      "role": "gallery",
+      "alt": "The green lens over a city apartment plan: what shapes nature here, the kitchen flagged thirsty for daylight and plants",
+      "aspect": 1.8681,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/green-lens-640.webp",
+          "kb": 13
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/green-lens-1024.webp",
+          "kb": 29
+        }
+      ]
+    },
+    {
+      "name": "demo-report",
+      "role": "gif",
+      "alt": "The vision report scrolling: room scores, the prompt they become, and the render the copilot hands back",
+      "aspect": 1.8723,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/demo-report-640.webp",
+          "kb": 260
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/demo-report-1024.webp",
+          "kb": 583
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/demo-report-static-640.webp",
+          "kb": 13
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/demo-report-static-1024.webp",
+          "kb": 27
         }
       ]
     },
     {
       "name": "report",
       "role": "gallery",
+      "alt": "The vision report Sensi hands over: comfort scores shaped for one person, with the edits the layout absorbed",
       "aspect": 1.8685,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/sensi/report-640.webp",
-          "kb": 11
+          "kb": 12
         },
         {
           "w": 1024,
           "file": "assets/projects/sensi/report-1024.webp",
-          "kb": 25
+          "kb": 26
         }
       ]
     },
     {
-      "name": "report-detail",
-      "role": "gallery",
-      "aspect": 1.9082,
+      "name": "relationship-galaxy",
+      "role": "gif",
+      "alt": "Animated relationship galaxy in Sensi, the comfort copilot, mapping how six sense scores pull on each other across a floor plan",
+      "aspect": 1.8723,
+      "animated": true,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/sensi/report-detail-640.webp",
-          "kb": 14
+          "file": "assets/projects/sensi/relationship-galaxy-640.webp",
+          "kb": 142
         },
         {
           "w": 1024,
-          "file": "assets/projects/sensi/report-detail-1024.webp",
-          "kb": 31
+          "file": "assets/projects/sensi/relationship-galaxy-1024.webp",
+          "kb": 288
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/relationship-galaxy-static-640.webp",
+          "kb": 3
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/relationship-galaxy-static-1024.webp",
+          "kb": 7
+        }
+      ]
+    },
+    {
+      "name": "sensory-layer",
+      "role": "gallery",
+      "alt": "The missing layer drawn onto the BIM stack: six senses above energy, cost and structure, the claim Sensi is built on",
+      "aspect": 2.6643,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/sensory-layer-640.webp",
+          "kb": 7
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/sensory-layer-1024.webp",
+          "kb": 14
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/sensi/sensory-layer-1600.webp",
+          "kb": 23
+        }
+      ]
+    },
+    {
+      "name": "coupling-map",
+      "role": "gallery",
+      "alt": "The levers-to-senses coupling map, every link grounded in research from BS 8233 to ASHRAE before it entered the model",
+      "aspect": 2.7645,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/coupling-map-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/coupling-map-1024.webp",
+          "kb": 19
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/sensi/coupling-map-1600.webp",
+          "kb": 32
+        }
+      ]
+    },
+    {
+      "name": "act-2-flow",
+      "role": "gallery",
+      "alt": "Act 2 of the pipeline as a flowchart: score, edit, ripple and galaxy loops around the plan while it is still soft",
+      "aspect": 2.1533,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/act-2-flow-640.webp",
+          "kb": 15
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/act-2-flow-1024.webp",
+          "kb": 27
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/sensi/act-2-flow-1600.webp",
+          "kb": 48
         }
       ]
     }
   ],
   "neurospace": [
     {
+      "name": "demo-cover",
+      "role": "gif",
+      "alt": "The red parametric room mid-morph as a slider drags, the NeuroScore answering live in the corner of the lab",
+      "aspect": 1.784,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/neurospace/demo-cover-640.webp",
+          "kb": 274
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/neurospace/demo-cover-1024.webp",
+          "kb": 452
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/neurospace/demo-cover-static-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/neurospace/demo-cover-static-1024.webp",
+          "kb": 12
+        }
+      ]
+    },
+    {
       "name": "landing",
       "role": "hero",
+      "alt": "NeuroSpace landing page: enter the lab where sliders reshape a room and a live score estimates what it does to you",
       "aspect": 1.9192,
       "variants": [
         {
@@ -83,52 +312,91 @@
         {
           "w": 1024,
           "file": "assets/projects/neurospace/landing-1024.webp",
-          "kb": 14
+          "kb": 15
         },
         {
           "w": 1600,
           "file": "assets/projects/neurospace/landing-1600.webp",
-          "kb": 28
+          "kb": 29
         }
       ]
     },
     {
       "name": "view",
       "role": "gallery",
+      "alt": "The NeuroSpace lab in the browser: sliders reshape a parametric room while the live score answers back instantly",
       "aspect": 1.8696,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/neurospace/view-640.webp",
-          "kb": 11
+          "kb": 12
         },
         {
           "w": 1024,
           "file": "assets/projects/neurospace/view-1024.webp",
-          "kb": 20
+          "kb": 21
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/neurospace/view-1600.webp",
+          "kb": 37
+        }
+      ]
+    },
+    {
+      "name": "pipeline",
+      "role": "gallery",
+      "alt": "Pipeline diagram: slider values ride to Rhino.Compute for geometry while the browser scores the behavior instantly on its own",
+      "aspect": 1.5351,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/neurospace/pipeline-640.webp",
+          "kb": 12
+        }
+      ]
+    },
+    {
+      "name": "score-formula",
+      "role": "gallery",
+      "alt": "The NeuroScore formula opened up: five weighted dimensions and every assumption behind the estimate, readable and arguable",
+      "aspect": 1.8079,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/neurospace/score-formula-640.webp",
+          "kb": 13
         }
       ]
     },
     {
       "name": "score-1",
       "role": "gallery",
+      "alt": "Top of the NeuroSpace report: what this design predicts, hypothesis cards and the estimated wellbeing score dial",
       "aspect": 1.9104,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/neurospace/score-1-640.webp",
-          "kb": 9
+          "kb": 10
         },
         {
           "w": 1024,
           "file": "assets/projects/neurospace/score-1-1024.webp",
-          "kb": 21
+          "kb": 22
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/neurospace/score-1-1600.webp",
+          "kb": 45
         }
       ]
     },
     {
       "name": "score-2",
       "role": "gallery",
+      "alt": "The report's breakdown: contribution bars and a brain impact map behind the room's estimated wellbeing score",
       "aspect": 1.8873,
       "variants": [
         {
@@ -139,291 +407,778 @@
         {
           "w": 1024,
           "file": "assets/projects/neurospace/score-2-1024.webp",
-          "kb": 17
+          "kb": 18
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/neurospace/score-2-1600.webp",
+          "kb": 35
         }
       ]
     }
   ],
   "huddle": [
     {
+      "name": "wasp-growth",
+      "role": "gif",
+      "alt": "Animated WASP growth study: modules aggregating along wind and program across the Punta Arenas plot",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/huddle/wasp-growth-640.webp",
+          "kb": 143
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/huddle/wasp-growth-1024.webp",
+          "kb": 271
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/huddle/wasp-growth-static-640.webp",
+          "kb": 19
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/huddle/wasp-growth-static-1024.webp",
+          "kb": 36
+        }
+      ]
+    },
+    {
       "name": "axonometric",
       "role": "hero",
+      "alt": "Axonometric of The Huddle, wind-formed modules aggregated into a research hub inside the Punta Arenas grid",
       "aspect": 1.7917,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/huddle/axonometric-640.webp",
-          "kb": 51
+          "kb": 54
         },
         {
           "w": 1024,
           "file": "assets/projects/huddle/axonometric-1024.webp",
-          "kb": 112
+          "kb": 123
         },
         {
           "w": 1600,
           "file": "assets/projects/huddle/axonometric-1600.webp",
-          "kb": 218
+          "kb": 238
         }
       ]
     },
     {
       "name": "perspective-1",
       "role": "gallery",
+      "alt": "Blizzard courtyard render inside The Huddle, turbines spinning between the wind-formed modules in Punta Arenas",
       "aspect": 1.7917,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/huddle/perspective-1-640.webp",
-          "kb": 31
+          "kb": 34
         },
         {
           "w": 1024,
           "file": "assets/projects/huddle/perspective-1-1024.webp",
-          "kb": 66
+          "kb": 72
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/huddle/perspective-1-1600.webp",
+          "kb": 138
+        }
+      ]
+    },
+    {
+      "name": "climate-wind",
+      "role": "gallery",
+      "alt": "Climate analysis for Punta Arenas with monthly wind roses and the westerly wind speeds that drive the aggregation",
+      "aspect": 3.1887,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/huddle/climate-wind-640.webp",
+          "kb": 17
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/huddle/climate-wind-1024.webp",
+          "kb": 35
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/huddle/climate-wind-1600.webp",
+          "kb": 70
+        }
+      ]
+    },
+    {
+      "name": "global-index",
+      "role": "gallery",
+      "alt": "Global Index analysis matching Shield, Lens and Gill panels to daylight, wind and program across the envelope",
+      "aspect": 1.9608,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/huddle/global-index-640.webp",
+          "kb": 27
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/huddle/global-index-1024.webp",
+          "kb": 61
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/huddle/global-index-1600.webp",
+          "kb": 122
+        }
+      ]
+    },
+    {
+      "name": "sectioned-model",
+      "role": "gallery",
+      "alt": "Sectioned aggregation model showing public and private modules under the continuous wind-formed skin",
+      "aspect": 1.9763,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/huddle/sectioned-model-640.webp",
+          "kb": 22
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/huddle/sectioned-model-1024.webp",
+          "kb": 49
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/huddle/sectioned-model-1600.webp",
+          "kb": 104
         }
       ]
     },
     {
       "name": "perspective-2",
       "role": "gallery",
+      "alt": "Street-level render of the module cluster meeting the town, the Punta Arenas sign in the foreground",
       "aspect": 1.7917,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/huddle/perspective-2-640.webp",
-          "kb": 31
+          "kb": 33
         },
         {
           "w": 1024,
           "file": "assets/projects/huddle/perspective-2-1024.webp",
-          "kb": 63
-        }
-      ]
-    },
-    {
-      "name": "wind-study",
-      "role": "gallery",
-      "aspect": 1.7917,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/huddle/wind-study-640.webp",
-          "kb": 45
+          "kb": 68
         },
         {
-          "w": 1024,
-          "file": "assets/projects/huddle/wind-study-1024.webp",
-          "kb": 97
+          "w": 1600,
+          "file": "assets/projects/huddle/perspective-2-1600.webp",
+          "kb": 123
         }
       ]
     },
     {
       "name": "axonometric-zoom",
       "role": "gallery",
+      "alt": "Close-up of the aggregation at the gate, the three-panel envelope reading as a map of wind and light",
       "aspect": 1.7917,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/huddle/axonometric-zoom-640.webp",
-          "kb": 30
+          "kb": 33
         },
         {
           "w": 1024,
           "file": "assets/projects/huddle/axonometric-zoom-1024.webp",
-          "kb": 59
+          "kb": 64
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/huddle/axonometric-zoom-1600.webp",
+          "kb": 115
         }
       ]
     }
   ],
   "lungs": [
     {
-      "name": "tower",
-      "role": "hero",
+      "name": "demo-cover",
+      "role": "gif",
+      "alt": "The KPI dependency map of the live studio platform, data, program and structure indicators wired into one network",
       "aspect": 1.7778,
+      "animated": true,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/lungs/tower-640.webp",
-          "kb": 18
+          "file": "assets/projects/lungs/demo-cover-640.webp",
+          "kb": 227
         },
         {
           "w": 1024,
-          "file": "assets/projects/lungs/tower-1024.webp",
-          "kb": 46
+          "file": "assets/projects/lungs/demo-cover-1024.webp",
+          "kb": 468
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/lungs/demo-cover-static-640.webp",
+          "kb": 7
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/demo-cover-static-1024.webp",
+          "kb": 14
+        }
+      ]
+    },
+    {
+      "name": "kpi-dashboard",
+      "role": "gallery",
+      "alt": "The KPI dashboard mid-studio: nine indicators scored live against their targets, honest oranges included",
+      "aspect": 0.9519,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/lungs/kpi-dashboard-640.webp",
+          "kb": 21
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/kpi-dashboard-1024.webp",
+          "kb": 43
         },
         {
           "w": 1600,
-          "file": "assets/projects/lungs/tower-1600.webp",
-          "kb": 120
+          "file": "assets/projects/lungs/kpi-dashboard-1600.webp",
+          "kb": 78
         }
       ]
     },
     {
-      "name": "public-interface",
+      "name": "kpi-map",
       "role": "gallery",
-      "aspect": 0.3873,
+      "alt": "The KPI dependency network: data, program and structure indicators tied into one system the studio steered by",
+      "aspect": 2.0612,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/lungs/public-interface-640.webp",
-          "kb": 42
+          "file": "assets/projects/lungs/kpi-map-640.webp",
+          "kb": 9
         },
         {
           "w": 1024,
-          "file": "assets/projects/lungs/public-interface-1024.webp",
-          "kb": 84
+          "file": "assets/projects/lungs/kpi-map-1024.webp",
+          "kb": 19
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/lungs/kpi-map-1600.webp",
+          "kb": 35
         }
       ]
     },
     {
-      "name": "control-room",
+      "name": "speckle-live",
       "role": "gallery",
-      "aspect": 1.7483,
+      "alt": "Speckle streams the design teams' tower model into the app, so performance gradients sit on the geometry itself",
+      "aspect": 0.6355,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/lungs/control-room-640.webp",
-          "kb": 3
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/lungs/control-room-1024.webp",
-          "kb": 7
-        }
-      ]
-    },
-    {
-      "name": "control-room-kpis",
-      "role": "gallery",
-      "aspect": 1.6077,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/lungs/control-room-kpis-640.webp",
-          "kb": 13
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/lungs/control-room-kpis-1024.webp",
+          "file": "assets/projects/lungs/speckle-live-640.webp",
           "kb": 26
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/speckle-live-1024.webp",
+          "kb": 62
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "role": "gallery",
+      "alt": "Ten weeks as a live timeline: three team tracks and the weekly deliverables the app kept honest",
+      "aspect": 2.4734,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/lungs/timeline-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/timeline-1024.webp",
+          "kb": 19
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/lungs/timeline-1600.webp",
+          "kb": 36
+        }
+      ]
+    },
+    {
+      "name": "stress-test",
+      "role": "gallery",
+      "alt": "The stress test tab, a calmness leaderboard the studio actually played; fewer pops means calmer",
+      "aspect": 1.3335,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/lungs/stress-test-640.webp",
+          "kb": 14
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/stress-test-1024.webp",
+          "kb": 28
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/lungs/stress-test-1600.webp",
+          "kb": 52
+        }
+      ]
+    },
+    {
+      "name": "discover",
+      "role": "gallery",
+      "alt": "The Discover tab publishing the tower's vitals: three systems, one tower, and the numbers the studio stood behind",
+      "aspect": 0.5938,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/lungs/discover-640.webp",
+          "kb": 26
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/discover-1024.webp",
+          "kb": 53
+        }
+      ]
+    },
+    {
+      "name": "why-how-what",
+      "role": "gallery",
+      "alt": "The concept strip on the public page: the core problem, the data logic and the architecture in three beats",
+      "aspect": 3.5714,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/lungs/why-how-what-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/lungs/why-how-what-1024.webp",
+          "kb": 15
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/lungs/why-how-what-1600.webp",
+          "kb": 28
         }
       ]
     }
   ],
   "legoarch": [
     {
-      "name": "sagrada-render",
-      "role": "hero",
-      "aspect": 1,
+      "name": "demo-cover",
+      "role": "gif",
+      "alt": "Saint Basil's Cathedral solving into a brick layout in lEgoarCh, the stage with no AI in it on purpose",
+      "aspect": 1.7778,
+      "animated": true,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/legoarch/sagrada-render-640.webp",
-          "kb": 59
+          "file": "assets/projects/legoarch/demo-cover-640.webp",
+          "kb": 331
         },
         {
           "w": 1024,
-          "file": "assets/projects/legoarch/sagrada-render-1024.webp",
-          "kb": 92
+          "file": "assets/projects/legoarch/demo-cover-1024.webp",
+          "kb": 689
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/demo-cover-static-640.webp",
+          "kb": 9
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/demo-cover-static-1024.webp",
+          "kb": 16
+        }
+      ]
+    },
+    {
+      "name": "pipeline",
+      "role": "gallery",
+      "alt": "The lEgoarCh GenAI pipeline: FLUX and TRELLIS propose, deterministic code verifies the LEGO set as digitally buildable",
+      "aspect": 2.3253,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/pipeline-640.webp",
+          "kb": 12
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/pipeline-1024.webp",
+          "kb": 22
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/legoarch/pipeline-1600.webp",
+          "kb": 37
+        }
+      ]
+    },
+    {
+      "name": "three-graphs",
+      "role": "gallery",
+      "alt": "Three ComfyUI graphs share one core: the render, the LoRA look and the 3D mesh stages of the lEgoarCh pipeline",
+      "aspect": 1.92,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/three-graphs-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/three-graphs-1024.webp",
+          "kb": 18
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/legoarch/three-graphs-1600.webp",
+          "kb": 30
+        }
+      ]
+    },
+    {
+      "name": "lora-sweep",
+      "role": "gallery",
+      "alt": "LoRA strength sweep from 0 to 1 on the Sagrada Familia and La Muralla Roja: the LEGO set look snaps in at full strength",
+      "aspect": 1.9219,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/lora-sweep-640.webp",
+          "kb": 20
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/lora-sweep-1024.webp",
+          "kb": 40
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/legoarch/lora-sweep-1600.webp",
+          "kb": 73
+        }
+      ]
+    },
+    {
+      "name": "split-and-merge",
+      "role": "gallery",
+      "alt": "The split and merge pass packing the voxel grid into the largest legal bricks, fewer parts holding the same shape",
+      "aspect": 2.2999,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/split-and-merge-640.webp",
+          "kb": 11
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/split-and-merge-1024.webp",
+          "kb": 18
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/legoarch/split-and-merge-1600.webp",
+          "kb": 31
+        }
+      ]
+    },
+    {
+      "name": "perceptual-colour",
+      "role": "gallery",
+      "alt": "Colour matching by CIEDE2000 instead of RGB distance, snapping every voxel to the nearest of 48 real LEGO colours",
+      "aspect": 2.4205,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/perceptual-colour-640.webp",
+          "kb": 11
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/perceptual-colour-1024.webp",
+          "kb": 22
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/legoarch/perceptual-colour-1600.webp",
+          "kb": 39
         }
       ]
     },
     {
       "name": "mesh-vs-lego",
       "role": "gallery",
-      "aspect": 1.8605,
+      "alt": "The result page comparing generated mesh and placed bricks for the Sagrada Familia set, verified digitally buildable",
+      "aspect": 2.0317,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/legoarch/mesh-vs-lego-640.webp",
-          "kb": 12
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/legoarch/mesh-vs-lego-1024.webp",
-          "kb": 24
-        }
-      ]
-    },
-    {
-      "name": "booklet",
-      "role": "gallery",
-      "aspect": 1.8605,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/legoarch/booklet-640.webp",
-          "kb": 12
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/legoarch/booklet-1024.webp",
-          "kb": 25
-        }
-      ]
-    },
-    {
-      "name": "shelf",
-      "role": "gallery",
-      "aspect": 1.8605,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/legoarch/shelf-640.webp",
           "kb": 10
         },
         {
           "w": 1024,
-          "file": "assets/projects/legoarch/shelf-1024.webp",
-          "kb": 19
+          "file": "assets/projects/legoarch/mesh-vs-lego-1024.webp",
+          "kb": 21
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/legoarch/mesh-vs-lego-1600.webp",
+          "kb": 45
+        }
+      ]
+    },
+    {
+      "name": "honest-part",
+      "role": "gallery",
+      "alt": "The instructive failure: the Guggenheim prompt returned a voxel blob, structurally sound but not legible as architecture",
+      "aspect": 1.9219,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/honest-part-640.webp",
+          "kb": 16
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/honest-part-1024.webp",
+          "kb": 32
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/legoarch/honest-part-1600.webp",
+          "kb": 56
         }
       ]
     },
     {
       "name": "outputs",
       "role": "gallery",
-      "aspect": 1.7778,
+      "alt": "Everything one prompt returns: render, mesh, digitally verified build, box art, booklet, parts list and price",
+      "aspect": 1.9162,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/legoarch/outputs-640.webp",
-          "kb": 10
+          "kb": 11
         },
         {
           "w": 1024,
           "file": "assets/projects/legoarch/outputs-1024.webp",
           "kb": 20
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/legoarch/outputs-1600.webp",
+          "kb": 38
+        }
+      ]
+    },
+    {
+      "name": "real-parts",
+      "role": "gallery",
+      "alt": "Real parts and real moulds: 44 BrickLink parts in 48 colours, the catalog the optimizer is allowed to build from",
+      "aspect": 1.92,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/real-parts-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/real-parts-1024.webp",
+          "kb": 19
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/legoarch/real-parts-1600.webp",
+          "kb": 32
+        }
+      ]
+    },
+    {
+      "name": "shelf",
+      "role": "gallery",
+      "alt": "The collection shelf holding three boxed sets the pipeline produced: Sagrada, La Muralla Roja and the Guggenheim run",
+      "aspect": 2.0382,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/legoarch/shelf-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/legoarch/shelf-1024.webp",
+          "kb": 16
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/legoarch/shelf-1600.webp",
+          "kb": 31
         }
       ]
     }
   ],
   "cappelletti": [
     {
+      "name": "galapagos-run",
+      "role": "gif",
+      "alt": "Galapagos optimization running live, vertex octa lattice displacement traded against mass for the pavilion's outer shell",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/cappelletti/galapagos-run-640.webp",
+          "kb": 433
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/cappelletti/galapagos-run-1024.webp",
+          "kb": 1391
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/cappelletti/galapagos-run-static-640.webp",
+          "kb": 9
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/cappelletti/galapagos-run-static-1024.webp",
+          "kb": 21
+        }
+      ]
+    },
+    {
       "name": "poster",
       "role": "hero",
+      "alt": "Cappelletti Pavilion render: the pasta-derived lattice shell at human scale beside a pond, visitors underneath",
       "aspect": 1.7917,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/cappelletti/poster-640.webp",
-          "kb": 44
+          "kb": 47
         },
         {
           "w": 1024,
           "file": "assets/projects/cappelletti/poster-1024.webp",
-          "kb": 87
+          "kb": 93
         },
         {
           "w": 1600,
           "file": "assets/projects/cappelletti/poster-1600.webp",
-          "kb": 157
+          "kb": 169
+        }
+      ]
+    },
+    {
+      "name": "pasta-atlas",
+      "role": "gallery",
+      "alt": "The team's pasta atlas page: parametric equations of a cappelletti, the starting geometry for the pavilion's optimization",
+      "aspect": 0.8922,
+      "variants": [
+        {
+          "w": 480,
+          "file": "assets/projects/cappelletti/pasta-atlas-480.webp",
+          "kb": 19
+        }
+      ]
+    },
+    {
+      "name": "equations-script",
+      "role": "gif",
+      "alt": "Grasshopper and Python script translating cappelletti equations into the pavilion shell ahead of structural optimization",
+      "aspect": 2.55,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/cappelletti/equations-script-640.webp",
+          "kb": 329
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/cappelletti/equations-script-1024.webp",
+          "kb": 1099
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/cappelletti/equations-script-static-640.webp",
+          "kb": 5
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/cappelletti/equations-script-static-1024.webp",
+          "kb": 10
+        }
+      ]
+    },
+    {
+      "name": "optimization-map",
+      "role": "gallery",
+      "alt": "Workflow map of the structural optimization loop: Galapagos genomes, Alpaca4D analysis, mass and deflection fitness",
+      "aspect": 2.4453,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/cappelletti/optimization-map-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/cappelletti/optimization-map-1024.webp",
+          "kb": 17
         }
       ]
     },
     {
       "name": "lattice",
       "role": "gif",
+      "alt": "Edge octa lattice displacement study inside the shell, the inner structure that landed at 87 kg of material",
       "aspect": 0.9769,
       "animated": true,
       "variants": [
@@ -431,6 +1186,11 @@
           "w": 640,
           "file": "assets/projects/cappelletti/lattice-640.webp",
           "kb": 172
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/cappelletti/lattice-1024.webp",
+          "kb": 433
         }
       ],
       "static": [
@@ -438,6 +1198,29 @@
           "w": 640,
           "file": "assets/projects/cappelletti/lattice-static-640.webp",
           "kb": 25
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/cappelletti/lattice-static-1024.webp",
+          "kb": 59
+        }
+      ]
+    },
+    {
+      "name": "two-topologies",
+      "role": "gallery",
+      "alt": "Structural optimization result: two lattice topologies, edge octa at 87 kg and vertex octa at 73 kg, both standing",
+      "aspect": 2.1848,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/cappelletti/two-topologies-640.webp",
+          "kb": 20
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/cappelletti/two-topologies-1024.webp",
+          "kb": 46
         }
       ]
     }
@@ -497,71 +1280,21 @@
   ],
   "ballooning-market": [
     {
-      "name": "render-1",
-      "role": "hero",
-      "aspect": 1.7917,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/ballooning-market/render-1-640.webp",
-          "kb": 63
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/ballooning-market/render-1-1024.webp",
-          "kb": 149
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/ballooning-market/render-1-1600.webp",
-          "kb": 315
-        }
-      ]
-    },
-    {
-      "name": "render-3",
-      "role": "gallery",
-      "aspect": 1.7917,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/ballooning-market/render-3-640.webp",
-          "kb": 72
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/ballooning-market/render-3-1024.webp",
-          "kb": 184
-        }
-      ]
-    },
-    {
-      "name": "render-5",
-      "role": "gallery",
-      "aspect": 1.4906,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/ballooning-market/render-5-640.webp",
-          "kb": 74
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/ballooning-market/render-5-1024.webp",
-          "kb": 179
-        }
-      ]
-    },
-    {
       "name": "process",
       "role": "gif",
-      "aspect": 2.0694,
+      "alt": "Four stages of the Kangaroo inflation: seeding the balloons, anchoring, settling, and threading the spine path",
+      "aspect": 1.7778,
       "animated": true,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/ballooning-market/process-640.webp",
-          "kb": 262
+          "kb": 260
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/process-1024.webp",
+          "kb": 532
         }
       ],
       "static": [
@@ -569,12 +1302,77 @@
           "w": 640,
           "file": "assets/projects/ballooning-market/process-static-640.webp",
           "kb": 17
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/process-static-1024.webp",
+          "kb": 36
+        }
+      ]
+    },
+    {
+      "name": "render-1",
+      "role": "hero",
+      "alt": "Aerial render of the Bab al-Luq block, the settled balloon roof filling the historic steel frame with color",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/render-1-640.webp",
+          "kb": 68
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/render-1-1024.webp",
+          "kb": 161
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/ballooning-market/render-1-1600.webp",
+          "kb": 345
+        }
+      ]
+    },
+    {
+      "name": "exploded-layers",
+      "role": "gallery",
+      "alt": "Exploded layer diagram of the pneumatic occupation: historic steel frame, spine tunnel, and the inflated balloon roof",
+      "aspect": 2,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/exploded-layers-640.webp",
+          "kb": 20
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/exploded-layers-1024.webp",
+          "kb": 41
+        }
+      ]
+    },
+    {
+      "name": "algorithm",
+      "role": "gallery",
+      "alt": "The Grasshopper algorithm behind the inflation simulation, from constraints to Kangaroo goals to the settled cluster",
+      "aspect": 2.0107,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/algorithm-640.webp",
+          "kb": 17
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/algorithm-1024.webp",
+          "kb": 33
         }
       ]
     },
     {
       "name": "epic-fails",
       "role": "gif",
+      "alt": "The honest outtakes: zero self-collision and mesh clipping, the failures on the way to a settled balloon roof",
       "aspect": 2.0584,
       "animated": true,
       "variants": [
@@ -582,6 +1380,11 @@
           "w": 640,
           "file": "assets/projects/ballooning-market/epic-fails-640.webp",
           "kb": 235
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/epic-fails-1024.webp",
+          "kb": 560
         }
       ],
       "static": [
@@ -589,6 +1392,93 @@
           "w": 640,
           "file": "assets/projects/ballooning-market/epic-fails-static-640.webp",
           "kb": 15
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/epic-fails-static-1024.webp",
+          "kb": 36
+        }
+      ]
+    },
+    {
+      "name": "design-matrix",
+      "role": "gallery",
+      "alt": "Design-space matrix of Kangaroo inflation runs, tuning balloon scale, density and volume inside the frame",
+      "aspect": 1.9716,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/design-matrix-640.webp",
+          "kb": 18
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/design-matrix-1024.webp",
+          "kb": 39
+        }
+      ]
+    },
+    {
+      "name": "chromatic-study",
+      "role": "gallery",
+      "alt": "The chromatic coding study: overlapping ETFE balloons mix cyan, magenta and yellow light into market wayfinding",
+      "aspect": 1.905,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/chromatic-study-640.webp",
+          "kb": 16
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/chromatic-study-1024.webp",
+          "kb": 35
+        }
+      ]
+    },
+    {
+      "name": "souk-interior",
+      "role": "gallery",
+      "alt": "Render inside the souk under the settled balloon roof, daylight filtered through the colored membranes onto the stalls",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/souk-interior-640.webp",
+          "kb": 68
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/souk-interior-1024.webp",
+          "kb": 162
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/ballooning-market/souk-interior-1600.webp",
+          "kb": 340
+        }
+      ]
+    },
+    {
+      "name": "render-3",
+      "role": "gallery",
+      "alt": "Render of the playscape tunnel through the balloon field, a kid running the voronoi net spine",
+      "aspect": 1.7917,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/ballooning-market/render-3-640.webp",
+          "kb": 77
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/ballooning-market/render-3-1024.webp",
+          "kb": 194
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/ballooning-market/render-3-1600.webp",
+          "kb": 442
         }
       ]
     }
@@ -603,33 +1493,7 @@
         {
           "w": 640,
           "file": "assets/projects/narkomfin/voxel-graph-640.webp",
-          "kb": 7
-        }
-      ]
-    },
-    {
-      "name": "plan-graph",
-      "role": "gallery",
-      "alt": "Narkomfin floor plates grid-sampled in red wireframe, stair links tying the levels into one walkable spatial graph",
-      "aspect": 1.5,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/narkomfin/plan-graph-640.webp",
-          "kb": 15
-        }
-      ]
-    },
-    {
-      "name": "type-f-graph",
-      "role": "gallery",
-      "alt": "Type F duplex levels of Narkomfin stacked as sampled grids, corridor connections running between the floors",
-      "aspect": 1.5,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/narkomfin/type-f-graph-640.webp",
-          "kb": 26
+          "kb": 8
         }
       ]
     },
@@ -642,12 +1506,135 @@
         {
           "w": 640,
           "file": "assets/projects/narkomfin/exploded-axo-640.webp",
-          "kb": 20
+          "kb": 21
         },
         {
           "w": 1024,
           "file": "assets/projects/narkomfin/exploded-axo-1024.webp",
+          "kb": 38
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/narkomfin/exploded-axo-1600.webp",
+          "kb": 66
+        }
+      ]
+    },
+    {
+      "name": "plan-graph",
+      "role": "gallery",
+      "alt": "Narkomfin floor plates grid-sampled in red wireframe, stair links tying the levels into one walkable spatial graph",
+      "aspect": 1.5,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/plan-graph-640.webp",
+          "kb": 16
+        }
+      ]
+    },
+    {
+      "name": "type-f-graph",
+      "role": "gallery",
+      "alt": "Type F duplex levels of Narkomfin stacked as sampled grids, corridor connections running between the floors",
+      "aspect": 1.5,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/type-f-graph-640.webp",
+          "kb": 27
+        }
+      ]
+    },
+    {
+      "name": "betweenness",
+      "role": "gallery",
+      "alt": "Betweenness centrality over the team's spatial graph of Type K, one hot line showing every Narkomfin path crossing the corridor",
+      "aspect": 3.0738,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/betweenness-640.webp",
+          "kb": 11
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/narkomfin/betweenness-1024.webp",
+          "kb": 22
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/narkomfin/betweenness-1600.webp",
+          "kb": 41
+        }
+      ]
+    },
+    {
+      "name": "communities-f",
+      "role": "gallery",
+      "alt": "Community detection across the three Type F levels, the spatial graph reading Ginzburg's duplexes as full-height vertical slices",
+      "aspect": 2.447,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/communities-f-640.webp",
+          "kb": 14
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/narkomfin/communities-f-1024.webp",
+          "kb": 28
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/narkomfin/communities-f-1600.webp",
+          "kb": 48
+        }
+      ]
+    },
+    {
+      "name": "graphsage-f",
+      "role": "gallery",
+      "alt": "The team's GraphSAGE room classifier reading conventional Type F rooms at 91.3 percent, graph machine learning as a plan reader",
+      "aspect": 2.9557,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/graphsage-f-640.webp",
+          "kb": 12
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/narkomfin/graphsage-f-1024.webp",
+          "kb": 22
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/narkomfin/graphsage-f-1600.webp",
           "kb": 36
+        }
+      ]
+    },
+    {
+      "name": "graphsage-k",
+      "role": "gallery",
+      "alt": "GraphSAGE prediction for the communal Type K unit at 67.9 percent, the team's model flagging the rooms that break domestic rules",
+      "aspect": 2.8116,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/graphsage-k-640.webp",
+          "kb": 9
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/narkomfin/graphsage-k-1024.webp",
+          "kb": 17
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/narkomfin/graphsage-k-1600.webp",
+          "kb": 30
         }
       ]
     }
@@ -657,74 +1644,30 @@
       "name": "assessment-ui",
       "role": "gif",
       "alt": "The team's street safety assessment interface scoring a neighborhood's segments from OpenStreetMap features",
-      "aspect": 1.5342,
+      "aspect": 1.7778,
       "animated": true,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/urban-risk/assessment-ui-640.webp",
-          "kb": 956
+          "kb": 659
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/assessment-ui-1024.webp",
+          "kb": 2003
         }
       ],
       "static": [
         {
           "w": 640,
           "file": "assets/projects/urban-risk/assessment-ui-static-640.webp",
-          "kb": 26
-        }
-      ]
-    },
-    {
-      "name": "model-performance",
-      "role": "gallery",
-      "alt": "Three regression models flatlining on crime prediction, the run that showed spatial form alone predicts crime poorly",
-      "aspect": 2.1549,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/urban-risk/model-performance-640.webp",
-          "kb": 16
+          "kb": 20
         },
         {
           "w": 1024,
-          "file": "assets/projects/urban-risk/model-performance-1024.webp",
-          "kb": 30
-        }
-      ]
-    },
-    {
-      "name": "london-data",
-      "role": "gallery",
-      "alt": "The London training data: 921,753 police incidents mapped citywide and broken down by crime type",
-      "aspect": 2.1531,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/urban-risk/london-data-640.webp",
-          "kb": 18
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/urban-risk/london-data-1024.webp",
-          "kb": 43
-        }
-      ]
-    },
-    {
-      "name": "risk-score",
-      "role": "gallery",
-      "alt": "The composite risk score weighting lighting, visibility, connectivity, enclosure and transit per street segment",
-      "aspect": 1.9321,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/urban-risk/risk-score-640.webp",
-          "kb": 22
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/urban-risk/risk-score-1024.webp",
-          "kb": 40
+          "file": "assets/projects/urban-risk/assessment-ui-static-1024.webp",
+          "kb": 44
         }
       ]
     },
@@ -742,7 +1685,150 @@
         {
           "w": 1024,
           "file": "assets/projects/urban-risk/safety-theories-1024.webp",
+          "kb": 27
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/urban-risk/safety-theories-1600.webp",
+          "kb": 49
+        }
+      ]
+    },
+    {
+      "name": "london-data",
+      "role": "gallery",
+      "alt": "The London training data: 921,753 police incidents mapped citywide and broken down by crime type",
+      "aspect": 2.1531,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/london-data-640.webp",
+          "kb": 20
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/london-data-1024.webp",
+          "kb": 45
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/urban-risk/london-data-1600.webp",
+          "kb": 93
+        }
+      ]
+    },
+    {
+      "name": "pipeline",
+      "role": "gallery",
+      "alt": "The team's pipeline from OpenStreetMap data fetching through feature checks and risk scoring to model training and deployment",
+      "aspect": 3.1258,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/pipeline-640.webp",
+          "kb": 13
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/pipeline-1024.webp",
           "kb": 26
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/urban-risk/pipeline-1600.webp",
+          "kb": 47
+        }
+      ]
+    },
+    {
+      "name": "risk-score",
+      "role": "gallery",
+      "alt": "The composite risk score weighting lighting, visibility, connectivity, enclosure and transit per street segment",
+      "aspect": 1.9321,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/risk-score-640.webp",
+          "kb": 23
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/risk-score-1024.webp",
+          "kb": 42
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/urban-risk/risk-score-1600.webp",
+          "kb": 74
+        }
+      ]
+    },
+    {
+      "name": "model-performance",
+      "role": "gallery",
+      "alt": "Three regression models flatlining on crime prediction, the run that showed spatial form alone predicts crime poorly",
+      "aspect": 2.1549,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/model-performance-640.webp",
+          "kb": 17
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/model-performance-1024.webp",
+          "kb": 32
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/urban-risk/model-performance-1600.webp",
+          "kb": 53
+        }
+      ]
+    },
+    {
+      "name": "shap-explanations",
+      "role": "gallery",
+      "alt": "SHAP plots the team used to explain every prediction, comparing what drives risk in Islington and Barcelona's Eixample",
+      "aspect": 1.9877,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/shap-explanations-640.webp",
+          "kb": 20
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/shap-explanations-1024.webp",
+          "kb": 39
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/urban-risk/shap-explanations-1600.webp",
+          "kb": 68
+        }
+      ]
+    },
+    {
+      "name": "spanish-neighborhoods",
+      "role": "gallery",
+      "alt": "The trained model scoring street segments in Poble Sec, Puente de Vallecas, and Triana, testing how the pipeline transfers",
+      "aspect": 3.1411,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/urban-risk/spanish-neighborhoods-640.webp",
+          "kb": 12
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/urban-risk/spanish-neighborhoods-1024.webp",
+          "kb": 27
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/urban-risk/spanish-neighborhoods-1600.webp",
+          "kb": 52
         }
       ]
     }
@@ -752,22 +1838,22 @@
       "name": "workflow",
       "role": "hero",
       "alt": "The data team's workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
-      "aspect": 2.0502,
+      "aspect": 1.7778,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/data-geometry/workflow-640.webp",
-          "kb": 19
+          "kb": 20
         },
         {
           "w": 1024,
           "file": "assets/projects/data-geometry/workflow-1024.webp",
-          "kb": 37
+          "kb": 38
         },
         {
           "w": 1600,
           "file": "assets/projects/data-geometry/workflow-1600.webp",
-          "kb": 61
+          "kb": 64
         }
       ]
     },
@@ -786,6 +1872,52 @@
           "w": 1024,
           "file": "assets/projects/data-geometry/thermal-family-1024.webp",
           "kb": 13
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/data-geometry/thermal-family-1600.webp",
+          "kb": 26
+        }
+      ]
+    },
+    {
+      "name": "thermal-in-model",
+      "role": "gallery",
+      "alt": "Thermal comfort KPIs coloring the Hyperbuilding towers level by level, the team's Revit families carrying analysis into BIM",
+      "aspect": 1.9613,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/data-geometry/thermal-in-model-640.webp",
+          "kb": 29
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/data-geometry/thermal-in-model-1024.webp",
+          "kb": 71
+        }
+      ]
+    },
+    {
+      "name": "air-spheres",
+      "role": "gallery",
+      "alt": "Air purification KPIs as pollutant spheres along the cores, sized from Speckle data through Grasshopper and Rhino.Inside Revit",
+      "aspect": 1.9261,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/data-geometry/air-spheres-640.webp",
+          "kb": 15
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/data-geometry/air-spheres-1024.webp",
+          "kb": 33
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/data-geometry/air-spheres-1600.webp",
+          "kb": 67
         }
       ]
     },
@@ -798,12 +1930,12 @@
         {
           "w": 640,
           "file": "assets/projects/data-geometry/data-team-640.webp",
-          "kb": 23
+          "kb": 24
         },
         {
           "w": 1024,
           "file": "assets/projects/data-geometry/data-team-1024.webp",
-          "kb": 43
+          "kb": 46
         }
       ]
     },
@@ -816,55 +1948,68 @@
         {
           "w": 640,
           "file": "assets/projects/data-geometry/control-room-640.webp",
-          "kb": 14
+          "kb": 15
         },
         {
           "w": 1024,
           "file": "assets/projects/data-geometry/control-room-1024.webp",
-          "kb": 27
+          "kb": 28
         }
       ]
     }
   ],
   "tsukiji": [
     {
-      "name": "site-maps",
-      "role": "hero",
-      "alt": "The 19-hectare Tsukiji site in Tokyo: location maps, the nearest weather data hub and the 1979 land use plan",
-      "aspect": 2.0529,
+      "name": "form-iterations",
+      "role": "gif",
+      "alt": "Design exploration iterations reshaping the market hall after small tweaks barely moved environmental performance",
+      "aspect": 1.7778,
+      "animated": true,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/tsukiji/site-maps-640.webp",
-          "kb": 38
+          "file": "assets/projects/tsukiji/form-iterations-640.webp",
+          "kb": 439
         },
         {
           "w": 1024,
-          "file": "assets/projects/tsukiji/site-maps-1024.webp",
-          "kb": 80
+          "file": "assets/projects/tsukiji/form-iterations-1024.webp",
+          "kb": 1304
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/form-iterations-static-640.webp",
+          "kb": 35
         },
         {
-          "w": 1600,
-          "file": "assets/projects/tsukiji/site-maps-1600.webp",
-          "kb": 155
+          "w": 1024,
+          "file": "assets/projects/tsukiji/form-iterations-static-1024.webp",
+          "kb": 73
         }
       ]
     },
     {
-      "name": "site-model",
-      "role": "gallery",
-      "alt": "The Tsukiji development brief and the Rhino site model, the venue massed at 74 m among Chuo City towers",
-      "aspect": 2.0398,
+      "name": "site-maps",
+      "role": "hero",
+      "alt": "The 19-hectare Tsukiji site in Tokyo: location maps, the nearest weather data hub and the 1979 land use plan",
+      "aspect": 1.7778,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/tsukiji/site-model-640.webp",
-          "kb": 25
+          "file": "assets/projects/tsukiji/site-maps-640.webp",
+          "kb": 40
         },
         {
           "w": 1024,
-          "file": "assets/projects/tsukiji/site-model-1024.webp",
-          "kb": 52
+          "file": "assets/projects/tsukiji/site-maps-1024.webp",
+          "kb": 85
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/tsukiji/site-maps-1600.webp",
+          "kb": 164
         }
       ]
     },
@@ -877,33 +2022,109 @@
         {
           "w": 640,
           "file": "assets/projects/tsukiji/market-visit-640.webp",
-          "kb": 45
+          "kb": 48
         },
         {
           "w": 1024,
           "file": "assets/projects/tsukiji/market-visit-1024.webp",
-          "kb": 92
+          "kb": 99
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/tsukiji/market-visit-1600.webp",
+          "kb": 180
         }
       ]
     },
     {
-      "name": "form-iterations",
-      "role": "gif",
-      "alt": "Design exploration iterations reshaping the market hall after small tweaks barely moved environmental performance",
-      "aspect": 2.0386,
-      "animated": true,
+      "name": "site-model",
+      "role": "gallery",
+      "alt": "The Tsukiji development brief and the Rhino site model, the venue massed at 74 m among Chuo City towers",
+      "aspect": 2.0398,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/tsukiji/form-iterations-640.webp",
-          "kb": 441
+          "file": "assets/projects/tsukiji/site-model-640.webp",
+          "kb": 26
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/tsukiji/site-model-1024.webp",
+          "kb": 56
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/tsukiji/site-model-1600.webp",
+          "kb": 105
         }
-      ],
-      "static": [
+      ]
+    },
+    {
+      "name": "climate-stress",
+      "role": "gallery",
+      "alt": "UTCI thermal stress maps from the team's environmental analysis: Tokyo swings the site from cold stress to summer heat",
+      "aspect": 2.0269,
+      "variants": [
         {
           "w": 640,
-          "file": "assets/projects/tsukiji/form-iterations-static-640.webp",
-          "kb": 34
+          "file": "assets/projects/tsukiji/climate-stress-640.webp",
+          "kb": 28
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/tsukiji/climate-stress-1024.webp",
+          "kb": 59
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/tsukiji/climate-stress-1600.webp",
+          "kb": 110
+        }
+      ]
+    },
+    {
+      "name": "radiation-sun-hours",
+      "role": "gallery",
+      "alt": "Seasonal radiation and sun hour maps the team ran in Ladybug across the roof and facades of the proposed venue",
+      "aspect": 2.1001,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/radiation-sun-hours-640.webp",
+          "kb": 26
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/tsukiji/radiation-sun-hours-1024.webp",
+          "kb": 50
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/tsukiji/radiation-sun-hours-1600.webp",
+          "kb": 91
+        }
+      ]
+    },
+    {
+      "name": "daylight-floors",
+      "role": "gallery",
+      "alt": "Floor by floor daylight factor runs that failed the inner corners, the result that made the team reshape the form",
+      "aspect": 2.048,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/daylight-floors-640.webp",
+          "kb": 17
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/tsukiji/daylight-floors-1024.webp",
+          "kb": 32
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/tsukiji/daylight-floors-1600.webp",
+          "kb": 55
         }
       ]
     },
@@ -918,6 +2139,11 @@
           "w": 640,
           "file": "assets/projects/tsukiji/galapagos-640.webp",
           "kb": 20
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/tsukiji/galapagos-1024.webp",
+          "kb": 37
         }
       ],
       "static": [
@@ -925,6 +2151,236 @@
           "w": 640,
           "file": "assets/projects/tsukiji/galapagos-static-640.webp",
           "kb": 23
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/tsukiji/galapagos-static-1024.webp",
+          "kb": 44
+        }
+      ]
+    },
+    {
+      "name": "form-evolution",
+      "role": "gallery",
+      "alt": "Five form iterations from the team's environmental analysis, each revision answering a radiation, comfort or daylight study",
+      "aspect": 1.5099,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/tsukiji/form-evolution-640.webp",
+          "kb": 12
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/tsukiji/form-evolution-1024.webp",
+          "kb": 23
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/tsukiji/form-evolution-1600.webp",
+          "kb": 39
+        }
+      ]
+    }
+  ],
+  "podcast": [
+    {
+      "name": "demo-cover",
+      "role": "gif",
+      "alt": "The podcast quote reel: seven timestamped lines from the conversation on architecture and the brain, in Emilie and Dr. Valentine's words",
+      "aspect": 1.7757,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/podcast/demo-cover-640.webp",
+          "kb": 450
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/podcast/demo-cover-static-640.webp",
+          "kb": 9
+        }
+      ]
+    },
+    {
+      "name": "quote-icebreaker",
+      "role": "gallery",
+      "alt": "Quote card at 02:09, Emilie: we talk about smart buildings in terms of efficiency, but rarely in terms of feeling",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/podcast/quote-icebreaker-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/podcast/quote-icebreaker-1024.webp",
+          "kb": 19
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/podcast/quote-icebreaker-1600.webp",
+          "kb": 32
+        }
+      ]
+    },
+    {
+      "name": "quote-evidence",
+      "role": "gallery",
+      "alt": "Quote card at 09:21, Dr. Cleo Valentine: architecture has fallen into the trap of being artistically informed, not evidence informed",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/podcast/quote-evidence-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/podcast/quote-evidence-1024.webp",
+          "kb": 18
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/podcast/quote-evidence-1600.webp",
+          "kb": 32
+        }
+      ]
+    },
+    {
+      "name": "quote-naming",
+      "role": "gallery",
+      "alt": "Quote card at 09:21, Dr. Cleo Valentine blessing the term Behavior Information Modeling, an elegant way of describing the work",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/podcast/quote-naming-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/podcast/quote-naming-1024.webp",
+          "kb": 19
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/podcast/quote-naming-1600.webp",
+          "kb": 32
+        }
+      ]
+    },
+    {
+      "name": "quote-gameengines",
+      "role": "gallery",
+      "alt": "Quote card at 42:53, Emilie: what if the building does not exist yet and we want to test it, where game engines come in",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/podcast/quote-gameengines-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/podcast/quote-gameengines-1024.webp",
+          "kb": 18
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/podcast/quote-gameengines-1600.webp",
+          "kb": 31
+        }
+      ]
+    },
+    {
+      "name": "quote-publichealth",
+      "role": "gallery",
+      "alt": "Quote card at 55:59, Dr. Cleo Valentine: the built environment is one of the most underutilized tools for public health",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/podcast/quote-publichealth-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/podcast/quote-publichealth-1024.webp",
+          "kb": 16
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/podcast/quote-publichealth-1600.webp",
+          "kb": 28
+        }
+      ]
+    },
+    {
+      "name": "quote-upset",
+      "role": "gallery",
+      "alt": "Quote card at 59:30, Dr. Cleo Valentine: people in unhealthy spaces are entitled to be upset because we can do better",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/podcast/quote-upset-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/podcast/quote-upset-1024.webp",
+          "kb": 17
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/podcast/quote-upset-1600.webp",
+          "kb": 28
+        }
+      ]
+    },
+    {
+      "name": "quote-close",
+      "role": "gallery",
+      "alt": "Quote card at 1:01:54, Emilie closing: if spaces shape how you think and feel, maybe it is time we designed for that",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/podcast/quote-close-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/podcast/quote-close-1024.webp",
+          "kb": 19
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/podcast/quote-close-1600.webp",
+          "kb": 33
+        }
+      ]
+    },
+    {
+      "name": "episode-art",
+      "role": "gallery",
+      "alt": "Episode key art: a building cutaway splitting from grey efficiency into a warm, neuron-lit half, picturing the show's core question",
+      "aspect": 1.8318,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/podcast/episode-art-640.webp",
+          "kb": 19
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/podcast/episode-art-1024.webp",
+          "kb": 42
         }
       ]
     }

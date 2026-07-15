@@ -765,6 +765,160 @@ work-rework session, split off from S5 as the container-finishing pass.
   and as the meta description meanwhile (`headData` already prefers `question`
   when one exists, so nothing regresses). A dedicated question-discovery
   session authors + signs them for all projects at once, best after S4b.
+**S4b · THE FOUR (2026-07-14, gates over the visualize widget + the live build;
+uncommitted).** S4b's "five" shipped as FOUR.
+- **ADDED (supporting tier; the featured six unchanged):** Narkomfin as a Graph
+  (P-112), Encoding Urban Risk (P-113), Data into Geometry (P-114), Tsukiji Fish
+  Market (P-115) — one registry entry + one master file each; images pulled from
+  Emilie's public IAAC blog through the pipeline with authored alt text.
+- **PELAGÑOU PULLED at her copy gate** — a reading of someone else's essay reads
+  as a THOUGHT, not a project (and its slide assets were weak). Removed from every
+  surface, parked as a thought candidate (a words session).
+- **HONESTY (all four = shared team credit, no individual slice).** Urban Risk
+  reads as machine learning and Emilie declined the dossier's recorded slice for
+  "team of four, all hands"; Narkomfin shares credit too, chosen knowingly over the
+  data-prep slice; the accuracy figures stay the team's, woven as prose. Catch:
+  Data into Geometry's blog hero was another team's image, so it never ships here.
+- **THE LANDING CONSTELLATION grew 21 → 25, connected.** A new `pointOnThread`
+  helper (`landing/mindGraph.ts`) samples the drawn idea-lines so an appended
+  project declares which thread it rides and how far along, instead of hand-placed
+  pixels (the "optimized way" Emilie asked for); Narkomfin sits at the data×AI
+  crossing. The world census moved 36 → 40; three new idea threads.
+- **NEXT = FINALIZE THE WORK ROOM (Emilie's post-S4b direction).** Her north star:
+  finalize + simplify the site, THEN a Phase-2 CV + LinkedIn pass. She flagged the
+  work page's visual fluff — a lone animated cover distracts, a tighter book-like
+  index reads better, covers should sit still and move only on hover. So the
+  question-discovery + the full gallery refresh (186 blog images staged) fuse with
+  that visual-simplify pass into one session; §4 (the gallery) reads through this.
+**FINALIZE THE WORK ROOM (2026-07-14, three gates Emilie's over the visualize
+widget, then her AUTOMODE instruction: build everything, feedback at the end;
+uncommitted, no git run per contract).** §4 (the gallery) now reads through this.
+- **G-COVERS = STILL + HOVER-PLAY.** Every grid cover sits still (an animated
+  entry renders its static first-frame ladder via a new `Img still` prop); the
+  one animated cover (Urban Risk, 956KB loop) plays only while hovered OR
+  keyboard-focused, phones and reduced motion always get the 26KB still, and
+  the pipeline now fails if an animated image ships without its static ladder.
+  Motion lives inside the plate, as the D5 visual amendment orders.
+- **G-GRID = FULL INDEX (her pick over "tighter tail").** FEATURED goes
+  3-across at `lg` (was 2), MORE WORK goes 4-across with a compact `dense`
+  card face (13px title + lens pill only, tags dropped, gap-3) — the /work
+  page now reads like the printed book's index page. Card primitive gained
+  `dense`; sizes hints retuned per tier.
+- **G-FLUFF = ALL FOUR CUTS.** The grayscale develop-in retired on /work
+  covers (colors arrive immediately; the ceremony survives elsewhere); the
+  "15 PROJECTS · ALL" count line cut (an sr-only aria-live announcer keeps
+  filter changes audible); XR's "PHOTO PENDING" tile now wears its quiet
+  P-111; the flip-through dot row retired (counter + arrows carry it).
+- **THE GALLERIES ×12 (D3's flip-through, filled).** All staged blog frames
+  were viewed (12 fan-out viewing agents), curated to 6-9 frames per project,
+  every frame honesty-checked, EVERY entry now carries an authored alt
+  (80-140 chars, context not contents; validated programmatically). 50 → 86
+  manifest images. HONESTY CATCHES executed: legoarch's three gallery frames
+  exposing personal browser tabs swapped for clean crops (privacy); the lungs
+  cover alt corrected (it claimed a tower render; the frame is the app
+  collage); cappelletti's pasta-atlas frame cropped to the team's own typeset
+  half (the left half was a third-party book photo; crop staged as
+  `pasta-atlas-team-crop.png`); Dr. Valentine's science diagrams kept OFF the
+  podcast plate (one honest frame ships: the team's episode key art);
+  data-geometry's other-team title board (image-309) re-confirmed banned;
+  tsukiji's official-render comparison (10-1) kept out; the lungs classmate
+  "calmness leaderboard" frame withheld pending Emilie's explicit OK; huddle's
+  misnamed "wind-study" render replaced by the real climate analysis.
+- **THE QUESTIONS ×15 (D4, executed, then ROUND 2 at Emilie's desk).** Round 1
+  flipped the parked candidates live. Round 2 (her feedback, same day): a full
+  discovery pass, 4 research agents mapping 5 questions per project +
+  reverse-engineering real Google/AI search phrasing; she picked per project
+  and the leads were REWRITTEN to her direction (Sensi = the sense ripple;
+  NeuroSpace = visualize the parameters; lEgoarCh = "how can AI turn a text
+  prompt into a LEGO set"; Lungs = the dashboard; Podcast = "How does
+  architecture affect your brain? A conversation."; Urban Risk = "Can we
+  predict crime from urban features? A machine learning test."; Ballooning =
+  the pneumatic-simulation fusion; Marsception = "How do you design a habitat
+  for Mars?"; XR = "Can AR and VR change how we learn?"; the rest kept/tuned).
+  All still DRAFT pending her final sign; each = plate claim + meta
+  description + OG line; all 15 unique, no em dashes.
+- **THE QUESTION DOT (Emilie's ask, round 2).** Every master carries
+  `alsoAnswers` (the 4 other questions it answers, each with an optional
+  `beat`); the plate's lead question wears an NB-grammar dot
+  (`components/work/QuestionsDot.tsx`): hover/tap reveals ALL the questions
+  at a glance, pressing one scrolls to + briefly tints the spine section
+  that answers it (`[data-beat]` anchors on SpineBeat; `.beat-flash` redline
+  tint, interaction-only per governance rule 1). Escape peels the tip first,
+  never the plate; 44px hit boxes; viewport clamp; reduced motion = instant
+  scroll, tint as a state not a motion. Her "explain complex technical
+  subjects in a fun captivating way" goal is parked as an S5 THOUGHT
+  candidate.
+- Reviews run in-session: code review (aria-live announcer restored, dense
+  sizes hint fixed, focus parity added, pipeline assert), design critique,
+  accessibility audit (0 critical/major). Build chain green end to end: 43
+  tests, tsc, prerender 31 routes + 26 OG cards, both PDFs regenerated.
+- **GALLERY REVIEW round 2 (2026-07-15, Emilie project by project): SENSI
+  FINALIZED + THE QUALITY PASS.** Sensi's cover is THE GALAXY (her pick): the
+  sense-constellation still at rest, rippling on hover (an 8s ffmpeg cut of
+  her galaxy-cover-dynamic master; still 19KB, play 995KB on demand); the
+  plate runs act order ×10 behind the 45s scored demo video (onboard gif +
+  shot, shape + green-lens shots, report gif + shot, galaxy UI gif, the
+  two idea frames); demo gifs re-cut from the richer demos exports. THE
+  QUALITY ROOT CAUSE: the plate stage carried no `sizes` hint, so retina
+  screens loaded the 640 rung on every gallery image; fixed (STAGE_SIZES),
+  gallery ladders grew a 1600 rung, gifs a 1024 rung, stills to q82, full
+  89-image regen. Pipeline hardened: the `professional` slug is FROZEN
+  (its old-site sources left the repo in the hygiene cleanup; baked entries
+  carry forward instead of crashing full regens). Her follow-up swap: Sensi's
+  two idea closers replaced with sensory-layer + coupling-map + act-2-flow
+  (11 pages).
+- **NEUROSPACE FINALIZED (2026-07-15, her picks).** PRIVACY CATCH: the shipped
+  slider-tour video included the recording's browser chrome with her personal
+  tabs; the re-encode now carries a BINDING crop (video-manifest `vf`,
+  optimize-videos gained per-item filters) slicing exactly above the app, and
+  the old file is replaced (history scrub decision pending, same bundle as
+  legoarch). Her video pick: the silent recording stays the lead (the unused
+  CBDM final demo remains staged); the cover is a hover-play cut of the red
+  room morphing under a slider drag (demo-cover, still at rest, cut inside
+  the app frame); the landing screenshot moved into the strip; plate = 7
+  pages. Both flagship covers now share the gif-from-video method (ffmpeg
+  to animated webp to the pipeline's still + play ladders).
+- **THE FIT RULINGS (2026-07-15, her picks, four rounds to the bulletproof
+  end-state).** Neuro cover re-cut to a clean rest frame and native 16:9.
+  (a) GRID CARDS run 16:9 (`aspect-video`, was 16:10): the work's native
+  webpage-landscape shape. (b) The pipeline gained `frame16x9: true, bg:
+  '#hex'`: an off-ratio cover composites onto a true 16:9 canvas of its OWN
+  background color (galaxy #424242; sagrada / workflow / site-maps /
+  assessment-ui #ffffff), so 13/15 cards render zero-crop (the frozen
+  soma/mars photos side-crop; sources gone). (c) THE PLATE STAGE is a 16:9
+  WHITE MAT pinned in BOTH modes (a content surface like the print pin, "the
+  plate's paper") and EVERY asset renders object-contain, videos included,
+  no hybrid, no exceptions: her final ruling after the interim smart-hybrid
+  still shaved near-16:9 screenshots. Nothing in a flip-through is ever
+  cropped; the mat only shows where an asset genuinely is not 16:9.
+- **LEGOARCH FINALIZED (2026-07-15, her ask: a new silent film in the Sensi
+  45s grammar).** A 60s edit assembled in-session from the unused S12 demo
+  recording: question card, spaced title card, five mono act cards (NAME A
+  BUILDING · THE RENDER · THE MESH · THE BRICKS, VERIFIED · THE SET) and an
+  award closer, cards rendered with the site's own fonts (puppeteer, film
+  grammar shared with the Sensi 45s). PRIVACY: the raw recording shows
+  personal browser tabs; the chrome is cropped out of every segment at the
+  source. CEILING: the live bricks-on-the-table intro stays OUT (it would
+  read as physical assembly). The plate now leads with the film (10 pages);
+  the gallery gained the Sagrada pipeline trilogy (FLUX render, TRELLIS
+  mesh, joining mesh-vs-lego) and the clean booklet render. The golden
+  sagrada-render remains the card cover + book plate but no longer appears
+  inside the flip-through (the film replaced the photo page). Card copy is
+  DRAFT pending her sign-off. Her follow-ups: the flip is SLIDES + APP
+  SCREENSHOTS only (product renders out; four clean deck slides in); the
+  cards carry the REAL brand (wordmark + emblem from incoming/legoarch/
+  brand); film v2 rebuilt from her sfx-only base with the app sounds kept;
+  the cover is a live cut of Saint Basil's solving into its brick layout.
+- **THE LUNGS FINALIZED (2026-07-15, her spec).** Her studio demo re-cut to a
+  42.5s silent film (1.6x, title/credits dropped, the two teammate-name
+  segments skipped, cropped below the app header so the logged-in teammate
+  chip never ships); it leads the plate, which also answers the IAAC-gated
+  live app: the demo shows what the login hides, and the LIVE APP link
+  stays in the links row. The cover is a live cut of the KPI dependency
+  map, still at rest, breathing on hover. The strip runs inside-the-app
+  first (her priority), with the KPI map swapped to its chromeless version
+  (the old frame showed the teammate logged in). The tower collage left the
+  web gallery; it remains the book plate via its print rung.
 
 ---
 

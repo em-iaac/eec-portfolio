@@ -46,10 +46,14 @@ export default function SheetVideo({
   slug,
   name,
   ariaLabel,
+  fit = 'cover',
 }: {
   slug: string
   name: string
   ariaLabel: string
+  /** 'contain' letterboxes inside the host frame (the plate stage's smart
+   *  hybrid, Emilie 2026-07-15: a demo video never loses its edges). */
+  fit?: 'cover' | 'contain'
 }) {
   const prm = usePrefersReducedMotion()
   const ref = useRef<HTMLVideoElement | null>(null)
@@ -120,7 +124,7 @@ export default function SheetVideo({
       aria-label={ariaLabel}
       width={src.w}
       height={src.h}
-      className="block h-full w-full object-cover"
+      className={`block h-full w-full ${fit === 'contain' ? 'object-contain' : 'object-cover'}`}
     >
       {entry.sources.map(s => (
         <source key={s.file} src={BASE + s.file} type={s.type} />

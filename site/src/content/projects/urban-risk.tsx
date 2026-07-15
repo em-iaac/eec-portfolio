@@ -16,9 +16,17 @@ const urbanRisk: ProjectMaster = {
   myPart: 'Team of four, all hands on everything.',
   dek: 'Street shape alone predicts crime poorly. Saying precisely where the certainty ends was the most honest thing the pipeline produced.',
   dekSigned: true, // Emilie, S4b copy gate, 2026-07-14
-  // THE QUESTION (D4): DEFERRED to the question-discovery session. Candidate
-  // parked: "Can you read a street's safety from a map?" The dek serves
-  // meanwhile.
+  // THE QUESTION (D4 round 2, Emilie's phrasing 2026-07-14: "can we predict
+  // crime based on urban features? a machine learning test"). Honest by
+  // construction: the page's answer is "poorly, and here is where certainty
+  // ends". Team framing binds. DRAFT until signed.
+  question: 'Can we predict crime from urban features? A machine learning test.',
+  alsoAnswers: [
+    { q: "Can you read a street's safety from a map?", beat: 'what' },
+    { q: 'Does the shape of a street make it safe?', beat: 'why' },
+    { q: 'How much does a map actually know about crime?', beat: 'outcome' },
+    { q: 'What did 36,000 London street segments teach the model, and where did it stop learning?', beat: 'how' },
+  ],
   stat: 'TRAINED · ~36,000 STREET SEGMENTS',
   blurb:
     'A machine-learning pipeline that reads street segments from OpenStreetMap (connectivity, visibility, enclosure, transit) and sorts them into risk classes. Trained on roughly 36,000 London segments; the finding is that spatial form alone predicts crime poorly, and the team is explicit about where certainty ends.',

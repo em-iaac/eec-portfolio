@@ -14,16 +14,26 @@ const ballooningMarket: ProjectMaster = {
   meta: 'MACAD · SOLO',
   dek: 'Physics is the difference between a mess and a roof: the balloons ghosted through each other until Kangaroo gave them awareness.',
   dekSigned: true,
-  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
-  // 2026-07-13). Candidate parked: "What turns a mess of balloons into a
-  // roof?". The signed dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie 2026-07-14: she hated the mess line as
+  // lead, loved the touch-nothing and teach-balloons ones, asked for the
+  // pneumatic-simulation register; fused below). DRAFT until signed.
+  question: 'Can balloons roof a historic market without touching it? A pneumatic simulation.',
+  alsoAnswers: [
+    { q: 'How do you teach digital balloons that they exist?', beat: 'how' },
+    { q: 'What turns a mess of balloons into a roof?', beat: 'what' },
+    { q: 'Can pneumatic parasitism give a heritage building a third option?', beat: 'why' },
+    { q: 'What do the epic fails teach that the final render hides?', beat: 'outcome' },
+  ],
   blurb:
     'I decided to fill a historic Cairo market with balloons, and I almost failed: at first they had no physical awareness of each other, just ghosting through one another in a chaotic, colorful mess. Kangaroo gave them physics; pneumatic parasitism gave Bab al-Luq a new roof without touching its bones.',
   tech: 'GRASSHOPPER · KANGAROO · DENDRO · D5',
   links: [
     { label: 'BLOG', href: 'https://blog.iaac.net/a-ballooning-market-why-i-decided-to-fill-a-historic-market-with-balloons-and-how-i-almost-failed/' },
   ],
-  image: { slug: 'ballooning-market', name: 'render-1', alt: 'CMY balloons packed into the steel frame of Bab al-Luq market' },
+  // THE COVER = THE INFLATION, ALIVE (Emilie, 2026-07-15): the Kangaroo
+  // process gif, still at rest, playing on hover; render-1 moved into the
+  // strip and stays the book plate below.
+  image: { slug: 'ballooning-market', name: 'process', alt: 'The Kangaroo inflation running: balloons seeding, anchoring and settling into a roof over Bab al-Luq market' },
   // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
   spreadAssets: [{ slug: 'ballooning-market', name: 'render-1' }],
 

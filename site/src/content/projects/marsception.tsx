@@ -12,10 +12,17 @@ const marsception: ProjectMaster = {
   meta: 'MARSCEPTION COMPETITION · WITH CHARLES ABI CHAHINE',
   dek: "An early bet that generative tools belonged on an architect's desk, back when that still raised eyebrows.",
   dekSigned: true,
-  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
-  // 2026-07-13). Candidate parked: "Could generative tools and architecture
-  // share a desk, years before that was normal?" (duo credit binds; the
-  // question claims the bet, never a solo placement). The dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie 2026-07-14: she hated the desk line;
+  // "this is about how can we build in space? in mars?"). Duo credit binds in
+  // the meta row and blurb; the question asks the object. WHAT + WHY spine
+  // only, beats stay within those. DRAFT until signed.
+  question: 'How do you design a habitat for Mars?',
+  alsoAnswers: [
+    { q: 'Could AI help design a Mars habitat, years before that was normal?', beat: 'what' },
+    { q: 'What does a Mars habitat look like when you design it as a ring?', beat: 'what' },
+    { q: 'How early is too early to bet on generative design?', beat: 'why' },
+    { q: 'Could generative tools and architecture share a desk?', beat: 'why' },
+  ],
   award: 'TOP 50',
   myPart: 'A two-person entry with Charles Abi Chahine.',
   blurb:

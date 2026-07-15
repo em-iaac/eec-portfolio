@@ -14,6 +14,10 @@
 // LANDSCAPE like the book plates (and the new book-spread showcase); the
 // dev-only Lab keeps the square default. Wide = a 16:10 image over an
 // auto-height band; square = the original 80/20 flex split.
+//
+// DENSITY (G-GRID "full index", Emilie 2026-07-14): `dense` shrinks the band
+// (smaller title, tighter padding) for the index-like MORE WORK tier, where
+// four cards share a row and the face carries title + lens only.
 import type { CSSProperties, ReactNode } from 'react'
 import type { Lens } from '../Lens'
 import { LensPill, Pill, StatusPill } from './Pill'
@@ -25,6 +29,7 @@ export default function Card({
   award,
   image,
   aspect = 'square',
+  dense = false,
   onOpen,
   className = '',
   style,
@@ -40,6 +45,8 @@ export default function Card({
   image?: ReactNode
   /** 'square' (DL-0 default) or 'wide' (S4a landscape, the /work gallery) */
   aspect?: 'square' | 'wide'
+  /** compact band for the index tier (G-GRID, 2026-07-14) */
+  dense?: boolean
   onOpen?: () => void
   className?: string
   style?: CSSProperties
@@ -48,7 +55,10 @@ export default function Card({
   const wide = aspect === 'wide'
   const face = (
     <>
-      <div className={`relative overflow-hidden ${wide ? 'aspect-[16/10] w-full' : 'min-h-0 flex-[4]'}`}>
+      {/* 16:9 since the gallery review (Emilie, 2026-07-15): most covers are
+          webpage-landscape captures, so the index crops least at video ratio
+          (was 16:10). */}
+      <div className={`relative overflow-hidden ${wide ? 'aspect-video w-full' : 'min-h-0 flex-[4]'}`}>
         {image ?? (
           <div className="flex h-full w-full items-center justify-center bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)]">
             {/* muted, not faint (G4): faint fell to 3.2:1 on the dark ground */}
@@ -67,8 +77,14 @@ export default function Card({
           </span>
         )}
       </div>
-      <div className={`flex flex-col justify-center gap-1.5 px-3.5 text-left ${wide ? 'py-3' : 'min-h-0 flex-1 py-2'}`}>
-        <span className="truncate text-[15px] leading-tight font-semibold text-[var(--lang-ink)]">
+      <div
+        className={`flex flex-col justify-center text-left ${dense ? 'gap-1 px-3 py-2.5' : 'gap-1.5 px-3.5'} ${
+          wide ? (dense ? '' : 'py-3') : 'min-h-0 flex-1 py-2'
+        }`}
+      >
+        <span
+          className={`truncate leading-tight font-semibold text-[var(--lang-ink)] ${dense ? 'text-[13px]' : 'text-[15px]'}`}
+        >
           {title}
         </span>
         <span className="flex min-w-0 items-center gap-1.5 overflow-hidden">

@@ -14,15 +14,24 @@ const huddle: ProjectMaster = {
   myPart: 'Team of four, all hands on everything.',
   dek: 'Stop fighting the wind and build with it: modules that grow along the gusts instead of bracing against them.',
   dekSigned: true,
-  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
-  // 2026-07-13). Candidate parked: "What if you built with the wind instead of
-  // bracing against it?" (team of four; the question claims the idea, never an
-  // individual slice). The signed dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie 2026-07-14: "okay", lead kept; team of
+  // four, the question claims the idea, never an individual slice). The
+  // alsoAnswers feed the question dot. DRAFT until signed.
+  question: 'What if you built with the wind instead of bracing against it?',
+  alsoAnswers: [
+    { q: 'What does a building look like when the wind designs it with you?', beat: 'what' },
+    { q: 'How do you design for a place where the wind never stops?', beat: 'why' },
+    { q: 'What happens when wind patterns decide where the modules go?', beat: 'how' },
+    { q: 'How does a facade become a readable map of climate?', beat: 'how' },
+  ],
   blurb:
     'In Punta Arenas the wind never stops, so we stopped fighting it. The Huddle aggregates 4×4×4 m modules along the wind itself: WASP grows the cluster, Kangaroo settles it, and a three-panel envelope (Shields, Lenses, Gills) turns the facade into a readable map of climatic forces.',
   tech: 'WASP · KANGAROO · ALPACA4D',
   links: [{ label: 'BLOG', href: 'https://blog.iaac.net/the-huddle-wind-adaptive-research-hub-in-punta-arenas-chile/' }],
-  image: { slug: 'huddle', name: 'axonometric', alt: 'Axonometric of The Huddle wind-adaptive module cluster' },
+  // THE COVER = THE GROWTH, ALIVE (Emilie, 2026-07-15): the WASP aggregation
+  // gif, still at rest, playing on hover; axonometric moved into the strip
+  // and stays the book plate below.
+  image: { slug: 'huddle', name: 'wasp-growth', alt: 'Animated WASP growth study for The Huddle: modules aggregating along the wind across the Punta Arenas plot' },
   // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
   spreadAssets: [{ slug: 'huddle', name: 'axonometric' }],
 

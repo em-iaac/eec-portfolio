@@ -36,6 +36,10 @@ export interface ProjectMaster {
   // `position` = CSS object-position for the uniform 4:3 crop (escape hatch
   // when center-crop cuts the important part of a wide screenshot).
   image?: { slug: string; name: string; alt: string; position?: string }
+  // The cover is a MONTAGE/reel of the strip (2026-07-16): it plays on the
+  // card face but is NOT a plate page, so the flip-through starts on the real
+  // frames instead of replaying the reel (podcast quote reel).
+  coverMontage?: boolean
   draftCopy?: boolean
   // Session 7 rulings: myPart NEVER renders as a labeled line; it is woven
   // into `what` as an ordinary sentence. `stat` = the one defensible number.
@@ -50,6 +54,12 @@ export interface ProjectMaster {
   // JSON-LD description (lib/headData.ts prefers it over the dek); S4 also
   // makes it the on-screen claim. Until then the signed dek serves.
   question?: string
+  // THE QUESTION DOT (Emilie, 2026-07-14): the OTHER questions this project
+  // answers, revealed by the dot beside the lead question on the plate, "all
+  // the questions at a glance". Optional `beat` names the spine section that
+  // answers it; pressing the question highlights that section. Wordings ship
+  // DRAFT until she signs them, like the lead.
+  alsoAnswers?: { q: string; beat?: 'what' | 'why' | 'how' | 'outcome' }[]
   // The listening member's hero line (the podcast leads with a pull-quote).
   pullQuote?: { text: string; source: string }
 

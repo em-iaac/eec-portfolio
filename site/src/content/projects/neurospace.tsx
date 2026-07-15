@@ -17,10 +17,17 @@ const neurospace: ProjectMaster = {
   meta: 'MACAD · SOLO · LIVE APP',
   dek: 'Your room is doing something to you right now: move a slider and watch a browser score it live.',
   dekSigned: true,
-  // THE QUESTION (D4): DEFERRED to the question-discovery session (Emilie,
-  // 2026-07-13). Candidate parked: "What if a room could tell you what it's
-  // doing to you, while you design it?" (verbs stay score/estimate, never
-  // "measure", never "makes you feel"). The signed dek serves meanwhile.
+  // THE QUESTION (D4 round 2, Emilie's direction 2026-07-14): visualize the
+  // parameters + test the hypothesis. The QUESTION may ask "makes you feel"
+  // (the locked hero asks the same); the TOOL's claim stays score/estimate in
+  // the dek and spine, never measure. DRAFT until signed.
+  question: 'Can you visualize the parameters that affect how a room makes you feel?',
+  alsoAnswers: [
+    { q: "What if a room could tell you what it's doing to you, while you design it?", beat: 'what' },
+    { q: 'Does ceiling height really change how stressed you are?', beat: 'how' },
+    { q: 'Does the score prove the hypothesis, hand you a new one, or the opposite?', beat: 'outcome' },
+    { q: 'What happens when BIM starts describing you instead of the building?', beat: 'why' },
+  ],
   blurb:
     "You're sitting in a room right now, and its defaults are quietly shaping your cortisol, your circadian rhythm, your cognitive load. NeuroSpace makes those effects visible: move a slider, watch the score respond · Rhino.Compute geometry on the server, behavioral scoring live in the browser. It's BIM, reframed as Behavior Information Modeling.",
   tech: 'GRASSHOPPER · RHINO.COMPUTE · VUE 3 · THREE.JS',
@@ -29,7 +36,11 @@ const neurospace: ProjectMaster = {
     { label: 'GITHUB', href: 'https://github.com/hi-em/neurospace' },
     { label: 'BLOG', href: 'https://blog.iaac.net/the-data-pipeline-behind-neurospace-from-sliders-to-synapses/' },
   ],
-  image: { slug: 'neurospace', name: 'landing', alt: 'NeuroSpace landing page with parametric room and live scores' },
+  // THE COVER = THE ROOM, ALIVE (Emilie's pick, 2026-07-15): a still of the
+  // red parametric room at rest, morphing under a slider drag on hover; cut
+  // from the demo recording inside the app frame (never the browser chrome).
+  // The landing screenshot moved into the flip-through.
+  image: { slug: 'neurospace', name: 'demo-cover', alt: 'The red parametric room of NeuroSpace mid-morph, the live NeuroScore answering a slider drag' },
   // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
   spreadAssets: [{ slug: 'neurospace', name: 'landing' }],
 

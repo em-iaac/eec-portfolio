@@ -104,6 +104,11 @@ the on-screen claim/dek, the per-route `<meta name="description">` seed, and the
 question-style search. It echoes Emilie's own hero question, so the whole site asks and answers.
 Questions are drafted in S4/S5 in her voice and ship flagged until she signs them.
 
+**Amendment (2026-07-14, Finalize the Work Room): EXECUTED for all 15.** The parked
+candidates went live as `question` in every master (one wording tune: lEgoarCh
+"provably" → "actually" per the claim ceiling), each now the on-screen claim + the
+route's meta description + the OG line. All 15 ship DRAFT pending Emilie's sign-off.
+
 **Amendment (2026-07-13, S4a): the questions get their OWN discovery session.** In S4a Emilie
 deferred the on-screen question. Drafting the candidates made clear the real work is *choosing*
 the question a normal person would actually ask, which needs a collaborative pass: read each
@@ -120,6 +125,11 @@ those, cut it. Specifically fluff, cut on sight: evidence-free adjectives ("inno
 "cutting-edge", "passionate"), sentences that restate the title, generic mission statements,
 and anything reproducing method or code that already lives in the repo/blog. The bar is
 "portfolio, not a blog": tight, concrete, voiced.
+
+**Amendment (2026-07-14): the fluff bar also cuts VISUAL fluff.** Emilie extended the minimal
+rule to the visual layer: calm still covers (motion only on hover or inside the opened plate,
+never an autoplaying grid tile), a tighter index-like grid, no decorative motion. Same test,
+applied to pixels: if an element does not help a reviewer read the work faster, cut it or quiet it.
 
 ### D6 · ATS · reviewer · brand · SEO — do the full searchability build (S3)
 The single biggest gap on the live site is that it is invisible to crawlers per route. The
@@ -260,3 +270,17 @@ THE QUESTIONS (all projects) → S5.** The reasoning is unchanged (build the con
 it; one bounded sign-off per sitting). S4b's gates before it runs: the image-ingestion path for
 the five (their public IAAC blog images) and Emilie's exact role on the three with no calibration
 ceiling yet (Data-Geometry, Tsukiji, Pelagñou).
+
+**Amendment (2026-07-14): S4b shipped as THE FOUR; questions + galleries fused into FINALIZE THE
+WORK ROOM; CV/LinkedIn split into Phase 2.** S4b added four (Narkomfin, Urban Risk, Data into
+Geometry, Tsukiji), all signed with SHARED team credit (Urban Risk reads as machine learning;
+Emilie declined the recorded individual slice and chose shared, knowingly); Pelagñou was pulled at
+her gate as a reading of someone else's essay and parked as a THOUGHT candidate. At the post-S4b
+review Emilie set a NORTH STAR — finalize + simplify the website first, THEN optimise the CV +
+LinkedIn — and flagged the work page's visual fluff (a lone animated cover reads as distracting; a
+tighter, book-like index; still-at-rest with motion only on hover). So the questions and the full
+gallery refresh (all 15 projects; 186 blog images already staged in `incoming/`) fuse with that
+visual pass into ONE **Finalize the Work Room** session: global cover/grid/visual-fluff gates
+first, then per-project gallery + question (reading each blog once); may run two sittings.
+CV/LinkedIn leave the website track into a **Phase 2** after S5. Live order: **S1 ✓ → S3 ✓ →
+S4a ✓ → S4b ✓ → FINALIZE THE WORK ROOM → S5 (words) → Phase 2 (CV + LinkedIn).**

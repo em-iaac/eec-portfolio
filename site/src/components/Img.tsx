@@ -29,6 +29,7 @@ export default function Img({
   sizes = '(max-width: 700px) 100vw, 640px',
   priority = false,
   develop = false,
+  still = false,
   className,
   style,
 }: {
@@ -40,6 +41,10 @@ export default function Img({
   /** Run the grayscale -> color develop ceremony on first viewport entry
    *  (Session 5). Owns the filter classes so the caller passes layout only. */
   develop?: boolean
+  /** Render an animated webp's static first frame (G-COVERS, Emilie
+   *  2026-07-14: grid covers sit STILL at rest; the caller flips this off
+   *  while hovered to play, and reduced motion still wins below). */
+  still?: boolean
   className?: string
   style?: CSSProperties
 }) {
@@ -48,9 +53,10 @@ export default function Img({
   const entry = findImage(slug, name)
   if (!entry) return null
   // Reduced motion: animated webps render their static first frame instead
-  // of looping (governance rule 7 applies to figures too).
+  // of looping (governance rule 7 applies to figures too). A `still` caller
+  // gets the same first frame even without the preference.
   const variants =
-    entry.animated && prm && entry.static?.length ? entry.static : entry.variants
+    entry.animated && (prm || still) && entry.static?.length ? entry.static : entry.variants
   const largest = variants[variants.length - 1]
   if (!largest) return null
   // Develop owns the filter transition; hover no longer colorizes (retired
