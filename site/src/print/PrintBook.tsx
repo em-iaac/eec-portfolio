@@ -15,8 +15,9 @@ import { LENSES, LensTick, type Lens } from '../components/Lens'
 import { VOICE } from '../landing/identity'
 import { MIND, THREADS, VIEWBOX, spline, starPath } from '../landing/mindGraph'
 import { MASTERS_BY_SLUG } from '../content/projects'
-import { ENTRIES } from '../data/registry'
+import { thoughtIndexEntries } from '../data/registry'
 import { WORK_ENTRIES } from '../data/work'
+import ThoughtIndexRows, { fmtMonthYear } from '../components/ThoughtIndexRows'
 import { EDUCATION, EXPERIENCE, AWARDS, SKILLS, LANGUAGES, CERTIFICATES, UPDATED } from '../data/cv'
 import A4Page, { sideOf, type PageSide } from './A4Page'
 import { BOOK_SPREADS, type SpreadData } from './bookContents'
@@ -48,12 +49,9 @@ const SUBTITLE = `Design Technology Architect. ${VOICE}`
 // landing's G4 wording; the record is the single source).
 const AWARD_FACT = MASTERS_BY_SLUG['sensi']?.award ?? ''
 
-const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-function fmtDate(yyyymm: string): string {
-  const [y, m] = yyyymm.split('-')
-  const mi = Number(m) - 1
-  return `${MONTHS[mi] ?? ''} ${y}`.trim()
-}
+// The date grammar moved into the shared index-rows module (Session 1
+// REINDEX, 2026-07-16): the /work index and this book render the same rows.
+const fmtDate = fmtMonthYear
 
 function LensPill({ lens }: { lens: Lens }) {
   return (
@@ -327,27 +325,10 @@ function Spread({ data, side, plate }: { data: SpreadData; side: PageSide; plate
 
 /* ---- 3 · THE INDEX ------------------------------------------------------- */
 
-const THOUGHTS = ENTRIES.filter(e => e.kind === 'thought').sort((a, b) =>
-  (a.note?.number ?? '').localeCompare(b.note?.number ?? ''),
-)
-
-function ThoughtRows() {
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '8mm' }}>
-      {THOUGHTS.map(t => (
-        <div key={t.id} className="pr-row">
-          <span className="pr-mark pr-mark--thought" />
-          <span style={{ display: 'flex', justifyContent: 'space-between', gap: '4mm', alignItems: 'baseline' }}>
-            <span className="pr-body" style={{ fontStyle: 'italic' }}>{t.title}</span>
-            <span className="pr-mono pr-mono--muted">
-              {t.note?.number} · {fmtDate(t.date)}
-            </span>
-          </span>
-        </div>
-      ))}
-    </div>
-  )
-}
+// The rows themselves live in components/ThoughtIndexRows (print skin): the
+// /work index renders the same component in its screen skin, so the two
+// renditions share one layout logic + one selector (REINDEX, 2026-07-16).
+const THOUGHTS = thoughtIndexEntries()
 
 function IndexPage({ side }: { side: PageSide }) {
   return (
@@ -403,7 +384,7 @@ function IndexPage({ side }: { side: PageSide }) {
           })}
         </div>
         <h3 className="pr-kicker" style={{ margin: '5mm 0 2.4mm' }}>THE THOUGHTS</h3>
-        <ThoughtRows />
+        <ThoughtIndexRows skin="print" />
       </div>
     </A4Page>
   )

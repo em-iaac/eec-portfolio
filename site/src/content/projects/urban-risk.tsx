@@ -19,7 +19,7 @@ const urbanRisk: ProjectMaster = {
   // THE QUESTION (D4 round 2, Emilie's phrasing 2026-07-14: "can we predict
   // crime based on urban features? a machine learning test"). Honest by
   // construction: the page's answer is "poorly, and here is where certainty
-  // ends". Team framing binds. DRAFT until signed.
+  // ends". Team framing binds. Question + dot set SIGNED by Emilie (REINDEX batch D, 2026-07-16).
   question: 'Can we predict crime from urban features? A machine learning test.',
   alsoAnswers: [
     { q: "Can you read a street's safety from a map?", beat: 'what' },

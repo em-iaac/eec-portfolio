@@ -17,7 +17,7 @@ const lungs: ProjectMaster = {
   dekSigned: true,
   // THE QUESTION (D4 round 2, Emilie's direction 2026-07-14): the dashboard /
   // data-management vocabulary she asked for, still the data team's ownable
-  // claim, never the building's filtration. DRAFT until signed.
+  // claim, never the building's filtration. Question + dot set SIGNED by Emilie (REINDEX batch A, 2026-07-16).
   question: 'Can a dashboard run an architecture studio?',
   alsoAnswers: [
     { q: 'What if the data running a studio was the architecture?', beat: 'why' },

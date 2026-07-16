@@ -15,8 +15,8 @@ const cappelletti: ProjectMaster = {
   dek: 'A pasta shape is quietly structural: evolutionary optimization scaled a cappelletti shell to a 160 kg pavilion.',
   dekSigned: true,
   // THE QUESTION (D4 round 2, Emilie 2026-07-14: "good" to the pavilion
-  // phrasing; aligns with the blog title that already ranks). DRAFT until
-  // signed.
+  // phrasing; aligns with the blog title that already ranks). Question + dot
+  // set SIGNED by Emilie (REINDEX batch C, 2026-07-16).
   question: 'Can a pasta shape hold up a pavilion?',
   alsoAnswers: [
     { q: 'Is a piece of pasta secretly a structure?', beat: 'what' },

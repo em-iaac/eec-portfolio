@@ -22,10 +22,12 @@ import { useEffect, useRef } from 'react'
 // signed spine; the Pen Table sheet tier retired, /sheets/* redirects here).
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
+import ThoughtIndexRows from '../components/ThoughtIndexRows'
 import WorkCard from '../components/work/WorkCard'
 import WorkOverlay from '../components/work/WorkOverlay'
 import { FilterPill, LensMark } from '../components/ui/Pill'
 import { LENSES, type Lens } from '../components/Lens'
+import { thoughtIndexEntries } from '../data/registry'
 import { WORK_ENTRIES, WORK_LENSES, workEntryById } from '../data/work'
 
 // The lens facet filter: ALL + one pill per lens present, hash-synced so a
@@ -34,7 +36,8 @@ import { WORK_ENTRIES, WORK_LENSES, workEntryById } from '../data/work'
 // pill leads with its shape mark so colour never means alone.
 function FilterBar({ active }: { active: Lens | null }) {
   return (
-    <div className="-mx-1 flex flex-wrap" role="group" aria-label="Filter by lens">
+    <div className="-mx-1 flex flex-wrap items-center">
+      <div className="flex flex-wrap items-center" role="group" aria-label="Filter by lens">
       <FilterPill
         as={Link}
         to="/work"
@@ -59,6 +62,14 @@ function FilterBar({ active }: { active: Lens | null }) {
           {LENSES[l].label.toUpperCase()}
         </FilterPill>
       ))}
+      </div>
+      {/* The printed index's recognition legend, on the filter row but OUTSIDE
+          the filter group (REINDEX 2026-07-16: colour never means alone, and
+          neither does the star; the ✦ on a tile's meta is named here once).
+          Not interactive, so it is not a filter to a screen reader. */}
+      <span className="mx-1 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]">
+        ✦ RECOGNITION
+      </span>
     </div>
   )
 }
@@ -73,15 +84,24 @@ export default function Work() {
 
   const entries = activeLens ? WORK_ENTRIES.filter((w) => w.lens === activeLens) : WORK_ENTRIES
 
-  // THE FEATURED TIER (S4, D2): in the unfiltered ALL view the grid splits into
-  // FEATURED (leads, larger) + MORE WORK (the rest). A lens-filtered view shows
-  // ONE grid (its subset is small; a two-tier split there reads as clutter), in
-  // the same featured-first order WORK_ENTRIES already carries.
-  const showTiers = !activeLens
-  const featured = entries.filter((w) => w.featured)
-  const supporting = entries.filter((w) => !w.featured)
+  // THE BOOK INDEX (REINDEX, Emilie's gate 2026-07-16): the featured/more-work
+  // split retired for ONE uniform grid, every project the same size, like the
+  // printed book's index page. The strongest still lead: WORK_ENTRIES carries
+  // the featured-first order, and `featured` keeps steering eager loading.
+
+  // The thoughts rows follow the same facet (a lens with no thoughts simply
+  // shows none; the section hides rather than sitting empty).
+  const thoughts = thoughtIndexEntries().filter((t) => !activeLens || t.lens === activeLens)
 
   const selected = id ? workEntryById(id) : undefined
+
+  // #thoughts is a section anchor, not a lens facet (the facet parse above
+  // ignores it): a note page's "ALL THOUGHTS" corridor lands on the list.
+  useEffect(() => {
+    if (hash === '#thoughts') {
+      document.getElementById('thoughts')?.scrollIntoView({ behavior: 'auto', block: 'start' })
+    }
+  }, [hash])
 
   // A bad /work/:id (renamed or typo'd) cleans itself back to the grid rather
   // than showing nothing; IDs are permanent so this is rare, never a 404.
@@ -109,11 +129,11 @@ export default function Work() {
   const open = (entryId: string) => navigate(`/work/${entryId}${hash}`, { viewTransition: true })
   const close = () => navigate(`/work${hash}`, { replace: true, viewTransition: true })
 
-  // One card in a list item; `priorityCount` eager-loads the first images of a
-  // tier (they are above the fold). morphSource yields the entry's
+  // One card in a list item; `priorityCount` eager-loads the first images
+  // (they are above the fold). morphSource yields the entry's
   // view-transition-name to the open overlay (one element per name per state).
-  // `dense` renders the compact index face (G-GRID, Emilie 2026-07-14).
-  const cards = (list: typeof entries, priorityCount: number, dense = false) =>
+  // Every face is the compact index face now (dense; the uniform-grid gate).
+  const cards = (list: typeof entries, priorityCount: number) =>
     list.map((entry, i) => (
       <li key={entry.id} className="flex">
         <WorkCard
@@ -121,7 +141,7 @@ export default function Work() {
           onOpen={() => open(entry.id)}
           priority={i < priorityCount}
           morphSource={selected?.id !== entry.id}
-          dense={dense}
+          dense
         />
       </li>
     ))
@@ -167,36 +187,24 @@ export default function Work() {
         </div>
       </section>
 
-      {showTiers ? (
-        <>
-          {/* FEATURED (G-GRID "full index", Emilie 2026-07-14): the strongest
-              six still lead the page, three per row on desktop. */}
-          <section aria-labelledby="featured-heading" className="pb-2">
-            <h2 id="featured-heading" className={SECTION_LABEL}>
-              Featured
-            </h2>
-            <ul className="mt-3 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
-              {cards(featured, 3)}
-            </ul>
-          </section>
-          {/* MORE WORK: the index tail — four per row on desktop, compact
-              faces (title + lens), tight gaps, like the printed book's index
-              page (her pick over "tighter tail"). */}
-          {supporting.length > 0 && (
-            <section aria-labelledby="more-heading" className="pt-6 pb-4">
-              <h2 id="more-heading" className={SECTION_LABEL}>
-                More work
-              </h2>
-              <ul className="mt-3 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-4">
-                {cards(supporting, 0, true)}
-              </ul>
-            </section>
-          )}
-        </>
-      ) : (
-        <ul className="grid list-none grid-cols-1 gap-4 p-0 pb-4 sm:grid-cols-2 lg:grid-cols-3">
-          {cards(entries, 3)}
-        </ul>
+      {/* ONE uniform grid, filtered or not (the book index's manner): four
+          per row on desktop, two on phones, compact faces, tight gaps. */}
+      <ul className="grid list-none grid-cols-2 gap-3 p-0 pb-4 sm:grid-cols-3 lg:grid-cols-4">
+        {cards(entries, 4)}
+      </ul>
+
+      {/* THE THOUGHTS (REINDEX, Emilie's IA gate 2026-07-16): the printed
+          index's T-numbered contents rows, now the site's one thoughts list
+          (the reading room retired; /thoughts is the world only). Each row
+          opens its note page; the world stays one door over at /thoughts.
+          The lens facet reaches the rows too, same as the tiles. */}
+      {thoughts.length > 0 && (
+        <section id="thoughts" aria-labelledby="thoughts-list-heading" className="pt-8 pb-6">
+          <h2 id="thoughts-list-heading" className={SECTION_LABEL}>
+            The Thoughts
+          </h2>
+          <ThoughtIndexRows skin="screen" lens={activeLens} />
+        </section>
       )}
 
       {selected && <WorkOverlay key={selected.id} entry={selected} onClose={close} />}

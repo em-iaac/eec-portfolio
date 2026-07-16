@@ -15,7 +15,7 @@ const xrLab: ProjectMaster = {
   // THE QUESTION (D4 round 2, Emilie 2026-07-14: "this is about how XR and VR
   // can help in education"; she will expand this project eventually). The
   // question asks; the thin spine answers only from her lab years, no
-  // measured-outcome claims. WHAT + WHY beats only. DRAFT until signed.
+  // measured-outcome claims. WHAT + WHY beats only. Question + dot set SIGNED by Emilie (REINDEX batch C, 2026-07-16).
   question: 'Can AR and VR change how we learn?',
   alsoAnswers: [
     { q: 'What if the lesson could stand in the room with you?', beat: 'what' },

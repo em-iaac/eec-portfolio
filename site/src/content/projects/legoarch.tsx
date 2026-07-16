@@ -20,7 +20,7 @@ const legoarch: ProjectMaster = {
   // THE QUESTION (D4 round 2, Emilie's direction 2026-07-14): her "how can AI
   // turn text into lego sets" shape. HONESTY: input is a TEXT prompt (her
   // "or images" trimmed: images are the pipeline's intermediate, not its
-  // input); ceiling stays digitally verified buildable. DRAFT until signed.
+  // input); ceiling stays digitally verified buildable. Question + dot set SIGNED by Emilie (REINDEX batch A, 2026-07-16).
   question: 'How can AI turn a text prompt into a LEGO set that actually snaps together?',
   alsoAnswers: [
     { q: 'What does it take to turn a render into a parts list and a booklet?', beat: 'what' },

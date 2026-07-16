@@ -14,7 +14,7 @@ const tsukiji: ProjectMaster = {
   dek: 'Tokyo’s climate stress-tested a 19-hectare market hall, and the polite tweaks changed nothing: the form itself had to give.',
   dekSigned: true, // Emilie, S4b copy gate, 2026-07-14
   // THE QUESTION (D4 round 2, Emilie 2026-07-14: "okay" to the fusion; the
-  // field's name + her lunch line). Team framing binds. DRAFT until signed.
+  // field's name + her lunch line). Team framing binds. Question + dot set SIGNED by Emilie (REINDEX batch D, 2026-07-16).
   question: 'Can environmental analysis keep up with weather that changes its mind by lunch?',
   alsoAnswers: [
     { q: 'Can thermal, daylight, and wind simulation reshape a building form?', beat: 'what' },

@@ -20,7 +20,7 @@ const neurospace: ProjectMaster = {
   // THE QUESTION (D4 round 2, Emilie's direction 2026-07-14): visualize the
   // parameters + test the hypothesis. The QUESTION may ask "makes you feel"
   // (the locked hero asks the same); the TOOL's claim stays score/estimate in
-  // the dek and spine, never measure. DRAFT until signed.
+  // the dek and spine, never measure. Question + dot set SIGNED by Emilie (REINDEX batch A, 2026-07-16).
   question: 'Can you visualize the parameters that affect how a room makes you feel?',
   alsoAnswers: [
     { q: "What if a room could tell you what it's doing to you, while you design it?", beat: 'what' },

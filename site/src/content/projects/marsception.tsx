@@ -15,7 +15,7 @@ const marsception: ProjectMaster = {
   // THE QUESTION (D4 round 2, Emilie 2026-07-14: she hated the desk line;
   // "this is about how can we build in space? in mars?"). Duo credit binds in
   // the meta row and blurb; the question asks the object. WHAT + WHY spine
-  // only, beats stay within those. DRAFT until signed.
+  // only, beats stay within those. Question + dot set SIGNED by Emilie (REINDEX batch C, 2026-07-16).
   question: 'How do you design a habitat for Mars?',
   alsoAnswers: [
     { q: 'Could AI help design a Mars habitat, years before that was normal?', beat: 'what' },

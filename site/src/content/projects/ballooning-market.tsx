@@ -16,7 +16,7 @@ const ballooningMarket: ProjectMaster = {
   dekSigned: true,
   // THE QUESTION (D4 round 2, Emilie 2026-07-14: she hated the mess line as
   // lead, loved the touch-nothing and teach-balloons ones, asked for the
-  // pneumatic-simulation register; fused below). DRAFT until signed.
+  // pneumatic-simulation register; fused below). Question + dot set SIGNED by Emilie (REINDEX batch C, 2026-07-16).
   question: 'Can balloons roof a historic market without touching it? A pneumatic simulation.',
   alsoAnswers: [
     { q: 'How do you teach digital balloons that they exist?', beat: 'how' },

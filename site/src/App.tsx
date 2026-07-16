@@ -74,9 +74,10 @@ function ScrollToTop() {
     // resets as normal).
     const inWork = (p: string) => p === '/work' || p.startsWith('/work/')
     if (inWork(prev) && inWork(pathname)) return
-    // Same-path search-param navigations (/thoughts <-> ?view=words) must
-    // never reset scroll or steal focus; the effect re-runs on navType flips
-    // (PUSH<->REPLACE) even when the pathname is unchanged.
+    // Same-path search-param navigations (e.g. the retired ?view=words URLs
+    // stripping their param on /thoughts) must never reset scroll or steal
+    // focus; the effect re-runs on navType flips (PUSH<->REPLACE) even when
+    // the pathname is unchanged.
     if (prev === pathname && !hash) return
     if (navType === 'POP') return
     if (hash) {

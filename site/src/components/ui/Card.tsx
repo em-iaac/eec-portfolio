@@ -27,6 +27,7 @@ export default function Card({
   lens,
   tags = [],
   award,
+  meta,
   image,
   aspect = 'square',
   dense = false,
@@ -41,6 +42,10 @@ export default function Card({
   tags?: string[]
   /** e.g. "MaCAD '26" — rendered as the ✦ ink pill on the image corner */
   award?: string
+  /** the book-index meta ("P-101 · ✦"), quiet mono at the band's right
+      (REINDEX 2026-07-16: the uniform /work grid carries the printed
+      index's grammar; ✦ is named by the legend in the filter row) */
+  meta?: string
   /** the developing image (an <Img>, <img> or art); omit for the quiet tile */
   image?: ReactNode
   /** 'square' (DL-0 default) or 'wide' (S4a landscape, the /work gallery) */
@@ -94,6 +99,11 @@ export default function Card({
               {t}
             </Pill>
           ))}
+          {meta && (
+            <span className="ml-auto shrink-0 pl-1 font-mono text-[9px] tracking-[0.08em] whitespace-nowrap text-[var(--lang-ink-muted)]">
+              {meta}
+            </span>
+          )}
         </span>
       </div>
     </>

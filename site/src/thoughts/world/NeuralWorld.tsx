@@ -8,8 +8,9 @@
 // award · bare commit dot ON the lane = milestone. The ruler is geometric
 // and faint, the nerve organic and bright; the contrast is the design; the
 // mind owns all motion. TWO VIEWS OF ONE MIND: the landing stays the mind
-// at rest; this is the mind in time; the words stay one corridor away
-// (/thoughts?view=words).
+// at rest; this is the mind in time. The words: each thought's own note page
+// (/thoughts/:id), listed in /work's THE THOUGHTS section (the reading room
+// and its graph<->words switch retired at the reindex, 2026-07-16).
 //
 // Copy status: kicker/sub/hint/corridor + h1 "points in time" + LIVE ·
 // STILL GROWING all SIGNED in-session (gate 6). The NOW card's three lines
@@ -32,7 +33,6 @@ import TitleBlock from '../../components/TitleBlock'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import { NOW } from '../../data/now'
 import { THOUGHT_OPENINGS } from '../openings'
-import ViewToggle from '../ViewToggle'
 import { WORLD, starPath, type WorldNode } from './worldGraph'
 import { useProximityEngine, TUNE, type ConnHandle, type NodeHandle } from './useProximityEngine'
 import WorldSrNav from './WorldSrNav'
@@ -389,11 +389,9 @@ export default function NeuralWorld() {
             {pieces} PIECES · 2021 › <span className="text-[var(--lang-interaction)]">NOW</span> · PROJECTS +
             THOUGHTS + MILESTONES + AWARDS · EVERY PIECE OPENS
           </p>
-          {/* THE SWITCH (S4a): the graph<->words control, up by the title, so
-              the words are a switch away, not a one-way corridor. */}
-          <div className="pointer-events-auto mt-3">
-            <ViewToggle current="graph" />
-          </div>
+          {/* The graph<->words switch RETIRED at the reindex (2026-07-16,
+              Emilie's IA gate): the thoughts LIST lives on /work now (THE
+              THOUGHTS section); this room is the world only. */}
         </header>
 
         {!prm && (

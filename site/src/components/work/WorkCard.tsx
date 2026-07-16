@@ -77,7 +77,11 @@ export default function WorkCard({
       title={entry.title}
       lens={entry.lens}
       tags={dense ? [] : entry.tags.map(tagLabel)}
-      award={entry.awardFace}
+      // REINDEX (2026-07-16, Emilie's uniform-grid gate): the dense index face
+      // carries the printed index's quiet meta ("P-101 · ✦") instead of the
+      // award pill; the legend names ✦, the full award line lives in the plate.
+      award={dense ? undefined : entry.awardFace}
+      meta={dense ? `${entry.number}${entry.recognition ? ' · ✦' : ''}` : undefined}
       aspect="wide"
       dense={dense}
       onOpen={onOpen}

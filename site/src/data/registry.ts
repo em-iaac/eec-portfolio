@@ -622,6 +622,16 @@ export function timelineEntries(): RegistryEntry[] {
   return [...ENTRIES].sort(byDateDesc)
 }
 
+// THE THOUGHTS index rows (Session 1 REINDEX, 2026-07-16): the ONE selector
+// behind both index renditions, the /work THE THOUGHTS section and the
+// printed book's index page (components/ThoughtIndexRows). Book order =
+// T-number ascending, the order Emilie signed on the printed index.
+export function thoughtIndexEntries(): RegistryEntry[] {
+  return ENTRIES.filter((e) => e.kind === 'thought').sort((a, b) =>
+    (a.note?.number ?? '').localeCompare(b.note?.number ?? ''),
+  )
+}
+
 // (G3: the unused entriesByYear() selector retired with the notebook sweep;
 // it predated the 'now' pseudo-entry and had no consumers.)
 

@@ -21,7 +21,7 @@ const sensi: ProjectMaster = {
   // THE QUESTION (D4 round 2, Emilie's direction 2026-07-14): the lead is the
   // RIPPLE, the coupling of the senses, "understudied in the field" (her
   // words); the searchable people-question moved into alsoAnswers (the
-  // question dot). Verb rule holds: score, never measure. DRAFT until signed.
+  // question dot). Verb rule holds: score, never measure. Question + dot set SIGNED by Emilie (REINDEX batch A, 2026-07-16).
   question: 'When you fix one sense in a floor plan, what happens to the other five?',
   alsoAnswers: [
     { q: 'Can a copilot score how a floor plan will feel, before anyone builds it?', beat: 'what' },

@@ -16,7 +16,7 @@ const huddle: ProjectMaster = {
   dekSigned: true,
   // THE QUESTION (D4 round 2, Emilie 2026-07-14: "okay", lead kept; team of
   // four, the question claims the idea, never an individual slice). The
-  // alsoAnswers feed the question dot. DRAFT until signed.
+  // alsoAnswers feed the question dot. Question + dot set SIGNED by Emilie (REINDEX batch B, 2026-07-16).
   question: 'What if you built with the wind instead of bracing against it?',
   alsoAnswers: [
     { q: 'What does a building look like when the wind designs it with you?', beat: 'what' },

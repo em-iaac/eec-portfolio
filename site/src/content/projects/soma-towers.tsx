@@ -14,8 +14,8 @@ const somaTowers: ProjectMaster = {
   dek: 'A parametric study only counts once it survives a drawing set: four towers carried from Grasshopper into BIM.',
   dekSigned: true,
   // THE QUESTION (D4 round 2, Emilie 2026-07-14: "good", lead kept). This
-  // spine is WHAT + WHY only, so the dot's beats stay within those. DRAFT
-  // until signed.
+  // spine is WHAT + WHY only, so the dot's beats stay within those. Question
+  // + dot set SIGNED by Emilie (REINDEX batch C, 2026-07-16).
   question: 'What survives when a parametric study meets a real drawing set?',
   alsoAnswers: [
     { q: 'Does parametric design actually get built?', beat: 'what' },

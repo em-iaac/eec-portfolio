@@ -15,8 +15,8 @@ const dataGeometry: ProjectMaster = {
   dek: 'The data team does not produce geometry, so we turned the numbers into it: KPIs you can stand inside the Revit model and see.',
   dekSigned: true, // Emilie, S4b copy gate, 2026-07-14
   // THE QUESTION (D4 round 2, Emilie 2026-07-14: "good" to the Revit tune).
-  // alsoAnswers feed the question dot; data-team framing binds. DRAFT until
-  // signed.
+  // alsoAnswers feed the question dot; data-team framing binds. Question +
+  // dot set SIGNED by Emilie (REINDEX batch D, 2026-07-16).
   question: 'How do you turn a spreadsheet into Revit geometry you can stand inside?',
   alsoAnswers: [
     { q: 'Can a KPI be a building component instead of a row you have to believe?', beat: 'what' },

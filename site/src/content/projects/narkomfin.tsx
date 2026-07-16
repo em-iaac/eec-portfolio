@@ -18,7 +18,7 @@ const narkomfin: ProjectMaster = {
   dekSigned: true, // Emilie, S4b copy gate, 2026-07-14
   // THE QUESTION (D4 round 2, Emilie 2026-07-14: "okay" to the one-word tune;
   // "floor plan" is the literature's own search token). alsoAnswers feed the
-  // question dot; team framing binds every wording. DRAFT until signed.
+  // question dot; team framing binds every wording. Question + dot set SIGNED by Emilie (REINDEX batch D, 2026-07-16).
   question: "What does a building's floor plan look like as a graph?",
   alsoAnswers: [
     { q: 'Can a machine tell what a room is for just from where it sits?', beat: 'how' },

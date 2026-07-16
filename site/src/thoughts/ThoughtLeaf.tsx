@@ -5,9 +5,10 @@
 // title (the thinking voice), a 62ch serif column, and a quiet endmatter row.
 // NO panel under the prose (glass is for UI, not for words), NO figures,
 // ever. n.b. hover dots stay under rule 8's five-per-leaf cap. The endmatter
-// carries the two corridors (retargeted by the meta build): back to the
-// reading room (?view=words), and this thought's place in time — the neural
-// world at /thoughts, centred + woken on this very neuron via the #id hash.
+// carries the two corridors (retargeted at the reindex, 2026-07-16): back to
+// the thoughts LIST in /work's THE THOUGHTS section, and this thought's
+// place in time — the neural world at /thoughts, centred + woken on this
+// very neuron via the #id hash.
 import { type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
@@ -67,7 +68,9 @@ export default function ThoughtLeaf({
         </div>
 
         <div className="mt-9 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-t-[0.5px] border-[var(--lang-hairline)] pt-3.5 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
-          <Link to="/thoughts?view=words" viewTransition className={RED_LINK}>
+          {/* The list moved to /work at the reindex (2026-07-16): #thoughts
+              is the THE THOUGHTS section anchor, not a lens facet. */}
+          <Link to="/work#thoughts" viewTransition className={RED_LINK}>
             ‹ ALL THOUGHTS
           </Link>
           <Link to={`/thoughts#${id ?? ''}`} className={RED_LINK}>

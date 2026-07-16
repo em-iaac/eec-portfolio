@@ -6,8 +6,10 @@
 // attribution to a real person and is REPLACED with verbatim quotes checked
 // against the transcript. The quantified research (qEEG etc.) is Dr.
 // Valentine's, never Emilie's: the spine stays on the conversation and the
-// coined term. No HOW: a conversation, not a pipeline. All copy touched here
-// re-flagged DRAFT (draftCopy) pending Emilie's re-sign.
+// coined term. No HOW: a conversation, not a pipeline. The rewritten copy
+// (dek, pull quote, spine, the 7 verbatim quote cards, the alts) was
+// RE-SIGNED by Emilie (REINDEX batch B, 2026-07-16); the quotes stay
+// verbatim and Dr. Valentine's science diagrams stay out, binding.
 import type { ProjectMaster } from './types'
 
 const podcast: ProjectMaster = {
@@ -16,11 +18,11 @@ const podcast: ProjectMaster = {
   lens: 'computation',
   meta: 'MACAD PODCAST · CO-HOSTED WITH CHARLES ABI CHAHINE',
   dek: 'The conversation with Dr. Cleo Valentine where Behavior Information Modeling got its name: architecture as a public health question.',
-  dekSigned: false, // rewritten off the transcript 2026-07-15; pending re-sign
-  draftCopy: true,
+  dekSigned: true, // re-signed by Emilie off the verbatim rewrite (REINDEX batch B, 2026-07-16)
   // THE QUESTION (D4 round 2, Emilie's direction 2026-07-14): the highest
   // volume search phrase, owned as a conversation ("its nice", her words).
-  // The quantified research stays Dr. Valentine's. DRAFT until signed.
+  // The quantified research stays Dr. Valentine's. Question + dot set SIGNED
+  // by Emilie (REINDEX batch B, 2026-07-16).
   question: 'How does architecture affect your brain? A conversation.',
   alsoAnswers: [
     { q: 'Why does no building code ask whether a space is good for your brain?', beat: 'why' },
@@ -78,7 +80,7 @@ const podcast: ProjectMaster = {
       keeps circling it.
     </>
   ),
-  showcaseDraft: true, // rewritten off the transcript 2026-07-15; pending re-sign
+  showcaseDraft: false, // rewritten off the transcript, re-signed by Emilie (REINDEX batch B, 2026-07-16)
 }
 
 export default podcast
