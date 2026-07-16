@@ -81,6 +81,14 @@ seconds, so the strongest work leads at full size.
 signal, all in honest team-context framing. Bucketing carries the cleanest efficiency claim
 Emilie owns (a review cut from 25-30 minutes to under three).
 
+**Amendment (2026-07-16, S1): the featured-larger tier retired from the /work render.** Emilie
+chose to make /work literally the printed book's INDEX — one UNIFORM tile grid, no size
+hierarchy. The strongest-first ORDER and the eager-load survive (the award-and-live-app core still
+leads, top-left), but the featured tiles are no longer larger; /work and the book index now share
+one layout logic (`registry.thoughtIndexEntries()` + a `ThoughtIndexRows` component, screen +
+print skins). THE THOUGHTS list closes the /work page (the reading-room list moved here; /thoughts
+is the neural world only). The mind graph and the neural world still show everything.
+
 ### D3 · Card mechanic — unfold the story, redesign the showcase to the BOOK one-pager
 Keep the card-on-top overlay (the andrewheumann mechanism Emilie chose). Two changes:
 

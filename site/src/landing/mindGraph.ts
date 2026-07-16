@@ -197,6 +197,18 @@ const GEOM: Record<string, Geom> = {
   'urban-risk': { ...pointOnThread('AI', 0.04), th: ['AI'], a: 'start', d: [13, 5] },
   'data-geometry': { ...pointOnThread('DATA', 0.28), th: ['DATA'], a: 'start', d: [12, 20] },
   tsukiji: { ...pointOnThread('GEOMETRY', 0.18), th: ['GEOMETRY'], a: 'middle', d: [0, -16] },
+  // ---- S2 appends (2026-07-16): the pre-IAAC record + the bootcamp minis
+  // ride GEOMETRY's lower-left lead-in (the sparse "where the record grows"
+  // stretch) via the append recipe. Jemma + The Homage sit earliest (the
+  // oldest work, nearest the edge the thread enters from); the two Kangaroo
+  // minis land toward the solver corner, A Playscape right by Ballooning
+  // Market + the solvers thought, its honest neighbours. Labels alternate
+  // above/below the line so the lead-in never stacks text.
+  jemma: { ...pointOnThread('GEOMETRY', 0.05), th: ['GEOMETRY'], a: 'start', d: [10, -14] },
+  homage: { ...pointOnThread('GEOMETRY', 0.1), th: ['GEOMETRY'], a: 'middle', d: [0, 22] },
+  'chair-sim': { ...pointOnThread('GEOMETRY', 0.22), th: ['GEOMETRY'], a: 'middle', d: [0, 22] },
+  astroidal: { ...pointOnThread('GEOMETRY', 0.26), th: ['GEOMETRY'], a: 'middle', d: [0, -16] },
+  playscape: { ...pointOnThread('GEOMETRY', 0.4), th: ['GEOMETRY'], a: 'start', d: [12, 12] },
 }
 
 export interface MindNode {

@@ -504,6 +504,253 @@ export const MANIFEST = {
   // (Pelagñou was ingested here in S4b then pulled at Emilie's gate call:
   // parked as a THOUGHT candidate, see data/registry.ts. Its sources stay in
   // incoming/pelagnou/ for that future session.)
+
+  // ---- S2 · THE NEW WORK (2026-07-16): five new slugs from the reorganized
+  // incoming/ categories (academic/lau, academic/iaac, work/). Derived local
+  // files (derived-*.png/jpg, playscape-cover-web.webp) follow the pasta-atlas
+  // precedent: cut in-session, live in git-ignored incoming/, must exist for
+  // pipeline re-runs. Alts DRAFT pending Emilie (automode ruling: she reviews
+  // everything at the end).
+
+  // THE HOMAGE (LAU bachelor thesis, Tamayouz Top 100 2023): adaptive reuse of
+  // Oscar Niemeyer's Rachid Karami Fair in Tripoli. Cover = the moonlit slab
+  // render (native 16:9). The 35000px Sections-and-Plans board stays out; the
+  // sectional-axo board ships split in two (derived crops).
+  homage: [
+    {
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/portfnight.jpg', role: 'hero', name: 'moonlit-slab',
+      alt: 'Moonlit render of the renovated Niemeyer housing bar at the Tripoli fair, a lit interior glowing over the reflecting deck',
+    },
+    {
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/design-strategy-02.png', role: 'gallery', name: 'strategy-quote',
+      alt: "Strategy board pairing Niemeyer's line about Tripoli's two hearts with the adaptive reuse argument of The Homage",
+    },
+    {
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/protfolio Exploded Axo.jpg', role: 'gallery', name: 'exploded-axo',
+      alt: 'Exploded axonometric separating The Homage into past, present and future layers, paired with brain, lungs and heart icons',
+    },
+    {
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/derived-sectional-axo.jpg', role: 'gallery', name: 'sectional-axo',
+      alt: 'Cutaway axonometric of the housing bar, old Niemeyer units in yellow and the new unit typologies inserted in red',
+    },
+    {
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/derived-typology-matrix.jpg', role: 'gallery', name: 'typology-matrix',
+      alt: 'Typology matrix of the three new units: sectional perspectives, furnished plans and cutaway isometrics at 1 to 50',
+    },
+    {
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/residential-startegy.png', role: 'gallery', name: 'residential-strategy',
+      alt: 'Residential strategy board: studios, luxury units and affordable artisan apartments with private workshop space',
+    },
+    {
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/transport-design.png', role: 'gallery', name: 'transfer-box',
+      alt: 'The Transfer Box study: a rail mounted glass exhibition container with its exploded detail axo and underground renders',
+    },
+    {
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/FAIR WITH LIGHT night2.jpg', role: 'gallery', name: 'fair-night',
+      alt: 'Night aerial of the Rachid Karami fairgrounds in Tripoli, the dark site with one beam of light from the intervention',
+    },
+  ],
+  // COMPETITIONS AT JEMMA CHIDIAC (internship year, Beirut 2022): The
+  // Encounter (Anfeh cemetery, shortlisted finalist) + the Falcon Square
+  // monument (Moujassam Watan, Al Khobar). All renders native 3840x2160.
+  // Both competition boards are anonymous (entry 232 / no names on renders).
+  jemma: [
+    {
+      src: "work/jemma-chidiac-office-work/cemetery-challenge/02-WORK IN PROGRESS/06-RENDERS/5'.jpg", role: 'hero', name: 'bell-tower',
+      alt: 'Looking up at the split bell tower of the Anfeh cemetery chapel, two concrete blades carrying the bells and the cross',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/MIDAN AL SAKR - Final Production/Final Renders/RENDER__34 - Photo.jpg', role: 'gallery', name: 'falcon-aerial',
+      alt: 'High view over Falcon Square in Al Khobar, the steel falcon monument landing on lawns, stone wedges and water',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/02-WORK IN PROGRESS/06-RENDERS/18 final.jpg', role: 'gallery', name: 'cemetery-aerial',
+      alt: 'Aerial of The Encounter in Anfeh, crescents of green roofed tombs circling a sunken court crossed by two long halls',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/02-WORK IN PROGRESS/06-RENDERS/9.jpg', role: 'gallery', name: 'chapel-light',
+      alt: 'Inside the chapel, one thin roof slit washing light down board marked concrete onto a row of dark stone benches',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/MIDAN AL SAKR - Final Production/Final Renders/RENDER__36 - Photo.jpg', role: 'gallery', name: 'calligraphy-prow',
+      alt: "Sunset on the calligraphy prow of the falcon monument, pierced Arabic letters glowing over the square's water channel",
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/MIDAN AL SAKR - Final Production/Diagrams/Diagrams - Line Drawings_05 - Diagram 2D - set 1 .png', role: 'gallery', name: 'aircraft-process',
+      alt: "Process strip of the monument: an aircraft's takeoff line drawings rotated and mirrored into the falcon's two wings",
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/02-WORK IN PROGRESS/06-RENDERS/8 FINAL.jpg', role: 'gallery', name: 'sunken-court',
+      alt: 'The sunken court at the heart of the cemetery, radial stairs climbing between planted tomb walls toward the light',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/MIDAN AL SAKR - Final Production/Final Renders/RENDER__29 - Photo.jpg', role: 'gallery', name: 'wing-elevation',
+      alt: 'Side view of the falcon wing sweeping up, pierced calligraphy catching the light against a storm sky over Al Khobar',
+    },
+  ],
+  // ASTROIDAL ELLIPSOID (MaCAD bootcamp mini, 2025-10): the one-page scripted
+  // surface board, rasterized from her submission PDF (derived-board.png) and
+  // cropped into cover + method frames. LIGHT entry.
+  astroidal: [
+    {
+      src: 'academic/iaac/astroidal ellipsoid/derived-iterations.png', role: 'hero', name: 'iterations', frame16x9: true, bg: '#ffffff',
+      alt: 'Three astroidal ellipsoid surface iterations, the cubed sine and cosine equations pushed through different coefficients',
+    },
+    {
+      src: 'academic/iaac/astroidal ellipsoid/derived-equations.png', role: 'gallery', name: 'equations', frame16x9: true, bg: '#ffffff',
+      alt: 'The parametric equations of the astroidal ellipsoid written as Python, six coefficients driving the point grid',
+    },
+    {
+      src: 'academic/iaac/astroidal ellipsoid/derived-layout.png', role: 'gallery', name: 'layout',
+      alt: 'The reduced mesh read as a small house: floor plates sliced into the low poly star with a six part program',
+    },
+    {
+      src: 'academic/iaac/astroidal ellipsoid/derived-board.png', role: 'gallery', name: 'board',
+      alt: 'The full astroidal ellipsoid board: equations, iterations, the reduced mesh and the housing layout on one page',
+    },
+  ],
+  // CHAIR SIMULATION (MaCAD bootcamp mini, 2025-11): Kangaroo inflation vs
+  // sitting poses, then voxelation. Cover = the iteration matrix (still).
+  // LIGHT entry. (Source gif filename typo "infalte" is renamed on ingest.)
+  'chair-sim': [
+    {
+      src: 'academic/iaac/chair simulation/chair-matrix.png', role: 'hero', name: 'matrix', frame16x9: true, bg: '#ffffff',
+      alt: 'Eight voxelated chair iterations, each molded by a different sitting pose with damping and voxel size as the dials',
+    },
+    {
+      src: 'academic/iaac/chair simulation/chair-infalte.gif', role: 'gif', name: 'inflate',
+      alt: 'A flat red membrane inflates into a pillow under a reclining figure in the Kangaroo simulation',
+    },
+    {
+      src: 'academic/iaac/chair simulation/chair-voxelated-size.gif', role: 'gif', name: 'voxel-sizes',
+      alt: 'The settled chair rebuilt at growing voxel sizes, from fine grain steps to chunky rubber ring modules',
+    },
+    {
+      src: 'academic/iaac/chair simulation/gh-expained-chair.png', role: 'gallery', name: 'gh-definition', frame16x9: true, bg: '#ffffff',
+      alt: 'The Grasshopper definition: pillow mesh and sitting poses feed Kangaroo goals, then the chair mesh is voxelated',
+    },
+  ],
+  // VERVE CITY WALK (S2 enrich, 2026-07-16, the NDA lifted): the real SOMA
+  // portfolio material replaces the frozen old-site placeholder as the
+  // soma-towers cover + strip. HONESTY: boards 05-08 of the portfolio set are
+  // EXCLUDED (they show a multi-building courtyard masterplan, likely a
+  // different City Walk plot; Emilie confirms before they ever ship). The TG
+  // renders are the project's marketing imagery (viz-studio work), captioned
+  // as project imagery, never as personal renders. verve-ar-web.webp is a
+  // derived crop of the sales configurator capture, cut to the 3D viewport so
+  // the third-party sales platform's watermark + unit panel stay out.
+  verve: [
+    {
+      src: 'work/soma-work-office/soma -verve city walk/Verve - TG – 2.jpg', role: 'hero', name: 'dusk-facade',
+      alt: 'Dusk render of the Verve facade above the fog, double height planted terraces with Burj Khalifa in the distance',
+    },
+    {
+      src: 'work/soma-work-office/soma -verve city walk/Verve - TG - 1.jpg', role: 'gallery', name: 'podium-pool',
+      alt: 'Render of the Verve podium pool deck, an infinity lap pool and cabanas with Downtown Dubai on the horizon',
+    },
+    {
+      // The numbers are the board's own level ladder (018_LEVEL 36 T.O.S. at
+      // 161.00 m printed on the drawing), not an external claim.
+      src: 'work/soma-work-office/soma -verve city walk/SOMA_CITYWALK_PORTFOLIO-03.jpg', role: 'gallery', name: 'two-tower-elevation',
+      alt: 'Elevation of the twin Verve towers on their podium, 36 levels rising to 161 meters with planted balconies stepping up',
+    },
+    {
+      src: 'work/soma-work-office/soma -verve city walk/SOMA_CITYWALK_PORTFOLIO-01.jpg', role: 'gallery', name: 'amenities-plan',
+      alt: 'Amenities level plan for the two Verve towers: gym, spa, yoga studio, cinema, kids pool and playgrounds on the podium',
+    },
+    {
+      src: 'work/soma-work-office/soma -verve city walk/SOMA_CITYWALK_PORTFOLIO-02.jpg', role: 'gallery', name: 'typical-plan',
+      alt: 'Typical Verve tower floor plan: one to three bedroom units around the central core, planted terraces at the two ends',
+    },
+    {
+      src: 'work/soma-work-office/soma -verve city walk/Verve - TG – 3.jpg', role: 'gallery', name: 'lounge-interior',
+      alt: 'Interior render of a double height Verve lounge, a suspended chandelier and floor to ceiling glass over the skyline',
+    },
+    {
+      src: 'work/soma-work-office/soma -verve city walk/verve-ar-web.webp', role: 'gif', name: 'unit-selector',
+      alt: 'Screen capture of the interactive 3D unit selector orbiting the twin Verve towers, one unit footprint highlighted',
+    },
+  ],
+  // RINGS OF MARS (S2 enrich, 2026-07-16): the real competition board joins
+  // the record and the project moves off the shared frozen `professional`
+  // slug onto its own, so the plate finally gets a strip. HONESTY (Emilie's
+  // plan-gate ruling): the Top 50 recognition anchors on the OFFICIAL badge +
+  // the public results page link; the certificate of participation on disk
+  // stays OUT (it evidences participation, not placement). The board is
+  // anonymized to the entry code, so the duo credit lives in the captions.
+  mars: [
+    {
+      src: 'competitions/rings of mars/derived-crater-render.jpg', role: 'hero', name: 'crater-render',
+      alt: 'Ring 4000 embedded in the rim of a crater inside Valles Marineris, the annotated hero view of the Rings of Mars board',
+    },
+    {
+      src: 'competitions/rings of mars/MARS246875258.jpg', role: 'gallery', name: 'board',
+      alt: 'The full Rings of Mars competition board: exploded ring drawings, annotated plan, crater renders and systems diagram',
+    },
+    {
+      src: 'competitions/rings of mars/derived-sectional-perspective.jpg', role: 'gallery', name: 'sectional-perspective',
+      alt: 'Sectional perspective through Ring 4000, from the BIPV envelope down through farming, pods and the crater pit',
+    },
+    {
+      src: 'competitions/rings of mars/derived-top50-badge.png', role: 'gallery', name: 'top50-badge', frame16x9: true, bg: '#ffffff',
+      alt: 'The official Top 50 badge issued by Volume Zero for Marsception 2024, the recognition anchor for Ring 4000',
+    },
+  ],
+  // XR FOR EDUCATION (S2 enrich, 2026-07-16): the quiet P-111 tile gains its
+  // first real cover + gallery from the LAU XR Lab chemistry AR set. Modest
+  // on purpose: she plans to expand this project later. xr-cover-web.webp is
+  // a derived 8s cut of the SN2 reaction render (still at rest, hover-play);
+  // the sn1 stills are derived frames of the 2.4GB master. The Chem101 PDF's
+  // dead QR links stay out; the qr board ships as the overview frame.
+  xr: [
+    {
+      src: 'academic/lau/xr-education/xr-cover-web.webp', role: 'gif', name: 'reaction-cover',
+      alt: 'An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space',
+    },
+    {
+      src: 'academic/lau/xr-education/qr-codes-reactions.jpg', role: 'gallery', name: 'ar-board',
+      alt: 'Board of three AR chemistry reactions, SN1, E2 and SN2, each with a molecular render and a view in AR QR code',
+    },
+    {
+      src: 'academic/lau/xr-education/derived-sn1-before.png', role: 'gallery', name: 'sn1-before',
+      alt: 'Frame from the SN1 AR lesson: the propanol molecule intact in ball and stick, the chloride ion still bonded',
+    },
+    {
+      src: 'academic/lau/xr-education/derived-sn1-after.png', role: 'gallery', name: 'sn1-after',
+      alt: 'Frame from the SN1 AR lesson after the reaction, the chloride ion separated and drifting away from the molecule',
+    },
+  ],
+  // A PLAYSCAPE (MaCAD bootcamp mini, 2025-10, "just for fun"): Kangaroo
+  // pressure mounds + two dropped nets. Cover = playscape-cover-web.webp, a
+  // derived re-cut of the second net simulation whose FIRST frame is the
+  // settled dome (the pipeline's static ladder uses frame one, so the tile
+  // rests on the finished form and the fall plays on hover).
+  playscape: [
+    {
+      src: 'academic/iaac/just for fun - a playscape/playscape-cover-web.webp', role: 'gif', name: 'net-settle', frame16x9: true, bg: '#ffffff',
+      alt: 'The settled playscape at rest: a double layer climbing net draped by Kangaroo over soft red inflatable mounds',
+    },
+    {
+      src: 'academic/iaac/just for fun - a playscape/section.png', role: 'gallery', name: 'section',
+      alt: 'Section through the playscape: children climb the double net stretched over red inflatables above a padded ground',
+    },
+    {
+      src: 'academic/iaac/just for fun - a playscape/inflating-structure-simulation.gif', role: 'gif', name: 'inflate',
+      alt: 'Five red mounds puff up from taut tents to fat blobs on the square plate, pressure goals against edge stiffness',
+    },
+    {
+      src: 'academic/iaac/just for fun - a playscape/iterations.png', role: 'gallery', name: 'iterations', frame16x9: true, bg: '#ffffff',
+      alt: 'Three playscape iterations comparing net rotation and elevated anchor settings above the inflatable mounds',
+    },
+    {
+      src: 'academic/iaac/just for fun - a playscape/tensile-nets-simulation-01.gif', role: 'gif', name: 'net-drop',
+      alt: 'The first climbing net falls onto the inflated mounds and tautens into a four point canopy in Kangaroo',
+    },
+    {
+      src: 'academic/iaac/just for fun - a playscape/script.png', role: 'gallery', name: 'gh-canvas',
+      alt: 'The full Grasshopper canvas behind the playscape: Python base surfaces, pressure and net goals, and bouncy solvers',
+    },
+  ],
 }
 
 // Output size ladder per role (max widths; smaller sources stay at native width).

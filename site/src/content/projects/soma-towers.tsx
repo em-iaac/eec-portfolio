@@ -1,8 +1,13 @@
 // P-108 · Towers at SOMA (practice). Card copy migrated verbatim from
-// data/projects.tsx (dek signed 2026-07-10). A thin showcase ON PURPOSE:
-// professional record, NDA check on imagery still open (dossier), so the
-// spine is WHAT + WHY only, honestly short. myPart woven into WHAT.
-// Spine prose SIGNED by Emilie (G4, 2026-07-12).
+// data/projects.tsx (dek signed 2026-07-10).
+// S2 ENRICH (2026-07-16): the NDA on Verve City Walk imagery is LIFTED
+// (Emilie, 2026-07-16), so the frozen old-site placeholder retires and the
+// real SOMA portfolio material ships (cover + strip via the new `verve`
+// slug), with the public developer + architect pages in the links row. Her
+// role stays exactly ROL-02: design architect, facade + massing studies
+// carried into the BIM set; the TG renders are the project's marketing
+// imagery, never presented as personal renders. Spine was SIGNED at G4;
+// the S2 additions re-flag it showcaseDraft pending her re-sign.
 import type { ProjectMaster } from './types'
 
 const somaTowers: ProjectMaster = {
@@ -26,16 +31,26 @@ const somaTowers: ProjectMaster = {
   blurb:
     'Four towers between Dubai and Beirut: Verve at City Walk, Enara, Saria, District O. Facade and massing studies in Rhino and Grasshopper, carried into BIM for delivery. The years where I learned that a parametric study only matters if it survives contact with a drawing set.',
   tech: 'RHINO · GRASSHOPPER · REVIT',
-  links: [],
-  // Alt enriched for context + keywords (S1 alt pass, DRAFT pending Emilie's
-  // eye on the image): 80-140 chars, describes the view, no overclaim.
-  image: { slug: 'professional', name: 'citywalk', alt: 'Towers at SOMA: a dusk view of the City Walk high-rise cluster in Dubai, a facade and massing study' },
+  // The public anchors (NDA lifted): the developer's project page and SOMA's
+  // own Verve City Walk page.
+  links: [
+    { label: 'MERAAS · VERVE', href: 'https://www.meraas.com/en/project/verve-city-walk' },
+    { label: 'SOMA · VERVE', href: 'https://soma.us/verve-city-walk/' },
+  ],
+  // S2 cover: the real Verve dusk render (project imagery). Alt DRAFT.
+  image: {
+    slug: 'verve',
+    name: 'dusk-facade',
+    alt: 'Dusk render of the Verve facade above the fog, double height planted terraces with Burj Khalifa in the distance',
+  },
 
   what: (
     <>
       Four towers between Dubai and Beirut: Verve at City Walk, Enara, Saria, District O. My part
       was the facade and massing studies in Rhino and Grasshopper, carried into the BIM set for
-      delivery.
+      delivery. Verve, the one shown here, is the two tower high-rise SOMA designed at City
+      Walk in Dubai: a shared amenities podium under both towers, and balconies cut into the
+      facade rather than hung off it.
     </>
   ),
   why: (
@@ -45,7 +60,8 @@ const somaTowers: ProjectMaster = {
       schedule, and both have to win.
     </>
   ),
-  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
+  draftCopy: true,
+  showcaseDraft: true, // S2 enrich: the Verve sentence + cover + links await Emilie's re-sign
 }
 
 export default somaTowers

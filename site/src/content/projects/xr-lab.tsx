@@ -1,8 +1,16 @@
 // P-111 · XR for Education (explorations). Card copy migrated verbatim from
-// data/projects.tsx (dek signed 2026-07-10). No public artifact exists
-// (dossier), so this is the thinnest showcase on the site, on purpose:
-// WHAT + WHY, no photo, no numbers, nothing padded.
-// Spine prose SIGNED by Emilie (G4, 2026-07-12).
+// data/projects.tsx (dek signed 2026-07-10).
+// S2 ENRICH (2026-07-16): the quiet P-111 tile gains its first real cover +
+// gallery from her LAU XR Lab research assets (incoming/academic/lau/
+// xr-education/): a hover-play cut of the SN2 reaction render, the AR
+// reactions board, and an SN1 before/after pair. Kept modest on purpose
+// (she plans to expand this project later); the dead QR links never ship.
+// HONESTY: the lab's workshop curriculum teaches Unity and C#; per the
+// standing red line, no personal C# claim appears anywhere in this copy.
+// EVIDENCE for "seven reaction models": the Chem101 reference PDF on disk
+// (incoming/academic/lau/xr-education/) lists seven AR reactions (SN1, SN2,
+// SN2 with energy, SN1/SN2/E1/E2 alcohol); the shipped board shows three.
+// Spine was SIGNED at G4; the S2 sentence re-flags it pending her re-sign.
 import type { ProjectMaster } from './types'
 
 const xrLab: ProjectMaster = {
@@ -27,12 +35,19 @@ const xrLab: ProjectMaster = {
     'Point a phone at a molecule and watch the reaction happen in the room: AR chemistry lessons built at the LAU XR Lab, plus contributions to research on VR in education. Where the XR thread in my work started.',
   tech: 'AR · VR · 3D ANIMATION',
   links: [],
+  // S2 cover: a hover-play cut of the SN2 reaction render (still at rest).
+  image: {
+    slug: 'xr',
+    name: 'reaction-cover',
+    alt: 'An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space',
+  },
 
   what: (
     <>
       Point a phone at a molecule and watch the reaction happen in the room: AR chemistry lessons
       built as a research assistant at the LAU XR Lab, plus contributions to research on VR in
-      education.
+      education. The chemistry set grew to seven reaction models students could summon through QR
+      codes, each animated in ball and stick.
     </>
   ),
   why: (
@@ -42,7 +57,8 @@ const xrLab: ProjectMaster = {
       front of them.
     </>
   ),
-  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
+  draftCopy: true,
+  showcaseDraft: true, // S2 enrich: the reactions sentence + cover await Emilie's re-sign
 }
 
 export default xrLab

@@ -354,8 +354,11 @@ function IndexPage({ side }: { side: PageSide }) {
 
         {/* The WORK grid's manner, in print (Emilie's pick over the rows
             contents page): image tiles for every project, quiet tiles where
-            no photograph exists (the podcast honestly says LISTEN). */}
-        <div className="pr-index__grid" style={{ gridTemplateColumns: 'repeat(6, 1fr)' }}>
+            no photograph exists (the podcast honestly says LISTEN).
+            (S2, 2026-07-16: 20 projects. At 6-across the fourth tile row
+            pushed the page 181px past its A4 box, so the index runs 7-across
+            = 3 rows and the page keeps its box; measured live.) */}
+        <div className="pr-index__grid" style={{ gridTemplateColumns: 'repeat(7, 1fr)' }}>
           {WORK_ENTRIES.map(w => {
             const src = w.cover && printImageSrc(w.cover.slug, w.cover.name)
             return (

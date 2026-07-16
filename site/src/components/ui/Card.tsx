@@ -100,7 +100,10 @@ export default function Card({
             </Pill>
           ))}
           {meta && (
-            <span className="ml-auto shrink-0 pl-1 font-mono text-[9px] tracking-[0.08em] whitespace-nowrap text-[var(--lang-ink-muted)]">
+            /* -mr cancels the tracking's trailing space: letter-spacing adds
+               it after the LAST glyph too, and the row's overflow-hidden was
+               clipping the ✦'s edge at 320px (S2 index fix). */
+            <span className="ml-auto -mr-[0.08em] shrink-0 pl-1 font-mono text-[9px] tracking-[0.08em] whitespace-nowrap text-[var(--lang-ink-muted)]">
               {meta}
             </span>
           )}

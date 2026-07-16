@@ -919,6 +919,25 @@ uncommitted, no git run per contract).** §4 (the gallery) now reads through thi
   first (her priority), with the KPI map swapped to its chromeless version
   (the old frame showed the teammate logged in). The tower collage left the
   web gallery; it remains the book plate via its print rung.
+- **S1 · REINDEX + LOCK (2026-07-16, all gates Emilie's; uncommitted).**
+  **/work IS NOW THE PRINTED BOOK'S INDEX** (§4): one uniform tile grid (the D2
+  featured-LARGER tier retired from the render; the strongest-first order +
+  eager-load kept), each tile carrying its quiet `P-nnn · ✦` meta, a
+  `✦ RECOGNITION` legend on the filter row, and THE THOUGHTS rows closing the
+  page. ONE layout logic: `registry.thoughtIndexEntries()` + a shared
+  `ThoughtIndexRows` render BOTH the /work list AND the book index page (screen +
+  print skins), so they cannot drift. **/thoughts is the neural WORLD ONLY**
+  (§2, §6): the GRAPH|WORDS toggle + the reading-room LIST retired (ViewToggle +
+  ReadingRoom deleted); `?view=words` strips its param client-side (never 404s);
+  each thought's NOTE page stays prerendered, opening from the index rows + the
+  world; a note's back-corridor lands on `/work#thoughts`. **THE LOCK:** Emilie
+  signed all 15 questions + `alsoAnswers` dot sets, all gallery alt text, the
+  lEgoarCh film cards, and the full podcast rewrite — /work ships ZERO draft copy.
+  Two one-line-revert consequences of the uniform pick: the big award pill left
+  the index faces (the ✦ + legend + the opened plate carry it); at 320px the tile
+  meta can clip its last glyph. tsc + 43 tests + full build green (book census
+  intact at 10 pages). Owed: her commit + push, the history scrub, the real-phone
+  reduced-motion pass, post-deploy Lighthouse.
 
 ---
 

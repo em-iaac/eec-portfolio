@@ -29,9 +29,17 @@ const marsception: ProjectMaster = {
     'A habitat ring for Mars, designed with AI-driven workflows back when that still raised eyebrows. My first proof that generative tools and architecture could share a desk.',
   tech: 'AI WORKFLOWS · RHINO · V-RAY',
   links: [],
-  // Alt enriched for context + keywords (S1 alt pass, DRAFT pending Emilie's
-  // eye on the image): 80-140 chars, describes what is shown, no overclaim.
-  image: { slug: 'professional', name: 'marsception', alt: 'Rings of Mars, Ring 4000: a white orbital ring form rendered on black, the Marsception competition entry' },
+  // S2 ENRICH (2026-07-16): the project moves off the shared frozen
+  // `professional` slug onto its own `mars` slug, so the plate gains a strip
+  // (the full board, the sectional perspective, the official Top 50 badge).
+  // Emilie's plan-gate ruling binds: the badge + the public results page are
+  // the recognition anchors; the participation certificate stays OUT. Cover =
+  // the board's crater hero. Alt DRAFT.
+  image: {
+    slug: 'mars',
+    name: 'crater-render',
+    alt: 'Ring 4000 embedded in the rim of a crater inside Valles Marineris, the annotated hero view of the Rings of Mars board',
+  },
 
   what: (
     <>
@@ -46,7 +54,8 @@ const marsception: ProjectMaster = {
       it aged well.
     </>
   ),
-  showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
+  draftCopy: true,
+  showcaseDraft: true, // S2 enrich: new cover + alt + the badge/results anchors await Emilie's re-sign
 }
 
 export default marsception

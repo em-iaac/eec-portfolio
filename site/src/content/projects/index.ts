@@ -22,6 +22,14 @@ import narkomfin from './narkomfin'
 import urbanRisk from './urban-risk'
 import dataGeometry from './data-geometry'
 import tsukiji from './tsukiji'
+// S2 · THE NEW WORK (2026-07-16): the LAU thesis, the Jemma internship year,
+// and the three bootcamp mini-explorations (light entries, D2). All copy
+// ships draftCopy/showcaseDraft until Emilie signs at the end review.
+import homage from './homage'
+import jemma from './jemma'
+import astroidal from './astroidal'
+import chairSim from './chair-sim'
+import playscape from './playscape'
 
 export type { ProjectMaster } from './types'
 
@@ -41,6 +49,11 @@ export const ALL_PROJECT_MASTERS: ProjectMaster[] = [
   urbanRisk,
   dataGeometry,
   tsukiji,
+  homage,
+  jemma,
+  astroidal,
+  chairSim,
+  playscape,
 ]
 
 export const MASTERS_BY_SLUG: Record<string, ProjectMaster> = Object.fromEntries(

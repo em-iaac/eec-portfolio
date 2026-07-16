@@ -281,5 +281,60 @@
     ],
     "x": 315,
     "y": 765
+  },
+  {
+    "id": "homage",
+    "kind": "project",
+    "lens": "e",
+    "award": true,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 177,
+    "y": 770
+  },
+  {
+    "id": "jemma",
+    "kind": "project",
+    "lens": "p",
+    "award": true,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 90,
+    "y": 773
+  },
+  {
+    "id": "astroidal",
+    "kind": "project",
+    "lens": "e",
+    "award": false,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 450,
+    "y": 759
+  },
+  {
+    "id": "chair-sim",
+    "kind": "project",
+    "lens": "e",
+    "award": false,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 382,
+    "y": 762
+  },
+  {
+    "id": "playscape",
+    "kind": "project",
+    "lens": "e",
+    "award": false,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 627,
+    "y": 644
   }
 ]

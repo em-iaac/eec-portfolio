@@ -137,12 +137,17 @@ export function LensMark({ lens, active = false }: { lens: Lens; active?: boolea
 export function LensPill({ lens }: { lens: Lens }) {
   const l = LENS_UI[lens]
   return (
+    // min-w-0 + a truncating label: inside a tight flex row (the dense index
+    // face at phone widths) the PILL gives way with an ellipsis so the row's
+    // right-aligned "P-nnn · ✦" meta always renders whole (S2 index fix; the
+    // chip + colour survive any truncation, and the full label stays in the
+    // accessibility tree).
     <span
-      className={`${BASE} lang-glass-1 px-3 py-1.5 font-mono text-[9px] tracking-[0.06em]`}
+      className={`${BASE} lang-glass-1 min-w-0 px-3 py-1.5 font-mono text-[9px] tracking-[0.06em]`}
       style={{ color: l.accent } as CSSProperties}
     >
       <Chip shape={l.shape} />
-      {l.label.toUpperCase()}
+      <span className="min-w-0 truncate">{l.label.toUpperCase()}</span>
     </span>
   )
 }

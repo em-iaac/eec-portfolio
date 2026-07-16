@@ -44,7 +44,8 @@ export const MILESTONE_LANE: Record<string, WorldLane> = {
 export const SOMA_MERGE_AT = 'dynamic-start'
 
 // An award normally hangs off the project its refId names. This override
-// anchors the one award whose honour is a milestone, not a project.
-export const AWARD_ANCHOR_OVERRIDE: Record<string, string> = {
-  tamayouz: 'barch-grad',
-}
+// anchors an award whose honour is a milestone, not a project. (S2,
+// 2026-07-16: the map emptied. Tamayouz honoured the B.Arch graduation
+// project, which now lives ON the site as The Homage (P-116), so its refId
+// expresses the anchor directly and the barch-grad approximation retired.)
+export const AWARD_ANCHOR_OVERRIDE: Record<string, string> = {}

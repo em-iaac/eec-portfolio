@@ -43,6 +43,12 @@ export const VIDEOS = {
   neurospace: [
     { src: 'academic/iaac/neurospace/Images/neuro-recording-demo.mp4', name: 'slider-tour', audio: false, posterAt: 12, crf: 23, vf: 'crop=1280:630:0:56' },
   ],
+  // (XR for Education: NO video entry, decided S2 2026-07-16. A 12s clip of
+  // the SN2 render was encoded and REJECTED as the plate lead: the molecule
+  // reads near-blank at poster size, and the hero rule would have put that
+  // gray frame first. The reaction ships as the hover-play card cover
+  // (xr-cover-web.webp in image-manifest) + the sn1 stills instead; the
+  // multi-GB SN1/E2 .avi masters stay in staging for the future expansion.)
 }
 
 // Output ceiling: 720p-class. Sheets render video at <= ~900 CSS px; 1280w

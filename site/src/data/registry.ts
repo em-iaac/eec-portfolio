@@ -253,7 +253,10 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['geometry', 'practice', 'heritage'],
     sheet: sheet('P-108', 'in-preparation', 'soma'),
     project: 'soma-towers',
-    image: { slug: 'professional', name: 'citywalk', alt: 'Towers at SOMA: a dusk view of the City Walk high-rise cluster in Dubai, a facade and massing study' },
+    // S2 enrich (2026-07-16, NDA lifted): the real Verve City Walk cover
+    // replaces the frozen old-site placeholder; alt DRAFT pending Emilie.
+    image: { slug: 'verve', name: 'dusk-facade', alt: 'Dusk render of the Verve facade above the fog, double height planted terraces with Burj Khalifa in the distance' },
+    draftCopy: true,
     explore: { label: 'TOWERS AT SOMA', nodeKind: 'project', order: 7 },
   },
   {
@@ -265,7 +268,10 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['ai', 'practice', 'future'],
     sheet: sheet('P-109', 'in-preparation', 'mars'),
     project: 'marsception',
-    image: { slug: 'professional', name: 'marsception', alt: 'Rings of Mars, Ring 4000: a white orbital ring form rendered on black, the Marsception competition entry' },
+    // S2 enrich (2026-07-16): the real competition board's crater hero
+    // replaces the frozen old-site render; alt DRAFT pending Emilie.
+    image: { slug: 'mars', name: 'crater-render', alt: 'Ring 4000 embedded in the rim of a crater inside Valles Marineris, the annotated hero view of the Rings of Mars board' },
+    draftCopy: true,
     explore: { label: 'RING 4000', nodeKind: 'project', order: 8 },
   },
   {
@@ -289,6 +295,10 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['xr', 'research', 'play', 'education'],
     sheet: sheet('P-111', 'in-preparation', 'xr'),
     project: 'xr-lab',
+    // S2 enrich (2026-07-16): the first real cover for the quiet P-111 tile,
+    // from her LAU XR Lab research assets; alt DRAFT pending Emilie.
+    image: { slug: 'xr', name: 'reaction-cover', alt: 'An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space' },
+    draftCopy: true,
     explore: { label: 'XR FOR EDUCATION', nodeKind: 'project', order: 10 },
   },
 
@@ -369,7 +379,108 @@ export const ENTRIES: RegistryEntry[] = [
   // because it was exploring the work of someone else" (Ari Melenciano's
   // residency essay). Candidate for a future words session: a THOUGHT entry
   // whose note reads her take on the essay (opacity, desire paths, AGI
-  // tensions). P-116 was never shipped; the next free sheet number is P-116.
+  // tensions). (S2 note, 2026-07-16: P-116..P-120 now taken by THE NEW WORK
+  // below; the next free sheet number is P-121.)
+
+  // ---- S2 · THE NEW WORK (2026-07-16): the pre-IAAC record joins ----------
+  // APPENDS ONLY: explore orders continue at 25, sheet numbers at P-116.
+  // Sources are Emilie's reorganized incoming/ (academic/lau, academic/iaac,
+  // work/); recognition wordings are ceiling-checked against the certificates
+  // on disk + the public award pages (see each master file header). Dates:
+  // homage = the LAU graduation year (boards dated 2023), jemma = the CV's
+  // internship window (Jan-Aug 2022; the cemetery award entry already sat at
+  // 2022-06), minis = the bootcamp file dates (Oct-Nov 2025). Dates + copy
+  // DRAFT pending Emilie's end-of-session review (automode ruling).
+  {
+    id: 'homage',
+    kind: 'project',
+    date: '2023-06',
+    dateDraft: true,
+    title: 'The Homage',
+    lens: 'explorations',
+    tags: ['heritage', 'geometry', 'practice'],
+    sheet: sheet('P-116', 'in-preparation', 'homage'),
+    project: 'homage',
+    image: {
+      slug: 'homage',
+      name: 'moonlit-slab',
+      alt: 'Moonlit render of the renovated Niemeyer housing bar at the Tripoli fair, a lit interior glowing over the reflecting deck',
+    },
+    draftCopy: true,
+    explore: { label: 'THE HOMAGE', nodeKind: 'project', order: 25 },
+  },
+  {
+    id: 'jemma',
+    kind: 'project',
+    date: '2022-06',
+    dateDraft: true,
+    title: 'Competitions at Jemma Chidiac',
+    lens: 'practice',
+    tags: ['practice', 'geometry', 'heritage'],
+    sheet: sheet('P-117', 'in-preparation', 'jemma'),
+    project: 'jemma',
+    image: {
+      slug: 'jemma',
+      name: 'bell-tower',
+      alt: 'Looking up at the split bell tower of the Anfeh cemetery chapel, two concrete blades carrying the bells and the cross',
+    },
+    draftCopy: true,
+    explore: { label: 'JEMMA CHIDIAC', nodeKind: 'project', order: 26 },
+  },
+  {
+    id: 'astroidal',
+    kind: 'project',
+    date: '2025-10',
+    dateDraft: true,
+    title: 'Astroidal Ellipsoid',
+    lens: 'explorations',
+    tags: ['geometry', 'play'],
+    sheet: sheet('P-118', 'in-preparation', 'astroidal'),
+    project: 'astroidal',
+    image: {
+      slug: 'astroidal',
+      name: 'iterations',
+      alt: 'Three astroidal ellipsoid surface iterations, the cubed sine and cosine equations pushed through different coefficients',
+    },
+    draftCopy: true,
+    explore: { label: 'ASTROIDAL ELLIPSOID', nodeKind: 'project', order: 27 },
+  },
+  {
+    id: 'chair-sim',
+    kind: 'project',
+    date: '2025-11',
+    dateDraft: true,
+    title: 'Chair Simulation',
+    lens: 'explorations',
+    tags: ['simulation', 'geometry', 'play'],
+    sheet: sheet('P-119', 'in-preparation', 'chair-sim'),
+    project: 'chair-sim',
+    image: {
+      slug: 'chair-sim',
+      name: 'matrix',
+      alt: 'Eight voxelated chair iterations, each molded by a different sitting pose with damping and voxel size as the dials',
+    },
+    draftCopy: true,
+    explore: { label: 'CHAIR SIMULATION', nodeKind: 'project', order: 28 },
+  },
+  {
+    id: 'playscape',
+    kind: 'project',
+    date: '2025-10',
+    dateDraft: true,
+    title: 'A Playscape',
+    lens: 'explorations',
+    tags: ['simulation', 'geometry', 'play'],
+    sheet: sheet('P-120', 'in-preparation', 'playscape'),
+    project: 'playscape',
+    image: {
+      slug: 'playscape',
+      name: 'net-settle',
+      alt: 'The settled playscape at rest: a double layer climbing net draped by Kangaroo over soft red inflatable mounds',
+    },
+    draftCopy: true,
+    explore: { label: 'A PLAYSCAPE', nodeKind: 'project', order: 29 },
+  },
 
   // ---- Thoughts (explore order 11-20; labels verbatim from data.js;
   //      dates are Emilie-pending drafts) ----------------------------------
@@ -596,6 +707,18 @@ export const ENTRIES: RegistryEntry[] = [
     lens: 'practice',
     tags: ['ai', 'future'],
     refId: 'mars',
+    // S2 (2026-07-16): the public anchor. The Volume Zero results page lists
+    // the entry verbatim ("Emilie Chidiac - Charles Abi Chahine / Lebanon
+    // MARS246875258") under Top 50; the award pill links here. The
+    // certificate of participation on disk does NOT evidence Top 50 and
+    // stays off the site (Emilie's plan-gate ruling); the official badge
+    // ships as a gallery frame instead.
+    links: [
+      {
+        label: 'RESULTS',
+        href: 'https://volumezerocompetitions.com/competitions/result/marsception-2024',
+      },
+    ],
   },
   {
     id: 'tamayouz',
@@ -603,6 +726,18 @@ export const ENTRIES: RegistryEntry[] = [
     date: '2023-09',
     title: 'Tamayouz Excellence · Top 100 graduation projects',
     tags: ['practice'],
+    // S2 (2026-07-16): the honoured graduation project (The Homage, P-116) is
+    // finally ON the site, so refId can express what the world's override map
+    // approximated (the old barch-grad anchor retired from skeletonIds.ts).
+    // The link is the AWD-06 grade-A public anchor: the Tamayouz Top-100 page
+    // names Emilie, LAU and her supervisor.
+    refId: 'homage',
+    links: [
+      {
+        label: 'TAMAYOUZ TOP 100',
+        href: 'https://tamayouz-award.com/tamayouz-international-graduation-projects-2023-top100/',
+      },
+    ],
   },
   {
     id: 'cemetery',
@@ -610,6 +745,10 @@ export const ENTRIES: RegistryEntry[] = [
     date: '2022-06',
     title: 'Shortlisted finalist · The Cemetery Challenge',
     tags: ['practice'],
+    // S2 (2026-07-16): anchored to the Jemma internship entry (P-117). The
+    // certificate of achievement (on disk, her name) reads "Shortlisted as
+    // finalist"; no public URL exists, so no links.
+    refId: 'jemma',
   },
 ]
 
@@ -730,4 +869,9 @@ export const CORRELATIONS: readonly Correlation[] = [
   ['heritage', 'narkomfin', 2], // a 1930 monument read with new tools
   ['evosearch', 'tsukiji', 1], // Galapagos drove the form hunt
   ['bim', 'data-geometry', 1], // building data made legible inside the model
+  // S2 appends (2026-07-16, honest-lineage only; jemma + astroidal stand
+  // alone like urban-risk, no honest thread found):
+  ['heritage', 'homage', 2], // the thesis IS the heritage question, asked first
+  ['solvers', 'playscape', 2], // Kangaroo pressure + net goals, solver play
+  ['solvers', 'chair-sim', 2], // the same solver curiosity, aimed at a body
 ]
