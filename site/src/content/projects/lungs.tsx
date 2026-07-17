@@ -46,7 +46,7 @@ const lungs: ProjectMaster = {
   // dependency network at rest, breathing on hover; cut from her StudioDemo
   // edit below the app header (the teammate login chip never ships). The
   // collage moved out of the web gallery; it stays the book plate below.
-  image: { slug: 'lungs', name: 'demo-cover', alt: 'The KPI dependency map of the live studio platform, data, program and structure indicators wired into one network' },
+  image: { slug: 'lungs', name: 'demo-cover', alt: 'The analysis tower in the live viewer, program gradients in red and blue as the timeline scrubs across the studio platform' },
   // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
   spreadAssets: [{ slug: 'lungs', name: 'tower' }],
 

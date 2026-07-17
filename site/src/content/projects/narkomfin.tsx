@@ -30,11 +30,17 @@ const narkomfin: ProjectMaster = {
     'Moscow’s Narkomfin building, read as a graph: grid-sampled plans, stair links, centrality, community detection. A pretrained room classifier scored the communal units as rule-breaking, which is the point: Ginzburg meant them to break the rules of home.',
   tech: 'PYTHON · GRAPHSAGE · LOUVAIN',
   links: [{ label: 'BLOG', href: 'https://blog.iaac.net/analyzing-narkomfin-through-its-graph/' }],
+  // S2 fix round (2026-07-16, Emilie's gif-cover rule applied to all
+  // stills): a slow zoom cut of the same voxel graph; still at rest is the
+  // graph as before. Cover alt DRAFT pending her eye.
   image: {
     slug: 'narkomfin',
-    name: 'voxel-graph',
-    alt: 'The Narkomfin building rebuilt as translucent voxel volumes on black, spatial graph nodes and edges reaching out of the massing',
+    name: 'graph-cover',
+    alt: 'The Narkomfin voxel graph drawing closer: translucent volumes on black with graph nodes reaching out of the massing',
   },
+  // Created zoom cover: card face ONLY, never a deck page (Emilie's round-3
+  // rule; the real voxel-graph still remains the first deck page).
+  coverMontage: true,
 
   what: (
     <>

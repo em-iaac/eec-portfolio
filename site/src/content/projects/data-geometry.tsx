@@ -33,11 +33,17 @@ const dataGeometry: ProjectMaster = {
       href: 'https://blog.iaac.net/turning-data-into-geometry-rhino-inside-revit-workflows-for-modelling-documenting/',
     },
   ],
+  // S2 fix round (2026-07-16, Emilie's gif-cover rule applied to all
+  // stills): a slow zoom cut of the same workflow board; still at rest is
+  // the board as before. Cover alt DRAFT pending her eye.
   image: {
     slug: 'data-geometry',
-    name: 'workflow',
-    alt: "The data team's workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
+    name: 'workflow-cover',
+    alt: 'The data team workflow drawing closer: Speckle model and parameter sheets flowing through Grasshopper into Revit',
   },
+  // Created zoom cover: card face ONLY, never a deck page (Emilie's round-3
+  // rule; the real workflow board remains the first deck page).
+  coverMontage: true,
 
   what: (
     <>

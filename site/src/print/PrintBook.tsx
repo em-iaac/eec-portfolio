@@ -378,8 +378,11 @@ function IndexPage({ side }: { side: PageSide }) {
                     {w.title}
                   </span>
                 </div>
+                {/* S2 round 6: the origin stamp joins the printed index too,
+                    so both renditions read "P-108 · SOMA" (the screen face
+                    carries ✦ on its recognition line; print keeps it here). */}
                 <div className="pr-mono pr-mono--muted" style={{ marginTop: '0.6mm' }}>
-                  {w.number}
+                  {w.number} · {w.origin}
                   {w.recognition ? ' · ✦' : ''}
                 </div>
               </div>

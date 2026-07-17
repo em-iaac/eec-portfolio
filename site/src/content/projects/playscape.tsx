@@ -2,7 +2,7 @@
 // folder name: "just for fun"): Kangaroo pressure mounds + two dropped nets.
 // Authored fresh from her gifs + section at the S2 session, 2026-07-16. A
 // LIGHT entry (D2): dek + question + a short WHAT/WHY, honestly thin.
-// ALL COPY DRAFT: automode; Emilie signs at the end review.
+// ALL COPY SIGNED by Emilie (S2 sign-off, 2026-07-17).
 import type { ProjectMaster } from './types'
 
 const playscape: ProjectMaster = {
@@ -11,7 +11,7 @@ const playscape: ProjectMaster = {
   lens: 'explorations',
   meta: 'MACAD BOOTCAMP · JUST FOR FUN',
   dek: 'Pressure goals inflate the mounds, two nets drop and settle on top: a playground form found in Kangaroo, just for fun.',
-  dekSigned: false,
+  dekSigned: true, // SIGNED by Emilie (S2 sign-off, 2026-07-17)
   question: 'What happens when you drop a climbing net on balloons?',
   alsoAnswers: [
     { q: 'How do you form find a playground in Kangaroo?', beat: 'what' },
@@ -44,8 +44,7 @@ const playscape: ProjectMaster = {
       place a kid would run to.
     </>
   ),
-  draftCopy: true,
-  showcaseDraft: true, // S2 automode draft; Emilie reviews + signs at session end
+  showcaseDraft: false, // spine + credits + alts SIGNED by Emilie (S2 sign-off, 2026-07-17)
 }
 
 export default playscape

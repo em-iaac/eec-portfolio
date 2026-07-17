@@ -203,7 +203,7 @@ export const ENTRIES: RegistryEntry[] = [
     project: 'lungs',
     // 2026-07-15: the cover is the live KPI-map cut (the collage left the
     // web manifest; it remains the BOOK plate via its print rung).
-    image: { slug: 'lungs', name: 'demo-cover', alt: 'The KPI dependency map of the live studio platform, data, program and structure indicators wired into one network' },
+    image: { slug: 'lungs', name: 'demo-cover', alt: 'The analysis tower in the live viewer, program gradients in red and blue as the timeline scrubs across the studio platform' },
     explore: { label: 'THE LUNGS', nodeKind: 'project', order: 3 },
   },
   {
@@ -248,16 +248,17 @@ export const ENTRIES: RegistryEntry[] = [
     id: 'soma',
     kind: 'project',
     date: '2024-02',
-    title: 'Towers at SOMA',
+    // S2 fix round (2026-07-16, Emilie's call): Verve City Walk IS the
+    // project's name. The id 'soma' stays (permanent URLs; /work/soma has
+    // shipped since G1). Cover = the interactive unit-selector capture
+    // (her call), cropped clear of the sales platform's panel + watermark.
+    title: 'Verve City Walk',
     lens: 'practice',
     tags: ['geometry', 'practice', 'heritage'],
     sheet: sheet('P-108', 'in-preparation', 'soma'),
     project: 'soma-towers',
-    // S2 enrich (2026-07-16, NDA lifted): the real Verve City Walk cover
-    // replaces the frozen old-site placeholder; alt DRAFT pending Emilie.
-    image: { slug: 'verve', name: 'dusk-facade', alt: 'Dusk render of the Verve facade above the fog, double height planted terraces with Burj Khalifa in the distance' },
-    draftCopy: true,
-    explore: { label: 'TOWERS AT SOMA', nodeKind: 'project', order: 7 },
+    image: { slug: 'verve', name: 'unit-selector', alt: 'Screen capture of the interactive 3D unit selector orbiting the twin Verve towers, one unit footprint highlighted' },
+    explore: { label: 'VERVE CITY WALK', nodeKind: 'project', order: 7 },
   },
   {
     id: 'mars',
@@ -269,9 +270,8 @@ export const ENTRIES: RegistryEntry[] = [
     sheet: sheet('P-109', 'in-preparation', 'mars'),
     project: 'marsception',
     // S2 enrich (2026-07-16): the real competition board's crater hero
-    // replaces the frozen old-site render; alt DRAFT pending Emilie.
-    image: { slug: 'mars', name: 'crater-render', alt: 'Ring 4000 embedded in the rim of a crater inside Valles Marineris, the annotated hero view of the Rings of Mars board' },
-    draftCopy: true,
+    // replaces the frozen old-site render; alt SIGNED by Emilie (S2 sign-off, 2026-07-17).
+    image: { slug: 'mars', name: 'mars-cover', alt: 'Ring 4000 at a glance: the ring in its crater, the farming interior, the transfer box and the annotated ring plan' },
     explore: { label: 'RING 4000', nodeKind: 'project', order: 8 },
   },
   {
@@ -296,9 +296,8 @@ export const ENTRIES: RegistryEntry[] = [
     sheet: sheet('P-111', 'in-preparation', 'xr'),
     project: 'xr-lab',
     // S2 enrich (2026-07-16): the first real cover for the quiet P-111 tile,
-    // from her LAU XR Lab research assets; alt DRAFT pending Emilie.
+    // from her LAU XR Lab research assets; alt SIGNED by Emilie (S2 sign-off, 2026-07-17).
     image: { slug: 'xr', name: 'reaction-cover', alt: 'An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space' },
-    draftCopy: true,
     explore: { label: 'XR FOR EDUCATION', nodeKind: 'project', order: 10 },
   },
 
@@ -320,8 +319,8 @@ export const ENTRIES: RegistryEntry[] = [
     project: 'narkomfin',
     image: {
       slug: 'narkomfin',
-      name: 'voxel-graph',
-      alt: 'The Narkomfin building rebuilt as translucent voxel volumes on black, spatial graph nodes and edges reaching out of the massing',
+      name: 'graph-cover',
+      alt: 'The Narkomfin voxel graph drawing closer: translucent volumes on black with graph nodes reaching out of the massing',
     },
     explore: { label: 'NARKOMFIN', nodeKind: 'project', order: 21 },
   },
@@ -352,8 +351,8 @@ export const ENTRIES: RegistryEntry[] = [
     project: 'data-geometry',
     image: {
       slug: 'data-geometry',
-      name: 'workflow',
-      alt: "The data team's workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
+      name: 'workflow-cover',
+      alt: 'The data team workflow drawing closer: Speckle model and parameter sheets flowing through Grasshopper into Revit',
     },
     explore: { label: 'DATA INTO GEOMETRY', nodeKind: 'project', order: 23 },
   },
@@ -379,8 +378,8 @@ export const ENTRIES: RegistryEntry[] = [
   // because it was exploring the work of someone else" (Ari Melenciano's
   // residency essay). Candidate for a future words session: a THOUGHT entry
   // whose note reads her take on the essay (opacity, desire paths, AGI
-  // tensions). (S2 note, 2026-07-16: P-116..P-120 now taken by THE NEW WORK
-  // below; the next free sheet number is P-121.)
+  // tensions). (S2 note, 2026-07-16: P-116..P-121 now taken by THE NEW WORK
+  // below; the next free sheet number is P-122.)
 
   // ---- S2 · THE NEW WORK (2026-07-16): the pre-IAAC record joins ----------
   // APPENDS ONLY: explore orders continue at 25, sheet numbers at P-116.
@@ -403,29 +402,50 @@ export const ENTRIES: RegistryEntry[] = [
     project: 'homage',
     image: {
       slug: 'homage',
-      name: 'moonlit-slab',
-      alt: 'Moonlit render of the renovated Niemeyer housing bar at the Tripoli fair, a lit interior glowing over the reflecting deck',
+      name: 'homage-cover',
+      alt: 'The Homage at a glance: the moonlit housing bar, the dark fair with its one beam of light and the cutaway axonometric',
     },
-    draftCopy: true,
     explore: { label: 'THE HOMAGE', nodeKind: 'project', order: 25 },
   },
+  // (S2 fix round, 2026-07-16: the single "Competitions at Jemma Chidiac"
+  // entry SPLIT into its two competitions at Emilie's call. Her role title
+  // is architectural designer, her LinkedIn record; the split shipped
+  // before any commit, so the never-published 'jemma' id retired cleanly.
+  // The Encounter keeps P-117 and explore order 26; Falcon Square appends
+  // at P-121 / order 30.)
   {
-    id: 'jemma',
+    id: 'encounter',
     kind: 'project',
     date: '2022-06',
     dateDraft: true,
-    title: 'Competitions at Jemma Chidiac',
+    title: 'The Encounter',
     lens: 'practice',
-    tags: ['practice', 'geometry', 'heritage'],
-    sheet: sheet('P-117', 'in-preparation', 'jemma'),
-    project: 'jemma',
+    tags: ['practice', 'heritage', 'geometry'],
+    sheet: sheet('P-117', 'in-preparation', 'encounter'),
+    project: 'encounter',
     image: {
-      slug: 'jemma',
-      name: 'bell-tower',
-      alt: 'Looking up at the split bell tower of the Anfeh cemetery chapel, two concrete blades carrying the bells and the cross',
+      slug: 'encounter',
+      name: 'encounter-cover',
+      alt: 'The Encounter at a glance: the split bell tower, the tomb terraces from the air, the chapel light and the sunken court',
     },
-    draftCopy: true,
-    explore: { label: 'JEMMA CHIDIAC', nodeKind: 'project', order: 26 },
+    explore: { label: 'THE ENCOUNTER', nodeKind: 'project', order: 26 },
+  },
+  {
+    id: 'falcon',
+    kind: 'project',
+    date: '2022-04',
+    dateDraft: true,
+    title: 'Falcon Square',
+    lens: 'practice',
+    tags: ['practice', 'geometry'],
+    sheet: sheet('P-121', 'in-preparation', 'falcon'),
+    project: 'falcon',
+    image: {
+      slug: 'falcon',
+      name: 'falcon-cover',
+      alt: 'The falcon monument in motion: the camera pulls back from the copper calligraphy band to the whole roundabout at dusk',
+    },
+    explore: { label: 'FALCON SQUARE', nodeKind: 'project', order: 30 },
   },
   {
     id: 'astroidal',
@@ -439,10 +459,9 @@ export const ENTRIES: RegistryEntry[] = [
     project: 'astroidal',
     image: {
       slug: 'astroidal',
-      name: 'iterations',
-      alt: 'Three astroidal ellipsoid surface iterations, the cubed sine and cosine equations pushed through different coefficients',
+      name: 'star-cover',
+      alt: 'The three astroidal ellipsoid stars in turn, the same equations wearing three different coefficient sets',
     },
-    draftCopy: true,
     explore: { label: 'ASTROIDAL ELLIPSOID', nodeKind: 'project', order: 27 },
   },
   {
@@ -457,10 +476,9 @@ export const ENTRIES: RegistryEntry[] = [
     project: 'chair-sim',
     image: {
       slug: 'chair-sim',
-      name: 'matrix',
-      alt: 'Eight voxelated chair iterations, each molded by a different sitting pose with damping and voxel size as the dials',
+      name: 'voxel-sizes',
+      alt: 'The settled chair rebuilt at growing voxel sizes, from fine grain steps to chunky rubber ring modules',
     },
-    draftCopy: true,
     explore: { label: 'CHAIR SIMULATION', nodeKind: 'project', order: 28 },
   },
   {
@@ -478,7 +496,6 @@ export const ENTRIES: RegistryEntry[] = [
       name: 'net-settle',
       alt: 'The settled playscape at rest: a double layer climbing net draped by Kangaroo over soft red inflatable mounds',
     },
-    draftCopy: true,
     explore: { label: 'A PLAYSCAPE', nodeKind: 'project', order: 29 },
   },
 
@@ -716,7 +733,7 @@ export const ENTRIES: RegistryEntry[] = [
     links: [
       {
         label: 'RESULTS',
-        href: 'https://volumezerocompetitions.com/competitions/result/marsception-2024',
+        href: 'https://volumezerocompetitions.com/competitions/result/marsception-2024#gallery-56',
       },
     ],
   },
@@ -745,10 +762,13 @@ export const ENTRIES: RegistryEntry[] = [
     date: '2022-06',
     title: 'Shortlisted finalist · The Cemetery Challenge',
     tags: ['practice'],
-    // S2 (2026-07-16): anchored to the Jemma internship entry (P-117). The
-    // certificate of achievement (on disk, her name) reads "Shortlisted as
-    // finalist"; no public URL exists, so no links.
-    refId: 'jemma',
+    // S2 fix round (2026-07-16): anchored to The Encounter (P-117). No
+    // public results URL exists, so the pill links the certificate raster
+    // itself (her call): shipped as a real asset in the encounter slug.
+    refId: 'encounter',
+    links: [
+      { label: 'CERTIFICATE', href: '/assets/projects/encounter-cert/certificate-1600.webp' },
+    ],
   },
 ]
 

@@ -9,8 +9,8 @@
 // (The "1960 design" date in HOW narrates her own board's timeline strip;
 // public histories date Niemeyer's commission 1962: hers to settle.)
 // Supervisor Issam Barhouch credited (named on the public Tamayouz page).
-// ALL COPY DRAFT: drafted from the boards in automode; Emilie corrects the
-// facts and signs at the end-of-session review.
+// ALL COPY SIGNED by Emilie (S2 sign-off, 2026-07-17), the board-sourced
+// facts reviewed by her (incl. the 1960 board date + the tech row).
 import type { ProjectMaster } from './types'
 
 const homage: ProjectMaster = {
@@ -20,7 +20,7 @@ const homage: ProjectMaster = {
   meta: 'LAU THESIS · TRIPOLI · 2023',
   myPart: 'My bachelor thesis at LAU, supervised by Issam Barhouch.',
   dek: 'A homage to Oscar Niemeyer’s unfinished fair in Tripoli: the housing bar brought back to life, past, present and future in one section.',
-  dekSigned: false,
+  dekSigned: true, // SIGNED by Emilie (S2 sign-off, 2026-07-17)
   // THE QUESTION (D4, S2 draft): search-shaped, the way someone would ask it.
   question: 'How do you revive an unfinished Niemeyer masterpiece?',
   alsoAnswers: [
@@ -29,16 +29,20 @@ const homage: ProjectMaster = {
     { q: 'What is the Transfer Box?', beat: 'how' },
     { q: 'What came of a thesis about an unfinished fair?', beat: 'outcome' },
   ],
-  award: 'TAMAYOUZ TOP 100',
+  award: 'TOP 100 @ TAMAYOUZ',
   blurb:
     'My bachelor thesis at LAU: an adaptive reuse of Oscar Niemeyer’s unfinished Rachid Karami Fair in Tripoli. The surviving collective housing bar is re-inhabited as three homages, the past, the present and the future, threaded together by a rail mounted exhibition box. Selected among the Tamayouz Top 100 graduation projects of 2023.',
   tech: 'ADAPTIVE REUSE · COLLECTIVE HOUSING · EXHIBITION',
   links: [],
+  // S2 fix round cover: the crossfade cut (still = the moonlit slab).
   image: {
     slug: 'homage',
-    name: 'moonlit-slab',
-    alt: 'Moonlit render of the renovated Niemeyer housing bar at the Tripoli fair, a lit interior glowing over the reflecting deck',
+    name: 'homage-cover',
+    alt: 'The Homage at a glance: the moonlit housing bar, the dark fair with its one beam of light and the cutaway axonometric',
   },
+  // Created crossfade cover: card face ONLY, never a deck page (Emilie's
+  // round-3 rule: a cover I assembled is not an asset).
+  coverMontage: true,
 
   what: (
     <>
@@ -81,8 +85,7 @@ const homage: ProjectMaster = {
       people, and the past, inside it.
     </>
   ),
-  draftCopy: true,
-  showcaseDraft: true, // S2 automode draft; Emilie reviews + signs at session end
+  showcaseDraft: false, // spine + credits + alts SIGNED by Emilie (S2 sign-off, 2026-07-17)
 }
 
 export default homage

@@ -615,31 +615,31 @@
     {
       "name": "demo-cover",
       "role": "gif",
-      "alt": "The KPI dependency map of the live studio platform, data, program and structure indicators wired into one network",
-      "aspect": 1.7778,
+      "alt": "The analysis tower in the live viewer, program gradients in red and blue as the timeline scrubs across the studio platform",
+      "aspect": 2.1333,
       "animated": true,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/lungs/demo-cover-640.webp",
-          "kb": 227
+          "kb": 415
         },
         {
           "w": 1024,
           "file": "assets/projects/lungs/demo-cover-1024.webp",
-          "kb": 468
+          "kb": 738
         }
       ],
       "static": [
         {
           "w": 640,
           "file": "assets/projects/lungs/demo-cover-static-640.webp",
-          "kb": 7
+          "kb": 5
         },
         {
           "w": 1024,
           "file": "assets/projects/lungs/demo-cover-static-1024.webp",
-          "kb": 14
+          "kb": 10
         }
       ]
     },
@@ -1485,6 +1485,37 @@
   ],
   "narkomfin": [
     {
+      "name": "graph-cover",
+      "role": "gif",
+      "alt": "The Narkomfin voxel graph drawing closer: translucent volumes on black with graph nodes reaching out of the massing",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/graph-cover-640.webp",
+          "kb": 281
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/narkomfin/graph-cover-1024.webp",
+          "kb": 754
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/narkomfin/graph-cover-static-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/narkomfin/graph-cover-static-1024.webp",
+          "kb": 30
+        }
+      ]
+    },
+    {
       "name": "voxel-graph",
       "role": "hero",
       "alt": "The Narkomfin building rebuilt as translucent voxel volumes on black, spatial graph nodes and edges reaching out of the massing",
@@ -1834,6 +1865,37 @@
     }
   ],
   "data-geometry": [
+    {
+      "name": "workflow-cover",
+      "role": "gif",
+      "alt": "The data team workflow drawing closer: Speckle model and parameter sheets flowing through Grasshopper into Revit",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/data-geometry/workflow-cover-640.webp",
+          "kb": 524
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/data-geometry/workflow-cover-1024.webp",
+          "kb": 909
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/data-geometry/workflow-cover-static-640.webp",
+          "kb": 19
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/data-geometry/workflow-cover-static-1024.webp",
+          "kb": 31
+        }
+      ]
+    },
     {
       "name": "workflow",
       "role": "hero",
@@ -2387,6 +2449,37 @@
   ],
   "homage": [
     {
+      "name": "homage-cover",
+      "role": "gif",
+      "alt": "The Homage at a glance: the moonlit housing bar, the dark fair with its one beam of light and the cutaway axonometric",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/homage/homage-cover-640.webp",
+          "kb": 73
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/homage/homage-cover-1024.webp",
+          "kb": 124
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/homage/homage-cover-static-640.webp",
+          "kb": 10
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/homage/homage-cover-static-1024.webp",
+          "kb": 16
+        }
+      ]
+    },
+    {
       "name": "moonlit-slab",
       "role": "hero",
       "alt": "Moonlit render of the renovated Niemeyer housing bar at the Tripoli fair, a lit interior glowing over the reflecting deck",
@@ -2556,193 +2649,38 @@
       ]
     }
   ],
-  "jemma": [
+  "astroidal": [
     {
-      "name": "bell-tower",
-      "role": "hero",
-      "alt": "Looking up at the split bell tower of the Anfeh cemetery chapel, two concrete blades carrying the bells and the cross",
+      "name": "star-cover",
+      "role": "gif",
+      "alt": "The three astroidal ellipsoid stars in turn, the same equations wearing three different coefficient sets",
       "aspect": 1.7778,
+      "animated": true,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/jemma/bell-tower-640.webp",
-          "kb": 13
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/jemma/bell-tower-1024.webp",
-          "kb": 30
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/jemma/bell-tower-1600.webp",
-          "kb": 69
-        }
-      ]
-    },
-    {
-      "name": "falcon-aerial",
-      "role": "gallery",
-      "alt": "High view over Falcon Square in Al Khobar, the steel falcon monument landing on lawns, stone wedges and water",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/jemma/falcon-aerial-640.webp",
-          "kb": 19
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/jemma/falcon-aerial-1024.webp",
-          "kb": 41
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/jemma/falcon-aerial-1600.webp",
-          "kb": 97
-        }
-      ]
-    },
-    {
-      "name": "cemetery-aerial",
-      "role": "gallery",
-      "alt": "Aerial of The Encounter in Anfeh, crescents of green roofed tombs circling a sunken court crossed by two long halls",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/jemma/cemetery-aerial-640.webp",
-          "kb": 57
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/jemma/cemetery-aerial-1024.webp",
-          "kb": 135
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/jemma/cemetery-aerial-1600.webp",
-          "kb": 291
-        }
-      ]
-    },
-    {
-      "name": "chapel-light",
-      "role": "gallery",
-      "alt": "Inside the chapel, one thin roof slit washing light down board marked concrete onto a row of dark stone benches",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/jemma/chapel-light-640.webp",
-          "kb": 24
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/jemma/chapel-light-1024.webp",
+          "file": "assets/projects/astroidal/star-cover-640.webp",
           "kb": 62
         },
         {
-          "w": 1600,
-          "file": "assets/projects/jemma/chapel-light-1600.webp",
-          "kb": 156
+          "w": 1024,
+          "file": "assets/projects/astroidal/star-cover-1024.webp",
+          "kb": 101
         }
-      ]
-    },
-    {
-      "name": "calligraphy-prow",
-      "role": "gallery",
-      "alt": "Sunset on the calligraphy prow of the falcon monument, pierced Arabic letters glowing over the square's water channel",
-      "aspect": 1.7778,
-      "variants": [
+      ],
+      "static": [
         {
           "w": 640,
-          "file": "assets/projects/jemma/calligraphy-prow-640.webp",
-          "kb": 21
+          "file": "assets/projects/astroidal/star-cover-static-640.webp",
+          "kb": 10
         },
         {
           "w": 1024,
-          "file": "assets/projects/jemma/calligraphy-prow-1024.webp",
-          "kb": 43
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/jemma/calligraphy-prow-1600.webp",
-          "kb": 87
+          "file": "assets/projects/astroidal/star-cover-static-1024.webp",
+          "kb": 16
         }
       ]
     },
-    {
-      "name": "aircraft-process",
-      "role": "gallery",
-      "alt": "Process strip of the monument: an aircraft's takeoff line drawings rotated and mirrored into the falcon's two wings",
-      "aspect": 1.7776,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/jemma/aircraft-process-640.webp",
-          "kb": 43
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/jemma/aircraft-process-1024.webp",
-          "kb": 85
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/jemma/aircraft-process-1600.webp",
-          "kb": 150
-        }
-      ]
-    },
-    {
-      "name": "sunken-court",
-      "role": "gallery",
-      "alt": "The sunken court at the heart of the cemetery, radial stairs climbing between planted tomb walls toward the light",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/jemma/sunken-court-640.webp",
-          "kb": 24
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/jemma/sunken-court-1024.webp",
-          "kb": 61
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/jemma/sunken-court-1600.webp",
-          "kb": 156
-        }
-      ]
-    },
-    {
-      "name": "wing-elevation",
-      "role": "gallery",
-      "alt": "Side view of the falcon wing sweeping up, pierced calligraphy catching the light against a storm sky over Al Khobar",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/jemma/wing-elevation-640.webp",
-          "kb": 13
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/jemma/wing-elevation-1024.webp",
-          "kb": 27
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/jemma/wing-elevation-1600.webp",
-          "kb": 54
-        }
-      ]
-    }
-  ],
-  "astroidal": [
     {
       "name": "iterations",
       "role": "hero",
@@ -2833,6 +2771,37 @@
   ],
   "chair-sim": [
     {
+      "name": "voxel-sizes",
+      "role": "gif",
+      "alt": "The settled chair rebuilt at growing voxel sizes, from fine grain steps to chunky rubber ring modules",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/chair-sim/voxel-sizes-640.webp",
+          "kb": 28
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/chair-sim/voxel-sizes-1024.webp",
+          "kb": 57
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/chair-sim/voxel-sizes-static-640.webp",
+          "kb": 6
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/chair-sim/voxel-sizes-static-1024.webp",
+          "kb": 13
+        }
+      ]
+    },
+    {
       "name": "matrix",
       "role": "hero",
       "alt": "Eight voxelated chair iterations, each molded by a different sitting pose with damping and voxel size as the dials",
@@ -2878,37 +2847,6 @@
           "w": 1024,
           "file": "assets/projects/chair-sim/inflate-static-1024.webp",
           "kb": 13
-        }
-      ]
-    },
-    {
-      "name": "voxel-sizes",
-      "role": "gif",
-      "alt": "The settled chair rebuilt at growing voxel sizes, from fine grain steps to chunky rubber ring modules",
-      "aspect": 0.8004,
-      "animated": true,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/chair-sim/voxel-sizes-640.webp",
-          "kb": 88
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/chair-sim/voxel-sizes-1024.webp",
-          "kb": 169
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/chair-sim/voxel-sizes-static-640.webp",
-          "kb": 21
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/chair-sim/voxel-sizes-static-1024.webp",
-          "kb": 47
         }
       ]
     },
@@ -3092,6 +3030,37 @@
   ],
   "verve": [
     {
+      "name": "unit-selector",
+      "role": "gif",
+      "alt": "Screen capture of the interactive 3D unit selector orbiting the twin Verve towers, one unit footprint highlighted",
+      "aspect": 2.0847,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/verve/unit-selector-640.webp",
+          "kb": 604
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/verve/unit-selector-1024.webp",
+          "kb": 1003
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/verve/unit-selector-static-640.webp",
+          "kb": 24
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/verve/unit-selector-static-1024.webp",
+          "kb": 39
+        }
+      ]
+    },
+    {
       "name": "dusk-facade",
       "role": "hero",
       "alt": "Dusk render of the Verve facade above the fog, double height planted terraces with Burj Khalifa in the distance",
@@ -3198,66 +3167,43 @@
           "kb": 41
         }
       ]
-    },
+    }
+  ],
+  "mars": [
     {
-      "name": "unit-selector",
+      "name": "mars-cover",
       "role": "gif",
-      "alt": "Screen capture of the interactive 3D unit selector orbiting the twin Verve towers, one unit footprint highlighted",
-      "aspect": 2.0847,
+      "alt": "Ring 4000 at a glance: the ring in its crater, the farming interior, the transfer box and the annotated ring plan",
+      "aspect": 1.7778,
       "animated": true,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/verve/unit-selector-640.webp",
-          "kb": 604
+          "file": "assets/projects/mars/mars-cover-640.webp",
+          "kb": 143
         },
         {
           "w": 1024,
-          "file": "assets/projects/verve/unit-selector-1024.webp",
-          "kb": 1003
+          "file": "assets/projects/mars/mars-cover-1024.webp",
+          "kb": 231
         }
       ],
       "static": [
         {
           "w": 640,
-          "file": "assets/projects/verve/unit-selector-static-640.webp",
-          "kb": 24
+          "file": "assets/projects/mars/mars-cover-static-640.webp",
+          "kb": 14
         },
         {
           "w": 1024,
-          "file": "assets/projects/verve/unit-selector-static-1024.webp",
-          "kb": 39
-        }
-      ]
-    }
-  ],
-  "mars": [
-    {
-      "name": "crater-render",
-      "role": "hero",
-      "alt": "Ring 4000 embedded in the rim of a crater inside Valles Marineris, the annotated hero view of the Rings of Mars board",
-      "aspect": 1.7797,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/mars/crater-render-640.webp",
-          "kb": 16
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/mars/crater-render-1024.webp",
-          "kb": 32
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/mars/crater-render-1600.webp",
-          "kb": 60
+          "file": "assets/projects/mars/mars-cover-static-1024.webp",
+          "kb": 22
         }
       ]
     },
     {
       "name": "board",
-      "role": "gallery",
+      "role": "hero",
       "alt": "The full Rings of Mars competition board: exploded ring drawings, annotated plan, crater renders and systems diagram",
       "aspect": 1.4159,
       "variants": [
@@ -3282,45 +3228,132 @@
       "name": "sectional-perspective",
       "role": "gallery",
       "alt": "Sectional perspective through Ring 4000, from the BIPV envelope down through farming, pods and the crater pit",
-      "aspect": 7.0485,
+      "aspect": 2.9907,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/mars/sectional-perspective-640.webp",
-          "kb": 9
+          "kb": 20
         },
         {
           "w": 1024,
           "file": "assets/projects/mars/sectional-perspective-1024.webp",
-          "kb": 17
+          "kb": 37
         },
         {
           "w": 1600,
           "file": "assets/projects/mars/sectional-perspective-1600.webp",
-          "kb": 35
+          "kb": 70
         }
       ]
     },
     {
-      "name": "top50-badge",
+      "name": "farming-interior",
       "role": "gallery",
-      "alt": "The official Top 50 badge issued by Volume Zero for Marsception 2024, the recognition anchor for Ring 4000",
+      "alt": "Inside the ring: the farming and transport level, a researcher on the stair beside planted beds and the pod bay",
       "aspect": 1.7778,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/mars/top50-badge-640.webp",
-          "kb": 12
+          "file": "assets/projects/mars/farming-interior-640.webp",
+          "kb": 58
         },
         {
           "w": 1024,
-          "file": "assets/projects/mars/top50-badge-1024.webp",
-          "kb": 22
+          "file": "assets/projects/mars/farming-interior-1024.webp",
+          "kb": 143
         },
         {
           "w": 1600,
-          "file": "assets/projects/mars/top50-badge-1600.webp",
-          "kb": 37
+          "file": "assets/projects/mars/farming-interior-1600.webp",
+          "kb": 364
+        }
+      ]
+    },
+    {
+      "name": "ring-plan",
+      "role": "gallery",
+      "alt": "The annotated ring plan at radius 30 meters: farming, research, buffer and integration zones around the crater",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/ring-plan-640.webp",
+          "kb": 21
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/ring-plan-1024.webp",
+          "kb": 38
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/mars/ring-plan-1600.webp",
+          "kb": 62
+        }
+      ]
+    },
+    {
+      "name": "pod-axo",
+      "role": "gallery",
+      "alt": "Cutaway axonometric of a segment of Ring 4000, the sleeping pod tucked into the shell with its service spine",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/pod-axo-640.webp",
+          "kb": 13
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/pod-axo-1024.webp",
+          "kb": 21
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/mars/pod-axo-1600.webp",
+          "kb": 34
+        }
+      ]
+    },
+    {
+      "name": "exterior-vignette",
+      "role": "gallery",
+      "alt": "Through a porthole: the ring bridging its crater under a Martian sky, a moon hanging over the far rim",
+      "aspect": 1,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/exterior-vignette-640.webp",
+          "kb": 68
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/exterior-vignette-1024.webp",
+          "kb": 168
+        }
+      ]
+    },
+    {
+      "name": "transfer-box",
+      "role": "gallery",
+      "alt": "Axonometric of the transfer box, the rail mounted unit that moves people and material around Ring 4000",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/transfer-box-640.webp",
+          "kb": 17
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/transfer-box-1024.webp",
+          "kb": 30
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/mars/transfer-box-1600.webp",
+          "kb": 53
         }
       ]
     }
@@ -3413,6 +3446,598 @@
           "w": 1024,
           "file": "assets/projects/xr/sn1-after-1024.webp",
           "kb": 6
+        }
+      ]
+    }
+  ],
+  "encounter": [
+    {
+      "name": "encounter-cover",
+      "role": "gif",
+      "alt": "The Encounter at a glance: the split bell tower, the tomb terraces from the air, the chapel light and the sunken court",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/encounter-cover-640.webp",
+          "kb": 277
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/encounter-cover-1024.webp",
+          "kb": 467
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/encounter-cover-static-640.webp",
+          "kb": 13
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/encounter-cover-static-1024.webp",
+          "kb": 21
+        }
+      ]
+    },
+    {
+      "name": "bell-tower",
+      "role": "hero",
+      "alt": "Looking up at the split bell tower of the Anfeh cemetery chapel, two concrete blades carrying the bells and the cross",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/bell-tower-640.webp",
+          "kb": 13
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/bell-tower-1024.webp",
+          "kb": 30
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/encounter/bell-tower-1600.webp",
+          "kb": 69
+        }
+      ]
+    },
+    {
+      "name": "cemetery-aerial",
+      "role": "gallery",
+      "alt": "Aerial of The Encounter in Anfeh, crescents of green roofed tombs circling a sunken court crossed by two long halls",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/cemetery-aerial-640.webp",
+          "kb": 57
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/cemetery-aerial-1024.webp",
+          "kb": 135
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/encounter/cemetery-aerial-1600.webp",
+          "kb": 291
+        }
+      ]
+    },
+    {
+      "name": "sunken-court",
+      "role": "gallery",
+      "alt": "The sunken court at the heart of the cemetery, radial stairs climbing between planted tomb walls toward the light",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/sunken-court-640.webp",
+          "kb": 24
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/sunken-court-1024.webp",
+          "kb": 61
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/encounter/sunken-court-1600.webp",
+          "kb": 156
+        }
+      ]
+    },
+    {
+      "name": "chapel-light",
+      "role": "gallery",
+      "alt": "Inside the chapel, one thin roof slit washing light down board marked concrete onto a row of dark stone benches",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/chapel-light-640.webp",
+          "kb": 24
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/chapel-light-1024.webp",
+          "kb": 62
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/encounter/chapel-light-1600.webp",
+          "kb": 156
+        }
+      ]
+    },
+    {
+      "name": "moonlit-night",
+      "role": "gallery",
+      "alt": "Night view of the Anfeh cemetery, the split bell tower and curved hall above moonlit terraces of planted tombs",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/moonlit-night-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/moonlit-night-1024.webp",
+          "kb": 17
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/encounter/moonlit-night-1600.webp",
+          "kb": 34
+        }
+      ]
+    },
+    {
+      "name": "sunrise-spire",
+      "role": "gallery",
+      "alt": "The cemetery at sunrise, the cross topped spire rising behind the curved hall wall and planted tomb roofs",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/sunrise-spire-640.webp",
+          "kb": 9
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/sunrise-spire-1024.webp",
+          "kb": 19
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/encounter/sunrise-spire-1600.webp",
+          "kb": 42
+        }
+      ]
+    },
+    {
+      "name": "sketches-grid",
+      "role": "gallery",
+      "alt": "The first ink sketches of The Encounter: the folding axis, the hollow, the descent, the tomb walls and the gathering ring",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/sketches-grid-640.webp",
+          "kb": 9
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/sketches-grid-1024.webp",
+          "kb": 18
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/encounter/sketches-grid-1600.webp",
+          "kb": 33
+        }
+      ]
+    },
+    {
+      "name": "floor-plan",
+      "role": "gallery",
+      "alt": "Labeled floor plan of The Encounter: bell tower, chapel, condolences hall and outdoor courtyard among the tomb crescents",
+      "aspect": 1.6084,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/floor-plan-640.webp",
+          "kb": 27
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/floor-plan-1024.webp",
+          "kb": 59
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/encounter/floor-plan-1600.webp",
+          "kb": 135
+        }
+      ]
+    },
+    {
+      "name": "section",
+      "role": "gallery",
+      "alt": "Long section through the cemetery, the spire and sunken steps between semi buried tombs and the tree lined slope",
+      "aspect": 2.7441,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter/section-640.webp",
+          "kb": 11
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter/section-1024.webp",
+          "kb": 23
+        }
+      ]
+    }
+  ],
+  "falcon": [
+    {
+      "name": "falcon-cover",
+      "role": "gif",
+      "alt": "The falcon monument in motion: the camera pulls back from the copper calligraphy band to the whole roundabout at dusk",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/falcon-cover-640.webp",
+          "kb": 720
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/falcon-cover-1024.webp",
+          "kb": 1113
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/falcon-cover-static-640.webp",
+          "kb": 22
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/falcon-cover-static-1024.webp",
+          "kb": 33
+        }
+      ]
+    },
+    {
+      "name": "storm-takeoff-view",
+      "role": "hero",
+      "alt": "Ground view under storm clouds, an airliner climbing overhead as the steel wings sweep up along the same take-off line",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/storm-takeoff-view-640.webp",
+          "kb": 15
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/storm-takeoff-view-1024.webp",
+          "kb": 30
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/storm-takeoff-view-1600.webp",
+          "kb": 61
+        }
+      ]
+    },
+    {
+      "name": "takeoff-angle-sketches",
+      "role": "gallery",
+      "alt": "Ink sketches on black of jets and a take-off diagram, tracing climb angles, flaps and slats that seed the monument's lines",
+      "aspect": 1.4007,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/takeoff-angle-sketches-640.webp",
+          "kb": 165
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/takeoff-angle-sketches-1024.webp",
+          "kb": 374
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/takeoff-angle-sketches-1600.webp",
+          "kb": 857
+        }
+      ]
+    },
+    {
+      "name": "aircraft-anatomy-sketches",
+      "role": "gallery",
+      "alt": "Ink sketches on black studying aircraft anatomy: control surfaces, flaps and spoilers, and the pitch, roll and yaw axes",
+      "aspect": 1.3635,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/aircraft-anatomy-sketches-640.webp",
+          "kb": 237
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/aircraft-anatomy-sketches-1024.webp",
+          "kb": 546
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/aircraft-anatomy-sketches-1600.webp",
+          "kb": 1233
+        }
+      ]
+    },
+    {
+      "name": "process-01-mirroring",
+      "role": "gallery",
+      "alt": "Process stages 1 to 4: aircraft line drawing, take-off angles, then two mirrorings that fuse the lines into the falcon",
+      "aspect": 1.7776,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/process-01-mirroring-640.webp",
+          "kb": 43
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/process-01-mirroring-1024.webp",
+          "kb": 85
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/process-01-mirroring-1600.webp",
+          "kb": 150
+        }
+      ]
+    },
+    {
+      "name": "process-02-lines-to-3d",
+      "role": "gallery",
+      "alt": "Process stages 5 to 8: the mirrored line drawings become a 3D body, connected through core, void, rotation and wings",
+      "aspect": 1.7776,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/process-02-lines-to-3d-640.webp",
+          "kb": 37
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/process-02-lines-to-3d-1024.webp",
+          "kb": 69
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/process-02-lines-to-3d-1600.webp",
+          "kb": 129
+        }
+      ]
+    },
+    {
+      "name": "process-03-landscape-merge",
+      "role": "gallery",
+      "alt": "Process stages 9 to 12: the roundabout landscape is redrawn from the same lines until sculpture and ground work as one",
+      "aspect": 1.7776,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/process-03-landscape-merge-640.webp",
+          "kb": 37
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/process-03-landscape-merge-1024.webp",
+          "kb": 69
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/process-03-landscape-merge-1600.webp",
+          "kb": 125
+        }
+      ]
+    },
+    {
+      "name": "calligraphy-wings-exploded",
+      "role": "gallery",
+      "alt": "Exploded axonometric lifting the two pierced calligraphy plates in red off the white falcon wings, labeled in Arabic",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/calligraphy-wings-exploded-640.webp",
+          "kb": 9
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/calligraphy-wings-exploded-1024.webp",
+          "kb": 18
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/calligraphy-wings-exploded-1600.webp",
+          "kb": 32
+        }
+      ]
+    },
+    {
+      "name": "site-plan",
+      "role": "gallery",
+      "alt": "Site plan of the falcon monument on the roundabout, mirrored wings on one axis with water channels and section lines",
+      "aspect": 1.7727,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/site-plan-640.webp",
+          "kb": 23
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/site-plan-1024.webp",
+          "kb": 54
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/site-plan-1600.webp",
+          "kb": 110
+        }
+      ]
+    },
+    {
+      "name": "day-aerial-roundabout",
+      "role": "gallery",
+      "alt": "Daytime aerial of the full roundabout, paving and water channels radiating from the steel falcon like take-off lines",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/day-aerial-roundabout-640.webp",
+          "kb": 30
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/day-aerial-roundabout-1024.webp",
+          "kb": 69
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/day-aerial-roundabout-1600.webp",
+          "kb": 151
+        }
+      ]
+    },
+    {
+      "name": "haze-sunset-prow",
+      "role": "gallery",
+      "alt": "The corten calligraphy prow against a hazy desert sunset, steel blades crossing above a carved landscape wall and berm",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/haze-sunset-prow-640.webp",
+          "kb": 17
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/haze-sunset-prow-1024.webp",
+          "kb": 36
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/haze-sunset-prow-1600.webp",
+          "kb": 69
+        }
+      ]
+    },
+    {
+      "name": "storm-elevation",
+      "role": "gallery",
+      "alt": "Side view of the falcon wings climbing against a storm sky, the pierced calligraphy band riding the leading edge",
+      "aspect": 2.2222,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/storm-elevation-640.webp",
+          "kb": 14
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/storm-elevation-1024.webp",
+          "kb": 28
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/storm-elevation-1600.webp",
+          "kb": 53
+        }
+      ]
+    },
+    {
+      "name": "calligraphy-closeup-sunset",
+      "role": "gallery",
+      "alt": "Close-up of the pierced corten calligraphy at sunset, the low sun and gold water plaza seen through the desert haze",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/calligraphy-closeup-sunset-640.webp",
+          "kb": 21
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/calligraphy-closeup-sunset-1024.webp",
+          "kb": 43
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/calligraphy-closeup-sunset-1600.webp",
+          "kb": 87
+        }
+      ]
+    },
+    {
+      "name": "night-aerial",
+      "role": "gallery",
+      "alt": "Night aerial of the roundabout, the steel falcon lit at the center with water channels and headlights on the ring road",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/falcon/night-aerial-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/falcon/night-aerial-1024.webp",
+          "kb": 15
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/falcon/night-aerial-1600.webp",
+          "kb": 29
+        }
+      ]
+    }
+  ],
+  "encounter-cert": [
+    {
+      "name": "certificate",
+      "role": "gallery",
+      "alt": "The certificate of achievement from Ctrl Act Design naming Emilie Chidiac, shortlisted as finalist of the Cemetery Challenge",
+      "aspect": 1.4134,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter-cert/certificate-640.webp",
+          "kb": 65
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter-cert/certificate-1024.webp",
+          "kb": 137
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/encounter-cert/certificate-1600.webp",
+          "kb": 251
         }
       ]
     }

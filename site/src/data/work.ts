@@ -53,6 +53,7 @@ export interface WorkEntry {
   // answers; `beat` names the spine section a press highlights.
   alsoAnswers?: { q: string; beat?: 'what' | 'why' | 'how' | 'outcome' }[]
   meta: string // the plate's credit/context row (e.g. 'MACAD STUDIO · TEAM OF 4')
+  origin: string // the face's origin stamp (MACAD/LAU/SOMA/JEMMA/SELF), derived from meta
   tech: string // the mono tech row
   stat?: string // Session 7: the one defensible number, data-plate style
   recognition?: string // award wording where real; ink, no box, never red
@@ -111,7 +112,55 @@ const featuredRank = (slug: string): number => {
   return i === -1 ? Infinity : i
 }
 
+// THE CURATED ORDER (S2 round 6, 2026-07-17: EMILIE'S OWN LIST, verbatim
+// where she named it). Her numbered picks 1-8, then "iaac projects ...",
+// then the practice tail closing on The Homage. Two placements were hers to
+// confirm (flagged at the review): the podcast leads the iaac block, and
+// XR for Education closes the school cluster before the practice tail. A
+// slug not listed falls back after the list, newest-first (append-safe).
+// This list orders the WHOLE grid; FEATURED_SLUGS keeps its original
+// membership for the eager-load flag only.
+const CURATED_ORDER: readonly string[] = [
+  'sensi',
+  'legoarch',
+  'neurospace',
+  'lungs',
+  'huddle',
+  'ballooning-market',
+  'urban-risk',
+  'cappelletti',
+  'podcast',
+  'narkomfin',
+  'data-geometry',
+  'tsukiji',
+  'chair-sim',
+  'astroidal',
+  'playscape',
+  'xr-lab',
+  'marsception',
+  'soma-towers',
+  'encounter',
+  'falcon',
+  'homage',
+]
+const curatedRank = (slug: string): number => {
+  const i = CURATED_ORDER.indexOf(slug)
+  return i === -1 ? Infinity : i
+}
+
 const humanize = (name: string) => name.replace(/-/g, ' ')
+
+// THE ORIGIN STAMP (S2 round 6, Emilie's pick of option A: school vs
+// practice must read on the tile face, as a quiet suffix BEHIND the sheet
+// number, never a leading label). Derived from the master's meta row (its
+// first word: MACAD, LAU, SOMA, JEMMA), with one override: Marsception's
+// meta leads with the competition's name, but the entry was her own
+// two-person team, so it stamps SELF (her LinkedIn files it under
+// self-employed). Renders as "P-108 · SOMA" on the face and the printed
+// index alike.
+const ORIGIN_OVERRIDES: Record<string, string> = { marsception: 'SELF' }
+const originOf = (p: Project): string =>
+  ORIGIN_OVERRIDES[p.slug] ?? p.meta.split('·')[0]!.trim().split(/\s+/)[0]!
 
 // The supporting strip: every other frame in the cover's own folder, hero
 // excluded, shared folders suppressed. Alt text prefers the manifest's
@@ -179,6 +228,7 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     // The plate rows (S4a): the showcase now mirrors the printed spread, so
     // it reads the same meta credit line + stat the book plate prints.
     meta: p.meta,
+    origin: originOf(p),
     tech: p.tech,
     stat: p.stat,
     // Recognition wording lives with the card copy; membership is guaranteed
@@ -218,8 +268,10 @@ export const WORK_ENTRIES: WorkEntry[] = ENTRIES.filter((e) => e.kind === 'proje
   .map(toWorkEntry)
   .filter((w): w is WorkEntry => w !== null)
   .sort((a, b) => {
-    const ra = featuredRank(a.slug)
-    const rb = featuredRank(b.slug)
+    // S2 round 6: HER list orders everything; date only breaks ties for
+    // slugs the list does not know yet (future appends).
+    const ra = curatedRank(a.slug)
+    const rb = curatedRank(b.slug)
     if (ra !== rb) return ra - rb
     return b.date.localeCompare(a.date)
   })

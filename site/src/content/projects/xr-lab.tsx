@@ -1,16 +1,17 @@
-// P-111 · XR for Education (explorations). Card copy migrated verbatim from
-// data/projects.tsx (dek signed 2026-07-10).
-// S2 ENRICH (2026-07-16): the quiet P-111 tile gains its first real cover +
-// gallery from her LAU XR Lab research assets (incoming/academic/lau/
-// xr-education/): a hover-play cut of the SN2 reaction render, the AR
-// reactions board, and an SN1 before/after pair. Kept modest on purpose
-// (she plans to expand this project later); the dead QR links never ship.
-// HONESTY: the lab's workshop curriculum teaches Unity and C#; per the
-// standing red line, no personal C# claim appears anywhere in this copy.
-// EVIDENCE for "seven reaction models": the Chem101 reference PDF on disk
-// (incoming/academic/lau/xr-education/) lists seven AR reactions (SN1, SN2,
-// SN2 with energy, SN1/SN2/E1/E2 alcohol); the shipped board shows three.
-// Spine was SIGNED at G4; the S2 sentence re-flags it pending her re-sign.
+// P-111 · XR for Education (explorations). S2 FIX ROUND (2026-07-16): the
+// spine rewritten from Emilie's own telling. Her two guiding questions,
+// near-verbatim, are the WHY ("chem students dont have the best
+// visualization skills so how can we teach them something crucial... in a
+// visual way? and how to make something relatively boring and too technical
+// into something immersive and fun"); the pipeline is the HOW (reactions
+// modeled and animated in 3ds Max and Maya, imported into Unity, run on
+// Oculus headsets); the OUTCOME keeps her ceiling exactly: engagement was
+// visibly higher in the trials, the research never went deeper, she
+// graduated and left the team. Her LinkedIn record (Research Assistant, XR
+// Learning Experiences, LAU, Sep 2021 - Jan 2023) backs the frame,
+// including contributions to research papers and documentation.
+// HONESTY red line held: no personal C# claim, no measured-outcome claim.
+// ALL COPY SIGNED by Emilie (S2 sign-off, 2026-07-17).
 import type { ProjectMaster } from './types'
 
 const xrLab: ProjectMaster = {
@@ -20,20 +21,19 @@ const xrLab: ProjectMaster = {
   meta: 'LAU XR LAB · RESEARCH ASSISTANT · 2021-23',
   dek: 'Where the XR thread started: point a phone at a molecule and watch it react in the room.',
   dekSigned: true,
-  // THE QUESTION (D4 round 2, Emilie 2026-07-14: "this is about how XR and VR
-  // can help in education"; she will expand this project eventually). The
-  // question asks; the thin spine answers only from her lab years, no
-  // measured-outcome claims. WHAT + WHY beats only. Question + dot set SIGNED by Emilie (REINDEX batch C, 2026-07-16).
+  // THE QUESTION (D4 round 2, Emilie 2026-07-14). Question + dot set SIGNED
+  // by Emilie (REINDEX batch C, 2026-07-16); the S2 HOW/OUTCOME beats
+  // SIGNED at the S2 sign-off, 2026-07-17.
   question: 'Can AR and VR change how we learn?',
   alsoAnswers: [
     { q: 'What if the lesson could stand in the room with you?', beat: 'what' },
     { q: 'Can a phone camera make a chemistry reaction visible?', beat: 'what' },
-    { q: 'What changes when the molecule is in the room, not on the screen?', beat: 'why' },
-    { q: 'How do you build an AR lesson a student can walk around?', beat: 'what' },
+    { q: 'How does a molecule get from Maya into a VR headset?', beat: 'how' },
+    { q: 'Did the students actually engage more?', beat: 'outcome' },
   ],
   blurb:
-    'Point a phone at a molecule and watch the reaction happen in the room: AR chemistry lessons built at the LAU XR Lab, plus contributions to research on VR in education. Where the XR thread in my work started.',
-  tech: 'AR · VR · 3D ANIMATION',
+    'AR and VR chemistry lessons built at the LAU XR Lab: reactions modeled and animated in 3ds Max and Maya, brought into Unity, and run on Oculus headsets, so a student can stand inside the reaction instead of squinting at a diagram. Where the XR thread in my work started.',
+  tech: 'MAYA · 3DS MAX · UNITY · OCULUS',
   links: [],
   // S2 cover: a hover-play cut of the SN2 reaction render (still at rest).
   image: {
@@ -44,21 +44,38 @@ const xrLab: ProjectMaster = {
 
   what: (
     <>
-      Point a phone at a molecule and watch the reaction happen in the room: AR chemistry lessons
-      built as a research assistant at the LAU XR Lab, plus contributions to research on VR in
-      education. The chemistry set grew to seven reaction models students could summon through QR
-      codes, each animated in ball and stick.
+      Research assistant work at the LAU XR Lab, turning chemistry into something you can stand
+      inside. We researched the reactions themselves to model them accurately, animated them in
+      3ds Max and Maya, and shipped them two ways: as AR lessons a phone summons through QR
+      codes, seven reaction models in the set, and as VR experiences built in Unity for Oculus
+      headsets. I also contributed to the lab&rsquo;s research papers and documentation on XR in
+      education.
     </>
   ),
   why: (
     <>
-      This is where the XR thread in my work started: the first time I watched a student
-      understand something because the content stood in the room with them, not on a screen in
-      front of them.
+      Two questions drove the whole experiment. Chemistry students do not always have the best
+      visualization skills, so how do you teach them something crucial and deeply technical in a
+      visual way? And how do you turn a subject that reads as boring and technical into
+      something immersive you can interact with?
     </>
   ),
-  draftCopy: true,
-  showcaseDraft: true, // S2 enrich: the reactions sentence + cover await Emilie's re-sign
+  how: [
+    <>Research each reaction until the chemistry is right, then model and animate it in 3ds Max
+      and Maya.</>,
+    <>Publish the animations as AR lessons behind QR codes, so the molecule appears in the room
+      through a phone camera.</>,
+    <>Import the models into Unity and build the VR versions for Oculus headsets, interactive
+      and walkable.</>,
+  ],
+  outcome: (
+    <>
+      It stayed honestly experimental: the students we tested with were visibly more engaged,
+      but the research never went deeper than those trials. I graduated and left the team, and
+      the XR thread in my work starts here.
+    </>
+  ),
+  showcaseDraft: false, // spine + credits + alts SIGNED by Emilie (S2 sign-off, 2026-07-17)
 }
 
 export default xrLab

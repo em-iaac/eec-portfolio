@@ -156,7 +156,7 @@ export const MANIFEST = {
   lungs: [
     {
       src: 'academic/iaac/lungs/lungs-cover-web.webp', role: 'gif', name: 'demo-cover',
-      alt: 'The KPI dependency map of the live studio platform, data, program and structure indicators wired into one network',
+      alt: 'The analysis tower in the live viewer, program gradients in red and blue as the timeline scrubs across the studio platform',
     },
     {
       src: 'academic/iaac/lungs/blog/image-480.png', role: 'gallery', name: 'kpi-dashboard',
@@ -324,6 +324,12 @@ export const MANIFEST = {
   // S4b · THE FIVE (2026-07-14): sources are Emilie's public IAAC blog posts,
   // downloaded into incoming/<slug>/ (her approval at the session gate).
   narkomfin: [
+    // (S2 fix round, Emilie's gif-cover rule applied to ALL stills: a slow
+    // zoom cut of the voxel graph; still at rest = the graph as before.)
+    {
+      src: 'academic/iaac/narkomfin/narkomfin-cover-web.webp', role: 'gif', name: 'graph-cover',
+      alt: 'The Narkomfin voxel graph drawing closer: translucent volumes on black with graph nodes reaching out of the massing',
+    },
     {
       src: 'academic/iaac/narkomfin/Blog_GraphML_G02_Maria_Lakzhmy_Charles_Emilie.png', role: 'hero', name: 'voxel-graph',
       alt: 'The Narkomfin building rebuilt as translucent voxel volumes on black, spatial graph nodes and edges reaching out of the massing',
@@ -392,6 +398,12 @@ export const MANIFEST = {
     },
   ],
   'data-geometry': [
+    // (S2 fix round, the gif-cover rule: a slow zoom cut of the workflow
+    // board on its white ground; still at rest = the board as before.)
+    {
+      src: 'academic/iaac/data-geometry/datageom-cover-web.webp', role: 'gif', name: 'workflow-cover',
+      alt: 'The data team workflow drawing closer: Speckle model and parameter sheets flowing through Grasshopper into Revit',
+    },
     {
       src: 'academic/iaac/data-geometry/image-301.png', role: 'hero', name: 'workflow', frame16x9: true, bg: '#ffffff',
       alt: "The data team's workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
@@ -517,95 +529,198 @@ export const MANIFEST = {
   // render (native 16:9). The 35000px Sections-and-Plans board stays out; the
   // sectional-axo board ships split in two (derived crops).
   homage: [
+    // (S2 fix round: crossfade cover cut per the gif-cover rule; still =
+    // the moonlit slab.)
     {
-      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/portfnight.jpg', role: 'hero', name: 'moonlit-slab',
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/homage-cover-web.webp', role: 'gif', name: 'homage-cover',
+      alt: 'The Homage at a glance: the moonlit housing bar, the dark fair with its one beam of light and the cutaway axonometric',
+    },
+    {
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/final-assets/moonlit-slab.jpg', role: 'hero', name: 'moonlit-slab',
       alt: 'Moonlit render of the renovated Niemeyer housing bar at the Tripoli fair, a lit interior glowing over the reflecting deck',
     },
     {
-      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/design-strategy-02.png', role: 'gallery', name: 'strategy-quote',
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/final-assets/strategy-quote.png', role: 'gallery', name: 'strategy-quote',
       alt: "Strategy board pairing Niemeyer's line about Tripoli's two hearts with the adaptive reuse argument of The Homage",
     },
     {
-      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/protfolio Exploded Axo.jpg', role: 'gallery', name: 'exploded-axo',
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/final-assets/exploded-axo.jpg', role: 'gallery', name: 'exploded-axo',
       alt: 'Exploded axonometric separating The Homage into past, present and future layers, paired with brain, lungs and heart icons',
     },
     {
-      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/derived-sectional-axo.jpg', role: 'gallery', name: 'sectional-axo',
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/final-assets/sectional-axo.jpg', role: 'gallery', name: 'sectional-axo',
       alt: 'Cutaway axonometric of the housing bar, old Niemeyer units in yellow and the new unit typologies inserted in red',
     },
     {
-      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/derived-typology-matrix.jpg', role: 'gallery', name: 'typology-matrix',
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/final-assets/typology-matrix.jpg', role: 'gallery', name: 'typology-matrix',
       alt: 'Typology matrix of the three new units: sectional perspectives, furnished plans and cutaway isometrics at 1 to 50',
     },
     {
-      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/residential-startegy.png', role: 'gallery', name: 'residential-strategy',
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/final-assets/residential-strategy.png', role: 'gallery', name: 'residential-strategy',
       alt: 'Residential strategy board: studios, luxury units and affordable artisan apartments with private workshop space',
     },
     {
-      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/transport-design.png', role: 'gallery', name: 'transfer-box',
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/final-assets/transfer-box.png', role: 'gallery', name: 'transfer-box',
       alt: 'The Transfer Box study: a rail mounted glass exhibition container with its exploded detail axo and underground renders',
     },
     {
-      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/FAIR WITH LIGHT night2.jpg', role: 'gallery', name: 'fair-night',
+      src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/final-assets/fair-night.jpg', role: 'gallery', name: 'fair-night',
       alt: 'Night aerial of the Rachid Karami fairgrounds in Tripoli, the dark site with one beam of light from the intervention',
     },
   ],
-  // COMPETITIONS AT JEMMA CHIDIAC (internship year, Beirut 2022): The
-  // Encounter (Anfeh cemetery, shortlisted finalist) + the Falcon Square
-  // monument (Moujassam Watan, Al Khobar). All renders native 3840x2160.
-  // Both competition boards are anonymous (entry 232 / no names on renders).
-  jemma: [
+  // THE ENCOUNTER (S2 fix round, 2026-07-16: the Jemma internship year SPLIT
+  // into its two competitions at Emilie's call; she was an ARCHITECTURAL
+  // DESIGNER per her LinkedIn record). The Anfeh cemetery, Ctrl Act Design,
+  // shortlisted finalist. Cover = a crossfade cut of the four key renders
+  // (encounter-cover-web.webp, derived; still = the bell tower). The
+  // certificate raster is BOTH a gallery frame and the FINALIST pill's link
+  // target (her call: no public URL exists, the certificate anchors it).
+  // (Round 4, 2026-07-17, her final-assets review: certificate OUT of the
+  // deck (it stays baked under its own `encounter-cert` slug so the FINALIST
+  // pill keeps its link target); her added frames IN (moonlit night, sunrise
+  // spire, the labeled floor plan, the long section); the five ink partis
+  // ship as ONE composed grid page, sketches-grid.jpg, built from her
+  // sketch-*.png scans at her ask.)
+  encounter: [
     {
-      src: "work/jemma-chidiac-office-work/cemetery-challenge/02-WORK IN PROGRESS/06-RENDERS/5'.jpg", role: 'hero', name: 'bell-tower',
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/encounter-cover-web.webp', role: 'gif', name: 'encounter-cover',
+      alt: 'The Encounter at a glance: the split bell tower, the tomb terraces from the air, the chapel light and the sunken court',
+    },
+    {
+      src: "work/jemma-chidiac-office-work/cemetery-challenge/final-assets/bell-tower.jpg", role: 'hero', name: 'bell-tower',
       alt: 'Looking up at the split bell tower of the Anfeh cemetery chapel, two concrete blades carrying the bells and the cross',
     },
     {
-      src: 'work/jemma-chidiac-office-work/round-about-chahine/MIDAN AL SAKR - Final Production/Final Renders/RENDER__34 - Photo.jpg', role: 'gallery', name: 'falcon-aerial',
-      alt: 'High view over Falcon Square in Al Khobar, the steel falcon monument landing on lawns, stone wedges and water',
-    },
-    {
-      src: 'work/jemma-chidiac-office-work/cemetery-challenge/02-WORK IN PROGRESS/06-RENDERS/18 final.jpg', role: 'gallery', name: 'cemetery-aerial',
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/final-assets/cemetery-aerial.jpg', role: 'gallery', name: 'cemetery-aerial',
       alt: 'Aerial of The Encounter in Anfeh, crescents of green roofed tombs circling a sunken court crossed by two long halls',
     },
     {
-      src: 'work/jemma-chidiac-office-work/cemetery-challenge/02-WORK IN PROGRESS/06-RENDERS/9.jpg', role: 'gallery', name: 'chapel-light',
-      alt: 'Inside the chapel, one thin roof slit washing light down board marked concrete onto a row of dark stone benches',
-    },
-    {
-      src: 'work/jemma-chidiac-office-work/round-about-chahine/MIDAN AL SAKR - Final Production/Final Renders/RENDER__36 - Photo.jpg', role: 'gallery', name: 'calligraphy-prow',
-      alt: "Sunset on the calligraphy prow of the falcon monument, pierced Arabic letters glowing over the square's water channel",
-    },
-    {
-      src: 'work/jemma-chidiac-office-work/round-about-chahine/MIDAN AL SAKR - Final Production/Diagrams/Diagrams - Line Drawings_05 - Diagram 2D - set 1 .png', role: 'gallery', name: 'aircraft-process',
-      alt: "Process strip of the monument: an aircraft's takeoff line drawings rotated and mirrored into the falcon's two wings",
-    },
-    {
-      src: 'work/jemma-chidiac-office-work/cemetery-challenge/02-WORK IN PROGRESS/06-RENDERS/8 FINAL.jpg', role: 'gallery', name: 'sunken-court',
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/final-assets/sunken-court.jpg', role: 'gallery', name: 'sunken-court',
       alt: 'The sunken court at the heart of the cemetery, radial stairs climbing between planted tomb walls toward the light',
     },
     {
-      src: 'work/jemma-chidiac-office-work/round-about-chahine/MIDAN AL SAKR - Final Production/Final Renders/RENDER__29 - Photo.jpg', role: 'gallery', name: 'wing-elevation',
-      alt: 'Side view of the falcon wing sweeping up, pierced calligraphy catching the light against a storm sky over Al Khobar',
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/final-assets/chapel-light.jpg', role: 'gallery', name: 'chapel-light',
+      alt: 'Inside the chapel, one thin roof slit washing light down board marked concrete onto a row of dark stone benches',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/final-assets/moonlit-night.jpg', role: 'gallery', name: 'moonlit-night',
+      alt: 'Night view of the Anfeh cemetery, the split bell tower and curved hall above moonlit terraces of planted tombs',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/final-assets/sunrise-spire.jpg', role: 'gallery', name: 'sunrise-spire',
+      alt: 'The cemetery at sunrise, the cross topped spire rising behind the curved hall wall and planted tomb roofs',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/final-assets/sketches-grid.jpg', role: 'gallery', name: 'sketches-grid',
+      alt: 'The first ink sketches of The Encounter: the folding axis, the hollow, the descent, the tomb walls and the gathering ring',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/final-assets/floor-plan.jpg', role: 'gallery', name: 'floor-plan',
+      alt: 'Labeled floor plan of The Encounter: bell tower, chapel, condolences hall and outdoor courtyard among the tomb crescents',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/final-assets/section.png', role: 'gallery', name: 'section',
+      alt: 'Long section through the cemetery, the spire and sunken steps between semi buried tombs and the tree lined slope',
+    },
+  ],
+  // The FINALIST pill's link target, OUT of the deck (round 4): baked under
+  // its own slug so no strip ever picks it up.
+  'encounter-cert': [
+    {
+      src: 'work/jemma-chidiac-office-work/cemetery-challenge/final-assets/certificate.png', role: 'gallery', name: 'certificate',
+      alt: 'The certificate of achievement from Ctrl Act Design naming Emilie Chidiac, shortlisted as finalist of the Cemetery Challenge',
+    },
+  ],
+  // FALCON SQUARE (round 3, 2026-07-17: the deck IS Emilie's final-assets
+  // folder, her own picks renamed by caption; her pattern for every project).
+  // MIDAN AL SAKR, the office's Moujassam Watan entry for Al Khobar; she LED
+  // the design from the first aircraft sketches to the proposal. Cover =
+  // teaser-cover.webp, a 6s cut (8s-14s) of HER teaser video: real footage,
+  // so it stays a deck page (unlike the created montage covers). Story
+  // order: the takeoff renders, her ink origin sketches, the 12-stage
+  // process, the drawings, then the moods. storm-elevation.jpg is her
+  // renders (5) with the unfinished black letterbox bar cropped off.
+  falcon: [
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/teaser-cover.webp', role: 'gif', name: 'falcon-cover',
+      alt: 'The falcon monument in motion: the camera pulls back from the copper calligraphy band to the whole roundabout at dusk',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/storm-takeoff-view.jpg', role: 'hero', name: 'storm-takeoff-view',
+      alt: 'Ground view under storm clouds, an airliner climbing overhead as the steel wings sweep up along the same take-off line',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/takeoff-angle-sketches.png', role: 'gallery', name: 'takeoff-angle-sketches',
+      alt: "Ink sketches on black of jets and a take-off diagram, tracing climb angles, flaps and slats that seed the monument's lines",
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/aircraft-anatomy-sketches.png', role: 'gallery', name: 'aircraft-anatomy-sketches',
+      alt: 'Ink sketches on black studying aircraft anatomy: control surfaces, flaps and spoilers, and the pitch, roll and yaw axes',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/process-01-mirroring.png', role: 'gallery', name: 'process-01-mirroring',
+      alt: 'Process stages 1 to 4: aircraft line drawing, take-off angles, then two mirrorings that fuse the lines into the falcon',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/process-02-lines-to-3d.png', role: 'gallery', name: 'process-02-lines-to-3d',
+      alt: 'Process stages 5 to 8: the mirrored line drawings become a 3D body, connected through core, void, rotation and wings',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/process-03-landscape-merge.png', role: 'gallery', name: 'process-03-landscape-merge',
+      alt: 'Process stages 9 to 12: the roundabout landscape is redrawn from the same lines until sculpture and ground work as one',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/calligraphy-wings-exploded.jpg', role: 'gallery', name: 'calligraphy-wings-exploded',
+      alt: 'Exploded axonometric lifting the two pierced calligraphy plates in red off the white falcon wings, labeled in Arabic',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/site-plan.jpg', role: 'gallery', name: 'site-plan',
+      alt: 'Site plan of the falcon monument on the roundabout, mirrored wings on one axis with water channels and section lines',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/day-aerial-roundabout.jpg', role: 'gallery', name: 'day-aerial-roundabout',
+      alt: 'Daytime aerial of the full roundabout, paving and water channels radiating from the steel falcon like take-off lines',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/haze-sunset-prow.jpg', role: 'gallery', name: 'haze-sunset-prow',
+      alt: 'The corten calligraphy prow against a hazy desert sunset, steel blades crossing above a carved landscape wall and berm',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/storm-elevation.jpg', role: 'gallery', name: 'storm-elevation',
+      alt: 'Side view of the falcon wings climbing against a storm sky, the pierced calligraphy band riding the leading edge',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/calligraphy-closeup-sunset.jpg', role: 'gallery', name: 'calligraphy-closeup-sunset',
+      alt: 'Close-up of the pierced corten calligraphy at sunset, the low sun and gold water plaza seen through the desert haze',
+    },
+    {
+      src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/night-aerial.jpg', role: 'gallery', name: 'night-aerial',
+      alt: 'Night aerial of the roundabout, the steel falcon lit at the center with water channels and headlights on the ring road',
     },
   ],
   // ASTROIDAL ELLIPSOID (MaCAD bootcamp mini, 2025-10): the one-page scripted
   // surface board, rasterized from her submission PDF (derived-board.png) and
   // cropped into cover + method frames. LIGHT entry.
   astroidal: [
+    // (S2 fix round: the three stars crossfade as the cover; still = star one.)
     {
-      src: 'academic/iaac/astroidal ellipsoid/derived-iterations.png', role: 'hero', name: 'iterations', frame16x9: true, bg: '#ffffff',
+      src: 'academic/iaac/astroidal ellipsoid/astroidal-cover-web.webp', role: 'gif', name: 'star-cover',
+      alt: 'The three astroidal ellipsoid stars in turn, the same equations wearing three different coefficient sets',
+    },
+    {
+      src: 'academic/iaac/astroidal ellipsoid/final-assets/iterations.png', role: 'hero', name: 'iterations', frame16x9: true, bg: '#ffffff',
       alt: 'Three astroidal ellipsoid surface iterations, the cubed sine and cosine equations pushed through different coefficients',
     },
     {
-      src: 'academic/iaac/astroidal ellipsoid/derived-equations.png', role: 'gallery', name: 'equations', frame16x9: true, bg: '#ffffff',
+      src: 'academic/iaac/astroidal ellipsoid/final-assets/equations.png', role: 'gallery', name: 'equations', frame16x9: true, bg: '#ffffff',
       alt: 'The parametric equations of the astroidal ellipsoid written as Python, six coefficients driving the point grid',
     },
     {
-      src: 'academic/iaac/astroidal ellipsoid/derived-layout.png', role: 'gallery', name: 'layout',
+      src: 'academic/iaac/astroidal ellipsoid/final-assets/layout.png', role: 'gallery', name: 'layout',
       alt: 'The reduced mesh read as a small house: floor plates sliced into the low poly star with a six part program',
     },
     {
-      src: 'academic/iaac/astroidal ellipsoid/derived-board.png', role: 'gallery', name: 'board',
+      src: 'academic/iaac/astroidal ellipsoid/final-assets/board.png', role: 'gallery', name: 'board',
       alt: 'The full astroidal ellipsoid board: equations, iterations, the reduced mesh and the housing layout on one page',
     },
   ],
@@ -613,20 +728,23 @@ export const MANIFEST = {
   // sitting poses, then voxelation. Cover = the iteration matrix (still).
   // LIGHT entry. (Source gif filename typo "infalte" is renamed on ingest.)
   'chair-sim': [
+    // (S2 fix round: the voxel-sizes gif PROMOTED to the cover per the
+    // gif-cover rule; its first frame, the fine grain pyramid, is the rest
+    // still. The matrix leads the strip.)
     {
-      src: 'academic/iaac/chair simulation/chair-matrix.png', role: 'hero', name: 'matrix', frame16x9: true, bg: '#ffffff',
-      alt: 'Eight voxelated chair iterations, each molded by a different sitting pose with damping and voxel size as the dials',
-    },
-    {
-      src: 'academic/iaac/chair simulation/chair-infalte.gif', role: 'gif', name: 'inflate',
-      alt: 'A flat red membrane inflates into a pillow under a reclining figure in the Kangaroo simulation',
-    },
-    {
-      src: 'academic/iaac/chair simulation/chair-voxelated-size.gif', role: 'gif', name: 'voxel-sizes',
+      src: 'academic/iaac/chair simulation/final-assets/voxel-sizes.gif', role: 'gif', name: 'voxel-sizes', frame16x9: true, bg: '#ffffff',
       alt: 'The settled chair rebuilt at growing voxel sizes, from fine grain steps to chunky rubber ring modules',
     },
     {
-      src: 'academic/iaac/chair simulation/gh-expained-chair.png', role: 'gallery', name: 'gh-definition', frame16x9: true, bg: '#ffffff',
+      src: 'academic/iaac/chair simulation/final-assets/matrix.png', role: 'hero', name: 'matrix', frame16x9: true, bg: '#ffffff',
+      alt: 'Eight voxelated chair iterations, each molded by a different sitting pose with damping and voxel size as the dials',
+    },
+    {
+      src: 'academic/iaac/chair simulation/final-assets/inflate.gif', role: 'gif', name: 'inflate',
+      alt: 'A flat red membrane inflates into a pillow under a reclining figure in the Kangaroo simulation',
+    },
+    {
+      src: 'academic/iaac/chair simulation/final-assets/gh-definition.png', role: 'gallery', name: 'gh-definition', frame16x9: true, bg: '#ffffff',
       alt: 'The Grasshopper definition: pillow mesh and sitting poses feed Kangaroo goals, then the chair mesh is voxelated',
     },
   ],
@@ -639,36 +757,38 @@ export const MANIFEST = {
   // as project imagery, never as personal renders. verve-ar-web.webp is a
   // derived crop of the sales configurator capture, cut to the 3D viewport so
   // the third-party sales platform's watermark + unit panel stay out.
+  // (S2 fix round: the interactive unit-selector capture is the COVER now,
+  // Emilie's call; the dusk facade leads the strip.)
   verve: [
     {
-      src: 'work/soma-work-office/soma -verve city walk/Verve - TG – 2.jpg', role: 'hero', name: 'dusk-facade',
+      src: 'work/soma-work-office/soma -verve city walk/final-assets/unit-selector.webp', role: 'gif', name: 'unit-selector',
+      alt: 'Screen capture of the interactive 3D unit selector orbiting the twin Verve towers, one unit footprint highlighted',
+    },
+    {
+      src: 'work/soma-work-office/soma -verve city walk/final-assets/dusk-facade.jpg', role: 'hero', name: 'dusk-facade',
       alt: 'Dusk render of the Verve facade above the fog, double height planted terraces with Burj Khalifa in the distance',
     },
     {
-      src: 'work/soma-work-office/soma -verve city walk/Verve - TG - 1.jpg', role: 'gallery', name: 'podium-pool',
+      src: 'work/soma-work-office/soma -verve city walk/final-assets/podium-pool.jpg', role: 'gallery', name: 'podium-pool',
       alt: 'Render of the Verve podium pool deck, an infinity lap pool and cabanas with Downtown Dubai on the horizon',
     },
     {
       // The numbers are the board's own level ladder (018_LEVEL 36 T.O.S. at
       // 161.00 m printed on the drawing), not an external claim.
-      src: 'work/soma-work-office/soma -verve city walk/SOMA_CITYWALK_PORTFOLIO-03.jpg', role: 'gallery', name: 'two-tower-elevation',
+      src: 'work/soma-work-office/soma -verve city walk/final-assets/two-tower-elevation.jpg', role: 'gallery', name: 'two-tower-elevation',
       alt: 'Elevation of the twin Verve towers on their podium, 36 levels rising to 161 meters with planted balconies stepping up',
     },
     {
-      src: 'work/soma-work-office/soma -verve city walk/SOMA_CITYWALK_PORTFOLIO-01.jpg', role: 'gallery', name: 'amenities-plan',
+      src: 'work/soma-work-office/soma -verve city walk/final-assets/amenities-plan.jpg', role: 'gallery', name: 'amenities-plan',
       alt: 'Amenities level plan for the two Verve towers: gym, spa, yoga studio, cinema, kids pool and playgrounds on the podium',
     },
     {
-      src: 'work/soma-work-office/soma -verve city walk/SOMA_CITYWALK_PORTFOLIO-02.jpg', role: 'gallery', name: 'typical-plan',
+      src: 'work/soma-work-office/soma -verve city walk/final-assets/typical-plan.jpg', role: 'gallery', name: 'typical-plan',
       alt: 'Typical Verve tower floor plan: one to three bedroom units around the central core, planted terraces at the two ends',
     },
     {
-      src: 'work/soma-work-office/soma -verve city walk/Verve - TG – 3.jpg', role: 'gallery', name: 'lounge-interior',
+      src: 'work/soma-work-office/soma -verve city walk/final-assets/lounge-interior.jpg', role: 'gallery', name: 'lounge-interior',
       alt: 'Interior render of a double height Verve lounge, a suspended chandelier and floor to ceiling glass over the skyline',
-    },
-    {
-      src: 'work/soma-work-office/soma -verve city walk/verve-ar-web.webp', role: 'gif', name: 'unit-selector',
-      alt: 'Screen capture of the interactive 3D unit selector orbiting the twin Verve towers, one unit footprint highlighted',
     },
   ],
   // RINGS OF MARS (S2 enrich, 2026-07-16): the real competition board joins
@@ -678,22 +798,44 @@ export const MANIFEST = {
   // the public results page link; the certificate of participation on disk
   // stays OUT (it evidences participation, not placement). The board is
   // anonymized to the entry code, so the duo credit lives in the captions.
+  // S2 FIX ROUND (2026-07-16, Emilie's fixes): the badge frame REMOVED at
+  // her call (the TOP 50 pill links her entry's gallery on the public
+  // results page instead); her flattened PSD exports join the strip; cover
+  // is a crossfade cut (mars-cover-web.webp, derived; still = the crater).
   mars: [
     {
-      src: 'competitions/rings of mars/derived-crater-render.jpg', role: 'hero', name: 'crater-render',
-      alt: 'Ring 4000 embedded in the rim of a crater inside Valles Marineris, the annotated hero view of the Rings of Mars board',
+      src: 'competitions/rings of mars/mars-cover-web.webp', role: 'gif', name: 'mars-cover',
+      alt: 'Ring 4000 at a glance: the ring in its crater, the farming interior, the transfer box and the annotated ring plan',
     },
+    // (Round 4: crater-render removed from the deck at her call, "remove
+    // asset 01"; the root derived file survives as a montage-cover source.)
     {
-      src: 'competitions/rings of mars/MARS246875258.jpg', role: 'gallery', name: 'board',
+      src: 'competitions/rings of mars/final-assets/board.jpg', role: 'hero', name: 'board',
       alt: 'The full Rings of Mars competition board: exploded ring drawings, annotated plan, crater renders and systems diagram',
     },
     {
-      src: 'competitions/rings of mars/derived-sectional-perspective.jpg', role: 'gallery', name: 'sectional-perspective',
+      src: 'competitions/rings of mars/final-assets/sectional-perspective.png', role: 'gallery', name: 'sectional-perspective',
       alt: 'Sectional perspective through Ring 4000, from the BIPV envelope down through farming, pods and the crater pit',
     },
     {
-      src: 'competitions/rings of mars/derived-top50-badge.png', role: 'gallery', name: 'top50-badge', frame16x9: true, bg: '#ffffff',
-      alt: 'The official Top 50 badge issued by Volume Zero for Marsception 2024, the recognition anchor for Ring 4000',
+      src: 'competitions/rings of mars/final-assets/farming-interior.png', role: 'gallery', name: 'farming-interior',
+      alt: 'Inside the ring: the farming and transport level, a researcher on the stair beside planted beds and the pod bay',
+    },
+    {
+      src: 'competitions/rings of mars/final-assets/ring-plan.png', role: 'gallery', name: 'ring-plan',
+      alt: 'The annotated ring plan at radius 30 meters: farming, research, buffer and integration zones around the crater',
+    },
+    {
+      src: 'competitions/rings of mars/final-assets/pod-axo.png', role: 'gallery', name: 'pod-axo',
+      alt: 'Cutaway axonometric of a segment of Ring 4000, the sleeping pod tucked into the shell with its service spine',
+    },
+    {
+      src: 'competitions/rings of mars/final-assets/exterior-vignette.png', role: 'gallery', name: 'exterior-vignette',
+      alt: 'Through a porthole: the ring bridging its crater under a Martian sky, a moon hanging over the far rim',
+    },
+    {
+      src: 'competitions/rings of mars/final-assets/transfer-box.png', role: 'gallery', name: 'transfer-box',
+      alt: 'Axonometric of the transfer box, the rail mounted unit that moves people and material around Ring 4000',
     },
   ],
   // XR FOR EDUCATION (S2 enrich, 2026-07-16): the quiet P-111 tile gains its
@@ -704,19 +846,19 @@ export const MANIFEST = {
   // dead QR links stay out; the qr board ships as the overview frame.
   xr: [
     {
-      src: 'academic/lau/xr-education/xr-cover-web.webp', role: 'gif', name: 'reaction-cover',
+      src: 'academic/lau/xr-education/final-assets/reaction-cover.webp', role: 'gif', name: 'reaction-cover',
       alt: 'An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space',
     },
     {
-      src: 'academic/lau/xr-education/qr-codes-reactions.jpg', role: 'gallery', name: 'ar-board',
+      src: 'academic/lau/xr-education/final-assets/ar-board.jpg', role: 'gallery', name: 'ar-board',
       alt: 'Board of three AR chemistry reactions, SN1, E2 and SN2, each with a molecular render and a view in AR QR code',
     },
     {
-      src: 'academic/lau/xr-education/derived-sn1-before.png', role: 'gallery', name: 'sn1-before',
+      src: 'academic/lau/xr-education/final-assets/sn1-before.png', role: 'gallery', name: 'sn1-before',
       alt: 'Frame from the SN1 AR lesson: the propanol molecule intact in ball and stick, the chloride ion still bonded',
     },
     {
-      src: 'academic/lau/xr-education/derived-sn1-after.png', role: 'gallery', name: 'sn1-after',
+      src: 'academic/lau/xr-education/final-assets/sn1-after.png', role: 'gallery', name: 'sn1-after',
       alt: 'Frame from the SN1 AR lesson after the reaction, the chloride ion separated and drifting away from the molecule',
     },
   ],
@@ -727,27 +869,27 @@ export const MANIFEST = {
   // rests on the finished form and the fall plays on hover).
   playscape: [
     {
-      src: 'academic/iaac/just for fun - a playscape/playscape-cover-web.webp', role: 'gif', name: 'net-settle', frame16x9: true, bg: '#ffffff',
+      src: 'academic/iaac/just for fun - a playscape/final-assets/net-settle.webp', role: 'gif', name: 'net-settle', frame16x9: true, bg: '#ffffff',
       alt: 'The settled playscape at rest: a double layer climbing net draped by Kangaroo over soft red inflatable mounds',
     },
     {
-      src: 'academic/iaac/just for fun - a playscape/section.png', role: 'gallery', name: 'section',
+      src: 'academic/iaac/just for fun - a playscape/final-assets/section.png', role: 'gallery', name: 'section',
       alt: 'Section through the playscape: children climb the double net stretched over red inflatables above a padded ground',
     },
     {
-      src: 'academic/iaac/just for fun - a playscape/inflating-structure-simulation.gif', role: 'gif', name: 'inflate',
+      src: 'academic/iaac/just for fun - a playscape/final-assets/inflate.gif', role: 'gif', name: 'inflate',
       alt: 'Five red mounds puff up from taut tents to fat blobs on the square plate, pressure goals against edge stiffness',
     },
     {
-      src: 'academic/iaac/just for fun - a playscape/iterations.png', role: 'gallery', name: 'iterations', frame16x9: true, bg: '#ffffff',
+      src: 'academic/iaac/just for fun - a playscape/final-assets/iterations.png', role: 'gallery', name: 'iterations', frame16x9: true, bg: '#ffffff',
       alt: 'Three playscape iterations comparing net rotation and elevated anchor settings above the inflatable mounds',
     },
     {
-      src: 'academic/iaac/just for fun - a playscape/tensile-nets-simulation-01.gif', role: 'gif', name: 'net-drop',
+      src: 'academic/iaac/just for fun - a playscape/final-assets/net-drop.gif', role: 'gif', name: 'net-drop',
       alt: 'The first climbing net falls onto the inflated mounds and tautens into a four point canopy in Kangaroo',
     },
     {
-      src: 'academic/iaac/just for fun - a playscape/script.png', role: 'gallery', name: 'gh-canvas',
+      src: 'academic/iaac/just for fun - a playscape/final-assets/gh-canvas.png', role: 'gallery', name: 'gh-canvas',
       alt: 'The full Grasshopper canvas behind the playscape: Python base surfaces, pressure and net goals, and bouncy solvers',
     },
   ],

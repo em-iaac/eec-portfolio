@@ -78,10 +78,15 @@ export default function WorkCard({
       lens={entry.lens}
       tags={dense ? [] : entry.tags.map(tagLabel)}
       // REINDEX (2026-07-16, Emilie's uniform-grid gate): the dense index face
-      // carries the printed index's quiet meta ("P-101 · ✦") instead of the
-      // award pill; the legend names ✦, the full award line lives in the plate.
+      // carries the printed index's quiet meta instead of the award pill.
+      // S2 ROUND 5 (2026-07-17, her pick of option 4): winner tiles wear the
+      // ✦ recognition line under the title, in ink, so the meta drops its
+      // now-redundant ✦ and the photo stays clean.
+      // S2 ROUND 6 (her pick of option A): the origin stamp rides BEHIND
+      // the number, "P-108 · SOMA", so school vs office reads at a glance.
       award={dense ? undefined : entry.awardFace}
-      meta={dense ? `${entry.number}${entry.recognition ? ' · ✦' : ''}` : undefined}
+      recognition={dense ? entry.awardFace : undefined}
+      meta={dense ? `${entry.number} · ${entry.origin}` : undefined}
       aspect="wide"
       dense={dense}
       onOpen={onOpen}

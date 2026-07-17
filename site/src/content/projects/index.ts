@@ -22,11 +22,13 @@ import narkomfin from './narkomfin'
 import urbanRisk from './urban-risk'
 import dataGeometry from './data-geometry'
 import tsukiji from './tsukiji'
-// S2 · THE NEW WORK (2026-07-16): the LAU thesis, the Jemma internship year,
-// and the three bootcamp mini-explorations (light entries, D2). All copy
-// ships draftCopy/showcaseDraft until Emilie signs at the end review.
+// S2 · THE NEW WORK (2026-07-16): the LAU thesis, the two Jemma Chidiac
+// competitions (split from one entry at Emilie's fix-round call), and the
+// three bootcamp mini-explorations (light entries, D2). All copy ships
+// draftCopy/showcaseDraft until Emilie signs at the end review.
 import homage from './homage'
-import jemma from './jemma'
+import encounter from './encounter'
+import falcon from './falcon'
 import astroidal from './astroidal'
 import chairSim from './chair-sim'
 import playscape from './playscape'
@@ -50,7 +52,8 @@ export const ALL_PROJECT_MASTERS: ProjectMaster[] = [
   dataGeometry,
   tsukiji,
   homage,
-  jemma,
+  encounter,
+  falcon,
   astroidal,
   chairSim,
   playscape,

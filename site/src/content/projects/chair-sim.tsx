@@ -2,7 +2,7 @@
 // Kangaroo inflation against sitting poses, then voxelation. Authored fresh
 // from her boards + gifs at the S2 session, 2026-07-16. A LIGHT entry (D2):
 // dek + question + a short WHAT/WHY, honestly thin.
-// ALL COPY DRAFT: automode; Emilie signs at the end review.
+// ALL COPY SIGNED by Emilie (S2 sign-off, 2026-07-17).
 import type { ProjectMaster } from './types'
 
 const chairSim: ProjectMaster = {
@@ -11,7 +11,7 @@ const chairSim: ProjectMaster = {
   lens: 'explorations',
   meta: 'MACAD BOOTCAMP · SIMULATION',
   dek: 'Kangaroo inflates a pillow under eight sitting poses: every posture molds its own voxel chair.',
-  dekSigned: false,
+  dekSigned: true, // SIGNED by Emilie (S2 sign-off, 2026-07-17)
   question: 'Can your sitting posture design its own chair?',
   alsoAnswers: [
     { q: 'How does Kangaroo turn a body pose into furniture?', beat: 'what' },
@@ -23,10 +23,12 @@ const chairSim: ProjectMaster = {
     'An inflatable pillow mesh meets a library of sitting poses in Kangaroo; the settled result is voxelated into a soft module chair. Eight poses, two dials, eight different chairs.',
   tech: 'GRASSHOPPER · KANGAROO · VOXELS',
   links: [],
+  // S2 fix round cover: the voxel-sizes gif promoted per the gif-cover rule
+  // (still = the fine grain pyramid); the matrix leads the strip.
   image: {
     slug: 'chair-sim',
-    name: 'matrix',
-    alt: 'Eight voxelated chair iterations, each molded by a different sitting pose with damping and voxel size as the dials',
+    name: 'voxel-sizes',
+    alt: 'The settled chair rebuilt at growing voxel sizes, from fine grain steps to chunky rubber ring modules',
   },
 
   what: (
@@ -45,8 +47,7 @@ const chairSim: ProjectMaster = {
       repeated module.
     </>
   ),
-  draftCopy: true,
-  showcaseDraft: true, // S2 automode draft; Emilie reviews + signs at session end
+  showcaseDraft: false, // spine + credits + alts SIGNED by Emilie (S2 sign-off, 2026-07-17)
 }
 
 export default chairSim

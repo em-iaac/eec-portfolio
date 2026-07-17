@@ -27,6 +27,7 @@ export default function Card({
   lens,
   tags = [],
   award,
+  recognition,
   meta,
   image,
   aspect = 'square',
@@ -42,6 +43,10 @@ export default function Card({
   tags?: string[]
   /** e.g. "MaCAD '26" — rendered as the ✦ ink pill on the image corner */
   award?: string
+  /** the band's ✦ recognition line under the title (S2 round 5, Emilie's
+      pick of option 4: winners read plainly on the index face, in ink,
+      photo left clean; the winner tile grows one quiet line taller) */
+  recognition?: string
   /** the book-index meta ("P-101 · ✦"), quiet mono at the band's right
       (REINDEX 2026-07-16: the uniform /work grid carries the printed
       index's grammar; ✦ is named by the legend in the filter row) */
@@ -92,6 +97,12 @@ export default function Card({
         >
           {title}
         </span>
+        {recognition && (
+          <span className="truncate font-mono text-[8px] tracking-[0.08em] text-[var(--lang-ink)]">
+            <span aria-hidden="true">✦ </span>
+            {recognition}
+          </span>
+        )}
         <span className="flex min-w-0 items-center gap-1.5 overflow-hidden">
           <LensPill lens={lens} />
           {tags.slice(0, 2).map(t => (

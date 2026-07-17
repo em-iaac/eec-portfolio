@@ -204,8 +204,12 @@ const GEOM: Record<string, Geom> = {
   // minis land toward the solver corner, A Playscape right by Ballooning
   // Market + the solvers thought, its honest neighbours. Labels alternate
   // above/below the line so the lead-in never stacks text.
-  jemma: { ...pointOnThread('GEOMETRY', 0.05), th: ['GEOMETRY'], a: 'start', d: [10, -14] },
+  // (S2 fix round: the 'jemma' node became THE ENCOUNTER at the same spot;
+  // FALCON SQUARE appends between The Homage and Tsukiji, label above the
+  // line where its neighbours sit below.)
+  encounter: { ...pointOnThread('GEOMETRY', 0.05), th: ['GEOMETRY'], a: 'start', d: [10, -14] },
   homage: { ...pointOnThread('GEOMETRY', 0.1), th: ['GEOMETRY'], a: 'middle', d: [0, 22] },
+  falcon: { ...pointOnThread('GEOMETRY', 0.14), th: ['GEOMETRY'], a: 'middle', d: [0, -16] },
   'chair-sim': { ...pointOnThread('GEOMETRY', 0.22), th: ['GEOMETRY'], a: 'middle', d: [0, 22] },
   astroidal: { ...pointOnThread('GEOMETRY', 0.26), th: ['GEOMETRY'], a: 'middle', d: [0, -16] },
   playscape: { ...pointOnThread('GEOMETRY', 0.4), th: ['GEOMETRY'], a: 'start', d: [12, 12] },
