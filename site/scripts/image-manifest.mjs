@@ -521,8 +521,8 @@ export const MANIFEST = {
   // incoming/ categories (academic/lau, academic/iaac, work/). Derived local
   // files (derived-*.png/jpg, playscape-cover-web.webp) follow the pasta-atlas
   // precedent: cut in-session, live in git-ignored incoming/, must exist for
-  // pipeline re-runs. Alts DRAFT pending Emilie (automode ruling: she reviews
-  // everything at the end).
+  // pipeline re-runs. ALL S2 alts SIGNED by Emilie (S2 sign-off, 2026-07-17),
+  // every fix-round and final-assets frame included.
 
   // THE HOMAGE (LAU bachelor thesis, Tamayouz Top 100 2023): adaptive reuse of
   // Oscar Niemeyer's Rachid Karami Fair in Tripoli. Cover = the moonlit slab

@@ -32,7 +32,7 @@ const narkomfin: ProjectMaster = {
   links: [{ label: 'BLOG', href: 'https://blog.iaac.net/analyzing-narkomfin-through-its-graph/' }],
   // S2 fix round (2026-07-16, Emilie's gif-cover rule applied to all
   // stills): a slow zoom cut of the same voxel graph; still at rest is the
-  // graph as before. Cover alt DRAFT pending her eye.
+  // graph as before. Cover alt SIGNED by Emilie (S2 sign-off, 2026-07-17).
   image: {
     slug: 'narkomfin',
     name: 'graph-cover',

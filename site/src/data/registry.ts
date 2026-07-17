@@ -389,7 +389,8 @@ export const ENTRIES: RegistryEntry[] = [
   // homage = the LAU graduation year (boards dated 2023), jemma = the CV's
   // internship window (Jan-Aug 2022; the cemetery award entry already sat at
   // 2022-06), minis = the bootcamp file dates (Oct-Nov 2025). Dates + copy
-  // DRAFT pending Emilie's end-of-session review (automode ruling).
+  // Copy SIGNED by Emilie (S2 sign-off, 2026-07-17); the six months stay
+  // dateDraft pending her one-line confirm.
   {
     id: 'homage',
     kind: 'project',

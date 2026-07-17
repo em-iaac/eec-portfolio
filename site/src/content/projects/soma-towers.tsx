@@ -8,7 +8,7 @@
 // floorplans, facade strategies and interior layouts of the residential
 // towers). The TG renders are project marketing imagery, never personal
 // renders; the NDA on Verve imagery was lifted 2026-07-16.
-// ALL COPY DRAFT pending her re-sign (dek re-drafted for the rename).
+// ALL COPY SIGNED by Emilie (S2 sign-off, 2026-07-17), incl. the re-drafted dek.
 import type { ProjectMaster } from './types'
 
 const somaTowers: ProjectMaster = {

@@ -40,7 +40,7 @@ const marsception: ProjectMaster = {
   tech: 'RHINO · SUBD · AI WORKFLOWS · V-RAY',
   links: [],
   // S2 cover: a crossfade cut of the crater hero, the farming interior, the
-  // transfer box and the ring plan (mars-cover-web.webp, derived). Alt DRAFT.
+  // transfer box and the ring plan (mars-cover-web.webp, derived). Alt SIGNED 2026-07-17.
   image: {
     slug: 'mars',
     name: 'mars-cover',

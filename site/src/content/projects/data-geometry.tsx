@@ -35,7 +35,7 @@ const dataGeometry: ProjectMaster = {
   ],
   // S2 fix round (2026-07-16, Emilie's gif-cover rule applied to all
   // stills): a slow zoom cut of the same workflow board; still at rest is
-  // the board as before. Cover alt DRAFT pending her eye.
+  // the board as before. Cover alt SIGNED by Emilie (S2 sign-off, 2026-07-17).
   image: {
     slug: 'data-geometry',
     name: 'workflow-cover',
