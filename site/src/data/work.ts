@@ -113,10 +113,9 @@ const featuredRank = (slug: string): number => {
 }
 
 // THE CURATED ORDER (S2 round 6, 2026-07-17: EMILIE'S OWN LIST, verbatim
-// where she named it). Her numbered picks 1-8, then "iaac projects ...",
-// then the practice tail closing on The Homage. Two placements were hers to
-// confirm (flagged at the review): the podcast leads the iaac block, and
-// XR for Education closes the school cluster before the practice tail. A
+// where she named it; LOOK & ORDER amendment 2026-07-18, her two swaps:
+// The Homage now closes the school cluster where XR sat, XR closes the
+// index, and Verve City Walk leads the practice tail ahead of Mars). A
 // slug not listed falls back after the list, newest-first (append-safe).
 // This list orders the WHOLE grid; FEATURED_SLUGS keeps its original
 // membership for the eager-load flag only.
@@ -136,12 +135,12 @@ const CURATED_ORDER: readonly string[] = [
   'chair-sim',
   'astroidal',
   'playscape',
-  'xr-lab',
-  'marsception',
+  'homage',
   'soma-towers',
+  'marsception',
   'encounter',
   'falcon',
-  'homage',
+  'xr-lab',
 ]
 const curatedRank = (slug: string): number => {
   const i = CURATED_ORDER.indexOf(slug)

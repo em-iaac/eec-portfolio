@@ -224,3 +224,161 @@ textarea,
     animation: none !important;
   }
 }
+
+/* ============================================================
+   THE PLATES (WORK PAGE · LOOK & ORDER, Emilie's gate 2026-07-18): the /work
+   tile rests as an ink drawing (components/work/artifacts.tsx) on the card's
+   own glass ground; the real cover fades in over it on hover/focus and the
+   gif flips through the assets. Existing tokens only. Reduced motion: the
+   swap is instant (no transition), the rest state never flashes.
+   ============================================================ */
+.work-plate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 9px 12px 10px;
+  text-align: left;
+}
+/* (The round-2 xl padding tighten retired at round 4: option B's full-width
+   grid gives the plates 163-186px of width, room enough for the full frame.) */
+.work-plate__num {
+  flex: none;
+}
+.work-art {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--lang-ink);
+}
+.work-art svg {
+  width: 62%;
+  height: 88%;
+  overflow: visible;
+}
+.work-art svg * {
+  vector-effect: non-scaling-stroke;
+}
+.work-art .ln {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.work-art .th {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+.work-art .dt {
+  fill: currentColor;
+  stroke: none;
+}
+/* The ONE accent per drawing, the tile's lens pen (set by WorkCard as
+   --plate-accent). Colour never means alone: the lens tick + label below the
+   drawing name the lens; the accent only warms the ink. */
+.work-art .ac {
+  fill: var(--plate-accent, currentColor);
+  stroke: none;
+}
+.work-art .acs {
+  fill: none;
+  stroke: var(--plate-accent, currentColor);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+.work-plate__foot {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+/* The reveal: the true cover over the plate. Opacity only (element-level,
+   never a filter, rule 7); PRM gets the instant swap. */
+.work-plate__cover {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.work-plate__cover.is-on {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .work-plate__cover {
+    transition: opacity 240ms var(--ease-soft);
+  }
+}
+
+/* ============================================================
+   THE THOUGHTS RAIL MECHANIC (same gate): hovering or focusing a row fills
+   the ring, inks the title, and unfolds the thought's verbatim opening
+   (openings.ts). The correlated work tiles glow softly (data-glow, set by
+   Work.tsx from registry CORRELATIONS).
+   ============================================================ */
+.thought-row .thought-ring circle {
+  transition: fill 200ms var(--ease-soft);
+  fill: none;
+}
+.thought-row:hover .thought-ring circle,
+.thought-row:focus-within .thought-ring circle {
+  fill: var(--lang-ink);
+}
+/* Round 4: the opening reveal FLOATS under its row (a small glass slip)
+   instead of unfolding in-flow, so hovering a thought can never grow the
+   page into a scrollbar. Solid tier fill; hairline; no pointer events. */
+.thought-row {
+  position: relative;
+}
+.thought-row .thought-open {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  display: block;
+  padding: 6px 10px 7px;
+  border: 0.5px solid var(--lang-glass-2-border);
+  border-radius: var(--r-control);
+  background: var(--lang-glass-2-solid);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.thought-row:hover .thought-open,
+.thought-row:focus-within .thought-open {
+  opacity: 1;
+  visibility: visible;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .thought-row .thought-open {
+    transition:
+      opacity 200ms var(--ease-soft),
+      visibility 200ms;
+  }
+}
+/* The cross-glow: a quiet ink ring, no red (red = interaction, not a
+   relation), no motion, colour transitions only. */
+li[data-glow] > button {
+  border-color: var(--lang-ink-muted);
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--lang-ink) 30%, transparent);
+}
+
+/* THE ONE-PAGE FIT (2026-07-18, round 4: option B + the bar): the closing
+   thoughts block steps its serif down a size on lg+ so titles hold one
+   line in the three-column arrangement. (The ≥1400px 7-across override
+   retired with the rail: xl:grid-cols-7 does it in the markup now.) */
+@media (min-width: 1024px) {
+  .thought-rail .thought-title {
+    font-size: 15px;
+  }
+  .thought-rail li .font-mono {
+    font-size: 8px;
+  }
+}

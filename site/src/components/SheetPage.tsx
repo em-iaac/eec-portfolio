@@ -11,10 +11,19 @@ import Footer from './Footer'
 export default function SheetPage({
   children,
   footerCompact = false,
+  wide = false,
+  headerBar,
 }: {
   children: ReactNode
   /** One-screen pages pull the footer close (no long-page margin). */
   footerCompact?: boolean
+  /** LAYOUT B+ (WORK PAGE · LOOK & ORDER, Emilie's gate 2026-07-18): /work
+      runs full-width; every other page keeps the centred column. Additive,
+      opt-in. */
+  wide?: boolean
+  /** Replaces the centred pill with a page-owned header (the /work
+      full-width bar, round 4 gate). Omit = the ordinary TitleBlock. */
+  headerBar?: ReactNode
 }) {
   return (
     <div className="flex min-h-dvh flex-col">
@@ -24,11 +33,15 @@ export default function SheetPage({
       >
         Skip to content
       </a>
-      <TitleBlock />
-      <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-5 outline-none sm:px-8">
+      {headerBar ?? <TitleBlock />}
+      <main
+        id="main"
+        tabIndex={-1}
+        className={`mx-auto w-full flex-1 px-5 outline-none sm:px-8 ${wide ? 'max-w-[1920px]' : 'max-w-5xl'}`}
+      >
         {children}
       </main>
-      <Footer compact={footerCompact} />
+      <Footer compact={footerCompact} wide={wide} />
     </div>
   )
 }

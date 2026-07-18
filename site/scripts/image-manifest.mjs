@@ -324,11 +324,12 @@ export const MANIFEST = {
   // S4b · THE FIVE (2026-07-14): sources are Emilie's public IAAC blog posts,
   // downloaded into incoming/<slug>/ (her approval at the session gate).
   narkomfin: [
-    // (S2 fix round, Emilie's gif-cover rule applied to ALL stills: a slow
-    // zoom cut of the voxel graph; still at rest = the graph as before.)
+    // (LOOK & ORDER 2026-07-18, Emilie's ask: the slow zoom became a
+    // FLIPBOOK of the deck assets, hard cuts, fast start; still at rest =
+    // the voxel graph as before. Alt reworded for the flip; hers to sign.)
     {
       src: 'academic/iaac/narkomfin/narkomfin-cover-web.webp', role: 'gif', name: 'graph-cover',
-      alt: 'The Narkomfin voxel graph drawing closer: translucent volumes on black with graph nodes reaching out of the massing',
+      alt: 'The Narkomfin study flipping through its boards: the voxel graph massing, the exploded levels, the sampled floor plates and the graph analyses',
     },
     {
       src: 'academic/iaac/narkomfin/Blog_GraphML_G02_Maria_Lakzhmy_Charles_Emilie.png', role: 'hero', name: 'voxel-graph',
@@ -398,11 +399,12 @@ export const MANIFEST = {
     },
   ],
   'data-geometry': [
-    // (S2 fix round, the gif-cover rule: a slow zoom cut of the workflow
-    // board on its white ground; still at rest = the board as before.)
+    // (LOOK & ORDER 2026-07-18, Emilie's ask: the slow zoom became a
+    // FLIPBOOK of the deck assets, hard cuts, fast start; still at rest =
+    // the workflow board as before. Alt reworded for the flip; hers to sign.)
     {
       src: 'academic/iaac/data-geometry/datageom-cover-web.webp', role: 'gif', name: 'workflow-cover',
-      alt: 'The data team workflow drawing closer: Speckle model and parameter sheets flowing through Grasshopper into Revit',
+      alt: "The data team's boards flipping in sequence: the Speckle-to-Revit workflow, the thermal family, the KPI views and the control room",
     },
     {
       src: 'academic/iaac/data-geometry/image-301.png', role: 'hero', name: 'workflow', frame16x9: true, bg: '#ffffff',

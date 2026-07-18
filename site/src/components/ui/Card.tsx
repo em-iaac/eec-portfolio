@@ -30,6 +30,7 @@ export default function Card({
   recognition,
   meta,
   image,
+  face: faceOverride,
   aspect = 'square',
   dense = false,
   onOpen,
@@ -53,6 +54,11 @@ export default function Card({
   meta?: string
   /** the developing image (an <Img>, <img> or art); omit for the quiet tile */
   image?: ReactNode
+  /** FULL face override (THE PLATES, Emilie's gate 2026-07-18): replaces the
+      image+band composition entirely while keeping the glass skin, the single
+      button, and the morph plumbing. /work's plate tile rides this; the
+      default face below is untouched for every other consumer. */
+  face?: ReactNode
   /** 'square' (DL-0 default) or 'wide' (S4a landscape, the /work gallery) */
   aspect?: 'square' | 'wide'
   /** compact band for the index tier (G-GRID, 2026-07-14) */
@@ -63,7 +69,7 @@ export default function Card({
   [prop: string]: unknown
 }) {
   const wide = aspect === 'wide'
-  const face = (
+  const face = faceOverride ?? (
     <>
       {/* 16:9 since the gallery review (Emilie, 2026-07-15): most covers are
           webpage-landscape captures, so the index crops least at video ratio

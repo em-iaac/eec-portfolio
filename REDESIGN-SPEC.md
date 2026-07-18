@@ -938,6 +938,29 @@ uncommitted, no git run per contract).** §4 (the gallery) now reads through thi
   meta can clip its last glyph. tsc + 43 tests + full build green (book census
   intact at 10 pages). Owed: her commit + push, the history scrub, the real-phone
   reduced-motion pass, post-deploy Lighthouse.
+**S2 · ADD THE NEW WORK — THE SIX (2026-07-17, automode build then her end-review;
+all signed, committed).** Six new projects P-116..P-121 into the book index:
+- **The Homage** — her LAU bachelor thesis (adaptive reuse of Niemeyer's Rachid
+  Karami Fair, Tripoli). The Tamayouz result was VERIFIED from the certificate +
+  tamayouz-award.com = **TOP 100 of 422 (2023), never "winner"** (her memory said
+  "won"; the record is Top 100); the `tamayouz` award gained a refId + the public
+  page as its anchor. Supervisor Issam Barhouch woven.
+- **The Encounter + Falcon Square** — the Jemma year split into two projects; role =
+  architectural designer (per her LinkedIn), she led the falcon; Falcon Square carries
+  a FINALIST pill linking its certificate (finalist = a recognition, precise).
+- **Three bootcamp mini-explorations** — light explorations entries.
+- ENRICHED: **Verve City Walk** (soma-towers RENAMED; the SOMA/Dynamic NDA resolved,
+  imagery cleared; AR-capture cover; woven responsibilities + 5 public links) ·
+  **Rings of Mars** (her renders + full spine; TOP 50 @ Volume Zero → #gallery-56) ·
+  **XR for Education** (her story Max/Maya → Unity → Oculus, honest outcome).
+- SYSTEM: `final-assets/` folders are the curation surface the manifest reads; created
+  covers are `coverMontage` (they play on the face, never a plate page); GIF covers on
+  ALL 21 tiles (still + hover, her standing rule); ✦ recognition lines on winner tiles;
+  ORIGIN STAMPS `P-nnn · MACAD/LAU/SOMA/JEMMA/SELF` on the face + the printed index; her
+  curated order closes on The Homage; the 320px meta clip fixed; the book index went
+  7-across. Constellation 31, world 46; build green (37 routes, 32 OG, both PDFs, 43
+  tests). NEXT (her call): a WORK PAGE · LOOK & ORDER design pass (cover unification +
+  the thoughts layout + a reshuffle) before S5.
 
 ---
 

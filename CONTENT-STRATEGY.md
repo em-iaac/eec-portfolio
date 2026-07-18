@@ -89,6 +89,15 @@ one layout logic (`registry.thoughtIndexEntries()` + a `ThoughtIndexRows` compon
 print skins). THE THOUGHTS list closes the /work page (the reading-room list moved here; /thoughts
 is the neural world only). The mind graph and the neural world still show everything.
 
+**Amendment (2026-07-17, S2): the ADD list is executed.** The featured/add plan shipped —
+Narkomfin, Urban Risk, Data into Geometry, Tsukiji (S4b), plus S2's LAU thesis (The Homage,
+Tamayouz Top 100 anchored), the Jemma year (The Encounter + Falcon Square, a finalist certificate),
+three mini-explorations, and the SOMA enrichment renamed **Verve City Walk** (the SOMA/Dynamic NDA
+is resolved, imagery cleared). Speckle Bucketing stays OUT (her call). The mind graph grew to 31
+nodes, the neural world to 46 pieces. Remaining content work: a WORK PAGE · LOOK & ORDER design
+pass (cover unification + thoughts layout + reshuffle), then S5 (the words), then Phase 2 (CV +
+LinkedIn — where the Jemma title, the Encounter/Falcon split, and the Verve renaming get aligned).
+
 ### D3 · Card mechanic — unfold the story, redesign the showcase to the BOOK one-pager
 Keep the card-on-top overlay (the andrewheumann mechanism Emilie chose). Two changes:
 

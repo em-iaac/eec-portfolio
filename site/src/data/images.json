@@ -1487,31 +1487,31 @@
     {
       "name": "graph-cover",
       "role": "gif",
-      "alt": "The Narkomfin voxel graph drawing closer: translucent volumes on black with graph nodes reaching out of the massing",
+      "alt": "The Narkomfin study flipping through its boards: the voxel graph massing, the exploded levels, the sampled floor plates and the graph analyses",
       "aspect": 1.7778,
       "animated": true,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/narkomfin/graph-cover-640.webp",
-          "kb": 281
+          "kb": 95
         },
         {
           "w": 1024,
           "file": "assets/projects/narkomfin/graph-cover-1024.webp",
-          "kb": 754
+          "kb": 186
         }
       ],
       "static": [
         {
           "w": 640,
           "file": "assets/projects/narkomfin/graph-cover-static-640.webp",
-          "kb": 10
+          "kb": 7
         },
         {
           "w": 1024,
           "file": "assets/projects/narkomfin/graph-cover-static-1024.webp",
-          "kb": 30
+          "kb": 11
         }
       ]
     },
@@ -1868,31 +1868,31 @@
     {
       "name": "workflow-cover",
       "role": "gif",
-      "alt": "The data team workflow drawing closer: Speckle model and parameter sheets flowing through Grasshopper into Revit",
+      "alt": "The data team's boards flipping in sequence: the Speckle-to-Revit workflow, the thermal family, the KPI views and the control room",
       "aspect": 1.7778,
       "animated": true,
       "variants": [
         {
           "w": 640,
           "file": "assets/projects/data-geometry/workflow-cover-640.webp",
-          "kb": 524
+          "kb": 99
         },
         {
           "w": 1024,
           "file": "assets/projects/data-geometry/workflow-cover-1024.webp",
-          "kb": 909
+          "kb": 197
         }
       ],
       "static": [
         {
           "w": 640,
           "file": "assets/projects/data-geometry/workflow-cover-static-640.webp",
-          "kb": 19
+          "kb": 20
         },
         {
           "w": 1024,
           "file": "assets/projects/data-geometry/workflow-cover-static-1024.webp",
-          "kb": 31
+          "kb": 38
         }
       ]
     },
@@ -2458,19 +2458,19 @@
         {
           "w": 640,
           "file": "assets/projects/homage/homage-cover-640.webp",
-          "kb": 73
+          "kb": 69
         },
         {
           "w": 1024,
           "file": "assets/projects/homage/homage-cover-1024.webp",
-          "kb": 124
+          "kb": 132
         }
       ],
       "static": [
         {
           "w": 640,
           "file": "assets/projects/homage/homage-cover-static-640.webp",
-          "kb": 10
+          "kb": 8
         },
         {
           "w": 1024,
@@ -2649,807 +2649,6 @@
       ]
     }
   ],
-  "astroidal": [
-    {
-      "name": "star-cover",
-      "role": "gif",
-      "alt": "The three astroidal ellipsoid stars in turn, the same equations wearing three different coefficient sets",
-      "aspect": 1.7778,
-      "animated": true,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/astroidal/star-cover-640.webp",
-          "kb": 62
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/astroidal/star-cover-1024.webp",
-          "kb": 101
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/astroidal/star-cover-static-640.webp",
-          "kb": 10
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/astroidal/star-cover-static-1024.webp",
-          "kb": 16
-        }
-      ]
-    },
-    {
-      "name": "iterations",
-      "role": "hero",
-      "alt": "Three astroidal ellipsoid surface iterations, the cubed sine and cosine equations pushed through different coefficients",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/astroidal/iterations-640.webp",
-          "kb": 17
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/astroidal/iterations-1024.webp",
-          "kb": 32
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/astroidal/iterations-1600.webp",
-          "kb": 62
-        }
-      ]
-    },
-    {
-      "name": "equations",
-      "role": "gallery",
-      "alt": "The parametric equations of the astroidal ellipsoid written as Python, six coefficients driving the point grid",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/astroidal/equations-640.webp",
-          "kb": 8
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/astroidal/equations-1024.webp",
-          "kb": 14
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/astroidal/equations-1600.webp",
-          "kb": 25
-        }
-      ]
-    },
-    {
-      "name": "layout",
-      "role": "gallery",
-      "alt": "The reduced mesh read as a small house: floor plates sliced into the low poly star with a six part program",
-      "aspect": 1.3204,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/astroidal/layout-640.webp",
-          "kb": 21
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/astroidal/layout-1024.webp",
-          "kb": 36
-        }
-      ]
-    },
-    {
-      "name": "board",
-      "role": "gallery",
-      "alt": "The full astroidal ellipsoid board: equations, iterations, the reduced mesh and the housing layout on one page",
-      "aspect": 0.7069,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/astroidal/board-640.webp",
-          "kb": 54
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/astroidal/board-1024.webp",
-          "kb": 97
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/astroidal/board-1600.webp",
-          "kb": 169
-        }
-      ]
-    }
-  ],
-  "chair-sim": [
-    {
-      "name": "voxel-sizes",
-      "role": "gif",
-      "alt": "The settled chair rebuilt at growing voxel sizes, from fine grain steps to chunky rubber ring modules",
-      "aspect": 1.7778,
-      "animated": true,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/chair-sim/voxel-sizes-640.webp",
-          "kb": 28
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/chair-sim/voxel-sizes-1024.webp",
-          "kb": 57
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/chair-sim/voxel-sizes-static-640.webp",
-          "kb": 6
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/chair-sim/voxel-sizes-static-1024.webp",
-          "kb": 13
-        }
-      ]
-    },
-    {
-      "name": "matrix",
-      "role": "hero",
-      "alt": "Eight voxelated chair iterations, each molded by a different sitting pose with damping and voxel size as the dials",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/chair-sim/matrix-640.webp",
-          "kb": 21
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/chair-sim/matrix-1024.webp",
-          "kb": 42
-        }
-      ]
-    },
-    {
-      "name": "inflate",
-      "role": "gif",
-      "alt": "A flat red membrane inflates into a pillow under a reclining figure in the Kangaroo simulation",
-      "aspect": 0.8004,
-      "animated": true,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/chair-sim/inflate-640.webp",
-          "kb": 49
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/chair-sim/inflate-1024.webp",
-          "kb": 87
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/chair-sim/inflate-static-640.webp",
-          "kb": 8
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/chair-sim/inflate-static-1024.webp",
-          "kb": 13
-        }
-      ]
-    },
-    {
-      "name": "gh-definition",
-      "role": "gallery",
-      "alt": "The Grasshopper definition: pillow mesh and sitting poses feed Kangaroo goals, then the chair mesh is voxelated",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/chair-sim/gh-definition-640.webp",
-          "kb": 12
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/chair-sim/gh-definition-1024.webp",
-          "kb": 22
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/chair-sim/gh-definition-1600.webp",
-          "kb": 36
-        }
-      ]
-    }
-  ],
-  "playscape": [
-    {
-      "name": "net-settle",
-      "role": "gif",
-      "alt": "The settled playscape at rest: a double layer climbing net draped by Kangaroo over soft red inflatable mounds",
-      "aspect": 1.7778,
-      "animated": true,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/playscape/net-settle-640.webp",
-          "kb": 256
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/playscape/net-settle-1024.webp",
-          "kb": 674
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/playscape/net-settle-static-640.webp",
-          "kb": 12
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/playscape/net-settle-static-1024.webp",
-          "kb": 31
-        }
-      ]
-    },
-    {
-      "name": "section",
-      "role": "gallery",
-      "alt": "Section through the playscape: children climb the double net stretched over red inflatables above a padded ground",
-      "aspect": 2.7308,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/playscape/section-640.webp",
-          "kb": 19
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/playscape/section-1024.webp",
-          "kb": 37
-        }
-      ]
-    },
-    {
-      "name": "inflate",
-      "role": "gif",
-      "alt": "Five red mounds puff up from taut tents to fat blobs on the square plate, pressure goals against edge stiffness",
-      "aspect": 1,
-      "animated": true,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/playscape/inflate-640.webp",
-          "kb": 17
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/playscape/inflate-1024.webp",
-          "kb": 30
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/playscape/inflate-static-640.webp",
-          "kb": 6
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/playscape/inflate-static-1024.webp",
-          "kb": 12
-        }
-      ]
-    },
-    {
-      "name": "iterations",
-      "role": "gallery",
-      "alt": "Three playscape iterations comparing net rotation and elevated anchor settings above the inflatable mounds",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/playscape/iterations-640.webp",
-          "kb": 14
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/playscape/iterations-1024.webp",
-          "kb": 29
-        }
-      ]
-    },
-    {
-      "name": "net-drop",
-      "role": "gif",
-      "alt": "The first climbing net falls onto the inflated mounds and tautens into a four point canopy in Kangaroo",
-      "aspect": 1,
-      "animated": true,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/playscape/net-drop-640.webp",
-          "kb": 151
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/playscape/net-drop-1024.webp",
-          "kb": 358
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/playscape/net-drop-static-640.webp",
-          "kb": 30
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/playscape/net-drop-static-1024.webp",
-          "kb": 71
-        }
-      ]
-    },
-    {
-      "name": "gh-canvas",
-      "role": "gallery",
-      "alt": "The full Grasshopper canvas behind the playscape: Python base surfaces, pressure and net goals, and bouncy solvers",
-      "aspect": 2.3541,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/playscape/gh-canvas-640.webp",
-          "kb": 31
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/playscape/gh-canvas-1024.webp",
-          "kb": 52
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/playscape/gh-canvas-1600.webp",
-          "kb": 85
-        }
-      ]
-    }
-  ],
-  "verve": [
-    {
-      "name": "unit-selector",
-      "role": "gif",
-      "alt": "Screen capture of the interactive 3D unit selector orbiting the twin Verve towers, one unit footprint highlighted",
-      "aspect": 2.0847,
-      "animated": true,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/verve/unit-selector-640.webp",
-          "kb": 604
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/verve/unit-selector-1024.webp",
-          "kb": 1003
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/verve/unit-selector-static-640.webp",
-          "kb": 24
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/verve/unit-selector-static-1024.webp",
-          "kb": 39
-        }
-      ]
-    },
-    {
-      "name": "dusk-facade",
-      "role": "hero",
-      "alt": "Dusk render of the Verve facade above the fog, double height planted terraces with Burj Khalifa in the distance",
-      "aspect": 1.0233,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/verve/dusk-facade-640.webp",
-          "kb": 38
-        }
-      ]
-    },
-    {
-      "name": "podium-pool",
-      "role": "gallery",
-      "alt": "Render of the Verve podium pool deck, an infinity lap pool and cabanas with Downtown Dubai on the horizon",
-      "aspect": 1.0233,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/verve/podium-pool-640.webp",
-          "kb": 92
-        }
-      ]
-    },
-    {
-      "name": "two-tower-elevation",
-      "role": "gallery",
-      "alt": "Elevation of the twin Verve towers on their podium, 36 levels rising to 161 meters with planted balconies stepping up",
-      "aspect": 1.4151,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/verve/two-tower-elevation-640.webp",
-          "kb": 20
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/verve/two-tower-elevation-1024.webp",
-          "kb": 43
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/verve/two-tower-elevation-1600.webp",
-          "kb": 83
-        }
-      ]
-    },
-    {
-      "name": "amenities-plan",
-      "role": "gallery",
-      "alt": "Amenities level plan for the two Verve towers: gym, spa, yoga studio, cinema, kids pool and playgrounds on the podium",
-      "aspect": 1.9157,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/verve/amenities-plan-640.webp",
-          "kb": 22
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/verve/amenities-plan-1024.webp",
-          "kb": 43
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/verve/amenities-plan-1600.webp",
-          "kb": 86
-        }
-      ]
-    },
-    {
-      "name": "typical-plan",
-      "role": "gallery",
-      "alt": "Typical Verve tower floor plan: one to three bedroom units around the central core, planted terraces at the two ends",
-      "aspect": 0.9957,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/verve/typical-plan-640.webp",
-          "kb": 46
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/verve/typical-plan-1024.webp",
-          "kb": 99
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/verve/typical-plan-1600.webp",
-          "kb": 198
-        }
-      ]
-    },
-    {
-      "name": "lounge-interior",
-      "role": "gallery",
-      "alt": "Interior render of a double height Verve lounge, a suspended chandelier and floor to ceiling glass over the skyline",
-      "aspect": 1.0233,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/verve/lounge-interior-640.webp",
-          "kb": 41
-        }
-      ]
-    }
-  ],
-  "mars": [
-    {
-      "name": "mars-cover",
-      "role": "gif",
-      "alt": "Ring 4000 at a glance: the ring in its crater, the farming interior, the transfer box and the annotated ring plan",
-      "aspect": 1.7778,
-      "animated": true,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/mars/mars-cover-640.webp",
-          "kb": 143
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/mars/mars-cover-1024.webp",
-          "kb": 231
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/mars/mars-cover-static-640.webp",
-          "kb": 14
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/mars/mars-cover-static-1024.webp",
-          "kb": 22
-        }
-      ]
-    },
-    {
-      "name": "board",
-      "role": "hero",
-      "alt": "The full Rings of Mars competition board: exploded ring drawings, annotated plan, crater renders and systems diagram",
-      "aspect": 1.4159,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/mars/board-640.webp",
-          "kb": 35
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/mars/board-1024.webp",
-          "kb": 78
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/mars/board-1600.webp",
-          "kb": 157
-        }
-      ]
-    },
-    {
-      "name": "sectional-perspective",
-      "role": "gallery",
-      "alt": "Sectional perspective through Ring 4000, from the BIPV envelope down through farming, pods and the crater pit",
-      "aspect": 2.9907,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/mars/sectional-perspective-640.webp",
-          "kb": 20
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/mars/sectional-perspective-1024.webp",
-          "kb": 37
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/mars/sectional-perspective-1600.webp",
-          "kb": 70
-        }
-      ]
-    },
-    {
-      "name": "farming-interior",
-      "role": "gallery",
-      "alt": "Inside the ring: the farming and transport level, a researcher on the stair beside planted beds and the pod bay",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/mars/farming-interior-640.webp",
-          "kb": 58
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/mars/farming-interior-1024.webp",
-          "kb": 143
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/mars/farming-interior-1600.webp",
-          "kb": 364
-        }
-      ]
-    },
-    {
-      "name": "ring-plan",
-      "role": "gallery",
-      "alt": "The annotated ring plan at radius 30 meters: farming, research, buffer and integration zones around the crater",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/mars/ring-plan-640.webp",
-          "kb": 21
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/mars/ring-plan-1024.webp",
-          "kb": 38
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/mars/ring-plan-1600.webp",
-          "kb": 62
-        }
-      ]
-    },
-    {
-      "name": "pod-axo",
-      "role": "gallery",
-      "alt": "Cutaway axonometric of a segment of Ring 4000, the sleeping pod tucked into the shell with its service spine",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/mars/pod-axo-640.webp",
-          "kb": 13
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/mars/pod-axo-1024.webp",
-          "kb": 21
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/mars/pod-axo-1600.webp",
-          "kb": 34
-        }
-      ]
-    },
-    {
-      "name": "exterior-vignette",
-      "role": "gallery",
-      "alt": "Through a porthole: the ring bridging its crater under a Martian sky, a moon hanging over the far rim",
-      "aspect": 1,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/mars/exterior-vignette-640.webp",
-          "kb": 68
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/mars/exterior-vignette-1024.webp",
-          "kb": 168
-        }
-      ]
-    },
-    {
-      "name": "transfer-box",
-      "role": "gallery",
-      "alt": "Axonometric of the transfer box, the rail mounted unit that moves people and material around Ring 4000",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/mars/transfer-box-640.webp",
-          "kb": 17
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/mars/transfer-box-1024.webp",
-          "kb": 30
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/mars/transfer-box-1600.webp",
-          "kb": 53
-        }
-      ]
-    }
-  ],
-  "xr": [
-    {
-      "name": "reaction-cover",
-      "role": "gif",
-      "alt": "An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space",
-      "aspect": 1.7778,
-      "animated": true,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/xr/reaction-cover-640.webp",
-          "kb": 80
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/xr/reaction-cover-1024.webp",
-          "kb": 136
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/xr/reaction-cover-static-640.webp",
-          "kb": 1
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/xr/reaction-cover-static-1024.webp",
-          "kb": 2
-        }
-      ]
-    },
-    {
-      "name": "ar-board",
-      "role": "gallery",
-      "alt": "Board of three AR chemistry reactions, SN1, E2 and SN2, each with a molecular render and a view in AR QR code",
-      "aspect": 1.3804,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/xr/ar-board-640.webp",
-          "kb": 24
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/xr/ar-board-1024.webp",
-          "kb": 45
-        },
-        {
-          "w": 1600,
-          "file": "assets/projects/xr/ar-board-1600.webp",
-          "kb": 77
-        }
-      ]
-    },
-    {
-      "name": "sn1-before",
-      "role": "gallery",
-      "alt": "Frame from the SN1 AR lesson: the propanol molecule intact in ball and stick, the chloride ion still bonded",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/xr/sn1-before-640.webp",
-          "kb": 4
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/xr/sn1-before-1024.webp",
-          "kb": 6
-        }
-      ]
-    },
-    {
-      "name": "sn1-after",
-      "role": "gallery",
-      "alt": "Frame from the SN1 AR lesson after the reaction, the chloride ion separated and drifting away from the molecule",
-      "aspect": 1.7778,
-      "variants": [
-        {
-          "w": 640,
-          "file": "assets/projects/xr/sn1-after-640.webp",
-          "kb": 4
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/xr/sn1-after-1024.webp",
-          "kb": 6
-        }
-      ]
-    }
-  ],
   "encounter": [
     {
       "name": "encounter-cover",
@@ -3461,24 +2660,24 @@
         {
           "w": 640,
           "file": "assets/projects/encounter/encounter-cover-640.webp",
-          "kb": 277
+          "kb": 252
         },
         {
           "w": 1024,
           "file": "assets/projects/encounter/encounter-cover-1024.webp",
-          "kb": 467
+          "kb": 446
         }
       ],
       "static": [
         {
           "w": 640,
           "file": "assets/projects/encounter/encounter-cover-static-640.webp",
-          "kb": 13
+          "kb": 11
         },
         {
           "w": 1024,
           "file": "assets/projects/encounter/encounter-cover-static-1024.webp",
-          "kb": 21
+          "kb": 19
         }
       ]
     },
@@ -3681,6 +2880,31 @@
           "w": 1024,
           "file": "assets/projects/encounter/section-1024.webp",
           "kb": 23
+        }
+      ]
+    }
+  ],
+  "encounter-cert": [
+    {
+      "name": "certificate",
+      "role": "gallery",
+      "alt": "The certificate of achievement from Ctrl Act Design naming Emilie Chidiac, shortlisted as finalist of the Cemetery Challenge",
+      "aspect": 1.4134,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/encounter-cert/certificate-640.webp",
+          "kb": 65
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/encounter-cert/certificate-1024.webp",
+          "kb": 137
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/encounter-cert/certificate-1600.webp",
+          "kb": 251
         }
       ]
     }
@@ -4017,27 +3241,803 @@
       ]
     }
   ],
-  "encounter-cert": [
+  "astroidal": [
     {
-      "name": "certificate",
-      "role": "gallery",
-      "alt": "The certificate of achievement from Ctrl Act Design naming Emilie Chidiac, shortlisted as finalist of the Cemetery Challenge",
-      "aspect": 1.4134,
+      "name": "star-cover",
+      "role": "gif",
+      "alt": "The three astroidal ellipsoid stars in turn, the same equations wearing three different coefficient sets",
+      "aspect": 1.7778,
+      "animated": true,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/encounter-cert/certificate-640.webp",
-          "kb": 65
+          "file": "assets/projects/astroidal/star-cover-640.webp",
+          "kb": 58
         },
         {
           "w": 1024,
-          "file": "assets/projects/encounter-cert/certificate-1024.webp",
-          "kb": 137
+          "file": "assets/projects/astroidal/star-cover-1024.webp",
+          "kb": 104
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/astroidal/star-cover-static-640.webp",
+          "kb": 9
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/astroidal/star-cover-static-1024.webp",
+          "kb": 16
+        }
+      ]
+    },
+    {
+      "name": "iterations",
+      "role": "hero",
+      "alt": "Three astroidal ellipsoid surface iterations, the cubed sine and cosine equations pushed through different coefficients",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/astroidal/iterations-640.webp",
+          "kb": 17
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/astroidal/iterations-1024.webp",
+          "kb": 32
         },
         {
           "w": 1600,
-          "file": "assets/projects/encounter-cert/certificate-1600.webp",
-          "kb": 251
+          "file": "assets/projects/astroidal/iterations-1600.webp",
+          "kb": 62
+        }
+      ]
+    },
+    {
+      "name": "equations",
+      "role": "gallery",
+      "alt": "The parametric equations of the astroidal ellipsoid written as Python, six coefficients driving the point grid",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/astroidal/equations-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/astroidal/equations-1024.webp",
+          "kb": 14
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/astroidal/equations-1600.webp",
+          "kb": 25
+        }
+      ]
+    },
+    {
+      "name": "layout",
+      "role": "gallery",
+      "alt": "The reduced mesh read as a small house: floor plates sliced into the low poly star with a six part program",
+      "aspect": 1.3204,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/astroidal/layout-640.webp",
+          "kb": 21
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/astroidal/layout-1024.webp",
+          "kb": 36
+        }
+      ]
+    },
+    {
+      "name": "board",
+      "role": "gallery",
+      "alt": "The full astroidal ellipsoid board: equations, iterations, the reduced mesh and the housing layout on one page",
+      "aspect": 0.7069,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/astroidal/board-640.webp",
+          "kb": 54
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/astroidal/board-1024.webp",
+          "kb": 97
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/astroidal/board-1600.webp",
+          "kb": 169
+        }
+      ]
+    }
+  ],
+  "chair-sim": [
+    {
+      "name": "voxel-sizes",
+      "role": "gif",
+      "alt": "The settled chair rebuilt at growing voxel sizes, from fine grain steps to chunky rubber ring modules",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/chair-sim/voxel-sizes-640.webp",
+          "kb": 28
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/chair-sim/voxel-sizes-1024.webp",
+          "kb": 57
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/chair-sim/voxel-sizes-static-640.webp",
+          "kb": 6
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/chair-sim/voxel-sizes-static-1024.webp",
+          "kb": 13
+        }
+      ]
+    },
+    {
+      "name": "matrix",
+      "role": "hero",
+      "alt": "Eight voxelated chair iterations, each molded by a different sitting pose with damping and voxel size as the dials",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/chair-sim/matrix-640.webp",
+          "kb": 21
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/chair-sim/matrix-1024.webp",
+          "kb": 42
+        }
+      ]
+    },
+    {
+      "name": "inflate",
+      "role": "gif",
+      "alt": "A flat red membrane inflates into a pillow under a reclining figure in the Kangaroo simulation",
+      "aspect": 0.8004,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/chair-sim/inflate-640.webp",
+          "kb": 49
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/chair-sim/inflate-1024.webp",
+          "kb": 87
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/chair-sim/inflate-static-640.webp",
+          "kb": 8
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/chair-sim/inflate-static-1024.webp",
+          "kb": 13
+        }
+      ]
+    },
+    {
+      "name": "gh-definition",
+      "role": "gallery",
+      "alt": "The Grasshopper definition: pillow mesh and sitting poses feed Kangaroo goals, then the chair mesh is voxelated",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/chair-sim/gh-definition-640.webp",
+          "kb": 12
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/chair-sim/gh-definition-1024.webp",
+          "kb": 22
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/chair-sim/gh-definition-1600.webp",
+          "kb": 36
+        }
+      ]
+    }
+  ],
+  "verve": [
+    {
+      "name": "unit-selector",
+      "role": "gif",
+      "alt": "Screen capture of the interactive 3D unit selector orbiting the twin Verve towers, one unit footprint highlighted",
+      "aspect": 2.0847,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/verve/unit-selector-640.webp",
+          "kb": 604
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/verve/unit-selector-1024.webp",
+          "kb": 1003
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/verve/unit-selector-static-640.webp",
+          "kb": 24
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/verve/unit-selector-static-1024.webp",
+          "kb": 39
+        }
+      ]
+    },
+    {
+      "name": "dusk-facade",
+      "role": "hero",
+      "alt": "Dusk render of the Verve facade above the fog, double height planted terraces with Burj Khalifa in the distance",
+      "aspect": 1.0233,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/verve/dusk-facade-640.webp",
+          "kb": 38
+        }
+      ]
+    },
+    {
+      "name": "podium-pool",
+      "role": "gallery",
+      "alt": "Render of the Verve podium pool deck, an infinity lap pool and cabanas with Downtown Dubai on the horizon",
+      "aspect": 1.0233,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/verve/podium-pool-640.webp",
+          "kb": 92
+        }
+      ]
+    },
+    {
+      "name": "two-tower-elevation",
+      "role": "gallery",
+      "alt": "Elevation of the twin Verve towers on their podium, 36 levels rising to 161 meters with planted balconies stepping up",
+      "aspect": 1.4151,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/verve/two-tower-elevation-640.webp",
+          "kb": 20
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/verve/two-tower-elevation-1024.webp",
+          "kb": 43
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/verve/two-tower-elevation-1600.webp",
+          "kb": 83
+        }
+      ]
+    },
+    {
+      "name": "amenities-plan",
+      "role": "gallery",
+      "alt": "Amenities level plan for the two Verve towers: gym, spa, yoga studio, cinema, kids pool and playgrounds on the podium",
+      "aspect": 1.9157,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/verve/amenities-plan-640.webp",
+          "kb": 22
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/verve/amenities-plan-1024.webp",
+          "kb": 43
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/verve/amenities-plan-1600.webp",
+          "kb": 86
+        }
+      ]
+    },
+    {
+      "name": "typical-plan",
+      "role": "gallery",
+      "alt": "Typical Verve tower floor plan: one to three bedroom units around the central core, planted terraces at the two ends",
+      "aspect": 0.9957,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/verve/typical-plan-640.webp",
+          "kb": 46
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/verve/typical-plan-1024.webp",
+          "kb": 99
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/verve/typical-plan-1600.webp",
+          "kb": 198
+        }
+      ]
+    },
+    {
+      "name": "lounge-interior",
+      "role": "gallery",
+      "alt": "Interior render of a double height Verve lounge, a suspended chandelier and floor to ceiling glass over the skyline",
+      "aspect": 1.0233,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/verve/lounge-interior-640.webp",
+          "kb": 41
+        }
+      ]
+    }
+  ],
+  "mars": [
+    {
+      "name": "mars-cover",
+      "role": "gif",
+      "alt": "Ring 4000 at a glance: the ring in its crater, the farming interior, the transfer box and the annotated ring plan",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/mars-cover-640.webp",
+          "kb": 136
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/mars-cover-1024.webp",
+          "kb": 256
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/mars-cover-static-640.webp",
+          "kb": 12
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/mars-cover-static-1024.webp",
+          "kb": 22
+        }
+      ]
+    },
+    {
+      "name": "board",
+      "role": "hero",
+      "alt": "The full Rings of Mars competition board: exploded ring drawings, annotated plan, crater renders and systems diagram",
+      "aspect": 1.4159,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/board-640.webp",
+          "kb": 35
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/board-1024.webp",
+          "kb": 78
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/mars/board-1600.webp",
+          "kb": 157
+        }
+      ]
+    },
+    {
+      "name": "sectional-perspective",
+      "role": "gallery",
+      "alt": "Sectional perspective through Ring 4000, from the BIPV envelope down through farming, pods and the crater pit",
+      "aspect": 2.9907,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/sectional-perspective-640.webp",
+          "kb": 20
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/sectional-perspective-1024.webp",
+          "kb": 37
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/mars/sectional-perspective-1600.webp",
+          "kb": 70
+        }
+      ]
+    },
+    {
+      "name": "farming-interior",
+      "role": "gallery",
+      "alt": "Inside the ring: the farming and transport level, a researcher on the stair beside planted beds and the pod bay",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/farming-interior-640.webp",
+          "kb": 58
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/farming-interior-1024.webp",
+          "kb": 143
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/mars/farming-interior-1600.webp",
+          "kb": 364
+        }
+      ]
+    },
+    {
+      "name": "ring-plan",
+      "role": "gallery",
+      "alt": "The annotated ring plan at radius 30 meters: farming, research, buffer and integration zones around the crater",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/ring-plan-640.webp",
+          "kb": 21
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/ring-plan-1024.webp",
+          "kb": 38
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/mars/ring-plan-1600.webp",
+          "kb": 62
+        }
+      ]
+    },
+    {
+      "name": "pod-axo",
+      "role": "gallery",
+      "alt": "Cutaway axonometric of a segment of Ring 4000, the sleeping pod tucked into the shell with its service spine",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/pod-axo-640.webp",
+          "kb": 13
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/pod-axo-1024.webp",
+          "kb": 21
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/mars/pod-axo-1600.webp",
+          "kb": 34
+        }
+      ]
+    },
+    {
+      "name": "exterior-vignette",
+      "role": "gallery",
+      "alt": "Through a porthole: the ring bridging its crater under a Martian sky, a moon hanging over the far rim",
+      "aspect": 1,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/exterior-vignette-640.webp",
+          "kb": 68
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/exterior-vignette-1024.webp",
+          "kb": 168
+        }
+      ]
+    },
+    {
+      "name": "transfer-box",
+      "role": "gallery",
+      "alt": "Axonometric of the transfer box, the rail mounted unit that moves people and material around Ring 4000",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/mars/transfer-box-640.webp",
+          "kb": 17
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/mars/transfer-box-1024.webp",
+          "kb": 30
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/mars/transfer-box-1600.webp",
+          "kb": 53
+        }
+      ]
+    }
+  ],
+  "xr": [
+    {
+      "name": "reaction-cover",
+      "role": "gif",
+      "alt": "An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/xr/reaction-cover-640.webp",
+          "kb": 80
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/xr/reaction-cover-1024.webp",
+          "kb": 136
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/xr/reaction-cover-static-640.webp",
+          "kb": 1
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/xr/reaction-cover-static-1024.webp",
+          "kb": 2
+        }
+      ]
+    },
+    {
+      "name": "ar-board",
+      "role": "gallery",
+      "alt": "Board of three AR chemistry reactions, SN1, E2 and SN2, each with a molecular render and a view in AR QR code",
+      "aspect": 1.3804,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/xr/ar-board-640.webp",
+          "kb": 24
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/xr/ar-board-1024.webp",
+          "kb": 45
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/xr/ar-board-1600.webp",
+          "kb": 77
+        }
+      ]
+    },
+    {
+      "name": "sn1-before",
+      "role": "gallery",
+      "alt": "Frame from the SN1 AR lesson: the propanol molecule intact in ball and stick, the chloride ion still bonded",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/xr/sn1-before-640.webp",
+          "kb": 4
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/xr/sn1-before-1024.webp",
+          "kb": 6
+        }
+      ]
+    },
+    {
+      "name": "sn1-after",
+      "role": "gallery",
+      "alt": "Frame from the SN1 AR lesson after the reaction, the chloride ion separated and drifting away from the molecule",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/xr/sn1-after-640.webp",
+          "kb": 4
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/xr/sn1-after-1024.webp",
+          "kb": 6
+        }
+      ]
+    }
+  ],
+  "playscape": [
+    {
+      "name": "net-settle",
+      "role": "gif",
+      "alt": "The settled playscape at rest: a double layer climbing net draped by Kangaroo over soft red inflatable mounds",
+      "aspect": 1.7778,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/playscape/net-settle-640.webp",
+          "kb": 256
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/playscape/net-settle-1024.webp",
+          "kb": 674
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/playscape/net-settle-static-640.webp",
+          "kb": 12
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/playscape/net-settle-static-1024.webp",
+          "kb": 31
+        }
+      ]
+    },
+    {
+      "name": "section",
+      "role": "gallery",
+      "alt": "Section through the playscape: children climb the double net stretched over red inflatables above a padded ground",
+      "aspect": 2.7308,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/playscape/section-640.webp",
+          "kb": 19
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/playscape/section-1024.webp",
+          "kb": 37
+        }
+      ]
+    },
+    {
+      "name": "inflate",
+      "role": "gif",
+      "alt": "Five red mounds puff up from taut tents to fat blobs on the square plate, pressure goals against edge stiffness",
+      "aspect": 1,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/playscape/inflate-640.webp",
+          "kb": 17
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/playscape/inflate-1024.webp",
+          "kb": 30
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/playscape/inflate-static-640.webp",
+          "kb": 6
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/playscape/inflate-static-1024.webp",
+          "kb": 12
+        }
+      ]
+    },
+    {
+      "name": "iterations",
+      "role": "gallery",
+      "alt": "Three playscape iterations comparing net rotation and elevated anchor settings above the inflatable mounds",
+      "aspect": 1.7778,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/playscape/iterations-640.webp",
+          "kb": 14
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/playscape/iterations-1024.webp",
+          "kb": 29
+        }
+      ]
+    },
+    {
+      "name": "net-drop",
+      "role": "gif",
+      "alt": "The first climbing net falls onto the inflated mounds and tautens into a four point canopy in Kangaroo",
+      "aspect": 1,
+      "animated": true,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/playscape/net-drop-640.webp",
+          "kb": 151
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/playscape/net-drop-1024.webp",
+          "kb": 358
+        }
+      ],
+      "static": [
+        {
+          "w": 640,
+          "file": "assets/projects/playscape/net-drop-static-640.webp",
+          "kb": 30
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/playscape/net-drop-static-1024.webp",
+          "kb": 71
+        }
+      ]
+    },
+    {
+      "name": "gh-canvas",
+      "role": "gallery",
+      "alt": "The full Grasshopper canvas behind the playscape: Python base surfaces, pressure and net goals, and bouncy solvers",
+      "aspect": 2.3541,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/playscape/gh-canvas-640.webp",
+          "kb": 31
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/playscape/gh-canvas-1024.webp",
+          "kb": 52
+        },
+        {
+          "w": 1600,
+          "file": "assets/projects/playscape/gh-canvas-1600.webp",
+          "kb": 85
         }
       ]
     }

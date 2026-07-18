@@ -27,45 +27,56 @@ const NAV: { label: string; to: string }[] = [
   { label: 'ABOUT', to: '/about' },
 ]
 
+// The mark + the four doors, extracted so the /work full-width bar (LOOK &
+// ORDER round 4, Emilie's gate 2026-07-18) reuses the exact same pieces:
+// one nav, two frames, zero drift.
+export function HeaderNav() {
+  return (
+    <>
+      <Link
+        to="/"
+        viewTransition
+        aria-label="Home"
+        className="flex size-11 shrink-0 items-center justify-center rounded-[var(--r-pill)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+      >
+        <LogoMark size={26} />
+      </Link>
+      <nav
+        aria-label="Primary"
+        className="flex min-w-0 items-center font-mono text-[10px] tracking-[0.08em]"
+      >
+        {NAV.map(item => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            viewTransition
+            className="flex h-11 min-w-11 items-center justify-center px-0.5 no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] sm:px-1"
+          >
+            {({ isActive }) => (
+              <span
+                className={
+                  isActive
+                    ? 'rounded-[var(--r-pill)] bg-[color-mix(in_srgb,var(--lang-ink)_12%,transparent)] px-3 py-1.5 font-semibold text-[var(--lang-ink)]'
+                    : 'px-2 py-1.5 text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)]'
+                }
+              >
+                {item.label}
+              </span>
+            )}
+          </NavLink>
+        ))}
+      </nav>
+    </>
+  )
+}
+
 export default function TitleBlock() {
   return (
     // Sticky with a breath of air; the header strip itself lets clicks
     // through, only the pill is interactive.
     <header className="pointer-events-none sticky top-3 z-40 flex justify-center px-3 py-2">
       <div className="lang-glass-2 pointer-events-auto flex max-w-full items-center gap-0.5 rounded-[var(--r-pill)] py-1.5 pr-1.5 pl-2">
-        <Link
-          to="/"
-          viewTransition
-          aria-label="Home"
-          className="flex size-11 shrink-0 items-center justify-center rounded-[var(--r-pill)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
-        >
-          <LogoMark size={26} />
-        </Link>
-        <nav
-          aria-label="Primary"
-          className="flex min-w-0 items-center font-mono text-[10px] tracking-[0.08em]"
-        >
-          {NAV.map(item => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              viewTransition
-              className="flex h-11 min-w-11 items-center justify-center px-0.5 no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] sm:px-1"
-            >
-              {({ isActive }) => (
-                <span
-                  className={
-                    isActive
-                      ? 'rounded-[var(--r-pill)] bg-[color-mix(in_srgb,var(--lang-ink)_12%,transparent)] px-3 py-1.5 font-semibold text-[var(--lang-ink)]'
-                      : 'px-2 py-1.5 text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)]'
-                  }
-                >
-                  {item.label}
-                </span>
-              )}
-            </NavLink>
-          ))}
-        </nav>
+        <HeaderNav />
         <span aria-hidden="true" className="mx-1 h-6 w-px shrink-0 bg-[var(--lang-hairline)]" />
         <ModeToggle />
       </div>
