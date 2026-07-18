@@ -1,12 +1,20 @@
 {
-  "w": 3948,
+  "w": 4182,
   "h": 860,
   "nodes": [
+    {
+      "id": "charcoal",
+      "kind": "thought",
+      "date": "2020-06",
+      "x": 189,
+      "y": 208.3,
+      "route": "/thoughts/charcoal"
+    },
     {
       "id": "xrlab-start",
       "kind": "milestone",
       "date": "2021-09",
-      "x": 189,
+      "x": 267,
       "y": 660,
       "route": null
     },
@@ -14,7 +22,7 @@
       "id": "self-open",
       "kind": "milestone",
       "date": "2022-01",
-      "x": 267,
+      "x": 345,
       "y": 600,
       "route": null
     },
@@ -22,47 +30,47 @@
       "id": "falcon",
       "kind": "project",
       "date": "2022-04",
-      "x": 345,
-      "y": 334.6,
+      "x": 423,
+      "y": 315.4,
       "route": "/work/falcon"
     },
     {
       "id": "cemetery",
       "kind": "award",
       "date": "2022-06",
-      "x": 543,
-      "y": 412.8,
+      "x": 621,
+      "y": 486.7,
       "route": "/work/encounter"
     },
     {
       "id": "encounter",
       "kind": "project",
       "date": "2022-06",
-      "x": 501,
-      "y": 348.8,
+      "x": 579,
+      "y": 422.7,
       "route": "/work/encounter"
     },
     {
       "id": "xr",
       "kind": "project",
       "date": "2022-06",
-      "x": 579,
-      "y": 428.9,
+      "x": 657,
+      "y": 476.7,
       "route": "/work/xr"
     },
     {
       "id": "xreal",
       "kind": "thought",
       "date": "2022-09",
-      "x": 657,
-      "y": 221.9,
+      "x": 735,
+      "y": 277.9,
       "route": "/thoughts/xreal"
     },
     {
       "id": "barch-grad",
       "kind": "milestone",
       "date": "2023-06",
-      "x": 735,
+      "x": 813,
       "y": 660,
       "route": null
     },
@@ -70,15 +78,15 @@
       "id": "homage",
       "kind": "project",
       "date": "2023-06",
-      "x": 813,
-      "y": 407.6,
+      "x": 891,
+      "y": 340.3,
       "route": "/work/homage"
     },
     {
       "id": "soma-start",
       "kind": "milestone",
       "date": "2023-08",
-      "x": 891,
+      "x": 969,
       "y": 722,
       "route": null
     },
@@ -86,47 +94,47 @@
       "id": "tamayouz",
       "kind": "award",
       "date": "2023-09",
-      "x": 855,
-      "y": 471.6,
+      "x": 933,
+      "y": 404.3,
       "route": "/work/homage"
     },
     {
       "id": "mars",
       "kind": "project",
       "date": "2023-10",
-      "x": 1047,
-      "y": 350.2,
+      "x": 1125,
+      "y": 424.1,
       "route": "/work/mars"
     },
     {
       "id": "soma",
       "kind": "project",
       "date": "2024-02",
-      "x": 1125,
-      "y": 436.6,
+      "x": 1203,
+      "y": 483.5,
       "route": "/work/soma"
     },
     {
       "id": "mars-top50",
       "kind": "award",
       "date": "2024-03",
-      "x": 1089,
-      "y": 414.2,
+      "x": 1167,
+      "y": 488.1,
       "route": "/work/mars"
     },
     {
       "id": "genai",
       "kind": "thought",
       "date": "2024-06",
-      "x": 1281,
-      "y": 241.3,
+      "x": 1359,
+      "y": 146.4,
       "route": "/thoughts/genai"
     },
     {
       "id": "dynamic-start",
       "kind": "milestone",
       "date": "2024-08",
-      "x": 1359,
+      "x": 1437,
       "y": 762,
       "route": null
     },
@@ -134,7 +142,7 @@
       "id": "macad-start",
       "kind": "milestone",
       "date": "2025-10",
-      "x": 1437,
+      "x": 1515,
       "y": 560,
       "route": null
     },
@@ -142,191 +150,191 @@
       "id": "astroidal",
       "kind": "project",
       "date": "2025-10",
-      "x": 1515,
-      "y": 305.5,
+      "x": 1593,
+      "y": 351.5,
       "route": "/work/astroidal"
     },
     {
       "id": "playscape",
       "kind": "project",
       "date": "2025-10",
-      "x": 1593,
-      "y": 350.3,
+      "x": 1671,
+      "y": 424.2,
       "route": "/work/playscape"
     },
     {
       "id": "cappelletti",
       "kind": "project",
       "date": "2025-11",
-      "x": 1671,
-      "y": 422.4,
+      "x": 1749,
+      "y": 468.3,
       "route": "/work/cappelletti"
     },
     {
       "id": "chair-sim",
       "kind": "project",
       "date": "2025-11",
-      "x": 1749,
-      "y": 479.2,
+      "x": 1827,
+      "y": 462.4,
       "route": "/work/chair-sim"
     },
     {
       "id": "evosearch",
       "kind": "thought",
       "date": "2025-11",
-      "x": 1827,
-      "y": 153.4,
+      "x": 1905,
+      "y": 100.7,
       "route": "/thoughts/evosearch"
     },
     {
       "id": "huddle-award",
       "kind": "award",
       "date": "2025-12",
-      "x": 2025,
-      "y": 391.4,
+      "x": 2103,
+      "y": 375.9,
       "route": "/work/huddle"
     },
     {
       "id": "huddle",
       "kind": "project",
       "date": "2025-12",
-      "x": 1983,
-      "y": 327.4,
+      "x": 2061,
+      "y": 311.9,
       "route": "/work/huddle"
     },
     {
       "id": "tsukiji",
       "kind": "project",
       "date": "2025-12",
-      "x": 2061,
-      "y": 316.3,
+      "x": 2139,
+      "y": 363.2,
       "route": "/work/tsukiji"
     },
     {
       "id": "neuroaes",
       "kind": "thought",
       "date": "2025-12",
-      "x": 2139,
-      "y": 266.1,
+      "x": 2217,
+      "y": 222.8,
       "route": "/thoughts/neuroaes"
     },
     {
       "id": "podcast",
       "kind": "project",
       "date": "2026-01",
-      "x": 2217,
-      "y": 439.3,
+      "x": 2295,
+      "y": 484.3,
       "route": "/work/podcast"
     },
     {
       "id": "bim",
       "kind": "thought",
       "date": "2026-01",
-      "x": 2295,
-      "y": 132.2,
+      "x": 2373,
+      "y": 80.8,
       "route": "/thoughts/bim"
     },
     {
       "id": "neurospace",
       "kind": "project",
       "date": "2026-02",
-      "x": 2373,
-      "y": 447.1,
+      "x": 2451,
+      "y": 379.7,
       "route": "/work/neurospace"
     },
     {
       "id": "lungs-award",
       "kind": "award",
       "date": "2026-03",
-      "x": 2649,
-      "y": 370.2,
+      "x": 2727,
+      "y": 418.1,
       "route": "/work/lungs"
     },
     {
       "id": "data-geometry",
       "kind": "project",
       "date": "2026-03",
-      "x": 2529,
-      "y": 316,
+      "x": 2607,
+      "y": 301.7,
       "route": "/work/data-geometry"
     },
     {
       "id": "lungs",
       "kind": "project",
       "date": "2026-03",
-      "x": 2607,
-      "y": 306.2,
+      "x": 2685,
+      "y": 354.1,
       "route": "/work/lungs"
     },
     {
       "id": "drawiface",
       "kind": "thought",
       "date": "2026-03",
-      "x": 2685,
-      "y": 245.9,
+      "x": 2763,
+      "y": 150.7,
       "route": "/thoughts/drawiface"
     },
     {
       "id": "ballooning",
       "kind": "project",
       "date": "2026-04",
-      "x": 2763,
-      "y": 431.7,
+      "x": 2841,
+      "y": 475.7,
       "route": "/work/ballooning"
     },
     {
       "id": "heritage",
       "kind": "thought",
       "date": "2026-04",
-      "x": 2841,
-      "y": 98.2,
+      "x": 2919,
+      "y": 143.6,
       "route": "/thoughts/heritage"
     },
     {
       "id": "solvers",
       "kind": "thought",
       "date": "2026-04",
-      "x": 2919,
-      "y": 146.4,
+      "x": 2997,
+      "y": 241.6,
       "route": "/thoughts/solvers"
     },
     {
       "id": "legoarch-jury",
       "kind": "award",
       "date": "2026-05",
-      "x": 3117,
-      "y": 392.9,
+      "x": 3195,
+      "y": 379.7,
       "route": "/work/legoarch"
     },
     {
       "id": "legoarch",
       "kind": "project",
       "date": "2026-05",
-      "x": 3075,
-      "y": 328.9,
+      "x": 3153,
+      "y": 315.7,
       "route": "/work/legoarch"
     },
     {
       "id": "comfort",
       "kind": "thought",
       "date": "2026-05",
-      "x": 3153,
-      "y": 245.9,
+      "x": 3231,
+      "y": 150.6,
       "route": "/thoughts/comfort"
     },
     {
       "id": "sensi-macad-award",
       "kind": "award",
       "date": "2026-06",
-      "x": 3507,
-      "y": 523.7,
+      "x": 3585,
+      "y": 455.3,
       "route": "/work/sensi"
     },
     {
       "id": "macad-y1",
       "kind": "milestone",
       "date": "2026-06",
-      "x": 3309,
+      "x": 3387,
       "y": 560,
       "route": null
     },
@@ -334,41 +342,57 @@
       "id": "narkomfin",
       "kind": "project",
       "date": "2026-06",
-      "x": 3387,
-      "y": 482.2,
+      "x": 3465,
+      "y": 461.8,
       "route": "/work/narkomfin"
     },
     {
       "id": "sensi",
       "kind": "project",
       "date": "2026-06",
-      "x": 3465,
-      "y": 459.7,
+      "x": 3543,
+      "y": 391.3,
       "route": "/work/sensi"
     },
     {
       "id": "urban-risk",
       "kind": "project",
       "date": "2026-06",
-      "x": 3543,
-      "y": 396.8,
+      "x": 3621,
+      "y": 332.2,
       "route": "/work/urban-risk"
+    },
+    {
+      "id": "pelagnou",
+      "kind": "thought",
+      "date": "2026-06",
+      "x": 3699,
+      "y": 150,
+      "route": "/thoughts/pelagnou"
     },
     {
       "id": "respond",
       "kind": "thought",
       "date": "2026-06",
-      "x": 3621,
-      "y": 231.6,
+      "x": 3777,
+      "y": 89,
       "route": "/thoughts/respond"
     },
     {
       "id": "site-live",
       "kind": "milestone",
       "date": "2026-07",
-      "x": 3699,
+      "x": 3855,
       "y": 600,
       "route": null
+    },
+    {
+      "id": "explain",
+      "kind": "thought",
+      "date": "2026-07",
+      "x": 3933,
+      "y": 247.8,
+      "route": "/thoughts/explain"
     }
   ]
 }

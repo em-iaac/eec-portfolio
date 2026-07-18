@@ -14,6 +14,10 @@
 // next to Building Information Modeling and one gesture from NeuroSpace.
 import { type ReactNode } from 'react'
 import NBDot from '../components/ui/NB'
+import SketchDot from './SketchDot'
+
+const RED_LINK =
+  'text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
 
 // THE OPENINGS (G2) live in openings.ts (JSX-free so index surfaces can
 // import them without pulling this prose into their chunk). Each string there
@@ -242,6 +246,121 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
         estimates, out loud and arguably, how its choices push you, and hands you the controls. The
         dumb version of this is surveillance. The good version is a room that finally asks how it's
         making you feel, and is willing to change its answer.
+      </p>
+    </>
+  ),
+
+  // T-111 · THE FIRST THOUGHT (S5, 2026-07-18): her LAU charcoal year, dated
+  // before every other entry, voiced from before the tools existed. The
+  // confession + the close are woven from her verbatim reflections; the
+  // three sketch dots bloom the drawings (SketchDot, her signed mechanism).
+  charcoal: (
+    <>
+      <p>
+        When the art class was asked who here dislikes drawing, mine was the only hand that went
+        up. Awkward. My instruments were always music and writing; charcoal belonged to other
+        people. But the studies kept coming, so I kept going back, and going back is where it gets
+        interesting.
+      </p>
+      <p>
+        The poetics of a curve live in what you leave out. Shade the big shapes honestly, let the
+        small truths stay foggy, and the figure reads clearer, not less: which is how seeing works
+        anyway. Nobody takes a room in detail by detail; you catch the big picture and your mind
+        fills in the rest.
+        <SketchDot
+          name="torso"
+          alt="Charcoal figure study from the LAU drawing year: a classical torso built from big tonal shapes, the details left soft"
+          drop={-30}
+        />
+      </p>
+      <p>
+        Listening is the same lesson from the other side. An ear has no lid; it stays open all
+        night, hearing while you sleep, so the privilege was never hearing, it's attention: someone
+        arriving with a story to tell, a question to ask, and you choosing to receive it. And the
+        anatomy is in on it: the three smallest bones in the body live in there, next to the sense
+        of balance. The organ that listens is the organ that keeps you standing.
+        <SketchDot
+          name="ear"
+          alt="Charcoal study of an ear from the LAU drawing year, drawn close and slow, folds and shadows carrying all the detail"
+          drop={-20}
+        />
+      </p>
+      <p>
+        Maybe that's the real subject: not the things, the space between them. Drawing a figure
+        pulling on a rope, what comes out is the pull itself: no face, the rope barely there,
+        everything leaning toward a force you can't draw directly, only show. The connection is the
+        drawing. Draw the middle, and the rest explains itself.
+        <SketchDot
+          name="tension"
+          alt="Charcoal sketch of a seated figure pulling a rope, face and rope left vague so the tension itself becomes the subject"
+          drop={-30}
+        />
+      </p>
+      <p>
+        So no, I still wouldn't call drawing mine. But go back to a thing often enough, look at it
+        long enough, and something connects, something works out, and you catch yourself thinking:
+        maybe, what if? I am connecting the dots. (an artist?)
+      </p>
+    </>
+  ),
+
+  // T-112 · her reading of the team theory project (credits woven in
+  // sentence one; the whole note declares itself a reading). The desire
+  // path centered at her direction (2026-07-18).
+  pelagnou: (
+    <>
+      <p>
+        Some projects hand you a tool; Pelagñou handed me a library card. A theory project with
+        Aditya Kossambe and Eleni Maglari for the AI in Architecture Theory course at IAAC,{' '}
+        <a href="https://blog.iaac.net/pelagnou/" target="_blank" rel="noreferrer" className={RED_LINK}>
+          an archipelagic reading of technoculture
+          <span className="sr-only"> (opens in new tab)</span>
+        </a>
+        , and this note is only my reading of our reading, mostly of the thinkers it introduced me
+        to: Ari Melenciano, Édouard Glissant, an internet full of footprints.
+      </p>
+      <p>
+        The idea that refuses to leave is the desire path: the shortcut worn into the grass where
+        people actually walk, truer than the pavement anyone planned. We pave paths for each other
+        constantly, mostly by walking them first, one person daring the shortcut and the next one
+        trusting the flattened grass. I had never thought of the digital world that way: the
+        internet as a field of trails, every link a footprint, whole cultures following each
+        other's shortcuts until they harden into roads.
+        <NBDot note="nobody designs a desire path. that's the whole point of it." align="right" />
+      </p>
+      <p>
+        I keep relating it to my own unusual threads. The connections in my head, the ones this
+        site draws as lines between projects and thoughts, were never planned like pavements; they
+        got worn in by walking the same what-if twice, then a third time. And Glissant's right to
+        opacity is the caution at the edge of the field: not every path wants to be mapped. Some
+        things should stay islands. Not everything wants to be a dataset.
+      </p>
+    </>
+  ),
+
+  // T-113 · her named thought, SIGNED 2026-07-18 ("for now").
+  explain: (
+    <>
+      <p>
+        How do you explain a complex, honestly boring technical subject so someone leans in
+        instead of glazing over? I think about this constantly, because the gap between the people
+        who build technical things and the people who live with their consequences is mostly an
+        explanation gap.
+      </p>
+      <p>
+        The trick, as far as I can tell, is that fun is not decoration on the explanation; it is
+        the explanation. A LEGO brick explains discrete aggregation better than a lecture. A film
+        of a cathedral solving into bricks explains a pipeline better than the diagram of the
+        pipeline. When an idea lands, it's usually because someone found the toy inside the
+        concept.
+        <NBDot note="if the demo needs a manual, the demo isn't done." align="right" />
+      </p>
+      <p>
+        So I hold my own work to it: if I can't make the boring part captivating, I don't
+        understand it well enough yet. And it matters beyond taste. The subjects that decide how
+        buildings treat people read as the most boring ones, standards, data layers, scoring
+        models, and they'll only get argued about by more than five people if someone makes them
+        worth looking at.
       </p>
     </>
   ),

@@ -961,6 +961,29 @@ all signed, committed).** Six new projects P-116..P-121 into the book index:
   7-across. Constellation 31, world 46; build green (37 routes, 32 OG, both PDFs, 43
   tests). NEXT (her call): a WORK PAGE · LOOK & ORDER design pass (cover unification +
   the thoughts layout + a reshuffle) before S5.
+**WORK PAGE · LOOK & ORDER (2026-07-18, committed; Emilie very happy).** The three
+concerns she raised over the live /work, resolved:
+- **THE PLATES (the cover-unification answer).** Instead of a desaturate / mat /
+  neutral-ground filter, the grid coheres by giving every tile a hand-designed signed
+  INK ARTIFACT as its RESTING face (new `artifacts.tsx`, 21 of them); hover/focus
+  reveals the real cover, and gifs flip through the assets. Plates everywhere, mobile
+  included; reduced motion rests calm. This is the site's spine made literal on the
+  grid: calm ink at rest, the work on interaction — the whole page coheres without
+  touching a single cover image.
+- **ONE PAGE, FULL WIDTH (the layout answer).** /work leaves the centered column for a
+  full-width grid (7 across, ~255px tiles at 1920); THE THOUGHTS close the page in
+  THREE COLUMNS (a right rail was considered and declined); the opening reveal FLOATS
+  so nothing reflows; the footer aligns wide; zero vertical scroll at >= 1280x800.
+  §4 (the gallery) reads through this — /work and the book index now share DATA
+  (`thoughtIndexEntries` + `ThoughtIndexRows`) but the screen layout is full-width.
+- **THE BAR.** /work's header stack collapsed into one full-width glass `WorkHeaderBar`
+  via a new `SheetPage` `headerBar` slot (other pages untouched); one row on wide
+  screens, two when narrow, the pill below lg.
+- **THE ORDER.** Her swaps (Homage/XR, Verve/Mars), single-sourced; flipbook covers
+  added for Narkomfin + Data into Geometry; all six flipbooks start instantly.
+The plates/artifacts, the full-width one-page grid, and the `headerBar` slot are new
+DESIGN-LANGUAGE patterns (a DL entry is owed when DL is next touched). NEXT: S5 = the
+words + a page-by-page design-system polish (Emilie's ask).
 
 ---
 

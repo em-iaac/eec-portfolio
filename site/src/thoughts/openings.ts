@@ -24,4 +24,9 @@ export const THOUGHT_OPENINGS: Record<string, string> = {
     'The usual choice with an old building is a trap: treat it as a museum piece no one may touch, or drop a glass-and-steel box in the middle and call it modern.',
   respond:
     'Right now a building is a fixed guess. Someone chose the ceiling height and the window size years before you arrived, and you live inside their averaged assumptions whether they fit you or not.',
+  charcoal:
+    'When the art class was asked who here dislikes drawing, mine was the only hand that went up. Awkward.',
+  pelagnou: 'Some projects hand you a tool; Pelagñou handed me a library card.',
+  explain:
+    'How do you explain a complex, honestly boring technical subject so someone leans in instead of glazing over?',
 }

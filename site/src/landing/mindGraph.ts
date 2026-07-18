@@ -213,6 +213,14 @@ const GEOM: Record<string, Geom> = {
   'chair-sim': { ...pointOnThread('GEOMETRY', 0.22), th: ['GEOMETRY'], a: 'middle', d: [0, 22] },
   astroidal: { ...pointOnThread('GEOMETRY', 0.26), th: ['GEOMETRY'], a: 'middle', d: [0, -16] },
   playscape: { ...pointOnThread('GEOMETRY', 0.4), th: ['GEOMETRY'], a: 'start', d: [12, 12] },
+  // ---- S5 appends (2026-07-18, the words session): the three new thoughts
+  // ride the append recipe. connecting-the-dots (the 2020 charcoal year)
+  // joins GEOMETRY's lead-in among the other early work, label below where
+  // astroidal sits above; pelagñou + explaining-things ride AI (the theory
+  // reading + the explaining instinct, whose proof is the AI work).
+  charcoal: { ...pointOnThread('GEOMETRY', 0.33), th: ['GEOMETRY'], a: 'middle', d: [0, 22] },
+  pelagnou: { ...pointOnThread('AI', 0.1), th: ['AI'], a: 'middle', d: [0, -16] },
+  explain: { ...pointOnThread('AI', 0.85), th: ['AI'], a: 'start', d: [12, -12] },
 }
 
 export interface MindNode {

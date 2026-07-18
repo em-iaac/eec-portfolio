@@ -147,6 +147,62 @@ re-skinned to this language in its own focused session (see §9).
 >     the page (now.ts renders only as the registry/CV live tip). And the
 >     site gains its one pointer ceremony: the sitewide node cursor, §4.6.
 
+>
+> **AMENDMENTS (Emilie, 2026-07-18, WORK PAGE · LOOK & ORDER; the owed
+> entries, written at S5; the concept record lives in REDESIGN-SPEC §13):**
+>
+> 10.5. **THE PLATES (the /work resting faces).** Every work tile RESTS as a
+>     hand-designed signed INK ARTIFACT (`site/src/components/work/
+>     artifacts.tsx`, one SVG parti per project in the Pen Table stroke
+>     grammar, one lens-pen accent via `--plate-accent`); hover/focus reveals
+>     the real cover (gif covers flip through the assets), reduced motion
+>     rests calm with an instant swap. Plates render everywhere, mobile
+>     included. This supersedes the §5 image-forward Card reading ON /WORK
+>     ONLY (the card face elsewhere is unchanged): the grid coheres as
+>     calm-ink-at-rest, life-on-interaction — the site's soul made literal.
+>     The plates are SCREEN-ONLY: the printed book and the OG cards keep the
+>     true covers (screen and print share DATA, not faces).
+> 10.6. **THE FULL-WIDTH ONE-PAGE /WORK GRID.** /work leaves the centred
+>     column: `SheetPage wide` (cap 1920px), a plain-CSS `.work-grid`
+>     stepping to the printed index's exact 7-across geometry at >=1400px
+>     (21 tiles = 3 rows; Tailwind arbitrary `min-[...]` variants do not
+>     generate in this repo, custom breakpoints use plain media queries),
+>     THE THOUGHTS closing the page in columns (xl = 4 since the thoughts
+>     grew to 13), the opening reveal floating on a glass slip so hover
+>     never grows the page, and the Footer's `wide` prop aligning its card
+>     with the grid. The promise: zero vertical scroll at >=1280×800.
+> 10.7. **THE WORK HEADER BAR (`SheetPage headerBar` slot).** On lg+ /work
+>     collapses its header stack into ONE full-width sticky glass-2 bar
+>     (`components/work/WorkHeaderBar.tsx`): nav + room sign (the page's
+>     real h1) + filters + ✦ legend + book link + ModeToggle, one row wide
+>     (~58px at >=1500px), two when narrow; below lg the floating pill +
+>     stacked header return. The slot is opt-in per page; every other page
+>     keeps the floating pill. Only one h1 ever enters the a11y tree.
+>
+> **AMENDMENTS (Emilie, 2026-07-18, S5 the words session):**
+>
+> 11. **THE SKETCH DOT (the one figure mechanism in thought notes).** The
+>     G2 "words on the ground, no figures" rule holds AT REST; a note may
+>     carry an NB-grammar dot that blooms a FRAMELESS drawing floating in
+>     the margin on hover/focus/tap (`site/src/thoughts/SketchDot.tsx`):
+>     charcoal lifted off its scanned paper by `mix-blend-mode: multiply`
+>     on the light ground, `invert(1)` + `screen` on carbon (the chalk
+>     version; explicit mode blocks, the §4.6 cursor pattern). One drawing
+>     floats at a time; narrow viewports step it into the flow, centred;
+>     interaction grammar is NB's verbatim (44px, pin, Escape, outside-tap,
+>     PRM instant). First user: T-111 "connecting the dots".
+> 12. **The pillar page carries NO room sign** (Emilie: "fluff"): the one
+>     recorded exception to amendment 9's kicker › h1 grammar. The pillar
+>     is not a nav room; its lowercase serif h1 IS the sign, and the
+>     endmatter's THE SPINE label keeps the identity. Every nav room keeps
+>     its kicker.
+> 13. **Hero ink tokens.** The landing hero's two special inks are tokens
+>     now: `--lang-hero-muted` (the adjective line; dark value deliberately
+>     brighter than ink-muted for the scrim floor) and `--lang-hand-warm`
+>     (the handwritten voice line). No raw hex in components; the lens-pen
+>     definitions in `ui/Pill.tsx` remain their canonical source.
+>
+
 ---
 
 ## 0 · What binds (unchanged, non-negotiable)

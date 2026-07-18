@@ -61,21 +61,16 @@ export default function About() {
 
           <div id="contact" className="mt-5 border-t-[0.5px] border-[var(--lang-hairline)] pt-4 tall:mt-8 tall:pt-7">
             {/* The callback line completes the landing's split ("this is
-                what's on my mind · what's in yours?"). SIGNED (G4). */}
+                what's on my mind · what's in yours?"). Words SIGNED (G4);
+                the interim invitation paragraph RETIRED (Emilie, S5
+                2026-07-18): "What's in yours?" now carries the mailto and is
+                the page's one action; the footer right below carries the
+                EMAIL/LINKEDIN/GITHUB pills. */}
             <p className={`italic text-[var(--lang-ink)] ${PROSE}`}>
-              That's what's on my mind. What's in yours?
-            </p>
-            {/* The invitation, INTERIM (draftCopy, Emilie 2026-07-12): the
-                Session-11 wording was shortened to hold the one-screen
-                promise on 768p laptops; the page's whole text gets its own
-                revisit session. The mailto is the page's one action; the
-                footer right below carries the EMAIL/LINKEDIN/GITHUB pills. */}
-            <p className={`mt-3 ${PROSE}`}>
-              If your team is trying to make buildings answer harder questions,{' '}
+              That's what's on my mind.{' '}
               <a href="mailto:chidiacemilie@gmail.com" className={RED_LINK}>
-                let's talk
+                What's in yours?
               </a>
-              .
             </p>
           </div>
         </section>

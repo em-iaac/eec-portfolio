@@ -248,7 +248,7 @@ export default function LandingCover() {
 
           {/* TIER 2a — the role adjectives (signed). One line on the name-row
               measure on sm+ (10px keeps all four inside it); wraps calmly on phones. */}
-          <p className="mt-5 font-mono text-[11px] leading-relaxed tracking-[0.08em] text-[light-dark(#565b63,#c7cbd1)] lowercase sm:whitespace-nowrap sm:text-[11px] sm:tracking-[0.02em]">
+          <p className="mt-5 font-mono text-[11px] leading-relaxed tracking-[0.08em] text-[var(--lang-hero-muted)] lowercase sm:whitespace-nowrap sm:text-[11px] sm:tracking-[0.02em]">
             {ADJECTIVES}
           </p>
 
@@ -257,7 +257,7 @@ export default function LandingCover() {
               red pen for interaction only). One line on the 360px measure on sm+;
               wraps calmly on phones. (Caveat sized past the usual margin-note cap
               here is a sanctioned redesign departure from the old rule 8.) */}
-          <p className="mt-3 font-hand text-[21px] leading-tight text-[light-dark(#6d5f46,#d8d2c4)] sm:whitespace-nowrap sm:text-[30.97px]">
+          <p className="mt-3 font-hand text-[21px] leading-tight text-[var(--lang-hand-warm)] sm:whitespace-nowrap sm:text-[30.97px]">
             {VOICE}
           </p>
 

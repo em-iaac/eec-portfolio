@@ -174,7 +174,9 @@ export default function Work() {
           mechanic survives (ink + the verbatim opening + the cross-glow up
           onto the correlated tiles). */}
       {thoughts.length > 0 && (
-        <section id="thoughts" aria-labelledby="thoughts-list-heading" className="pt-4 pb-4">
+        // S5: pt/pb trimmed 4 -> 2 when the thoughts grew to 13 (T-111..113)
+        // so the one-page promise holds at 1280x800 (was 14px over).
+        <section id="thoughts" aria-labelledby="thoughts-list-heading" className="pt-2 pb-2">
           <h2 id="thoughts-list-heading" className={SECTION_LABEL}>
             The Thoughts
           </h2>

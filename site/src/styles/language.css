@@ -38,6 +38,14 @@
   --lang-hairline: light-dark(rgba(22, 24, 29, 0.1), rgba(255, 255, 255, 0.1));
   --lang-interaction: light-dark(#be123c, #ff4d6d);
 
+  /* The landing hero's two special inks, tokenized at the S5 audit
+     (2026-07-18; they lived as raw light-dark() pairs in LandingCover).
+     hero-muted = the adjective line: the light value IS ink-muted, the dark
+     value rides brighter than ink-muted on purpose (the scrim floor).
+     hand-warm = the handwritten voice line's warm ink (Caveat register). */
+  --lang-hero-muted: light-dark(#565b63, #c7cbd1);
+  --lang-hand-warm: light-dark(#6d5f46, #d8d2c4);
+
   /* Glass tiers: raised (cards/panels) + floating (overlays/sheets/menus) */
   --lang-glass-1: light-dark(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.05));
   --lang-glass-1-border: light-dark(rgba(22, 24, 29, 0.1), rgba(255, 255, 255, 0.12));
@@ -380,5 +388,64 @@ li[data-glow] > button {
   }
   .thought-rail li .font-mono {
     font-size: 8px;
+  }
+}
+
+/* ============================================================
+   THE SKETCH DOT (S5, Emilie 2026-07-18): a note's dot blooms a charcoal
+   drawing FLOATING in the margin. No frame, no panel: the blend lifts the
+   charcoal off its scanned paper (multiply on the light ground; inverted +
+   screen on carbon = the chalk version). Same explicit mode blocks as the
+   cursor (§4.6): light-dark() cannot wrap filter/blend values.
+   On wide screens the drawing floats in the right margin beside the prose;
+   under ~1180px it steps into the flow below its line (the margin is gone,
+   never overlap running text). Entrance = a soft settle; PRM = instant.
+   ============================================================ */
+.sketch-fl {
+  position: absolute;
+  left: calc(100% + 28px);
+  z-index: 10;
+  display: block;
+  width: 220px;
+  pointer-events: none;
+  rotate: -2.5deg;
+}
+@media (max-width: 1180px) {
+  .sketch-fl {
+    position: static;
+    display: block;
+    width: 200px;
+    margin: 10px auto 4px;
+    rotate: -2deg;
+  }
+}
+.sketch-img {
+  display: block;
+  width: 100%;
+  mix-blend-mode: multiply;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .sketch-img {
+    filter: invert(1);
+    mix-blend-mode: screen;
+  }
+}
+[data-theme='dark'] .sketch-img {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sketch-fl:not(.sketch-fl-still) {
+    animation: sketch-settle 260ms var(--ease-soft);
+  }
+}
+@keyframes sketch-settle {
+  from {
+    opacity: 0;
+    rotate: -1deg;
+  }
+  to {
+    opacity: 1;
+    rotate: -2.5deg;
   }
 }

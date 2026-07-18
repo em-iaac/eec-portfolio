@@ -3,8 +3,12 @@
 // standard glass chrome (SheetPage pill header + footer), then nothing but
 // type on the page ground: a mono meta line, the lowercase serif italic
 // title (the thinking voice), a 62ch serif column, and a quiet endmatter row.
-// NO panel under the prose (glass is for UI, not for words), NO figures,
-// ever. n.b. hover dots stay under rule 8's five-per-leaf cap. The endmatter
+// NO panel under the prose (glass is for UI, not for words), NO figures in
+// the flow. S5 AMENDMENT (Emilie, 2026-07-18): the SKETCH DOT is the one
+// sanctioned figure mechanism: words-only at rest holds, and a dot may
+// bloom a frameless drawing floating in the margin on interaction
+// (SketchDot.tsx; the charcoal note is its first user). n.b. hover dots
+// stay under rule 8's five-per-leaf cap, sketch dots included. The endmatter
 // carries the two corridors (retargeted at the reindex, 2026-07-16): back to
 // the thoughts LIST in /work's THE THOUGHTS section, and this thought's
 // place in time — the neural world at /thoughts, centred + woken on this
@@ -62,8 +66,9 @@ export default function ThoughtLeaf({
         </h1>
 
         {/* Words only, on the ground. Child selectors keep the note files
-            plain <p> + NB dots. */}
-        <div className="max-w-[62ch] font-serif text-[16.5px] leading-[1.75] text-[var(--lang-ink)] [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
+            plain <p> + NB dots. [&_p]:relative anchors the sketch-dot's
+            floating drawing to the paragraph's margin (S5). */}
+        <div className="max-w-[62ch] font-serif text-[16.5px] leading-[1.75] text-[var(--lang-ink)] [&_p]:relative [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
           {children}
         </div>
 

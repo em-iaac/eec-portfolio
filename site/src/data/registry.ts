@@ -603,6 +603,52 @@ export const ENTRIES: RegistryEntry[] = [
     explore: { label: 'buildings that respond', nodeKind: 'thought', order: 20 },
   },
 
+  // ---- S5 thoughts (2026-07-18, the words session) -----------------------
+  {
+    // THE FIRST THOUGHT, by design: her LAU charcoal year, dated before
+    // every other entry ("this thought is being written supposedly before
+    // every other thought. its the first.", Emilie 2026-07-18). The three
+    // sketches reveal via SketchDot (her mechanism, signed same day).
+    id: 'charcoal',
+    kind: 'thought',
+    date: '2020-06',
+    dateDraft: true, // year hers (2020); the month is a placeholder
+    title: 'connecting the dots',
+    lens: 'explorations',
+    tags: ['play', 'practice'],
+    note: note('charcoal', 'T-111'),
+    // SIGNED by Emilie 2026-07-18 off the live page ("Everything is good").
+    explore: { label: 'connecting the dots', nodeKind: 'thought', order: 31 },
+  },
+  {
+    // Her reading of the team theory project (Aditya Kossambe + Eleni
+    // Maglari, AI in Architecture Theory, IAAC); the note declares itself
+    // a reading, the desire path centered at her direction (2026-07-18).
+    id: 'pelagnou',
+    kind: 'thought',
+    date: '2026-06',
+    title: 'pelagñou',
+    lens: 'computation',
+    tags: ['ai', 'research', 'future'],
+    note: note('pelagnou', 'T-112'),
+    // SIGNED by Emilie 2026-07-18 off the live page ("Everything is good").
+    explore: { label: 'pelagñou', nodeKind: 'thought', order: 32 },
+  },
+  {
+    // Her named thought ("how do we explain complex, sometimes boring
+    // technical subjects in a fun and captivating way, because it matters"),
+    // parked at S4, written S5. SIGNED by Emilie 2026-07-18 ("i like the
+    // explaining things. for now.").
+    id: 'explain',
+    kind: 'thought',
+    date: '2026-07',
+    title: 'explaining things',
+    lens: 'practice',
+    tags: ['play', 'education', 'ai'],
+    note: note('explain', 'T-113'),
+    explore: { label: 'explaining things', nodeKind: 'thought', order: 33 },
+  },
+
   // ---- Milestones (where Em shows up on the record; dates from cv.ts) ----
   {
     id: 'xrlab-start',
@@ -895,4 +941,10 @@ export const CORRELATIONS: readonly Correlation[] = [
   ['heritage', 'homage', 2], // the thesis IS the heritage question, asked first
   ['solvers', 'playscape', 2], // Kangaroo pressure + net goals, solver play
   ['solvers', 'chair-sim', 2], // the same solver curiosity, aimed at a body
+  // S5 appends (2026-07-18, Emilie confirmed the set at the batch gate):
+  ['charcoal', 'drawiface', 2], // the drawing lesson grew into drawing-as-interface
+  ['charcoal', 'solvers', 1], // the pull: tension drawn, then simulated
+  ['genai', 'pelagnou', 1], // the AI thinking, read through theory
+  ['podcast', 'explain', 2], // explaining on air = the thought lived first
+  ['legoarch', 'explain', 1], // the film that made the pipeline captivating
 ]

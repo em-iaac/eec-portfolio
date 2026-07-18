@@ -131,7 +131,10 @@ export default function ThoughtIndexRows({
 
   if (skin === 'print')
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '8mm' }}>
+      // S5: 2 -> 3 columns when the thoughts grew 10 -> 13; at two columns
+      // the extra rows overflowed the index page's A4 box by 26px (the
+      // build's overflow probe caught it and refused the PDF).
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', columnGap: '6mm' }}>
         {thoughts.map((t) => (
           <div key={t.id} className="pr-row">
             <span className="pr-mark pr-mark--thought" />
@@ -146,9 +149,12 @@ export default function ThoughtIndexRows({
       </div>
     )
 
+  // S5 (2026-07-18): xl went 3 -> 4 columns when the thoughts grew 10 -> 13
+  // (T-111..T-113); at three columns the extra row broke /work's one-page
+  // promise by 11px at 1280x800. Four columns holds 13 in the same height.
   const cols =
     variant === 'wide'
-      ? 'thought-rail grid-cols-1 gap-x-10 sm:grid-cols-2 xl:grid-cols-3'
+      ? 'thought-rail grid-cols-1 gap-x-10 sm:grid-cols-2 xl:grid-cols-4'
       : 'grid-cols-1 gap-x-10 sm:grid-cols-2'
   return (
     <ol role="list" className={`mt-3 grid list-none p-0 ${cols}`}>
