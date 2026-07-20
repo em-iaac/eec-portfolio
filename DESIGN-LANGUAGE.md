@@ -202,6 +202,81 @@ re-skinned to this language in its own focused session (see §9).
 >     (the handwritten voice line). No raw hex in components; the lens-pen
 >     definitions in `ui/Pill.tsx` remain their canonical source.
 >
+> **AMENDMENTS (Emilie, 2026-07-19/20, THE DESIGN AUDIT + REDESIGN; every
+> ruling decided over live builds on her screen, three review rounds; the
+> audit board + fork picks recorded in chat):**
+>
+> 14. **The sign lines RETIRED (supersedes amendment 9).** The room-sign
+>     kicker tier (`WORK · THE PROOF`, `CV · THE RECORD`, `ABOUT · THE
+>     PERSON`, `THOUGHTS · ONE WORLD…`, `404 · NOT A PAGE`) is gone
+>     sitewide: the nav says where you are, the title says it once, a third
+>     repetition is scaffolding. The pillar's amendment-12 exception is now
+>     the rule. ONE survivor: the 404 keeps a bare mono `404` because the
+>     status number is real information its voiced h1 lacks.
+> 15. **THE FROZEN FRAME (SheetPage rebuilt).** Every interior page is
+>     exactly one viewport tall: a frozen HEADER LINE, a middle CONTENT band
+>     that scrolls on an INVISIBLE wheel when it overflows (`.no-scrollbar`)
+>     and centres when it fits, and a frozen FOOTER LINE. The header and
+>     footer never move, on any page, at any scroll. Pages opt out of the
+>     footer where it would repeat their content (/cv, /about); the world
+>     (/thoughts) insets its canvas between the two lines (`.nw-stage`
+>     top/bottom insets; its fade scrims retired, nothing hides under
+>     chrome).
+> 16. **ONE PILL, ANCHORED LEFT + TOOLS ON THE HEADER LINE (supersedes
+>     amendments 3's centering and 10.7's headerBar; the bar and every
+>     variant retired).** The nav pill is pixel-identical on every page
+>     (mark · four doors · divider · ModeToggle), anchored LEFT so it never
+>     jumps between rooms. A page's own tools ride the SAME header line to
+>     the right, bare on the ground, never inside the pill and never a
+>     second bar: /work = lens filters + the book chip (the ✦ RECOGNITION
+>     legend retired, self-explanatory); /cv = reach-me links + the CV
+>     chip; a thought leaf = its meta + its three controls. Below lg, /work
+>     falls back to its stacked tools; pages whose tools must survive
+>     mobile keep them on the line.
+> 17. **THE MAGNIFIER (the site's pointer ceremony on controls).** The
+>     "you are here" cue is a LIQUID-GLASS LENS (`.nav-lens`): it rests on
+>     the current door, SLIDES to whatever the pointer or keyboard focus is
+>     over (the home mark included) gently magnifying it, then returns.
+>     Clicking rides the universal crossfade. The mechanism is reusable
+>     (`ui/LensGroup.tsx` + `.lens-pop`): one lens grammar now also rides
+>     the footer contact row, the About link cluster (it slides across
+>     rows), and the landing's door row. It does NOT ride selection
+>     controls (the /work filters keep solid-ink = selected; the thought
+>     controls keep their icon+colour) so "pointing" and "selected" never
+>     blur. Reduced motion: instant placement, no slide, no magnify; the
+>     bold ink label always carries the state without motion.
+> 18. **The FOOTER = a frozen wide pill.** Near-full-width with a breath of
+>     margin, the same stadium as the header pill (never edge-to-edge
+>     full-bleed), one height everywhere it appears: name lockup + role
+>     left, the contact pills right (with the lens). /cv and /about drop it
+>     (their contact lives elsewhere); the world's footer line carries its
+>     legend + drag hint instead of the lockup.
+> 19. **ONE DOWNLOAD AFFORDANCE (`ui/DownloadChip.tsx`).** Every download
+>     sitewide is the same chip: hairline pill + tray-arrow icon, mono
+>     label, ink at rest, interaction hue on hover/focus, 44px floor. The
+>     red-underline book link and the bordered CV button both retired into
+>     it.
+> 20. **THE CV = the landscape record (screen only; the PDF unchanged).**
+>     /cv is full-width, THREE columns, no scrolling system: Education +
+>     Certificates | Experience | Awards + Skills. Section titles carry an
+>     icon + an accessible accent colour each (mode-aware light-dark pairs,
+>     all AA on both grounds; red stays interaction-only). Name + locked
+>     role line lead the content; the reach-me links + DownloadChip ride
+>     the header line; the FOCUS phrase left the screen (it survives in the
+>     ATS PDF, which stays the plain portrait single column). No footer.
+> 21. **ABOUT = the landscape contact split.** One centred sheet, split:
+>     LEFT the person (cube + "Say hi" + the short script), a hairline
+>     divider, RIGHT the contact (the signed callback + ALL the links:
+>     three socials + both DownloadChips, under one lens). No footer. The
+>     script from her 2026-07-19 brief ships draftCopy until signed.
+> 22. **THE THOUGHT LEAF inside the frame.** The header line carries the
+>     thought's meta (kind · date · lens · number) AND its three controls,
+>     each an icon + its own AA accent: ALL THOUGHTS (list glyph, indigo),
+>     IN TIME (clock, amber), NEXT (arrow, teal). The pillar door retired
+>     from the leaf. Only the title (morph name intact) and the words live
+>     in the content band. The world's own canvas carries NO words at all
+>     ("points in time" + the meta line retired; the h1 is sr-only for
+>     readers + SEO).
 
 ---
 

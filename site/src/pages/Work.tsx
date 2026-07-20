@@ -24,7 +24,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import ThoughtIndexRows from '../components/ThoughtIndexRows'
 import WorkCard from '../components/work/WorkCard'
-import WorkHeaderBar, { BookDownloadLink, WorkFilterRow } from '../components/work/WorkHeaderBar'
+import WorkGroundTools, { BookDownloadLink, WorkFilterRow } from '../components/work/WorkPillTools'
 import WorkOverlay from '../components/work/WorkOverlay'
 import { LENSES, type Lens } from '../components/Lens'
 import { CORRELATIONS, thoughtIndexEntries } from '../data/registry'
@@ -44,9 +44,9 @@ const GLOW_MAP: Record<string, readonly string[]> = (() => {
   return m
 })()
 
-// (The lens filter row + book link moved into components/work/WorkHeaderBar
-// at the round-4 bar gate: one filter, rendered by the lg+ bar AND the
-// mobile stacked header below.)
+// (The lens filter row + book link live in components/work/WorkToolbar:
+// one filter, rendered by the lg+ docked row AND the mobile stacked header
+// below. The round-4 full-width bar retired at the audit gate, 2026-07-19.)
 
 export default function Work() {
   const { id } = useParams()
@@ -128,25 +128,26 @@ export default function Work() {
     'font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase'
 
   return (
-    // OPTION B + THE BAR (LOOK & ORDER round 4, Emilie's picks 2026-07-18):
-    // on lg+ the whole header stack lives in the full-width WorkHeaderBar
-    // (SheetPage's headerBar slot) and the grid takes the full width, with
-    // THE THOUGHTS closing the page below it, the book's reading order.
-    // Below lg nothing changed: the centered pill + the stacked header.
-    <SheetPage wide footerCompact headerBar={<WorkHeaderBar active={activeLens} />}>
-      {/* The stacked header, MOBILE ONLY now (the bar carries it on lg+). */}
-      <section className="pt-8 pb-4 lg:hidden" aria-labelledby="work-heading">
-        {/* The kicker, SIGNED (G4, 2026-07-12: one room-sign grammar
-            sitewide, Emilie's ruling). */}
-        <p className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
-          WORK · THE PROOF
-        </p>
-        <h1
-          id="work-heading"
-          className="mt-2 mb-3 text-3xl font-semibold tracking-[-0.01em] text-[var(--lang-ink)]"
-        >
-          Work
-        </h1>
+    // TOOLS ON THE GROUND, ON THE SIDE (the design audit, Emilie's ruling
+    // round 3, 2026-07-19): the nav pill is identical to every room's;
+    // /work's tools ride the ground at the pill's line (pillTools ->
+    // TitleBlock's slot; placement in .pill-tools, language.css). The grid
+    // takes the full width, THE THOUGHTS close the page, and below lg the
+    // stacked header returns (minus the retired kicker tier).
+    <SheetPage wide pillTools={<WorkGroundTools active={activeLens} />}>
+      {/* ONE h1 for every size: visible under the pill on small screens,
+          sr-only on lg+ (the lit WORK door on the header line names the room;
+          repeating it next to itself is the redundancy this audit retired). */}
+      <h1
+        id="work-heading"
+        className="pt-4 text-3xl font-semibold tracking-[-0.01em] text-[var(--lang-ink)] lg:sr-only lg:pt-0"
+      >
+        Work
+      </h1>
+      {/* The stacked tools, MOBILE ONLY (the header line carries them on lg+).
+          The room-sign kicker retired at the audit gate (2026-07-19): the
+          nav says where you are, the title says it once. */}
+      <section className="pt-3 pb-4 lg:hidden" aria-label="Work filters">
         {/* The intro line retired at G2; the count line retired at G-FLUFF. */}
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
           <WorkFilterRow active={activeLens} />
@@ -163,7 +164,7 @@ export default function Work() {
       {/* ONE uniform grid, filtered or not (the book index's manner): two
           per row on phones, the printed index's 7-across on xl (21 tiles =
           exactly 3 rows at 186px, the one-page fit with the bar above). */}
-      <ul className="grid list-none grid-cols-2 gap-3 p-0 pb-2 sm:grid-cols-3 lg:grid-cols-6 lg:pt-3 xl:grid-cols-7">
+      <ul className="grid list-none grid-cols-2 gap-3 p-0 pb-2 sm:grid-cols-3 lg:grid-cols-6 xl:grid-cols-7">
         {cards(entries, 7)}
       </ul>
 
@@ -176,7 +177,7 @@ export default function Work() {
       {thoughts.length > 0 && (
         // S5: pt/pb trimmed 4 -> 2 when the thoughts grew to 13 (T-111..113)
         // so the one-page promise holds at 1280x800 (was 14px over).
-        <section id="thoughts" aria-labelledby="thoughts-list-heading" className="pt-2 pb-2">
+        <section id="thoughts" aria-labelledby="thoughts-list-heading" className="pt-1 pb-0">
           <h2 id="thoughts-list-heading" className={SECTION_LABEL}>
             The Thoughts
           </h2>

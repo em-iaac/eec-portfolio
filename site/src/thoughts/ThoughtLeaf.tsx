@@ -1,65 +1,94 @@
-// THOUGHT LEAF (Session 11; re-skinned G2, 2026-07-10, Emilie's ruling:
-// "words on the ground"). The reading page for one written thought: the
-// standard glass chrome (SheetPage pill header + footer), then nothing but
-// type on the page ground: a mono meta line, the lowercase serif italic
-// title (the thinking voice), a 62ch serif column, and a quiet endmatter row.
-// NO panel under the prose (glass is for UI, not for words), NO figures in
-// the flow. S5 AMENDMENT (Emilie, 2026-07-18): the SKETCH DOT is the one
-// sanctioned figure mechanism: words-only at rest holds, and a dot may
-// bloom a frameless drawing floating in the margin on interaction
-// (SketchDot.tsx; the charcoal note is its first user). n.b. hover dots
-// stay under rule 8's five-per-leaf cap, sketch dots included. The endmatter
-// carries the two corridors (retargeted at the reindex, 2026-07-16): back to
-// the thoughts LIST in /work's THE THOUGHTS section, and this thought's
-// place in time — the neural world at /thoughts, centred + woken on this
-// very neuron via the #id hash.
+// THOUGHT LEAF (Session 11; re-skinned G2 "words on the ground"; rebuilt at
+// the design audit round 2, 2026-07-19). The reading page for one written
+// thought inside the frozen frame (SheetPage): the HEADER LINE carries all
+// the thought's info (its meta: kind, date, lens, number) AND the nav
+// controls (All Thoughts, In Time, Next, each an icon + its own colour); the
+// CONTENT is just the title + the words, scrolling on an invisible wheel
+// between the frozen header and footer. The pillar door retired from the
+// leaf (Emilie 2026-07-19: "only all thoughts, next and in time"); the
+// pillar still links out to its cluster. No panel under the prose (glass is
+// for UI, not words); the SKETCH DOT is the one sanctioned figure (S5).
 import { type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import { LensPill } from '../components/ui/Pill'
 import { type Lens } from '../components/Lens'
 import { vtName } from '../lib/viewTransition'
-import { PILLAR_PATH } from '../lib/pillar'
 
-const RED_LINK =
-  '-m-2 p-2 text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
+// Each control: an icon + label in its own accessible accent (mode-aware
+// light-dark pairs, all clear AA on both grounds). Colour + icon aid the
+// scan; the label carries the meaning.
+function CtrlIcon({ name }: { name: 'list' | 'clock' | 'arrow' }) {
+  const p = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.4, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" className="shrink-0">
+      {name === 'list' && <path {...p} d="M11 3.5L7 8l4 4.5M3 4h4M3 8h4M3 12h3" />}
+      {name === 'clock' && (
+        <>
+          <circle {...p} cx="8" cy="8" r="5.5" />
+          <path {...p} d="M8 5v3l2 1.4" />
+        </>
+      )}
+      {name === 'arrow' && <path {...p} d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" />}
+    </svg>
+  )
+}
 
-export default function ThoughtLeaf({
-  number,
-  title,
-  date,
-  lens,
-  next,
-  pillarDoor = false,
-  children,
-}: {
+const CTRL =
+  '-m-1 inline-flex min-h-9 items-center gap-1.5 p-1 font-mono text-[10px] tracking-[0.08em] no-underline hover:underline hover:decoration-2 hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
+
+export default function ThoughtLeaf(props: {
   number?: string
   title: string
   date: string
   lens: Lens
   next?: { title: string; route: string }
-  /** S3 (D6 topical authority): a neuro-tagged note carries a door to the
-   *  Behavior Information Modeling pillar; the pillar links back. */
+  /** Accepted for call-site compatibility; the pillar door retired from the
+   *  leaf at the audit (Emilie 2026-07-19). */
   pillarDoor?: boolean
   children: ReactNode
 }) {
+  const { number, title, date, lens, next, children } = props
   // The morph target: /thoughts/:id names its title so the index row (or the
   // mind-graph node) that opened it travels into it (src/lib/viewTransition.ts).
   const { id } = useParams()
 
-  return (
-    <SheetPage>
-      <article className="mx-auto w-full max-w-[680px] pt-10 pb-16">
-        {/* The note knows its place in the record: kind + date, the lens
-            (shape + label, never colour alone), the quiet T-number. */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
-          <span>~ THOUGHT · {date}</span>
-          <LensPill lens={lens} />
-          {number && <span className="ml-auto">{number}</span>}
-        </div>
+  // THE HEADER INFO + CONTROLS (Emilie's ruling round 2): the thought's meta
+  // and the way to leaf through the record both ride the header line.
+  const headerInfo = (
+    <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1">
+      <div className="flex flex-wrap items-center gap-x-3 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
+        <span>~ THOUGHT · {date}</span>
+        <LensPill lens={lens} />
+        {number && <span>{number}</span>}
+      </div>
+      <span aria-hidden="true" className="h-4 w-px bg-[var(--lang-hairline)]" />
+      <nav aria-label="Thought navigation" className="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <Link to="/work#thoughts" viewTransition className={CTRL} style={{ color: 'light-dark(#4338ca, #a5b4fc)' }}>
+          <CtrlIcon name="list" />
+          ALL THOUGHTS
+        </Link>
+        <Link to={`/thoughts#${id ?? ''}`} className={CTRL} style={{ color: 'light-dark(#a16207, #fbbf24)' }}>
+          <CtrlIcon name="clock" />
+          IN TIME
+        </Link>
+        {next && (
+          <Link to={next.route} viewTransition className={CTRL} style={{ color: 'light-dark(#0f766e, #5eead4)' }}>
+            <CtrlIcon name="arrow" />
+            NEXT
+          </Link>
+        )}
+      </nav>
+    </div>
+  )
 
+  return (
+    <SheetPage center={false} pillTools={headerInfo}>
+      <article className="mx-auto w-full max-w-[680px] pt-8 pb-12">
+        {/* Only the title in the content now (Emilie's ruling round 2): the
+            meta moved to the header line. */}
         <h1
-          className="mt-4 mb-6 max-w-[22ch] font-serif text-[27px] leading-[1.22] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
+          className="mb-6 max-w-[22ch] font-serif text-[27px] leading-[1.22] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
           style={{ viewTransitionName: id ? vtName(`/thoughts/${id}`) : undefined }}
         >
           {title}
@@ -70,28 +99,6 @@ export default function ThoughtLeaf({
             floating drawing to the paragraph's margin (S5). */}
         <div className="max-w-[62ch] font-serif text-[16.5px] leading-[1.75] text-[var(--lang-ink)] [&_p]:relative [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
           {children}
-        </div>
-
-        <div className="mt-9 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-t-[0.5px] border-[var(--lang-hairline)] pt-3.5 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
-          {/* The list moved to /work at the reindex (2026-07-16): #thoughts
-              is the THE THOUGHTS section anchor, not a lens facet. */}
-          <Link to="/work#thoughts" viewTransition className={RED_LINK}>
-            ‹ ALL THOUGHTS
-          </Link>
-          <Link to={`/thoughts#${id ?? ''}`} className={RED_LINK}>
-            SEE THIS THOUGHT IN TIME ›
-          </Link>
-          {pillarDoor && (
-            <Link to={PILLAR_PATH} viewTransition className={RED_LINK}>
-              BEHAVIOR INFORMATION MODELING ›
-            </Link>
-          )}
-          {next && (
-            <Link to={next.route} viewTransition className={RED_LINK}>
-              NEXT THOUGHT ›
-            </Link>
-          )}
-          <span className="ml-auto">{number ? `${number} · NOTE` : 'NOTE'}</span>
         </div>
       </article>
     </SheetPage>

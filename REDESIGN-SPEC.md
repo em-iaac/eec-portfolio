@@ -985,6 +985,45 @@ The plates/artifacts, the full-width one-page grid, and the `headerBar` slot are
 DESIGN-LANGUAGE patterns (a DL entry is owed when DL is next touched). NEXT: S5 = the
 words + a page-by-page design-system polish (Emilie's ask).
 
+**THE DESIGN AUDIT + REDESIGN (2026-07-19/20; the fresh-lens session after S5;
+every ruling decided over live builds in three review rounds; DL amendments
+14-22 are the design of record for all of it).** The whole top-of-page and
+page-frame system rebuilt to Emilie's rulings:
+- **THE FROZEN FRAME.** Every page = frozen header line · content scrolling
+  invisibly between · frozen footer line. §7's "one chrome grammar" reads
+  through DL 15/16 now: the pill is identical and LEFT-ANCHORED everywhere,
+  page tools ride the header line's right on the ground; the WorkHeaderBar,
+  the headerBar slot, and the room-sign kickers (G4's grammar) all RETIRED
+  (the 404 keeps a bare `404`). Iteration trail, for the record: two-pill
+  stack -> one wide pill -> side-by-side -> tools-on-the-ground was walked
+  LIVE with her; "one identical pill + ground tools" is the survivor.
+- **THE MAGNIFIER.** The active-door cue is a liquid-glass lens that slides
+  under pointer/focus and gently magnifies (she loves it); reusable
+  (`LensGroup`) and extended by her pick to the footer contact row, the
+  About cluster and the landing doors. Never on selection controls.
+- **THE CV (supersedes §9's screen face; the ATS PDF + §9's data discipline
+  unchanged).** Landscape, full-width, three columns (Education +
+  Certificates | Experience | Awards + Skills), icon + AA-accent section
+  titles, no footer, identity in content, links + DownloadChip on the header
+  line, FOCUS phrase off the screen (PDF keeps it). Jemma title corrected to
+  Architectural Designer (the S2 ruling, now in cv.ts -> all three
+  renditions).
+- **ABOUT.** The landscape contact split (person | line | links, all links
+  mid-page under one lens); footer dropped; NEW script drafted from her
+  brief, `draftCopy` until signed.
+- **THE WORLD.** Canvas words retired (sr-only h1), the stage inset between
+  the lines, the fade scrims retired; WATCH IT GROW on the header line, the
+  legend + drag hint on the footer line. THE THOUGHT LEAF: meta + coloured
+  icon controls (ALL THOUGHTS/IN TIME/NEXT; pillar door retired) on the
+  header line, title + words in the band.
+- **ONE DOWNLOAD CHIP** sitewide (`DownloadChip`); the ✦ RECOGNITION legend
+  retired on /work.
+Build green end-to-end at close (43 tests, 40 routes, 35 OG, both PDFs, the
+overflow probe + ATS assertions). Deferred to a next session: the audit
+board's performance pass (animated-webp re-encode + hover warm-up + landing
+idle), the world's resting label collisions, the under-the-hood token/dedup
+sweep, and her sign-offs on the About script + the batch itself.
+
 ---
 
 ## 14 · Still needs Emilie's sign-off

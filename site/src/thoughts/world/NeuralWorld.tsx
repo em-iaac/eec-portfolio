@@ -361,111 +361,99 @@ export default function NeuralWorld() {
     open(n)
   }
 
-  const pieces = WORLD.nodes.length
   const sk = WORLD.skeleton
 
   return (
-    <div className="text-[var(--lang-ink)]">
+    // The same frame shell as SheetPage (flex min-h-dvh flex-col) so the
+    // sticky header pill sits at the identical position as every other page
+    // (the audit fixed the world's pill reading "slightly up", 2026-07-19).
+    <div className="flex min-h-dvh flex-col text-[var(--lang-ink)]">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-redline focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-mylar"
       >
         Skip to content
       </a>
-      <TitleBlock />
+      {/* THE HEADER LINE (the design audit, Emilie 2026-07-19: header + footer
+          lines identical everywhere, the canvas clean of chrome): the pill
+          left, WATCH IT GROW on the header line right, exactly like every
+          other page's tools. */}
+      <TitleBlock
+        tools={
+          !prm ? (
+            <button
+              type="button"
+              onClick={engine.replay}
+              className="inline-flex min-h-8 items-center rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3 font-mono text-[10px] tracking-[0.1em] text-[var(--lang-ink)] hover:border-[var(--lang-interaction)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+            >
+              ⟳ WATCH IT GROW
+            </button>
+          ) : undefined
+        }
+      />
       <main id="main" tabIndex={-1} className="outline-none">
-        {/* the page chrome FIRST in the DOM (identity before the 40 canvas
-            stops); everything is position:fixed, so the paint is identical */}
-        {/* max-width leaves room for the WATCH IT GROW button on its right;
-            kicker in ink-muted (red = liveness/interaction only, DL am.7) */}
-        <header className="pointer-events-none fixed top-20 left-6 z-[3] max-w-[min(460px,calc(100vw-190px))] sm:left-9">
-          <p className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)]">
-            THOUGHTS · ONE WORLD · EVERYTHING, IN TIME
-          </p>
-          <h1 className="mt-2 font-serif text-[clamp(22px,2.6vw,30px)] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]">
-            points in time
-          </h1>
-          <p className="mt-2 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]">
-            {pieces} PIECES · 2021 › <span className="text-[var(--lang-interaction)]">NOW</span> · PROJECTS +
-            THOUGHTS + MILESTONES + AWARDS · EVERY PIECE OPENS
-          </p>
-          {/* The graph<->words switch RETIRED at the reindex (2026-07-16,
-              Emilie's IA gate): the thoughts LIST lives on /work now (THE
-              THOUGHTS section); this room is the world only. */}
-        </header>
+        {/* THE CLEAR CANVAS (the design audit round 2, Emilie 2026-07-19:
+            "remove 'points in time' and the other words from the content
+            area; keep the header area clear, no overlap with a node"). The
+            title + meta left the canvas entirely; the nav's THOUGHTS door
+            names the room, and the h1 survives for screen readers + SEO
+            (headData still needs it). The stage itself is inset between the
+            header and footer lines (.nw-stage, index.css), so no node ever
+            runs under the chrome; the old fade scrims retired (round 3). */}
+        <h1 className="sr-only">The mind in time: every project, thought, milestone and award since 2021</h1>
 
-        {!prm && (
-          <button
-            type="button"
-            onClick={engine.replay}
-            className="lang-glass-2 fixed top-20 right-6 z-[3] min-h-11 rounded-[var(--r-pill)] px-4 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)] sm:right-9"
-          >
-            ⟳ WATCH IT GROW
-          </button>
-        )}
-
-        {/* legend (bottom left) + hint / corridor (bottom right). The legend
-            stays on phones too (the kind key must not vanish, gate-2 look);
-            its max-width keeps it wrapping clear of the corridor block. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed bottom-5 left-6 z-[3] flex max-w-[52vw] flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-[8px] tracking-[0.08em] text-[var(--lang-ink-muted)] sm:left-9 sm:gap-x-4 sm:gap-y-2 sm:text-[9px] sm:tracking-[0.1em]"
-        >
-          <span className="inline-flex items-center gap-1.5">
-            <svg width="16" height="16" viewBox="0 0 16 16" className="overflow-visible">
-              <circle cx="8" cy="8" r="6" fill="var(--lang-ink)" />
-              <circle cx="8" cy="8" r="2.4" fill={LENS_COLOR.computation} />
-            </svg>
-            PROJECT
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <svg width="14" height="14" viewBox="0 0 14 14" className="overflow-visible">
-              <circle cx="7" cy="7" r="4.6" fill="none" stroke="var(--lang-ink)" strokeWidth="1.6" />
-            </svg>
-            THOUGHT
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <svg width="14" height="14" viewBox="0 0 14 14" className="overflow-visible">
-              <path d={starPath(7, 7, 5.5)} fill="var(--lang-ink)" />
-            </svg>
-            AWARD
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <svg width="12" height="12" viewBox="0 0 12 12" className="overflow-visible">
-              <circle cx="6" cy="6" r="2.4" fill="var(--lang-ink-muted)" />
-            </svg>
-            MILESTONE · ON THE CAREER LINE
-          </span>
-          <span className="text-[var(--lang-interaction)]">ONE RED TIP = LIVE</span>
+        {/* THE FOOTER LINE (Emilie's pick 2026-07-19: the world's key lives on
+            a footer line, no name/contact footer on this immersive page):
+            the legend (left) + the drag hint (right), one glass line at the
+            footer's height + insets so it reads the same as every page.
+            pointer-events-none so a drag still passes through to the stage. */}
+        <div className="pointer-events-none fixed inset-x-0 bottom-2 z-[3] px-5 sm:px-8">
+          <div className="lang-glass-1 mx-auto flex max-w-[1856px] flex-wrap items-center justify-between gap-x-6 gap-y-1 rounded-[var(--r-card)] px-5 py-2.5 sm:px-7">
+            <div
+              aria-hidden="true"
+              className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[8px] tracking-[0.08em] text-[var(--lang-ink-muted)] sm:gap-x-4 sm:text-[9px] sm:tracking-[0.1em]"
+            >
+              <span className="inline-flex items-center gap-1.5">
+                <svg width="16" height="16" viewBox="0 0 16 16" className="overflow-visible">
+                  <circle cx="8" cy="8" r="6" fill="var(--lang-ink)" />
+                  <circle cx="8" cy="8" r="2.4" fill={LENS_COLOR.computation} />
+                </svg>
+                PROJECT
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <svg width="14" height="14" viewBox="0 0 14 14" className="overflow-visible">
+                  <circle cx="7" cy="7" r="4.6" fill="none" stroke="var(--lang-ink)" strokeWidth="1.6" />
+                </svg>
+                THOUGHT
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <svg width="14" height="14" viewBox="0 0 14 14" className="overflow-visible">
+                  <path d={starPath(7, 7, 5.5)} fill="var(--lang-ink)" />
+                </svg>
+                AWARD
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <svg width="12" height="12" viewBox="0 0 12 12" className="overflow-visible">
+                  <circle cx="6" cy="6" r="2.4" fill="var(--lang-ink-muted)" />
+                </svg>
+                MILESTONE
+              </span>
+              <span className="text-[var(--lang-interaction)]">ONE RED TIP = LIVE</span>
+            </div>
+            <p
+              aria-hidden="true"
+              className="font-mono text-[9px] tracking-[0.12em] text-[var(--lang-ink-muted)]"
+            >
+              <b className="font-normal text-[var(--lang-ink)]">DRAG</b> TO EXPLORE ·{' '}
+              <b className="font-normal text-[var(--lang-ink)]">IT WAKES WHERE YOU LOOK</b>
+            </p>
+          </div>
         </div>
 
-        {/* The words are now reached by the switch up by the title (S4a); this
-            corner keeps only the drag hint. */}
-        <div className="pointer-events-none fixed right-6 bottom-5 z-[3] max-w-[44vw] text-right font-mono text-[9px] tracking-[0.12em] text-[var(--lang-ink-muted)] sm:right-9">
-          {/* emphasis in ink, not red: red = liveness/interaction only */}
-          <p aria-hidden="true">
-            <b className="font-normal text-[var(--lang-ink)]">DRAG</b> TO EXPLORE ·{' '}
-            <b className="font-normal text-[var(--lang-ink)]">IT WAKES WHERE YOU LOOK</b>
-          </p>
-        </div>
-
-        {/* legibility scrims over the stage's top + bottom edges */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed top-0 right-0 left-0 z-[2] h-[150px]"
-          style={{
-            background:
-              'linear-gradient(to bottom, color-mix(in srgb, var(--lang-ground) 92%, transparent), transparent)',
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed right-0 bottom-0 left-0 z-[2] h-[90px]"
-          style={{
-            background:
-              'linear-gradient(to top, color-mix(in srgb, var(--lang-ground) 88%, transparent), transparent)',
-          }}
-        />
+        {/* The legibility scrims RETIRED (round 3, Emilie 2026-07-19: the
+            fade made top thoughts unreadable). The stage is inset between
+            the header and footer lines now (.nw-stage, index.css), so no
+            node ever runs under the chrome and nothing needs fading. */}
 
         {/* the stage: full-bleed, drag/wheel/keyboard panning */}
         <section

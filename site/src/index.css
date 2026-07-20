@@ -378,7 +378,15 @@ section[id] {
    ============================================================ */
 .nw-stage {
   position: fixed;
-  inset: 0;
+  /* Inset to sit BETWEEN the frozen header line and the footer line (the
+     design audit round 2, Emilie 2026-07-19: "no fade into the header;
+     shrink the mind graph slightly so everything is readable in the content
+     area"). The world fits into this band, so no node ever hides under the
+     chrome and the readability scrims retired. */
+  top: 66px;
+  bottom: 52px;
+  left: 0;
+  right: 0;
   overflow-x: auto;
   overflow-y: auto;
   scrollbar-width: none;

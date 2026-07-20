@@ -168,6 +168,135 @@ textarea,
   }
 }
 
+/* THE CV COLUMNS (the design audit round 2, Emilie's ruling 2026-07-19:
+   THREE columns, no scrolling system). Education + Certificates | Experience
+   | Awards + Skills. Three wider columns let the whole record sit on one
+   screen without any per-column wheel. Steps 1 -> 2 -> 3 with width (plain
+   media queries: Tailwind min-[...] variants do not generate here). */
+.cv-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 2.5rem;
+}
+@media (min-width: 700px) {
+  .cv-cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 1024px) {
+  .cv-cols {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+/* Hide the scroll wheel everywhere the frame's middle band scrolls (Emilie:
+   "the scrolling control should be invisible"); the region stays scrollable
+   and keyboard-reachable. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* THE MAGNIFIER LENS (Emilie's ruling round 2, 2026-07-19: the active-door
+   cue is a liquid-glass lens that slides to the hovered door and magnifies
+   its label, resting on the current room). TitleBlock measures the door
+   rects and positions .nav-lens; the transition IS the slide. Reduced
+   motion: no slide, no magnify (the bold active label carries "you are
+   here"). The pill morph between pages retired with this: the pill is now
+   identical on every page (tools ride the ground), so nothing to morph. */
+.nav-lens {
+  top: 50%;
+  height: 30px;
+  transform: translateY(-50%);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--lang-ink) 9%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--lang-ink) 14%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
+}
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .nav-lens {
+    background: color-mix(in srgb, var(--lang-ink) 5%, transparent);
+    backdrop-filter: blur(3px) brightness(1.06) saturate(1.08);
+    -webkit-backdrop-filter: blur(3px) brightness(1.06) saturate(1.08);
+  }
+}
+.nav-label {
+  display: inline-block;
+  border-radius: var(--r-pill);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nav-lens {
+    transition:
+      left 300ms var(--ease-soft),
+      width 300ms var(--ease-soft);
+  }
+  .nav-label {
+    transition:
+      transform 220ms var(--ease-soft),
+      color 200ms var(--ease-soft);
+  }
+  .nav-label[data-mag] {
+    transform: scale(1.09);
+  }
+}
+
+/* THE LENS GROUP (round 3, Emilie 2026-07-19: the magnifier spread to the
+   footer contact row, the About link cluster and the landing doors). The
+   same glass as .nav-lens, but with no resting position: it appears under
+   the hovered/focused control and fades on leave. The group's pressable
+   children ride above the lens (z-index), and the hovered one gently
+   magnifies. Reduced motion: instant placement, no slide, no magnify. */
+.lens-pop {
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--lang-ink) 9%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--lang-ink) 14%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
+  z-index: 0;
+}
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .lens-pop {
+    background: color-mix(in srgb, var(--lang-ink) 5%, transparent);
+    backdrop-filter: blur(3px) brightness(1.06) saturate(1.08);
+    -webkit-backdrop-filter: blur(3px) brightness(1.06) saturate(1.08);
+  }
+}
+.lens-group :is(a, button) {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lens-pop {
+    transition:
+      left 250ms var(--ease-soft),
+      top 250ms var(--ease-soft),
+      width 250ms var(--ease-soft),
+      height 250ms var(--ease-soft);
+  }
+  .lens-group :is(a, button) {
+    transition: transform 220ms var(--ease-soft);
+  }
+  .lens-group :is(a, button)[data-mag] {
+    transform: scale(1.07);
+  }
+}
+/* ONE CONTROL LINE (Emilie's ruling, round 4, 2026-07-19): the pill sits
+   LEFT, a page's tools flow RIGHT of it on the same header line, bare on the
+   ground (no glass of their own), wrapping right-aligned only when the line
+   runs out. The slot is ALWAYS present (a page whose tools must survive
+   mobile, like the CV's links + download, keeps them here); only /work hides
+   its own tools below lg, where its stacked header repeats them. */
+.pill-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  row-gap: 2px;
+  margin-left: auto;
+  min-width: 0;
+}
+
 /* Card hover lift: small, springy, PRM-gated (under reduced motion the card
    simply brightens its border, which transitions as a colour, not a motion). */
 @media (prefers-reduced-motion: no-preference) {

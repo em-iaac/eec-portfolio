@@ -19,6 +19,7 @@ import ModeToggle from '../components/ui/ModeToggle'
 import MindGraphSrNav from './MindGraphSrNav'
 import { MIND, nodeRoute, starPath } from './mindGraph'
 import { assertPaletteMatchesTheme } from './palette'
+import LensGroup from '../components/ui/LensGroup'
 
 // The artwork is split out of the entry chunk (LCP, 2026-07-12): the honest
 // DOM hero paints without it, and the draw-in work stays out of the first
@@ -265,18 +266,23 @@ export default function LandingCover() {
               controls begin (Emilie, 2026-07-09). Full measure, hairline ink. */}
           <div aria-hidden="true" className="mt-8 h-px w-full bg-[var(--lang-hairline)]" />
 
-          {/* TIER 3 — the doors, spanning the same measure as the pill below */}
-          <nav aria-label="Primary" className="mt-6 flex justify-between font-mono text-[12px] tracking-[0.08em]">
-            {DOORS.map((d) => (
-              <Link
-                key={d.label}
-                to={d.to}
-                viewTransition
-                className="-m-1.5 p-1.5 text-[var(--lang-ink)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
-              >
-                {d.label}
-              </Link>
-            ))}
+          {/* TIER 3 — the doors, spanning the same measure as the pill below.
+              The magnifier lens rides them too (round 3, Emilie's pick): the
+              same four doors as the header pill, the same glass under the
+              pointer, one nav feel sitewide. */}
+          <nav aria-label="Primary" className="mt-6 font-mono text-[12px] tracking-[0.08em]">
+            <LensGroup className="flex justify-between">
+              {DOORS.map((d) => (
+                <Link
+                  key={d.label}
+                  to={d.to}
+                  viewTransition
+                  className="-m-1.5 p-1.5 text-[var(--lang-ink)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+                >
+                  {d.label}
+                </Link>
+              ))}
+            </LensGroup>
           </nav>
 
           {/* TIER 3 — the jump pill + the mode toggle (G4, Emilie's option b:

@@ -10,9 +10,11 @@ export default function NotFound() {
   return (
     <SheetPage>
       <section className="pt-10 pb-16 sm:pt-14" aria-labelledby="lost-heading">
-        {/* All 404 copy SIGNED by Emilie (G4, 2026-07-12). */}
+        {/* All 404 copy SIGNED by Emilie (G4, 2026-07-12). The room-sign tier
+            retired at the audit gate (2026-07-19); the bare status number
+            survives because it carries real information the voiced h1 lacks. */}
         <p className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
-          404 · NOT A PAGE
+          404
         </p>
         <h1
           id="lost-heading"

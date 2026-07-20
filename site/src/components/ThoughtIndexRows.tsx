@@ -96,12 +96,12 @@ function ScreenRow({
           to={e.note.route}
           viewTransition
           {...hoverProps}
-          className="flex min-h-11 flex-col justify-center rounded-[var(--r-control)] px-2 py-1.5 no-underline transition-colors hover:bg-[var(--lang-glass-1)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+          className="flex min-h-11 flex-col justify-center rounded-[var(--r-control)] px-2 py-1 no-underline transition-colors hover:bg-[var(--lang-glass-1)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
         >
           {body}
         </Link>
       ) : (
-        <span {...hoverProps} className="flex min-h-11 flex-col justify-center px-2 py-2.5">
+        <span {...hoverProps} className="flex min-h-11 flex-col justify-center px-2 py-2">
           {body}
         </span>
       )}
@@ -154,10 +154,10 @@ export default function ThoughtIndexRows({
   // promise by 11px at 1280x800. Four columns holds 13 in the same height.
   const cols =
     variant === 'wide'
-      ? 'thought-rail grid-cols-1 gap-x-10 sm:grid-cols-2 xl:grid-cols-4'
+      ? 'thought-rail grid-cols-1 gap-x-6 sm:grid-cols-2 xl:grid-cols-4'
       : 'grid-cols-1 gap-x-10 sm:grid-cols-2'
   return (
-    <ol role="list" className={`mt-3 grid list-none p-0 ${cols}`}>
+    <ol role="list" className={`mt-2 grid list-none p-0 ${cols}`}>
       {thoughts.map((t) => (
         <ScreenRow key={t.id} e={t} onThoughtHover={onThoughtHover} />
       ))}

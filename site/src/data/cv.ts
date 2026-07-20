@@ -57,8 +57,11 @@ export const EXPERIENCE = [
       'Rings of Mars: Ring 4000 for Marsception (Top 50) with AI-driven workflows; ongoing workshops and research in computational design and emerging technologies.',
   },
   {
+    // Title aligned to Emilie's LinkedIn + the project pages (S2 ruling,
+    // confirmed at the design audit 2026-07-19): "Architectural Designer",
+    // not "Intern". Dates stay honest (Jan-Aug 2022).
     dates: 'Jan 2022 - Aug 2022',
-    title: 'Architectural Intern',
+    title: 'Architectural Designer',
     org: 'Jemma Chidiac Architects, Beirut',
     notes:
       'Pre-concept design for the Moujassam Watan (Al Khobar) and Cemetery Challenge (Anfeh) competitions; research for the Abdullatif Al Fozan Award on mosque architecture.',

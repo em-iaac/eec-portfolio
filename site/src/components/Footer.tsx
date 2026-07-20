@@ -1,10 +1,12 @@
-// THE FOOTER (DL-1, Emilie 2026-07-10, visualised + confirmed): the header
-// pill's grounded sibling. One quiet glass card floating above the ground,
-// mode-aware via the --lang-* tokens: the name lockup with its mono role
-// micro-label on the left, the contact links as glass pills (44px touch
-// floor via FilterPill) on the right. Low density; the carbon strip retires
-// with the Pen Table chrome.
+// THE FOOTER LINE (DL-1; the design audit round 2, Emilie 2026-07-19: "the
+// footer, while frozen and almost full bleed, should still be a PILL, not
+// fully full bleed, to keep the same design language"). A frozen wide glass
+// pill floating at the foot of the frame: near-full-width with a breath of
+// margin, the same stadium the header pill wears, the name lockup + role on
+// the left and the contact links on the right. One height on every page that
+// carries it (/cv and /about drop it; their contact lives elsewhere).
 import { FilterPill } from './ui/Pill'
+import LensGroup from './ui/LensGroup'
 
 const LINKS = [
   { label: 'EMAIL', href: 'mailto:chidiacemilie@gmail.com' },
@@ -12,20 +14,11 @@ const LINKS = [
   { label: 'GITHUB', href: 'https://github.com/hi-em' },
 ]
 
-// `compact` pulls the footer close for one-screen pages (About's contact
-// sheet, 2026-07-12): there the footer IS the sheet's signature line, so the
-// long-page breathing margin would just push it past the fold.
-// `wide` matches the card to a wide page's column (/work, round 5) so the
-// footer stops reading as a narrow centered pill against a full-width grid.
-export default function Footer({ compact = false, wide = false }: { compact?: boolean; wide?: boolean }) {
+export default function Footer() {
   return (
-    <footer
-      className={`${compact ? 'mt-4 pb-3' : 'mt-16 pb-4'} ${wide ? 'px-5 sm:px-8' : 'px-3 sm:px-5'}`}
-    >
-      <div
-        className={`lang-glass-1 mx-auto flex flex-wrap items-center gap-x-8 gap-y-3 rounded-[var(--r-card)] px-5 py-4 sm:px-7 ${wide ? 'max-w-[1856px]' : 'max-w-5xl'}`}
-      >
-        <div className="flex min-w-[180px] flex-1 flex-col">
+    <footer className="shrink-0 px-3 pt-1 pb-3">
+      <div className="lang-glass-1 flex flex-wrap items-center justify-between gap-x-8 gap-y-1 rounded-[var(--r-pill)] px-5 py-2.5 sm:px-7">
+        <div className="flex min-w-0 flex-col">
           <span className="text-[13px] font-semibold tracking-[0.02em] text-[var(--lang-ink)]">
             EMILIE EL CHIDIAC
           </span>
@@ -33,23 +26,27 @@ export default function Footer({ compact = false, wide = false }: { compact?: bo
             DESIGN TECHNOLOGY ARCHITECT
           </span>
         </div>
-        <nav aria-label="Contact" className="-mx-1.5 flex flex-wrap items-center">
-          {LINKS.map(l => {
-            const external = !l.href.startsWith('mailto')
-            return (
-              <FilterPill
-                key={l.label}
-                as="a"
-                href={l.href}
-                target={external ? '_blank' : undefined}
-                rel="noopener noreferrer"
-                className="px-0.5"
-              >
-                {l.label}
-                {external && <span className="sr-only"> (opens in new tab)</span>}
-              </FilterPill>
-            )
-          })}
+        {/* The magnifier lens rides this cluster too (round 3, Emilie's
+            pick): header and footer share one interaction grammar. */}
+        <nav aria-label="Contact">
+          <LensGroup className="-mx-1.5 flex flex-wrap items-center">
+            {LINKS.map(l => {
+              const external = !l.href.startsWith('mailto')
+              return (
+                <FilterPill
+                  key={l.label}
+                  as="a"
+                  href={l.href}
+                  target={external ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  className="px-0.5"
+                >
+                  {l.label}
+                  {external && <span className="sr-only"> (opens in new tab)</span>}
+                </FilterPill>
+              )
+            })}
+          </LensGroup>
         </nav>
       </div>
     </footer>
