@@ -76,6 +76,7 @@ export interface RegistryEntry {
   note?: NoteRef // thought notes (Session 11): the written leaf at /thoughts/:id
   project?: string // slug join into projects.tsx for card data
   refId?: string // an award/press event points back at the project id it recognises (R1: drives the mind-graph award star from this single source; also the FLAG-03 anchor hook)
+  live?: boolean // a project still live + growing (a deployed, ongoing thing): the neural world marks it (S6-A, Emilie 2026-07-24)
   image?: { slug: string; name: string; alt: string }
   links?: { label: string; href: string }[]
   draftCopy?: boolean
@@ -165,6 +166,7 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['neuro', 'comfort', 'ai', 'research'],
     sheet: sheet('P-101', 'issued', 'sensi'),
     project: 'sensi',
+    live: true, // still live + growing (Emilie 2026-07-24)
     image: { slug: 'sensi', name: 'app-shape', alt: 'Sensi interface scoring a floor plan across six senses' },
     explore: { label: 'SENSI', nodeKind: 'project', order: 0 },
   },

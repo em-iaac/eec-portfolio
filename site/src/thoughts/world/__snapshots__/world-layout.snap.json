@@ -1,12 +1,12 @@
 {
-  "w": 4182,
+  "w": 6730,
   "h": 860,
   "nodes": [
     {
       "id": "charcoal",
       "kind": "thought",
       "date": "2020-06",
-      "x": 189,
+      "x": 215,
       "y": 208.3,
       "route": "/thoughts/charcoal"
     },
@@ -14,7 +14,7 @@
       "id": "xrlab-start",
       "kind": "milestone",
       "date": "2021-09",
-      "x": 267,
+      "x": 345,
       "y": 660,
       "route": null
     },
@@ -22,7 +22,7 @@
       "id": "self-open",
       "kind": "milestone",
       "date": "2022-01",
-      "x": 345,
+      "x": 475,
       "y": 600,
       "route": null
     },
@@ -30,7 +30,7 @@
       "id": "falcon",
       "kind": "project",
       "date": "2022-04",
-      "x": 423,
+      "x": 605,
       "y": 315.4,
       "route": "/work/falcon"
     },
@@ -38,7 +38,7 @@
       "id": "cemetery",
       "kind": "award",
       "date": "2022-06",
-      "x": 621,
+      "x": 907,
       "y": 486.7,
       "route": "/work/encounter"
     },
@@ -46,7 +46,7 @@
       "id": "encounter",
       "kind": "project",
       "date": "2022-06",
-      "x": 579,
+      "x": 865,
       "y": 422.7,
       "route": "/work/encounter"
     },
@@ -54,7 +54,7 @@
       "id": "xr",
       "kind": "project",
       "date": "2022-06",
-      "x": 657,
+      "x": 995,
       "y": 476.7,
       "route": "/work/xr"
     },
@@ -62,7 +62,7 @@
       "id": "xreal",
       "kind": "thought",
       "date": "2022-09",
-      "x": 735,
+      "x": 1125,
       "y": 277.9,
       "route": "/thoughts/xreal"
     },
@@ -70,7 +70,7 @@
       "id": "barch-grad",
       "kind": "milestone",
       "date": "2023-06",
-      "x": 813,
+      "x": 1255,
       "y": 660,
       "route": null
     },
@@ -78,7 +78,7 @@
       "id": "homage",
       "kind": "project",
       "date": "2023-06",
-      "x": 891,
+      "x": 1385,
       "y": 340.3,
       "route": "/work/homage"
     },
@@ -86,7 +86,7 @@
       "id": "soma-start",
       "kind": "milestone",
       "date": "2023-08",
-      "x": 969,
+      "x": 1515,
       "y": 722,
       "route": null
     },
@@ -94,7 +94,7 @@
       "id": "tamayouz",
       "kind": "award",
       "date": "2023-09",
-      "x": 933,
+      "x": 1427,
       "y": 404.3,
       "route": "/work/homage"
     },
@@ -102,7 +102,7 @@
       "id": "mars",
       "kind": "project",
       "date": "2023-10",
-      "x": 1125,
+      "x": 1775,
       "y": 424.1,
       "route": "/work/mars"
     },
@@ -110,7 +110,7 @@
       "id": "soma",
       "kind": "project",
       "date": "2024-02",
-      "x": 1203,
+      "x": 1905,
       "y": 483.5,
       "route": "/work/soma"
     },
@@ -118,7 +118,7 @@
       "id": "mars-top50",
       "kind": "award",
       "date": "2024-03",
-      "x": 1167,
+      "x": 1817,
       "y": 488.1,
       "route": "/work/mars"
     },
@@ -126,7 +126,7 @@
       "id": "genai",
       "kind": "thought",
       "date": "2024-06",
-      "x": 1359,
+      "x": 2165,
       "y": 146.4,
       "route": "/thoughts/genai"
     },
@@ -134,7 +134,7 @@
       "id": "dynamic-start",
       "kind": "milestone",
       "date": "2024-08",
-      "x": 1437,
+      "x": 2295,
       "y": 762,
       "route": null
     },
@@ -142,7 +142,7 @@
       "id": "macad-start",
       "kind": "milestone",
       "date": "2025-10",
-      "x": 1515,
+      "x": 2425,
       "y": 560,
       "route": null
     },
@@ -150,7 +150,7 @@
       "id": "astroidal",
       "kind": "project",
       "date": "2025-10",
-      "x": 1593,
+      "x": 2555,
       "y": 351.5,
       "route": "/work/astroidal"
     },
@@ -158,7 +158,7 @@
       "id": "playscape",
       "kind": "project",
       "date": "2025-10",
-      "x": 1671,
+      "x": 2685,
       "y": 424.2,
       "route": "/work/playscape"
     },
@@ -166,7 +166,7 @@
       "id": "cappelletti",
       "kind": "project",
       "date": "2025-11",
-      "x": 1749,
+      "x": 2815,
       "y": 468.3,
       "route": "/work/cappelletti"
     },
@@ -174,7 +174,7 @@
       "id": "chair-sim",
       "kind": "project",
       "date": "2025-11",
-      "x": 1827,
+      "x": 2945,
       "y": 462.4,
       "route": "/work/chair-sim"
     },
@@ -182,7 +182,7 @@
       "id": "evosearch",
       "kind": "thought",
       "date": "2025-11",
-      "x": 1905,
+      "x": 3075,
       "y": 100.7,
       "route": "/thoughts/evosearch"
     },
@@ -190,7 +190,7 @@
       "id": "huddle-award",
       "kind": "award",
       "date": "2025-12",
-      "x": 2103,
+      "x": 3377,
       "y": 375.9,
       "route": "/work/huddle"
     },
@@ -198,7 +198,7 @@
       "id": "huddle",
       "kind": "project",
       "date": "2025-12",
-      "x": 2061,
+      "x": 3335,
       "y": 311.9,
       "route": "/work/huddle"
     },
@@ -206,7 +206,7 @@
       "id": "tsukiji",
       "kind": "project",
       "date": "2025-12",
-      "x": 2139,
+      "x": 3465,
       "y": 363.2,
       "route": "/work/tsukiji"
     },
@@ -214,7 +214,7 @@
       "id": "neuroaes",
       "kind": "thought",
       "date": "2025-12",
-      "x": 2217,
+      "x": 3595,
       "y": 222.8,
       "route": "/thoughts/neuroaes"
     },
@@ -222,7 +222,7 @@
       "id": "podcast",
       "kind": "project",
       "date": "2026-01",
-      "x": 2295,
+      "x": 3725,
       "y": 484.3,
       "route": "/work/podcast"
     },
@@ -230,7 +230,7 @@
       "id": "bim",
       "kind": "thought",
       "date": "2026-01",
-      "x": 2373,
+      "x": 3855,
       "y": 80.8,
       "route": "/thoughts/bim"
     },
@@ -238,7 +238,7 @@
       "id": "neurospace",
       "kind": "project",
       "date": "2026-02",
-      "x": 2451,
+      "x": 3985,
       "y": 379.7,
       "route": "/work/neurospace"
     },
@@ -246,7 +246,7 @@
       "id": "lungs-award",
       "kind": "award",
       "date": "2026-03",
-      "x": 2727,
+      "x": 4417,
       "y": 418.1,
       "route": "/work/lungs"
     },
@@ -254,7 +254,7 @@
       "id": "data-geometry",
       "kind": "project",
       "date": "2026-03",
-      "x": 2607,
+      "x": 4245,
       "y": 301.7,
       "route": "/work/data-geometry"
     },
@@ -262,7 +262,7 @@
       "id": "lungs",
       "kind": "project",
       "date": "2026-03",
-      "x": 2685,
+      "x": 4375,
       "y": 354.1,
       "route": "/work/lungs"
     },
@@ -270,7 +270,7 @@
       "id": "drawiface",
       "kind": "thought",
       "date": "2026-03",
-      "x": 2763,
+      "x": 4505,
       "y": 150.7,
       "route": "/thoughts/drawiface"
     },
@@ -278,7 +278,7 @@
       "id": "ballooning",
       "kind": "project",
       "date": "2026-04",
-      "x": 2841,
+      "x": 4635,
       "y": 475.7,
       "route": "/work/ballooning"
     },
@@ -286,7 +286,7 @@
       "id": "heritage",
       "kind": "thought",
       "date": "2026-04",
-      "x": 2919,
+      "x": 4765,
       "y": 143.6,
       "route": "/thoughts/heritage"
     },
@@ -294,7 +294,7 @@
       "id": "solvers",
       "kind": "thought",
       "date": "2026-04",
-      "x": 2997,
+      "x": 4895,
       "y": 241.6,
       "route": "/thoughts/solvers"
     },
@@ -302,7 +302,7 @@
       "id": "legoarch-jury",
       "kind": "award",
       "date": "2026-05",
-      "x": 3195,
+      "x": 5197,
       "y": 379.7,
       "route": "/work/legoarch"
     },
@@ -310,7 +310,7 @@
       "id": "legoarch",
       "kind": "project",
       "date": "2026-05",
-      "x": 3153,
+      "x": 5155,
       "y": 315.7,
       "route": "/work/legoarch"
     },
@@ -318,7 +318,7 @@
       "id": "comfort",
       "kind": "thought",
       "date": "2026-05",
-      "x": 3231,
+      "x": 5285,
       "y": 150.6,
       "route": "/thoughts/comfort"
     },
@@ -326,7 +326,7 @@
       "id": "sensi-macad-award",
       "kind": "award",
       "date": "2026-06",
-      "x": 3585,
+      "x": 5847,
       "y": 455.3,
       "route": "/work/sensi"
     },
@@ -334,7 +334,7 @@
       "id": "macad-y1",
       "kind": "milestone",
       "date": "2026-06",
-      "x": 3387,
+      "x": 5545,
       "y": 560,
       "route": null
     },
@@ -342,7 +342,7 @@
       "id": "narkomfin",
       "kind": "project",
       "date": "2026-06",
-      "x": 3465,
+      "x": 5675,
       "y": 461.8,
       "route": "/work/narkomfin"
     },
@@ -350,7 +350,7 @@
       "id": "sensi",
       "kind": "project",
       "date": "2026-06",
-      "x": 3543,
+      "x": 5805,
       "y": 391.3,
       "route": "/work/sensi"
     },
@@ -358,7 +358,7 @@
       "id": "urban-risk",
       "kind": "project",
       "date": "2026-06",
-      "x": 3621,
+      "x": 5935,
       "y": 332.2,
       "route": "/work/urban-risk"
     },
@@ -366,7 +366,7 @@
       "id": "pelagnou",
       "kind": "thought",
       "date": "2026-06",
-      "x": 3699,
+      "x": 6065,
       "y": 150,
       "route": "/thoughts/pelagnou"
     },
@@ -374,7 +374,7 @@
       "id": "respond",
       "kind": "thought",
       "date": "2026-06",
-      "x": 3777,
+      "x": 6195,
       "y": 89,
       "route": "/thoughts/respond"
     },
@@ -382,7 +382,7 @@
       "id": "site-live",
       "kind": "milestone",
       "date": "2026-07",
-      "x": 3855,
+      "x": 6325,
       "y": 600,
       "route": null
     },
@@ -390,7 +390,7 @@
       "id": "explain",
       "kind": "thought",
       "date": "2026-07",
-      "x": 3933,
+      "x": 6455,
       "y": 247.8,
       "route": "/thoughts/explain"
     }

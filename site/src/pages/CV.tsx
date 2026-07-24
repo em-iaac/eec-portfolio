@@ -1,6 +1,8 @@
 import { type ReactNode } from 'react'
 import SheetPage from '../components/SheetPage'
 import DownloadChip from '../components/ui/DownloadChip'
+import ContactLinks from '../components/ui/ContactLinks'
+import { DocGlyph } from '../components/ui/glyphs'
 import { EDUCATION, EXPERIENCE, AWARDS, SKILLS, LANGUAGES, CERTIFICATES, UPDATED } from '../data/cv'
 
 const BASE = import.meta.env.BASE_URL
@@ -17,16 +19,20 @@ const BASE = import.meta.env.BASE_URL
 // the keyword cluster. Header string LOCKED: "Emilie El Chidiac | Design
 // Technology Architect".
 
-// A small accessible accent per column (mode-aware light-dark pairs; every
-// value clears WCAG AA on its ground, checked at the a11y review): colour
-// aids the scan, the icon carries the meaning, the label still reads in ink
-// weight. Red is NOT used (it means interaction/liveness, not a category).
+// A small accent per column, MUTED and on the ICON ONLY (S6-A, Emilie
+// 2026-07-24, Board 1 option C: "I like them but I don't want to overwhelm").
+// The five saturated hues read as a rainbow competing with the words, so the
+// colour steps back to a muted tonal family and rides the icon alone; the
+// label goes to ink. The icon shape + the ink label carry the category, so
+// colour is never the sole signal (the a11y rule), and the muted values only
+// need the 3:1 graphical floor on their ground, not text AA. Red is NOT used
+// (it means interaction/liveness, not a category).
 const SECTIONS = {
-  education: 'light-dark(#1d4ed8, #93c5fd)',
-  experience: 'light-dark(#0f766e, #5eead4)',
-  awards: 'light-dark(#a16207, #fbbf24)',
-  certificates: 'light-dark(#6d28d9, #c4b5fd)',
-  skills: 'light-dark(#4338ca, #a5b4fc)',
+  education: 'light-dark(#5b6b7a, #97a8ba)',
+  experience: 'light-dark(#4f7a6b, #83b6a4)',
+  awards: 'light-dark(#8a7038, #cbb073)',
+  certificates: 'light-dark(#6f5f86, #b4a7cd)',
+  skills: 'light-dark(#5c6187, #a6abd1)',
 } as const
 
 function SecIcon({ name }: { name: keyof typeof SECTIONS }) {
@@ -71,11 +77,11 @@ function SecIcon({ name }: { name: keyof typeof SECTIONS }) {
 
 function SecTitle({ name, children }: { name: keyof typeof SECTIONS; children: ReactNode }) {
   return (
-    <h2
-      className="mb-3 flex items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.12em]"
-      style={{ color: SECTIONS[name] }}
-    >
-      <SecIcon name={name} />
+    <h2 className="mb-2.5 flex items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.12em] text-[var(--lang-ink)]">
+      {/* Colour rides the icon only (Board 1 C); the label holds ink. */}
+      <span className="inline-flex" style={{ color: SECTIONS[name] }}>
+        <SecIcon name={name} />
+      </span>
       {children}
     </h2>
   )
@@ -83,38 +89,28 @@ function SecTitle({ name, children }: { name: keyof typeof SECTIONS; children: R
 
 function Entry({ dates, title, org, notes }: { dates: string; title: string; org: string; notes: string }) {
   return (
-    <div className="mb-4">
-      <div className="font-mono text-[10px] leading-5 tracking-[0.04em] text-[var(--lang-ink-muted)] tabular-nums">
+    <div className="mb-2.5">
+      <div className="font-mono text-[10px] leading-[13px] tracking-[0.04em] text-[var(--lang-ink-muted)] tabular-nums">
         {dates}
       </div>
       <h3 className="text-[13.5px] leading-snug font-semibold text-[var(--lang-ink)]">
         {title} <span className="font-normal text-[var(--lang-ink-muted)]">· {org}</span>
       </h3>
-      <p className="mt-0.5 font-serif text-[13px] leading-snug text-[var(--lang-ink)]">{notes}</p>
+      <p className="mt-0.5 font-serif text-[13px] leading-[1.35] text-[var(--lang-ink)]">{notes}</p>
     </div>
   )
 }
 
-// The reach-me links + the download on the header line (pillTools).
+// The reach-me links + the download on the header line (pillTools). The links
+// are now the shared ContactLinks (S6-A, Board 2 grammar B): the /cv links used
+// to sit red-at-rest and unlensed; they join the sitewide row (ink at rest,
+// red on hover, the magnifier under them) so contact reads as one thing on
+// every surface. The download leads with the document mark.
 function CvHeaderTools() {
-  const LINK =
-    '-m-1 p-1 font-mono text-[10px] tracking-[0.06em] text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-      <span className="flex flex-wrap items-center gap-x-4">
-        <a href="mailto:chidiacemilie@gmail.com" className={LINK}>
-          EMAIL
-        </a>
-        <a href="https://www.linkedin.com/in/EmilieElChidiac" target="_blank" rel="noopener noreferrer" className={LINK}>
-          LINKEDIN
-          <span className="sr-only"> (opens in new tab)</span>
-        </a>
-        <a href="https://github.com/hi-em" target="_blank" rel="noopener noreferrer" className={LINK}>
-          GITHUB
-          <span className="sr-only"> (opens in new tab)</span>
-        </a>
-      </span>
-      <DownloadChip href={`${BASE}assets/cv-emilie-el-chidiac.pdf`} download="Emilie-El-Chidiac-CV.pdf">
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+      <ContactLinks />
+      <DownloadChip href={`${BASE}assets/cv-emilie-el-chidiac.pdf`} download="Emilie-El-Chidiac-CV.pdf" icon={<DocGlyph />}>
         DOWNLOAD PDF
       </DownloadChip>
     </div>
@@ -125,12 +121,12 @@ export default function CV() {
   return (
     <SheetPage wide center={false} footer={false} pillTools={<CvHeaderTools />}>
       {/* The name + title back in the content (Emilie's ruling round 2). */}
-      <div className="pt-1 pb-4">
+      <div className="pt-0 pb-2">
         <h1 className="text-2xl font-semibold tracking-[-0.01em]">
           Emilie El Chidiac{' '}
           <span className="font-normal text-[var(--lang-ink-muted)]">| Design Technology Architect</span>
         </h1>
-        <p className="mt-1.5 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]">
+        <p className="mt-1 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]">
           UPDATED {UPDATED.toUpperCase()}
         </p>
       </div>
@@ -138,13 +134,13 @@ export default function CV() {
       {/* THREE columns, no scrolling (Emilie's ruling round 2): column 1 =
           Education then Certificates, column 2 = Experience, column 3 =
           Awards then Skills. */}
-      <div className="cv-cols pb-6">
+      <div className="cv-cols pb-0">
         <section aria-label="Education and certificates">
           <SecTitle name="education">EDUCATION</SecTitle>
           {EDUCATION.map(e => (
             <Entry key={e.title} {...e} />
           ))}
-          <div className="mt-6">
+          <div className="mt-5">
             <SecTitle name="certificates">CERTIFICATES</SecTitle>
             <ul className="grid gap-1.5">
               {CERTIFICATES.map(c => (
@@ -165,7 +161,7 @@ export default function CV() {
 
         <section aria-label="Awards and skills">
           <SecTitle name="awards">AWARDS &amp; RECOGNITION</SecTitle>
-          <ul className="mb-6 grid gap-1.5">
+          <ul className="mb-4 grid gap-1">
             {AWARDS.map(a => (
               <li key={a.text} className="grid grid-cols-[40px_1fr] gap-x-2">
                 <span className="font-mono text-[10px] leading-5 text-[var(--lang-ink-muted)] tabular-nums">{a.year}</span>
@@ -175,12 +171,12 @@ export default function CV() {
           </ul>
           <SecTitle name="skills">SKILLS</SecTitle>
           {SKILLS.map(s => (
-            <div key={s.group} className="mb-2.5 font-mono text-[10.5px] leading-relaxed">
+            <div key={s.group} className="mb-2 font-mono text-[10.5px] leading-[1.5]">
               <span className="tracking-[0.1em] text-[var(--lang-ink-muted)]">{s.group}</span>
               <span className="mt-0.5 block text-[var(--lang-ink)]">{s.items}</span>
             </div>
           ))}
-          <div className="mt-1 font-mono text-[10.5px] leading-relaxed">
+          <div className="mt-1 font-mono text-[10.5px] leading-[1.5]">
             <span className="tracking-[0.1em] text-[var(--lang-ink-muted)]">LANGUAGES</span>
             <span className="mt-0.5 block text-[var(--lang-ink)]">{LANGUAGES}</span>
           </div>

@@ -76,13 +76,20 @@ export default function Lightbox({
       }}
     >
       <div className="flex max-h-dvh w-screen flex-col items-center justify-center gap-2 p-4 sm:p-8">
+        {/* THE WHITE MAT (S6-A, Emilie 2026-07-24): the enlarged view keeps
+            the plate stage's white backing (WorkOverlay's 16:9 mat) instead of
+            floating on the dark backdrop. A transparent asset (a line sketch,
+            a cutout render, a diagram) reads as a drawing on paper in both
+            modes here too, where before it could nearly vanish on the near-
+            black backdrop in dark mode. A solid photo simply covers the white,
+            so there is no frame; only the transparent assets change. */}
         <Img
           slug={pic.slug}
           name={pic.name}
           alt={pic.alt}
           priority
           sizes="92vw"
-          className="max-h-[80dvh] max-w-full rounded-[var(--r-image)] object-contain"
+          className="max-h-[80dvh] max-w-full rounded-[var(--r-image)] bg-white object-contain"
         />
         <p className="max-w-[62ch] text-center font-mono text-[10px] tracking-[0.08em] text-white/85">
           {pic.alt}

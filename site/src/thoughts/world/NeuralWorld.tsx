@@ -64,12 +64,20 @@ function nodeAria(n: WorldNode): string {
 }
 
 interface CardState {
+  id: string
   title: string
   date: string
   kind: string
   blurb?: string
   serifTitle: boolean
   red?: boolean
+  /** A live + still-growing project: the locked card carries the red note. */
+  live?: boolean
+  /** Present on routed nodes: the locked card's OPEN button travels here. */
+  route?: string
+  /** false = the light hover chip (title + kind, no blurb, no button);
+   *  true = the clicked, persistent card (blurb + OPEN, pointer-interactive). */
+  locked: boolean
   left: number
   top: number
 }
@@ -86,9 +94,11 @@ export default function NeuralWorld() {
   const plumbLineRef = useRef<SVGLineElement>(null)
   const plumbDotRef = useRef<SVGCircleElement>(null)
   const [card, setCard] = useState<CardState | null>(null)
-  const [announce, setAnnounce] = useState('')
-  const armedId = useRef<string | null>(null)
-  const lastPointerType = useRef<'mouse' | 'touch' | 'pen'>('mouse')
+  // The LOCKED node id lives in a ref (not state) so the mount-time drag/Escape
+  // handlers close over a stable handle, never a stale render's card (S6-A,
+  // Emilie 2026-07-24: hover glances, a click LOCKS the card, click again /
+  // Escape / empty field closes it; travel is the card's OPEN button).
+  const lockedId = useRef<string | null>(null)
   // The project deks load AFTER first paint (they live in the /work data
   // chunk; the field card is the only consumer here, and it is hover-gated).
   const dekMap = useRef<Map<string, string> | null>(null)
@@ -170,9 +180,9 @@ export default function NeuralWorld() {
     let drag: { x: number; s: number } | null = null
     let saveTimer = 0
     const down = (e: PointerEvent) => {
-      lastPointerType.current = (e.pointerType as 'mouse' | 'touch' | 'pen') || 'mouse'
       if ((e.target as Element).closest('.nw-node, a, button')) return
-      // a press on empty field dismisses the card + disarms (1.4.13)
+      // a press on empty field closes the locked card (1.4.13; her "empty
+      // space closes it")
       dismiss()
       drag = { x: e.clientX, s: stage.scrollLeft }
       stage.classList.add('dragging')
@@ -291,35 +301,49 @@ export default function NeuralWorld() {
     return undefined
   }
 
-  function showCard(n: WorldNode) {
-    const h = nodesRef.current.get(n.id)
-    const soma = h?.soma
-    if (!soma) return
-    const b = soma.getBoundingClientRect()
+  function cardPos(b: DOMRect, locked: boolean) {
     const left = Math.max(12, Math.min(b.left + b.width / 2 - 150, window.innerWidth - 312))
-    const top = b.top < window.innerHeight * 0.5 ? b.bottom + 14 : b.top - 178
+    // The locked card is taller (blurb + button), so it lifts higher when it
+    // must open upward; the light chip sits closer to its node.
+    const top = b.top < window.innerHeight * 0.5 ? b.bottom + 14 : b.top - (locked ? 178 : 92)
+    return { left, top: Math.max(80, top) }
+  }
+
+  // locked=false is the light hover/focus CHIP (title + kind + date, no blurb,
+  // no button, non-interactive); locked=true is the clicked, persistent card
+  // (blurb + OPEN, pointer-interactive).
+  function showCard(n: WorldNode, locked: boolean) {
+    const soma = nodesRef.current.get(n.id)?.soma
+    if (!soma) return
+    const { left, top } = cardPos(soma.getBoundingClientRect(), locked)
     setCard({
+      id: n.id,
       title: n.title,
       date: n.date,
       kind: KIND_LABEL[n.kind],
-      blurb: blurbOf(n),
+      blurb: locked ? blurbOf(n) : undefined,
       serifTitle: n.kind === 'thought',
+      live: n.live,
+      route: n.route,
+      locked,
       left,
-      top: Math.max(80, top),
+      top,
     })
   }
 
-  function showNowCard(el: SVGGraphicsElement) {
+  function showNowCard(el: SVGGraphicsElement, locked: boolean) {
     const b = el.getBoundingClientRect()
     setCard({
+      id: 'now',
       title: 'still growing',
       date: NOW.date,
       kind: 'NOW',
       red: true,
       serifTitle: true,
-      blurb: `building ${NOW.building} · reading ${NOW.reading} · thinking about ${NOW.thinking}`,
+      blurb: locked ? `building ${NOW.building} · reading ${NOW.reading} · thinking about ${NOW.thinking}` : undefined,
+      locked,
       left: Math.max(12, Math.min(b.left - 150, window.innerWidth - 312)),
-      top: Math.max(80, b.top - 190),
+      top: Math.max(80, b.top - (locked ? 190 : 104)),
     })
   }
 
@@ -332,14 +356,15 @@ export default function NeuralWorld() {
     engine.kick()
   }
 
-  // Escape / empty-field press: card away, armed wake released (1.4.13).
+  // Escape / empty-field press: close the card, release the locked wake
+  // (1.4.13). Ref-based (lockedId) so the mount-time handlers never read a
+  // stale render's card.
   function dismiss() {
-    if (armedId.current) {
-      setForce(armedId.current, 0)
-      armedId.current = null
+    if (lockedId.current) {
+      setForce(lockedId.current, 0)
+      lockedId.current = null
     }
     setCard(null)
-    setAnnounce('')
   }
 
   function open(n: WorldNode) {
@@ -347,18 +372,32 @@ export default function NeuralWorld() {
     navigate(n.route, { viewTransition: true })
   }
 
-  // First tap wakes + arms (card shows, politely announced), second tap
-  // opens: the landing's shipped armed-tap pattern (gate 5).
+  // A pointer click LOCKS this node's card (releasing any previously locked
+  // node's wake); clicking the locked node again closes it. Travel is the
+  // card's OPEN button, so a stray click never jumps the page. Keyboard Enter
+  // still opens directly (onKeyDown below), and screen readers travel via
+  // WorldSrNav's links.
   function onNodeClick(n: WorldNode) {
-    if (lastPointerType.current === 'touch' && armedId.current !== n.id) {
-      if (armedId.current) setForce(armedId.current, 0)
-      armedId.current = n.id
-      setForce(n.id, 1)
-      showCard(n)
-      setAnnounce(n.route ? `${n.title} preview shown. Activate again to open.` : `${n.title} preview shown.`)
+    if (lockedId.current === n.id) {
+      dismiss()
       return
     }
-    open(n)
+    if (lockedId.current && lockedId.current !== n.id) setForce(lockedId.current, 0)
+    lockedId.current = n.id
+    setForce(n.id, 1)
+    showCard(n, true)
+  }
+
+  // The live NOW tip locks the same way; it has no route, so its card carries
+  // no OPEN button (the wake is the beat animation, not a forced energy).
+  function onNowClick(el: SVGGraphicsElement) {
+    if (lockedId.current === 'now') {
+      dismiss()
+      return
+    }
+    if (lockedId.current && lockedId.current !== 'now') setForce(lockedId.current, 0)
+    lockedId.current = 'now'
+    showNowCard(el, true)
   }
 
   const sk = WORLD.skeleton
@@ -438,7 +477,7 @@ export default function NeuralWorld() {
                 </svg>
                 MILESTONE
               </span>
-              <span className="text-[var(--lang-interaction)]">ONE RED TIP = LIVE</span>
+              <span className="text-[var(--lang-interaction)]">RED = LIVE</span>
             </div>
             <p
               aria-hidden="true"
@@ -513,10 +552,25 @@ export default function NeuralWorld() {
               tabIndex={0}
               role="img"
               aria-label={`Live, still growing: the self-employed practice. Now building ${NOW.building}; reading ${NOW.reading}; thinking about ${NOW.thinking}.`}
-              onMouseEnter={(e) => showNowCard(e.currentTarget)}
-              onMouseLeave={hideCard}
-              onFocus={(e) => showNowCard(e.currentTarget)}
-              onBlur={hideCard}
+              onMouseEnter={(e) => {
+                if (!lockedId.current) showNowCard(e.currentTarget, false)
+              }}
+              onMouseLeave={() => {
+                if (!lockedId.current) hideCard()
+              }}
+              onClick={(e) => onNowClick(e.currentTarget)}
+              onFocus={(e) => {
+                if (!lockedId.current) showNowCard(e.currentTarget, false)
+              }}
+              onBlur={() => {
+                if (!lockedId.current) hideCard()
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  onNowClick(e.currentTarget)
+                }
+              }}
             >
               <g className="nw-livetip">
                 <line
@@ -594,24 +648,36 @@ export default function NeuralWorld() {
                     aria-label={nodeAria(n)}
                     onMouseEnter={() => {
                       setForce(n.id, 1)
-                      showCard(n)
+                      // While a card is locked, hovering only wakes the
+                      // neuron; the light chip stays suppressed so it never
+                      // fights the locked card.
+                      if (!lockedId.current) showCard(n, false)
                     }}
                     onMouseLeave={() => {
+                      if (lockedId.current === n.id) return
                       setForce(n.id, 0)
-                      hideCard()
+                      if (!lockedId.current) hideCard()
                     }}
                     onFocus={(e) => {
                       setForce(n.id, 1)
-                      showCard(n)
-                      e.currentTarget.scrollIntoView({
-                        block: 'nearest',
-                        inline: 'center',
-                        behavior: prm ? 'auto' : 'smooth',
-                      })
+                      if (!lockedId.current) showCard(n, false)
+                      // Keyboard focus brings the node into view; a POINTER
+                      // click must NOT scroll, or it slides the node out from
+                      // under the freshly-placed card (the "opens at a random
+                      // place / lagging" bug). :focus-visible is the keyboard
+                      // signal, so the card stays pinned to the dot on click.
+                      if (e.currentTarget.matches(':focus-visible')) {
+                        e.currentTarget.scrollIntoView({
+                          block: 'nearest',
+                          inline: 'center',
+                          behavior: prm ? 'auto' : 'smooth',
+                        })
+                      }
                     }}
                     onBlur={() => {
+                      if (lockedId.current === n.id) return
                       setForce(n.id, 0)
-                      hideCard()
+                      if (!lockedId.current) hideCard()
                     }}
                     onClick={() => onNodeClick(n)}
                     onKeyDown={(e) => {
@@ -634,6 +700,20 @@ export default function NeuralWorld() {
                         <>
                           <circle className="nw-soma" cx={n.x} cy={n.y} r={o.r} fill="var(--lang-ink)" />
                           <circle cx={n.x} cy={n.y} r={2.6} fill={col} />
+                          {/* live + still growing (Emilie 2026-07-24): a red
+                              ring marks a deployed, ongoing project. Red =
+                              liveness, the governance law; static so it rests
+                              calm under reduced motion. */}
+                          {n.live && (
+                            <circle
+                              cx={n.x}
+                              cy={n.y}
+                              r={o.r + 3.5}
+                              fill="none"
+                              stroke="var(--lang-interaction)"
+                              strokeWidth={1.3}
+                            />
+                          )}
                         </>
                       ) : n.kind === 'thought' ? (
                         <>
@@ -660,17 +740,17 @@ export default function NeuralWorld() {
                         paint IS the rest state, no post-mount pop */}
                     <text
                       className={`nw-lbl ${kindClass}`}
-                      x={n.x}
-                      y={ly}
+                      x={n.x + (n.labelDx ?? 0)}
+                      y={ly + (n.labelDy ?? 0)}
                       textAnchor="middle"
                       style={{ opacity: TUNE.restInk }}
                     >
-                      {n.title}
+                      {n.mapLabel ?? n.title}
                     </text>
                     <text
                       className="nw-yr"
-                      x={n.x}
-                      y={yy}
+                      x={n.x + (n.labelDx ?? 0)}
+                      y={yy + (n.labelDy ?? 0)}
                       textAnchor="middle"
                       style={{ opacity: TUNE.restInk }}
                     >
@@ -690,11 +770,19 @@ export default function NeuralWorld() {
           </svg>
         </section>
 
-        {/* the field card */}
+        {/* the field card: a light CHIP on hover/focus (title + kind + date),
+            an interactive LOCKED card on click (blurb + OPEN). Always
+            aria-hidden — screen readers travel via WorldSrNav; the OPEN button
+            is a pointer affordance (tabIndex -1), and keyboard opens the node
+            directly with Enter. */}
         {card && (
           <aside
             aria-hidden="true"
-            className="nw-fieldcard lang-glass-2 infocard-enter pointer-events-none fixed z-[6] max-w-[300px] rounded-[var(--r-sheet)] px-4 py-3.5"
+            className={`nw-fieldcard lang-glass-2 infocard-enter fixed z-[6] rounded-[var(--r-sheet)] ${
+              card.locked
+                ? 'pointer-events-auto max-w-[300px] px-4 py-3.5'
+                : 'pointer-events-none max-w-[264px] px-3.5 py-2.5'
+            }`}
             style={{ left: card.left, top: card.top }}
           >
             <div className="flex justify-between gap-3 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
@@ -704,24 +792,35 @@ export default function NeuralWorld() {
               </span>
             </div>
             <p
-              className={`mt-2 text-[16px] leading-snug font-semibold text-[var(--lang-ink)] ${
-                card.serifTitle ? 'font-serif font-medium lowercase italic' : ''
-              }`}
+              className={`mt-1.5 leading-snug font-semibold text-[var(--lang-ink)] ${
+                card.locked ? 'text-[16px]' : 'text-[14px]'
+              } ${card.serifTitle ? 'font-serif font-medium lowercase italic' : ''}`}
             >
               {card.title}
             </p>
-            {card.blurb && (
+            {card.locked && card.blurb && (
               <p className="mt-1.5 font-serif text-[13px] leading-relaxed text-[var(--lang-ink-muted)]">
                 {card.blurb}
               </p>
             )}
+            {card.locked && card.live && (
+              <p className="mt-2 flex items-center gap-1.5 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-interaction)]">
+                <span aria-hidden="true" className="inline-block size-1.5 rounded-full bg-[var(--lang-interaction)]" />
+                LIVE · STILL GROWING
+              </p>
+            )}
+            {card.locked && card.route && (
+              <button
+                type="button"
+                tabIndex={-1}
+                onClick={() => card.route && navigate(card.route, { viewTransition: true })}
+                className="mt-2.5 inline-flex items-center gap-1.5 rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3 py-1.5 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink)] transition-colors hover:border-[var(--lang-interaction)] hover:text-[var(--lang-interaction)]"
+              >
+                OPEN <span aria-hidden="true">›</span>
+              </button>
+            )}
           </aside>
         )}
-
-        {/* the armed-tap announcement (a silent arm would eat a double-tap) */}
-        <div aria-live="polite" className="sr-only">
-          {announce}
-        </div>
 
         <WorldSrNav />
       </main>

@@ -16,6 +16,7 @@
 import { Link } from 'react-router-dom'
 import { FilterPill, LensMark } from '../ui/Pill'
 import DownloadChip from '../ui/DownloadChip'
+import { BookGlyph } from '../ui/glyphs'
 import { LENSES, type Lens } from '../Lens'
 import { WORK_LENSES } from '../../data/work'
 
@@ -75,6 +76,7 @@ export function BookDownloadLink({ className = '' }: { className?: string }) {
     <DownloadChip
       href={`${import.meta.env.BASE_URL}assets/portfolio-emilie-el-chidiac.pdf`}
       download="Emilie-El-Chidiac-Portfolio.pdf"
+      icon={<BookGlyph />}
       className={className}
     >
       THE BOOK (PDF)
@@ -89,6 +91,9 @@ export default function WorkGroundTools({ active }: { active: Lens | null }) {
     // on the header line at all sizes.
     <div className="hidden min-w-0 flex-wrap items-center justify-end gap-x-1 gap-y-0.5 lg:flex">
       <WorkFilterRow active={active} flat />
+      {/* A thin divider marks the shift from facets (filter) to action
+          (download); both now ride the same compact pill height (option A). */}
+      <span aria-hidden="true" className="mx-1.5 h-5 w-px shrink-0 bg-[var(--lang-hairline)]" />
       <BookDownloadLink />
     </div>
   )

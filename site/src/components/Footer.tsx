@@ -5,14 +5,10 @@
 // margin, the same stadium the header pill wears, the name lockup + role on
 // the left and the contact links on the right. One height on every page that
 // carries it (/cv and /about drop it; their contact lives elsewhere).
-import { FilterPill } from './ui/Pill'
-import LensGroup from './ui/LensGroup'
-
-const LINKS = [
-  { label: 'EMAIL', href: 'mailto:chidiacemilie@gmail.com' },
-  { label: 'LINKEDIN', href: 'https://www.linkedin.com/in/EmilieElChidiac' },
-  { label: 'GITHUB', href: 'https://github.com/hi-em' },
-]
+//
+// The contact row is the shared ContactLinks (S6-A, Board 2 grammar B): plain
+// text links + app icons under the magnifier, one thing on every surface.
+import ContactLinks from './ui/ContactLinks'
 
 export default function Footer() {
   return (
@@ -26,28 +22,7 @@ export default function Footer() {
             DESIGN TECHNOLOGY ARCHITECT
           </span>
         </div>
-        {/* The magnifier lens rides this cluster too (round 3, Emilie's
-            pick): header and footer share one interaction grammar. */}
-        <nav aria-label="Contact">
-          <LensGroup className="-mx-1.5 flex flex-wrap items-center">
-            {LINKS.map(l => {
-              const external = !l.href.startsWith('mailto')
-              return (
-                <FilterPill
-                  key={l.label}
-                  as="a"
-                  href={l.href}
-                  target={external ? '_blank' : undefined}
-                  rel="noopener noreferrer"
-                  className="px-0.5"
-                >
-                  {l.label}
-                  {external && <span className="sr-only"> (opens in new tab)</span>}
-                </FilterPill>
-              )
-            })}
-          </LensGroup>
-        </nav>
+        <ContactLinks />
       </div>
     </footer>
   )

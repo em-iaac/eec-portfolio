@@ -9,16 +9,19 @@ import SheetPage from '../components/SheetPage'
 export default function NotFound() {
   return (
     <SheetPage>
-      <section className="pt-10 pb-16 sm:pt-14" aria-labelledby="lost-heading">
-        {/* All 404 copy SIGNED by Emilie (G4, 2026-07-12). The room-sign tier
-            retired at the audit gate (2026-07-19); the bare status number
-            survives because it carries real information the voiced h1 lacks. */}
-        <p className="font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
+      {/* Centred in the frame with a big status number (Emilie 2026-07-24:
+          "nicer in the middle, and the 404 bigger"). SheetPage centres the
+          block vertically; items-center + text-center centre it across. */}
+      <section className="flex flex-col items-center text-center" aria-labelledby="lost-heading">
+        {/* All 404 copy SIGNED by Emilie (G4, 2026-07-12). The bare status
+            number carries real information the voiced h1 lacks; now the page's
+            hero mark. */}
+        <p className="font-mono text-[64px] font-semibold leading-none tracking-[0.02em] text-[var(--lang-ink)] tall:text-[80px]">
           404
         </p>
         <h1
           id="lost-heading"
-          className="mt-3 max-w-[24ch] font-serif text-[30px] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
+          className="mt-5 max-w-[24ch] font-serif text-[30px] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
         >
           this thought wandered off
         </h1>

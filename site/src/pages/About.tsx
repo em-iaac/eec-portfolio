@@ -1,8 +1,8 @@
 import SheetPage from '../components/SheetPage'
 import LogoMark from '../components/LogoMark'
 import DownloadChip from '../components/ui/DownloadChip'
-import LensGroup from '../components/ui/LensGroup'
-import { FilterPill } from '../components/ui/Pill'
+import ContactLinks from '../components/ui/ContactLinks'
+import { BookGlyph, DocGlyph } from '../components/ui/glyphs'
 
 const BASE = import.meta.env.BASE_URL
 
@@ -22,12 +22,6 @@ const PROSE = 'font-serif text-[17px] leading-relaxed tall:text-[19px]'
 // downloads). No footer (the contact IS the content). Below the split
 // breaks it stacks. COPY: the script is a NEW draft from Emilie's 2026-07-19
 // brief, draftCopy until she signs; the h1 "Say hi" + callback stay SIGNED.
-
-const SOCIALS = [
-  { label: 'EMAIL', href: 'mailto:chidiacemilie@gmail.com' },
-  { label: 'LINKEDIN', href: 'https://www.linkedin.com/in/EmilieElChidiac' },
-  { label: 'GITHUB', href: 'https://github.com/hi-em' },
-]
 
 export default function About() {
   return (
@@ -76,35 +70,28 @@ export default function About() {
               What's in yours?
             </a>
           </p>
-          {/* One lens over the whole cluster (round 3, Emilie's pick): the
-              page's point, the links, wears the site's nicest interaction. */}
-          <LensGroup>
-            <nav aria-label="Contact" className="mt-5 flex flex-wrap items-center gap-2">
-              {SOCIALS.map(s => {
-                const external = !s.href.startsWith('mailto')
-                return (
-                  <FilterPill
-                    key={s.label}
-                    as="a"
-                    href={s.href}
-                    target={external ? '_blank' : undefined}
-                    rel="noopener noreferrer"
-                  >
-                    {s.label}
-                    {external && <span className="sr-only"> (opens in new tab)</span>}
-                  </FilterPill>
-                )
-              })}
-            </nav>
-            <nav aria-label="Downloads" className="mt-3 flex flex-wrap items-center gap-2">
-              <DownloadChip href={`${BASE}assets/portfolio-emilie-el-chidiac.pdf`} download="Emilie-El-Chidiac-Portfolio.pdf">
-                THE BOOK (PDF)
-              </DownloadChip>
-              <DownloadChip href={`${BASE}assets/cv-emilie-el-chidiac.pdf`} download="Emilie-El-Chidiac-CV.pdf">
-                CV (PDF)
-              </DownloadChip>
-            </nav>
-          </LensGroup>
+          {/* The reach-me links: the shared ContactLinks (S6-A, Board 2
+              grammar B) — plain text links + app icons under the magnifier,
+              the same row the footer wears. The downloads sit below as their
+              own chips (book vs document icon), no lens: a chip carries its
+              own hover, and the lens belongs to the links. */}
+          <ContactLinks className="mt-5" />
+          <nav aria-label="Downloads" className="mt-3 flex flex-wrap items-center gap-2">
+            <DownloadChip
+              href={`${BASE}assets/portfolio-emilie-el-chidiac.pdf`}
+              download="Emilie-El-Chidiac-Portfolio.pdf"
+              icon={<BookGlyph />}
+            >
+              THE BOOK (PDF)
+            </DownloadChip>
+            <DownloadChip
+              href={`${BASE}assets/cv-emilie-el-chidiac.pdf`}
+              download="Emilie-El-Chidiac-CV.pdf"
+              icon={<DocGlyph />}
+            >
+              CV (PDF)
+            </DownloadChip>
+          </nav>
         </div>
       </section>
     </SheetPage>

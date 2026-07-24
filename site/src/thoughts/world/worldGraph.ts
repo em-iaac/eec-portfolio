@@ -36,7 +36,14 @@ import {
 
 export const WORLD_H = 860
 export const X0 = 150 // first column
-export const STEP = 78 // one chronological rank = one step (frozen)
+// One chronological rank = one horizontal step. Sized to the SPATIAL SCALE
+// (S6-A, Emilie 2026-07-24): at 78 the step was ~57% of the median label width
+// (137px), so 90% of time-neighbours could not sit side by side and the layout
+// leaned on vertical stagger, which is what kept crowding the labels. 130 lets a
+// typical label fit between neighbours, so spacing does the de-crowding
+// structurally. Still a FIXED step per rank (append-safe): new work extends the
+// right edge, no shipped rank's spacing changes.
+export const STEP = 130
 const MARGIN_R = 210 // room for the open lane tips + NOW/LIVE tags
 
 export const WORLD_KINDS: ReadonlySet<EntryKind> = new Set([
@@ -215,7 +222,41 @@ export interface WorldNode {
   route?: string
   dendrites: string[] // path d strings, hidden at rest, grown by the engine
   labelAbove: boolean
+  /** The SHORT map label for awards (S6-A, Emilie 2026-07-24): the map shows
+   *  "issuer + AWARD"; the full recognition (title) rides the card + a11y. */
+  mapLabel?: string
+  /** A project still live + growing (registry `live`): the world marks it. */
+  live?: boolean
+  /** A label-ONLY nudge (px) for any resting label that still overlaps a
+   *  neighbour (S6-A). Moves the title + date text only; the soma, dendrites
+   *  and frozen x/y coordinates never move, so the snapshot stays valid. */
+  labelDx?: number
+  labelDy?: number
   style: KindStyle
+}
+
+// THE SHORT AWARD LABELS (S6-A, Emilie 2026-07-24, "issuer + AWARD"): awards
+// stay their own star node beside the project, but the MAP label is trimmed so
+// it no longer repeats the project name nor sprawls over neighbours; the full
+// recognition still reads in the card + the screen-reader list. draftCopy
+// (wording unsigned), keyed by award id.
+const AWARD_SHORT: Record<string, string> = {
+  'sensi-macad-award': 'MaCAD AWARD',
+  'legoarch-jury': 'AIA JURY',
+  'lungs-award': 'BIMSC AWARD',
+  'huddle-award': 'ACESD AWARD',
+  'mars-top50': 'TOP 50',
+  tamayouz: 'TAMAYOUZ TOP 100',
+  cemetery: 'CEMETERY FINALIST',
+}
+
+// Residual label nudges (label-only, snapshot-safe). Re-derived live after the
+// award short-labels + always-below landed: dropping the above/below stagger
+// left three same-lane touches. Each pushes ONE label of a pair down to clear.
+const LABEL_NUDGE: Record<string, { dx?: number; dy?: number }> = {
+  cemetery: { dy: 16 }, // clears XR for Education
+  cappelletti: { dy: 14 }, // clears Chair Simulation
+  'huddle-award': { dy: 14 }, // clears Tsukiji Fish Market
 }
 
 export interface WorldLink {
@@ -320,7 +361,13 @@ export function buildWorld(): World {
       lane: p.kind === 'milestone' ? laneOf(p) : undefined,
       route,
       dendrites: dendritePaths(p.x, p.y, idSeed(p.id, 11), style),
-      labelAbove: p.kind === 'thought' || (p.kind === 'project' && p.rank % 2 === 0),
+      // Labels always BELOW the dot (S6-A, Emilie 2026-07-24): one consistent
+      // side reads calmer than the old above/below stagger.
+      labelAbove: false,
+      mapLabel: p.kind === 'award' ? AWARD_SHORT[p.id] : undefined,
+      live: p.live,
+      labelDx: LABEL_NUDGE[p.id]?.dx,
+      labelDy: LABEL_NUDGE[p.id]?.dy,
       style,
     }
   })

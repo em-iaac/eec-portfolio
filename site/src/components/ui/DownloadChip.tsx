@@ -1,9 +1,15 @@
 // THE DOWNLOAD CHIP (the design audit round 2, Emilie 2026-07-19: "the
 // download button is a pill on the CV but just red on /work; decide on one
 // consistent way, maybe add an icon"). ONE download affordance sitewide: a
-// hairline pill with a tray-arrow icon, ink at rest, the interaction hue on
-// hover/focus (download is an action, and hover/focus is the interaction, so
-// red enters only there). Used by /work (the book), /cv, and /about.
+// hairline pill, ink at rest, the interaction hue on hover/focus (download is
+// an action, and hover/focus is the interaction, so red enters only there).
+// Used by /work (the book), /cv, and /about.
+//
+// The LEADING icon tells the two downloads apart (S6-A, Emilie 2026-07-24,
+// Board 2): the book download leads with a book, the CV with a document, so a
+// row that holds both no longer reads as one thing twice. Callers pass the
+// type mark via `icon`; the tray-arrow stays the default for any plain
+// download that is neither.
 import { type ReactNode } from 'react'
 
 function TrayArrow() {
@@ -26,25 +32,36 @@ function TrayArrow() {
   )
 }
 
+// ONE PILL FAMILY (S6-A, Emilie 2026-07-24, /work toolbar option A): the chip
+// now mirrors FilterPill's geometry exactly — a COMPACT visible pill (~28px)
+// inside a transparent >= 44px hit area — so a download sitting beside the lens
+// filters reads as the same size, not a chunky 44px outlier. The hairline (not
+// the filter's glass fill) + the type icon keep it legible as "an action, not
+// a facet"; hover/focus brings the interaction hue.
 export default function DownloadChip({
   href,
   download,
   children,
+  icon,
   className = '',
 }: {
   href: string
   download: string
   children: ReactNode
+  /** The leading type mark (book / document). Defaults to the tray-arrow. */
+  icon?: ReactNode
   className?: string
 }) {
   return (
     <a
       href={href}
       download={download}
-      className={`inline-flex min-h-11 items-center gap-1.5 rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3 font-mono text-[10px] tracking-[0.1em] text-[var(--lang-ink)] no-underline hover:border-[var(--lang-interaction)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)] ${className}`}
+      className={`group inline-flex min-h-11 min-w-11 items-center justify-center no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] ${className}`}
     >
-      <TrayArrow />
-      {children}
+      <span className="inline-flex items-center gap-1.5 rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3.5 py-2 font-mono text-[10px] leading-none tracking-[0.1em] text-[var(--lang-ink)] transition-colors group-hover:border-[var(--lang-interaction)] group-hover:text-[var(--lang-interaction)]">
+        {icon ?? <TrayArrow />}
+        {children}
+      </span>
     </a>
   )
 }
