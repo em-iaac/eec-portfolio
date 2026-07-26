@@ -97,7 +97,7 @@ export default function ThoughtLeaf(props: {
         {/* Words only, on the ground. Child selectors keep the note files
             plain <p> + NB dots. [&_p]:relative anchors the sketch-dot's
             floating drawing to the paragraph's margin (S5). */}
-        <div className="max-w-[62ch] font-serif text-prose leading-[1.75] text-[var(--lang-ink)] [&_p]:relative [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
+        <div className="prose-rag max-w-[62ch] font-serif text-prose leading-[1.75] text-[var(--lang-ink)] [&_p]:relative [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
           {children}
         </div>
       </article>

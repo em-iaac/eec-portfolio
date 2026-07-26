@@ -1,13 +1,13 @@
 # DESIGN LANGUAGE v3
 
 **The visual language of record for eec-portfolio.** Consolidated 2026-07-26
-from v2 plus its 32 amendments.
+from v2 plus its 32 amendments; extended to 35.
 
 **How to read this file.** Every section states what is TRUE NOW. There are no
 "supersedes" chains to follow: where an amendment changed a rule, the rule below
 is already the changed one. Two appendices carry the history that still earns
 its keep — **§13 THE DECLINED LIST** (what was tried and refused, so it stays
-refused) and **§14 THE DECISION RECORD** (amendments 1-32 → where each lives
+refused) and **§14 THE DECISION RECORD** (amendments 1-35 → where each lives
 now, so `// DL amendment 17` in the code still resolves).
 
 **Precedence.** `REDESIGN-SPEC.md` is the CONCEPT of record; this file is the
@@ -196,6 +196,15 @@ width 100 (wraps) and 420px at 87.5 (fits)**. The axis buys a whole type step.
 Consequence: the descriptor row and the name are **measure-bound**. If the copy
 grows, dial the token — do not add a size.
 
+### Ragging
+`text-wrap: pretty` on prose (a last-lines optimisation: kills orphans, evens
+the rag, cheap on long text) via `.prose-rag`; `text-wrap: balance` on h1/h2/h3
+(it evens SHORT text into equal lines and the browser caps it at ~6 lines, so it
+belongs on titles — on body copy it silently does nothing).
+**`hanging-punctuation` is deliberately NOT used**: it is Safari-only, and an
+optical margin only a minority of readers see is not a rule the design can lean
+on.
+
 ### Canvas type
 **The WORDS in a drawing render at the same PHYSICAL size whatever the viewport;
 only the DRAWING scales.** SVG canvas type is therefore sized per breakpoint and
@@ -313,6 +322,20 @@ Primitives ship in `site/src/components/ui/`.
   `RED_LINK_TAP` (paint + `-m-2 p-2`, for links inside running prose where
   inline-flex would break the line box) · `INK_LINK` (the one deliberate
   near-variant: ink text, red focus ring, on a photograph's caption strip).
+
+- **The share cards** (`print/OgRoute.tsx`) — 36 cards, one per page, built by
+  the prerender. Each frames **its own corner of the mind graph**, with its node
+  lit in the interaction red, bled off the right edge behind the words at 0.5
+  opacity. A camera on the frozen model, exactly like the phone: no coordinate
+  moves and nothing new is drawn on the artwork. They used to share one mark, so
+  every link looked identical in a feed.
+- **The jump bar** — searches labels (fuzzy subsequence), then TAGS and DEKS
+  (substring, ranked strictly below any label match, so naming a thing never
+  buries it). Tags and lens are free — the registry is already in the entry
+  bundle. **Deks are NOT**: they live in the 129kB `/work` chunk, so they are
+  lazy-loaded on first FOCUS of the bar. Nobody pays for search text until they
+  reach for search. It matters most on phones, where the camera frames only part
+  of the drawing.
 
 **NAMING: one noun per shape.** "Chip" is retired as a rival to "pill" — every
 `--r-pill` object is a Pill; the lens shape is a Mark.
@@ -509,12 +532,16 @@ is not an answer to it.
 | **The signet breathing** | §5 says the mark is static always. Unlocking a signed rule for a hover flourish: declined 2026-07-26. |
 | **Making the handwritten line a claim** | Council-killed: it is the measured LCP element, it is signed, it is the printed book's cover subtitle, and 21px Caveat is a scan-hostile face. |
 | **A whole-landing composition redesign** | Ranked last on every council ballot. PARKED, explicitly. |
+| **Tracing a lineage** (click a node, walk its braid chronologically) | A new mode on a surface just simplified. /thoughts already walks time; the landing already lights threads. Declined 2026-07-26. |
+| **Procedural plates** for a project with no hand-drawn one | All 21 projects have plates. Infrastructure for a project that does not exist. Build it the day it is needed. |
+| **The mode flip as a ceremony** | A transition on a toggle is ornament that does not earn its place. Declined 2026-07-26. |
+| **A per-project single-sheet PDF** | The A4 book already is the leave-behind, and this adds 21 renders to every build. Declined 2026-07-26. |
 
 ---
 
 ## 14 · THE DECISION RECORD
 
-Amendments 1-32 (v2, 2026-07-09 → 2026-07-26) and where each now lives. Kept so
+Amendments 1-35 (v2, 2026-07-09 → 2026-07-26) and where each now lives. Kept so
 that code comments citing an amendment number still resolve.
 
 | # | what it decided | now |
@@ -551,6 +578,9 @@ that code comments citing an amendment number still resolve.
 | 30 | THE OVERTURE | §9 |
 | 31 | the woven question: resolved out | §13 |
 | 32 | a MediaQueryList `change` event is not enough | §9 |
+| 33 | share cards frame their own corner of the drawing | §8 |
+| 34 | the jump bar searches tags + deks, deks lazy | §8 |
+| 35 | prose ragging: `pretty` on prose, `balance` on titles | §4 |
 
 **Historical: the rebuild sequence.** `DL-0` foundation · `DL-1` header + footer
 · `DL-2` WORK · `DL-3` notebook · `DL-4` About · `DL-5` CV. All executed. These

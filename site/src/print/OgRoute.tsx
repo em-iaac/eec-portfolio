@@ -20,6 +20,66 @@ import { ENTRIES } from '../data/registry'
 import { workEntryById } from '../data/work'
 import { THOUGHT_OPENINGS } from '../thoughts/openings'
 import { PILLAR_PATH, PILLAR_PHRASE } from '../lib/pillar'
+import { MIND, THREADS, spline, starPath } from '../landing/mindGraph'
+
+// THE CARD'S PICTURE (2026-07-26). Every one of the 36 share cards used to
+// carry the same EEC mark, so a Sensi link and a thought link looked identical
+// in a feed. Each card now shows THAT ENTRY'S OWN CORNER of the mind graph:
+// the same drawing, framed on the node the card is about, with that node lit.
+//
+// It is a CAMERA on the frozen model, exactly like the phone (DL §10): no
+// coordinate moves, nothing new is drawn on the artwork, and it costs the
+// runtime site nothing because these render only under the build's prerender.
+const SLICE_W = 560
+const SLICE_H = 420
+
+function GraphSlice({ nodeId }: { nodeId: string }) {
+  const focus = MIND.nodes.find((n) => n.id === nodeId)
+  // The pillar and anything unmapped get the whole field, centred.
+  const cx = focus ? focus.x : 720
+  const cy = focus ? focus.y : 430
+  const x = cx - SLICE_W / 2
+  const y = cy - SLICE_H / 2
+  return (
+    <svg
+      viewBox={`${x} ${y} ${SLICE_W} ${SLICE_H}`}
+      width={SLICE_W}
+      height={SLICE_H}
+      aria-hidden="true"
+      style={{ overflow: 'hidden' }}
+    >
+      {THREADS.map((t) => (
+        <path
+          key={t.id}
+          d={spline(t.pts)}
+          fill="none"
+          stroke="var(--lang-ink)"
+          strokeWidth={1.4}
+          strokeLinecap="round"
+          opacity={0.26}
+        />
+      ))}
+      {MIND.nodes.map((n) => {
+        const lit = n.id === nodeId
+        const fill = lit ? 'var(--lang-interaction)' : 'var(--lang-ink)'
+        if (n.award) return <path key={n.id} d={starPath(n.x, n.y, lit ? 9 : 6)} fill={fill} />
+        if (n.kind === 'project')
+          return <circle key={n.id} cx={n.x} cy={n.y} r={lit ? 7 : 4} fill={fill} />
+        return (
+          <circle
+            key={n.id}
+            cx={n.x}
+            cy={n.y}
+            r={lit ? 6.5 : 3.6}
+            fill="none"
+            stroke={fill}
+            strokeWidth={lit ? 2.4 : 1.5}
+          />
+        )
+      })}
+    </svg>
+  )
+}
 
 interface CardData {
   kicker: string
@@ -29,6 +89,8 @@ interface CardData {
   line: string
   recognition?: string
   path: string
+  /** the registry id whose corner of the drawing this card frames */
+  nodeId?: string
 }
 
 function cardFor(cardKey: string): CardData | null {
@@ -43,6 +105,7 @@ function cardFor(cardKey: string): CardData | null {
       line: entry.question ?? entry.dek,
       recognition: entry.recognition,
       path: `emiliechidiac.com/work/${entry.id}`,
+      nodeId: entry.id,
     }
   }
   const thought = cardKey.match(/^thought-(.+)$/)
@@ -58,6 +121,7 @@ function cardFor(cardKey: string): CardData | null {
       serifTitle: true,
       line: opening,
       path: `emiliechidiac.com/thoughts/${entry.id}`,
+      nodeId: entry.id,
     }
   }
   if (cardKey === 'pillar') {
@@ -86,17 +150,34 @@ export default function OgRoute() {
     <div
       data-theme="light"
       data-print-ready={ready ? '' : undefined}
-      className="flex flex-col overflow-hidden bg-[var(--lang-ground)] text-[var(--lang-ink)]"
+      className="relative flex flex-col overflow-hidden bg-[var(--lang-ground)] text-[var(--lang-ink)]"
       style={{ width: 1200, height: 630, padding: '64px 72px 56px' }}
     >
-      <div className="flex items-center justify-between">
+      {/* The drawing sits BEHIND the words, bled off the right edge: the card
+          is read at thumbnail size in a feed, so the picture has to register as
+          texture before anything else resolves. Low opacity keeps the title at
+          full contrast (the AA floor applies here too). */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: -40,
+          right: -60,
+          opacity: 0.5,
+          pointerEvents: 'none',
+        }}
+      >
+        <GraphSlice nodeId={card.nodeId ?? ''} />
+      </div>
+
+      <div className="relative flex items-center justify-between">
         <LogoMark size={64} />
         <span className="font-mono text-[16px] tracking-[0.14em] text-[var(--lang-ink-muted)]">
           EMILIE EL CHIDIAC
         </span>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col justify-end">
+      <div className="relative flex min-h-0 flex-1 flex-col justify-end">
         <p className="font-mono text-[17px] tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">
           {card.kicker}
         </p>

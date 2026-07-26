@@ -287,6 +287,25 @@ section[id] {
   transform-origin: center;
 }
 
+/* PROSE RAGGING (2026-07-26). Two properties, applied where prose actually
+   runs, not globally.
+   `pretty` fixes the RAG and kills orphans on multi-line body copy: it is a
+   last-lines optimisation, so it is cheap and safe on long text.
+   `balance` evens SHORT multi-line text into equal lines and is capped by the
+   browser (~6 lines), so it belongs on TITLES only; putting it on body copy
+   silently does nothing on anything long.
+   `hanging-punctuation` is deliberately NOT used: it is Safari-only, and an
+   optical margin that only a minority of readers see is a rule the design
+   cannot rely on. */
+.prose-rag {
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
 /* THE OVERTURE (2026-07-26). The identity column gets its own entrance: the
    five tiers arrive in READING ORDER over ~1.1s, so the eye is led down the
    column instead of meeting all of it at once.

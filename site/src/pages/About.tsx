@@ -10,7 +10,7 @@ const BASE = import.meta.env.BASE_URL
 
 // The prose step: 17px is the short-laptop fit, 19px when the room breathes
 // (the `tall:` variant, index.css). Class strings stay LITERAL.
-const PROSE = 'font-serif text-[17px] leading-relaxed tall:text-[19px]'
+const PROSE = 'prose-rag font-serif text-[17px] leading-relaxed tall:text-[19px]'
 
 // THE ABOUT + CONTACT SHEET (the design audit round 2, Emilie's ruling
 // 2026-07-19: "design the page from a landscape lens: Say hi + logo on the

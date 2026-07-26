@@ -52,7 +52,7 @@ export default function Pillar() {
         </h1>
 
         {/* The definitive prose (S5, 2026-07-18). */}
-        <div className="max-w-[62ch] font-serif text-prose leading-[1.75] text-[var(--lang-ink)] [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
+        <div className="prose-rag max-w-[62ch] font-serif text-prose leading-[1.75] text-[var(--lang-ink)] [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
           <p>
             What if how a space will make someone feel could be treated as design data, scored
             and estimated and argued with before anything is built? Behavior information

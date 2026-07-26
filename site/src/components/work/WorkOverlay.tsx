@@ -47,7 +47,7 @@ import { INK_LINK, RED_LINK_ROW } from '../../lib/linkStyles'
 
 // Compact serif for the two-column spine (tighter than the old single-column
 // prose, so the whole plate fits without scrolling).
-const PROSE = 'font-serif text-small leading-[1.5] text-[var(--lang-ink)]'
+const PROSE = 'prose-rag font-serif text-small leading-[1.5] text-[var(--lang-ink)]'
 
 // The stage's true rendered size (Emilie's quality pass, 2026-07-14): without
 // this hint the browser assumed the Img default (~640px) and loaded the soft

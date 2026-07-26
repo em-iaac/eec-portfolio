@@ -22,6 +22,9 @@ import { assertPaletteMatchesTheme } from './palette'
 import { RED_LINK } from '../lib/linkStyles'
 import { hasOvertured, markOvertured } from '../lib/develop'
 import LensGroup from '../components/ui/LensGroup'
+import { LensMark } from '../components/ui/Pill'
+import type { Lens } from '../components/Lens'
+import { ENTRIES } from '../data/registry'
 
 // The artwork is split out of the entry chunk (LCP, 2026-07-12): the honest
 // DOM hero paints without it, and the draw-in work stays out of the first
@@ -81,10 +84,29 @@ function LegendMarks() {
 // The jump index: every project/thought (deep nodes the nav can't list) plus the
 // top pages. R9 extends this to the full site content index; R1 ships a real,
 // lean typeahead so the affordance is never a dead mock.
-type JumpItem = { label: string; hint: string; to: string }
+// THE JUMP BAR'S INDEX. It used to be labels only, so "comfort" found nothing
+// even though a project, a thought and four tags carry the word. It is also the
+// PHONE's main way in, since the phone camera (DL §10) frames only part of the
+// drawing, so what it can reach matters more there than anywhere.
+//
+// tags + lens are FREE: registry.ts is already in the entry bundle (mindGraph
+// reads it). DEKS ARE NOT: they live in data/work.ts, a 129kB chunk the landing
+// must never pull, so they are lazy-loaded on first FOCUS of the bar and merged
+// in when they land. Nobody pays for search text until they reach for search.
+type JumpItem = { label: string; hint: string; to: string; lens?: Lens; tags: string[]; dek?: string }
+
+const TAGS_BY_ID = new Map(ENTRIES.map((e) => [e.id, e.tags]))
+const LENS_BY_ID = new Map(ENTRIES.map((e) => [e.id, e.lens]))
+
 const JUMP_ITEMS: JumpItem[] = [
-  ...MIND.nodes.map((n) => ({ label: n.label, hint: n.kind, to: nodeRoute(n) })),
-  ...DOORS.map((d) => ({ label: d.label, hint: 'page', to: d.to })),
+  ...MIND.nodes.map((n) => ({
+    label: n.label,
+    hint: n.kind,
+    to: nodeRoute(n),
+    lens: LENS_BY_ID.get(n.id),
+    tags: TAGS_BY_ID.get(n.id) ?? [],
+  })),
+  ...DOORS.map((d) => ({ label: d.label, hint: 'page', to: d.to, tags: [] })),
 ]
 
 // Subsequence match: every character of the query must appear in the label IN
@@ -117,6 +139,24 @@ function JumpBar() {
   const inputRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
+  // route -> dek, filled on first focus (see JUMP_ITEMS above)
+  const [deks, setDeks] = useState<Record<string, string>>({})
+  const warmed = useRef(false)
+  const warmDeks = () => {
+    if (warmed.current) return
+    warmed.current = true
+    import('../data/work')
+      .then((m) => {
+        const next: Record<string, string> = {}
+        m.WORK_ENTRIES.forEach((w) => {
+          next[`/work/${w.id}`] = w.dek
+        })
+        setDeks(next)
+      })
+      .catch(() => {
+        warmed.current = false
+      })
+  }
 
   const matches = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -126,12 +166,22 @@ function JumpBar() {
     // short strings like "th" free to fuzzy-match labels (THE HUDDLE, heritage...).
     if (q.length >= 3 && 'projects'.startsWith(q)) return JUMP_ITEMS.filter((i) => i.hint === 'project')
     if (q.length >= 3 && 'thoughts'.startsWith(q)) return JUMP_ITEMS.filter((i) => i.hint === 'thought')
-    return JUMP_ITEMS.map((i) => ({ i, score: fuzzyScore(q, i.label) }))
+    // A LABEL match always outranks a tag or dek match: +5000 keeps the whole
+    // secondary tier below the worst subsequence hit, so typing a name never
+    // buries the thing you named under things that merely mention it.
+    return JUMP_ITEMS.map((i) => {
+      const byLabel = fuzzyScore(q, i.label)
+      if (byLabel !== null) return { i, score: byLabel }
+      const dek = deks[i.to]
+      const hay = [...i.tags, dek ?? ''].join(' ').toLowerCase()
+      const at = hay.indexOf(q)
+      return { i, score: at === -1 ? null : 5000 + at }
+    })
       .filter((x): x is { i: JumpItem; score: number } => x.score !== null)
       .sort((a, b) => a.score - b.score)
       .slice(0, 7)
       .map((x) => x.i)
-  }, [query])
+  }, [query, deks])
 
   // "/" focuses the bar from anywhere on the cover (unless already typing).
   useEffect(() => {
@@ -170,7 +220,10 @@ function JumpBar() {
           setQuery(e.target.value)
           setOpen(true)
         }}
-        onFocus={() => setOpen(true)}
+        onFocus={() => {
+          setOpen(true)
+          warmDeks()
+        }}
         onKeyDown={(e) => {
           if (e.key === 'Escape') {
             setQuery('')
@@ -205,7 +258,15 @@ function JumpBar() {
                 onClick={() => go(m.to)}
                 className="flex items-center justify-between gap-3 px-3 py-2 font-mono text-label tracking-[0.06em] text-[var(--lang-ink)] hover:bg-[color-mix(in_srgb,var(--lang-ink)_10%,transparent)] focus:bg-[color-mix(in_srgb,var(--lang-ink)_10%,transparent)] focus:outline-none"
               >
-                <span className="truncate">{m.label}</span>
+                <span className="flex min-w-0 items-center gap-1.5">
+                  {m.lens && <LensMark lens={m.lens} />}
+                  <span className="truncate">{m.label}</span>
+                </span>
+                {deks[m.to] && (
+                  <span className="hidden min-w-0 flex-1 truncate font-serif text-micro normal-case tracking-normal text-[var(--lang-ink-muted)] sm:block">
+                    {deks[m.to]}
+                  </span>
+                )}
                 <span className="shrink-0 text-micro tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">{m.hint}</span>
               </Link>
             </li>
