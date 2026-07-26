@@ -650,6 +650,24 @@ export const ENTRIES: RegistryEntry[] = [
     note: note('explain', 'T-113'),
     explore: { label: 'explaining things', nodeKind: 'thought', order: 33 },
   },
+  {
+    // ---- S7 append (2026-07-26): the MaCAD Module 03 graph work joins the
+    // record as a THOUGHT, not a project. Emilie's ruling: the notebook
+    // scaffolds came from the IAAC GraphML course and she adapted them, so the
+    // honest subject is the analysis and the judgement rather than a build.
+    // Dated to the same month as narkomfin (the team project from the same
+    // module), so it appends at the newest edge and the world layout barely
+    // moves. APPENDS ONLY: explore order continues at 34, note number at T-114.
+    id: 'adjacency',
+    kind: 'thought',
+    date: '2026-06',
+    title: 'adjacency is not access',
+    lens: 'computation',
+    tags: ['data', 'geometry'],
+    note: note('adjacency', 'T-114'),
+    explore: { label: 'adjacency is not access', nodeKind: 'thought', order: 34 },
+    draftCopy: true, // unsigned until Emilie reads the leaf
+  },
 
   // ---- Milestones (where Em shows up on the record; dates from cv.ts) ----
   {

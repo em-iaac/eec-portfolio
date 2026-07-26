@@ -38,7 +38,7 @@ function TrayArrow() {
 // filters reads as the same size, not a chunky 44px outlier. The hairline (not
 // the filter's glass fill) + the type icon keep it legible as "an action, not
 // a facet"; hover/focus brings the interaction hue.
-export default function DownloadChip({
+export default function DownloadPill({
   href,
   download,
   children,
@@ -58,7 +58,7 @@ export default function DownloadChip({
       download={download}
       className={`group inline-flex min-h-11 min-w-11 items-center justify-center no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] ${className}`}
     >
-      <span className="inline-flex items-center gap-1.5 rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3.5 py-2 font-mono text-[10px] leading-none tracking-[0.1em] text-[var(--lang-ink)] transition-colors group-hover:border-[var(--lang-interaction)] group-hover:text-[var(--lang-interaction)]">
+      <span className="inline-flex items-center gap-1.5 rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3.5 py-2 font-mono text-label leading-none tracking-[0.1em] text-[var(--lang-ink)] transition-colors group-hover:border-[var(--lang-interaction)] group-hover:text-[var(--lang-interaction)]">
         {icon ?? <TrayArrow />}
         {children}
       </span>

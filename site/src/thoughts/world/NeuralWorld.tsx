@@ -30,18 +30,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TitleBlock from '../../components/TitleBlock'
+import { LENSES, type Lens } from '../../components/Lens'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import { NOW } from '../../data/now'
 import { THOUGHT_OPENINGS } from '../openings'
 import { WORLD, starPath, type WorldNode } from './worldGraph'
+import { vtName } from '../../lib/viewTransition'
+import { preloadPath } from '../../lib/preloadRoute'
+import { travelTo } from '../../lib/navIntent'
 import { useProximityEngine, TUNE, type ConnHandle, type NodeHandle } from './useProximityEngine'
 import WorldSrNav from './WorldSrNav'
 
-const LENS_COLOR: Record<string, string> = {
-  computation: 'light-dark(#0e7490, #22d3ee)',
-  practice: 'light-dark(#a8186b, #f472b6)',
-  explorations: 'light-dark(#7a5e00, #facc15)',
-}
+// The lens accents come from the one source (components/Lens.tsx): these land
+// on SVG presentation attributes, so they must be the literal light-dark()
+// pair, never a var().
+const lensColor = (lens: Lens | undefined) => (lens ? LENSES[lens].accent : 'var(--lang-ink)')
 
 const KIND_LABEL = {
   project: 'PROJECT',
@@ -118,10 +121,8 @@ export default function NeuralWorld() {
   })
 
   useEffect(() => {
-    // Paint the whole document with the mode's ground so overscroll matches.
-    const html = document.documentElement
-    const prev = html.style.background
-    html.style.background = 'var(--lang-ground)'
+    // (No html-background patch here any more; see LandingCover. `body` paints
+    // --lang-ground, so overscroll already matches every surface.)
     let on = true
     import('../../data/work').then((m) => {
       if (on) dekMap.current = new Map(m.WORK_ENTRIES.map((w) => [w.id, w.dek]))
@@ -132,7 +133,6 @@ export default function NeuralWorld() {
     }
     return () => {
       on = false
-      html.style.background = prev
     }
   }, [])
 
@@ -369,7 +369,8 @@ export default function NeuralWorld() {
 
   function open(n: WorldNode) {
     if (!n.route) return
-    navigate(n.route, { viewTransition: true })
+    preloadPath(n.route)
+    navigate(travelTo(n.route), { viewTransition: true })
   }
 
   // A pointer click LOCKS this node's card (releasing any previously locked
@@ -409,7 +410,7 @@ export default function NeuralWorld() {
     <div className="flex min-h-dvh flex-col text-[var(--lang-ink)]">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-redline focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-mylar"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-redline focus:px-4 focus:py-2 focus:font-mono focus:text-nav focus:text-mylar"
       >
         Skip to content
       </a>
@@ -418,12 +419,13 @@ export default function NeuralWorld() {
           left, WATCH IT GROW on the header line right, exactly like every
           other page's tools. */}
       <TitleBlock
+        toolsKey="world"
         tools={
           !prm ? (
             <button
               type="button"
               onClick={engine.replay}
-              className="inline-flex min-h-8 items-center rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3 font-mono text-[10px] tracking-[0.1em] text-[var(--lang-ink)] hover:border-[var(--lang-interaction)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+              className="inline-flex min-h-8 items-center rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3 font-mono text-label tracking-[0.1em] text-[var(--lang-ink)] hover:border-[var(--lang-interaction)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
             >
               ⟳ WATCH IT GROW
             </button>
@@ -450,12 +452,12 @@ export default function NeuralWorld() {
           <div className="lang-glass-1 mx-auto flex max-w-[1856px] flex-wrap items-center justify-between gap-x-6 gap-y-1 rounded-[var(--r-card)] px-5 py-2.5 sm:px-7">
             <div
               aria-hidden="true"
-              className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[8px] tracking-[0.08em] text-[var(--lang-ink-muted)] sm:gap-x-4 sm:text-[9px] sm:tracking-[0.1em]"
+              className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)] sm:gap-x-4 sm:text-micro sm:tracking-[0.1em]"
             >
               <span className="inline-flex items-center gap-1.5">
                 <svg width="16" height="16" viewBox="0 0 16 16" className="overflow-visible">
                   <circle cx="8" cy="8" r="6" fill="var(--lang-ink)" />
-                  <circle cx="8" cy="8" r="2.4" fill={LENS_COLOR.computation} />
+                  <circle cx="8" cy="8" r="2.4" fill={LENSES.computation.accent} />
                 </svg>
                 PROJECT
               </span>
@@ -481,7 +483,7 @@ export default function NeuralWorld() {
             </div>
             <p
               aria-hidden="true"
-              className="font-mono text-[9px] tracking-[0.12em] text-[var(--lang-ink-muted)]"
+              className="font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)]"
             >
               <b className="font-normal text-[var(--lang-ink)]">DRAG</b> TO EXPLORE ·{' '}
               <b className="font-normal text-[var(--lang-ink)]">IT WAKES WHERE YOU LOOK</b>
@@ -601,7 +603,7 @@ export default function NeuralWorld() {
             <g aria-hidden="true">
               {WORLD.links.map((l) => {
                 const key = `${l.a}>${l.b}`
-                const col = l.lens ? LENS_COLOR[l.lens] : 'var(--lang-ink)'
+                const col = lensColor(l.lens)
                 return (
                   <g key={key} ref={connRefs.get(key)}>
                     {l.fibres.map((f, i) => (
@@ -632,7 +634,7 @@ export default function NeuralWorld() {
             {/* the neurons */}
             <g>
               {WORLD.nodes.map((n) => {
-                const col = n.lens ? LENS_COLOR[n.lens] : 'var(--lang-ink)'
+                const col = lensColor(n.lens)
                 const o = n.style
                 const above = n.labelAbove
                 const ly = n.kind === 'milestone' ? n.y + 18 : above ? n.y - o.r - 12 : n.y + o.r + 18
@@ -648,6 +650,7 @@ export default function NeuralWorld() {
                     aria-label={nodeAria(n)}
                     onMouseEnter={() => {
                       setForce(n.id, 1)
+                      if (n.route) preloadPath(n.route)
                       // While a card is locked, hovering only wakes the
                       // neuron; the light chip stays suppressed so it never
                       // fights the locked card.
@@ -783,9 +786,19 @@ export default function NeuralWorld() {
                 ? 'pointer-events-auto max-w-[300px] px-4 py-3.5'
                 : 'pointer-events-none max-w-[264px] px-3.5 py-2.5'
             }`}
-            style={{ left: card.left, top: card.top }}
+            // THE MORPH SOURCE (Emilie 2026-07-26): the CARD travels into
+            // the page, not the neuron. It is what the reader is looking at
+            // when they press OPEN, it already holds the destination's title,
+            // and a 300px panel into a title block is a short honest move
+            // where a 6px dot into a full hero would be a smear. Only one
+            // card exists at a time, so the one-element-per-name rule holds.
+            style={{
+              left: card.left,
+              top: card.top,
+              viewTransitionName: card.route ? vtName(card.route) : undefined,
+            }}
           >
-            <div className="flex justify-between gap-3 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
+            <div className="flex justify-between gap-3 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
               <span>{card.date}</span>
               <span className={card.red ? 'text-[var(--lang-interaction)]' : 'text-[var(--lang-ink)]'}>
                 {card.kind}
@@ -793,18 +806,18 @@ export default function NeuralWorld() {
             </div>
             <p
               className={`mt-1.5 leading-snug font-semibold text-[var(--lang-ink)] ${
-                card.locked ? 'text-[16px]' : 'text-[14px]'
+                card.locked ? 'text-prose' : 'text-body'
               } ${card.serifTitle ? 'font-serif font-medium lowercase italic' : ''}`}
             >
               {card.title}
             </p>
             {card.locked && card.blurb && (
-              <p className="mt-1.5 font-serif text-[13px] leading-relaxed text-[var(--lang-ink-muted)]">
+              <p className="mt-1.5 font-serif text-small leading-relaxed text-[var(--lang-ink-muted)]">
                 {card.blurb}
               </p>
             )}
             {card.locked && card.live && (
-              <p className="mt-2 flex items-center gap-1.5 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-interaction)]">
+              <p className="mt-2 flex items-center gap-1.5 font-mono text-micro tracking-[0.1em] text-[var(--lang-interaction)]">
                 <span aria-hidden="true" className="inline-block size-1.5 rounded-full bg-[var(--lang-interaction)]" />
                 LIVE · STILL GROWING
               </p>
@@ -813,8 +826,8 @@ export default function NeuralWorld() {
               <button
                 type="button"
                 tabIndex={-1}
-                onClick={() => card.route && navigate(card.route, { viewTransition: true })}
-                className="mt-2.5 inline-flex items-center gap-1.5 rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3 py-1.5 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink)] transition-colors hover:border-[var(--lang-interaction)] hover:text-[var(--lang-interaction)]"
+                onClick={() => card.route && navigate(travelTo(card.route), { viewTransition: true })}
+                className="mt-2.5 inline-flex items-center gap-1.5 rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3 py-1.5 font-mono text-micro tracking-[0.1em] text-[var(--lang-ink)] transition-colors hover:border-[var(--lang-interaction)] hover:text-[var(--lang-interaction)]"
               >
                 OPEN <span aria-hidden="true">›</span>
               </button>

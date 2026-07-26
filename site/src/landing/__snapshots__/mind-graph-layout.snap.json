@@ -380,5 +380,16 @@
     ],
     "x": 1239,
     "y": 385
+  },
+  {
+    "id": "adjacency",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "DATA"
+    ],
+    "x": 956,
+    "y": 460
   }
 ]

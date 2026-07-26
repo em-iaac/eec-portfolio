@@ -5,6 +5,7 @@
 // the full header: every real door stays one tap away for a lost visitor.
 import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
+import { RED_LINK_ROW } from '../lib/linkStyles'
 
 export default function NotFound() {
   return (
@@ -21,18 +22,18 @@ export default function NotFound() {
         </p>
         <h1
           id="lost-heading"
-          className="mt-5 max-w-[24ch] font-serif text-[30px] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
+          className="mt-5 max-w-[24ch] font-serif text-display font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
         >
           this thought wandered off
         </h1>
-        <p className="mt-4 max-w-[52ch] font-serif text-[15px] leading-relaxed text-[var(--lang-ink-muted)]">
+        <p className="mt-4 max-w-[52ch] font-serif text-body leading-relaxed text-[var(--lang-ink-muted)]">
           Whatever lived at this address is not here. Everything that is lives one door away.
         </p>
-        <p className="mt-8 font-mono text-[10px] tracking-[0.12em]">
+        <p className="mt-8 font-mono text-label tracking-[0.12em]">
           <Link
             to="/"
             viewTransition
-            className="-m-2 inline-flex min-h-11 items-center p-2 text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+            className={RED_LINK_ROW}
           >
             BACK TO THE MIND ›
           </Link>

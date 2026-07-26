@@ -3,7 +3,7 @@
 // Lens colour NEVER carries meaning alone — the shape-chip (square / diamond /
 // triangle) rides inside the lens pill, the a11y rule carried from Pen Table.
 import type { CSSProperties, ElementType, ReactNode } from 'react'
-import type { Lens } from '../Lens'
+import { LENSES, LensGlyph, type Lens } from '../Lens'
 
 const BASE = 'inline-flex items-center gap-1.5 rounded-[var(--r-pill)] leading-none'
 
@@ -25,7 +25,7 @@ export function Pill({
   const skin = active
     ? 'bg-[var(--lang-ink)] text-[var(--lang-ground)] border-[0.5px] border-transparent'
     : 'lang-glass-1 text-[var(--lang-ink-muted)]'
-  const type = mono ? 'font-mono text-[10px] tracking-[0.06em]' : 'text-[11px]'
+  const type = mono ? 'font-mono text-label tracking-[0.06em]' : 'text-nav'
   return <span className={`${BASE} px-3 py-1.5 ${type} ${skin} ${className}`}>{leading}{children}</span>
 }
 
@@ -61,7 +61,7 @@ export function FilterPill({
       className={`inline-flex min-h-11 min-w-11 items-center justify-center no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] ${className}`}
       {...rest}
     >
-      <span className={`${BASE} px-3.5 py-2 font-mono text-[10px] tracking-[0.06em] transition-colors ${skin}`}>
+      <span className={`${BASE} px-3.5 py-2 font-mono text-label tracking-[0.06em] transition-colors ${skin}`}>
         {leading}
         {children}
       </span>
@@ -85,7 +85,7 @@ export function StatusPill({
 }) {
   return (
     <span
-      className={`${BASE} lang-glass-1 px-2.5 py-1 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink)]`}
+      className={`${BASE} lang-glass-1 px-2.5 py-1 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink)]`}
       style={solid ? { background: 'var(--lang-glass-2-solid)' } : undefined}
     >
       {kind === 'live' ? (
@@ -98,44 +98,43 @@ export function StatusPill({
   )
 }
 
-const LENS_UI: Record<Lens, { label: string; accent: string; shape: 'square' | 'diamond' | 'triangle' }> = {
-  computation: { label: 'research', accent: 'light-dark(#0e7490, #22d3ee)', shape: 'square' },
-  practice: { label: 'practice', accent: 'light-dark(#a8186b, #f472b6)', shape: 'diamond' },
-  explorations: { label: 'explorations', accent: 'light-dark(#7a5e00, #facc15)', shape: 'triangle' },
-}
-
-// currentColor lets the mode-aware light-dark() accent flow to both the shape
-// and the label without repeating it (and without light-dark() in an SVG attr).
-function Chip({ shape }: { shape: LensShape }) {
-  return (
-    <svg width="7" height="7" viewBox="0 0 10 10" aria-hidden="true" style={{ fill: 'currentColor' }}>
-      {shape === 'square' && <rect x="0.5" y="0.5" width="9" height="9" />}
-      {shape === 'diamond' && <path d="M5 0 L10 5 L5 10 L0 5 Z" />}
-      {shape === 'triangle' && <path d="M5 0.5 L10 9.5 L0 9.5 Z" />}
-    </svg>
-  )
-}
-type LensShape = 'square' | 'diamond' | 'triangle'
-
-// The filter row's leading mark: the lens shape alone (the pill it rides in
-// supplies the label, so shape + label still travel together, a11y rule).
-// At rest it wears the lens accent; inside an ACTIVE pill (solid ink fill) it
-// inherits currentColor so the chip never fights the fill for contrast.
-export function LensMark({ lens, active = false }: { lens: Lens; active?: boolean }) {
-  const l = LENS_UI[lens]
+// THE ONE LENS MARK (the design-system audit, 2026-07-26). Absorbed the old
+// Lens.tsx `LensTick` and this file's internal `Chip`, which were the same
+// component twice with one consumer each.
+//
+// The lens shape alone, never a label: whatever it rides in supplies the word,
+// so shape + label still travel together (the a11y rule). currentColor lets the
+// mode-aware light-dark() accent reach both the shape and its label without
+// repeating it, and without light-dark() in an SVG attribute.
+//
+//   size    7 inside a pill (the filter row), 9 standing beside running text.
+//   active  inside a solid-ink pill the mark inherits currentColor instead of
+//           its accent, so it never fights the fill for contrast.
+export function LensMark({
+  lens,
+  size = 7,
+  active = false,
+}: {
+  lens: Lens
+  size?: number
+  active?: boolean
+}) {
+  const l = LENSES[lens]
   return (
     <span
       aria-hidden="true"
-      className="inline-flex"
+      className="inline-flex shrink-0"
       style={active ? undefined : ({ color: l.accent } as CSSProperties)}
     >
-      <Chip shape={l.shape} />
+      <svg width={size} height={size} viewBox="0 0 10 10" style={{ fill: 'currentColor' }}>
+        <LensGlyph shape={l.shape} />
+      </svg>
     </span>
   )
 }
 
 export function LensPill({ lens }: { lens: Lens }) {
-  const l = LENS_UI[lens]
+  const l = LENSES[lens]
   return (
     // min-w-0 + a truncating label: inside a tight flex row (the dense index
     // face at phone widths) the PILL gives way with an ellipsis so the row's
@@ -143,11 +142,12 @@ export function LensPill({ lens }: { lens: Lens }) {
     // chip + colour survive any truncation, and the full label stays in the
     // accessibility tree).
     <span
-      className={`${BASE} lang-glass-1 min-w-0 px-3 py-1.5 font-mono text-[9px] tracking-[0.06em]`}
+      className={`${BASE} lang-glass-1 min-w-0 px-3 py-1.5 font-mono text-micro tracking-[0.06em]`}
       style={{ color: l.accent } as CSSProperties}
     >
-      <Chip shape={l.shape} />
-      <span className="min-w-0 truncate">{l.label.toUpperCase()}</span>
+      <LensMark lens={lens} />
+      {/* the SHORT lens name: the long one cannot survive a 9px truncating pill */}
+      <span className="min-w-0 truncate">{l.short.toUpperCase()}</span>
     </span>
   )
 }

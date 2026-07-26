@@ -144,7 +144,7 @@ export default function QuestionsDot({
           // blur does not compose inside the already-blurred plate).
           className="nbtip-enter absolute top-5 left-[-120px] z-10 block w-[264px] rounded-[var(--r-control)] border-[0.5px] border-[var(--lang-glass-2-border)] bg-[var(--lang-glass-2-solid)] py-1.5 text-left"
         >
-          <span className="block px-3.5 pt-1 pb-0.5 font-mono text-[9px] tracking-[0.12em] text-[var(--lang-ink-muted)]">
+          <span className="block px-3.5 pt-1 pb-0.5 font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)]">
             ALSO ANSWERS
           </span>
           {also.map(a => (
@@ -152,7 +152,7 @@ export default function QuestionsDot({
               key={a.q}
               type="button"
               onClick={() => highlight(a.beat)}
-              className="block min-h-11 w-full cursor-pointer border-0 bg-transparent px-3.5 py-1.5 text-left font-serif text-[13px] leading-snug font-normal tracking-normal normal-case italic text-[var(--lang-ink)] hover:bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+              className="block min-h-11 w-full cursor-pointer border-0 bg-transparent px-3.5 py-1.5 text-left font-serif text-small leading-snug font-normal tracking-normal normal-case italic text-[var(--lang-ink)] hover:bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
             >
               {a.q}
             </button>

@@ -46,6 +46,17 @@
   --lang-hero-muted: light-dark(#565b63, #c7cbd1);
   --lang-hand-warm: light-dark(#6d5f46, #d8d2c4);
 
+  /* THE PHOTO SCRIM (the design-system audit, 2026-07-26). Controls that ride
+     ON a photograph cannot trust the ground behind them, so they carry their
+     own dark. This was rgba(11,14,19,x) hand-written EIGHT times across
+     Lightbox and WorkOverlay at four weights. It is carbon, and it is
+     MODE-INDEPENDENT on purpose: a photo is a photo in either mode. */
+  --lang-scrim: 11 14 19;
+  --lang-scrim-rest: rgb(var(--lang-scrim) / 0.55);
+  --lang-scrim-hover: rgb(var(--lang-scrim) / 0.8);
+  --lang-scrim-soft: rgb(var(--lang-scrim) / 0.45);
+  --lang-scrim-faint: rgb(var(--lang-scrim) / 0.35);
+
   /* Glass tiers: raised (cards/panels) + floating (overlays/sheets/menus) */
   --lang-glass-1: light-dark(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.05));
   --lang-glass-1-border: light-dark(rgba(22, 24, 29, 0.1), rgba(255, 255, 255, 0.12));
@@ -330,28 +341,118 @@ textarea,
      EVERY transition is an instant swap (the kill block below also
      silences the UA's default crossfade, which would otherwise run).
    ============================================================ */
+/* ---- THE LAYERS (2026-07-26) --------------------------------------------
+   A name lifts an element OUT of the root snapshot and gives it its own
+   layer. That is the whole mechanism behind the frozen frame reading as
+   frozen: name the chrome, and the chrome stops travelling with the page.
+   Static names live here, in one place, next to the animations that use
+   them; per-route names (the morphs) stay inline, where they are derived. */
+.nav-pill {
+  view-transition-name: chrome-pill;
+}
+.foot-pill {
+  view-transition-name: page-foot;
+}
+/* The page's own tools ride the HEADER LINE, beside the pill. They belong to
+   the frame, not to the content: unnamed they stayed in root and travelled
+   with the page while the pill right next to them held perfectly still, which
+   tore the header line in half. So they are named too, but the name is set in
+   TitleBlock and carries a PER-TOOL-SET key: the /work filter row is not a
+   version of the /cv contact links, and one shared name made the browser
+   morph a 794px box into a 149px one. See TitleBlock's toolsKey. */
+
 @media (prefers-reduced-motion: no-preference) {
-  ::view-transition-old(root) {
-    animation: lang-vt-out 250ms var(--ease-soft) both;
-  }
-  ::view-transition-new(root) {
-    animation: lang-vt-in 250ms var(--ease-soft) both;
-  }
-  /* Matched pairs (the morphs) ride the same clock + curve as the fade. */
-  ::view-transition-group(*) {
-    animation-duration: 250ms;
+  /* THE FRAME HOLDS STILL, and this is the whole answer to "lose the page
+     feel": not an effect, but naming. A name lifts an element out of the root
+     snapshot, so the content moving underneath can no longer drag the pill,
+     its tools or the footer along with it.
+     Note there is NO animation override here, and that is deliberate. Their
+     own default cross-fade is between two
+     pixel-identical images, which is invisible and costs nothing.
+     Forcing `animation: none` here was WRONG and was tried first: /work
+     carries a footer and /about does not, so an unpaired footer would hold
+     full opacity for the whole transition and then vanish in one frame. The
+     default fade handles the paired and unpaired cases correctly on its own. */
+  /* THE MAGNIFIER TRAVELS. It is the one piece of chrome that means
+     something different in each room, so it is the one piece that moves:
+     it slides from the old door to the new one ACROSS the navigation, on
+     the same clock as the page. */
+  ::view-transition-group(chrome-lens) {
+    animation-duration: 240ms;
     animation-timing-function: var(--ease-soft);
   }
-  @keyframes lang-vt-out {
+
+  ::view-transition-group(root) {
+    animation-duration: 320ms;
+    animation-timing-function: var(--ease-soft);
+  }
+  /* THE CONTENT MOVES, and it is the ONLY thing that moves. Out is fast and
+     short (the room you are leaving is not the story); in is slower and starts
+     at 80ms, once the old has mostly gone, so the two are never two equal
+     opposing fades. Transform + opacity only, so the compositor does the work
+     and nothing repaints.
+     A DIRECTIONAL SLIDE ON THE DOOR AXIS WAS BUILT AND DROPPED
+     (Emilie, 2026-07-26): 24px over 300ms sits in the dead zone where the eye
+     reads "something shifted" rather than "I travelled", which is what read as
+     a glitch, and committing harder would only have made it a phone-app push.
+     The magnifier already carries direction, quietly, in her own grammar.
+     Do not re-propose the slide.
+     mix-blend-mode is pinned to `normal` on purpose. Chrome's default for a
+     view transition is plus-lighter, which is built to keep a SYMMETRIC
+     cross-fade of the same content stable. These two snapshots are different
+     pages on a light ground, and plus-lighter across the overlap reads as a
+     bright wash. A plain dissolve is what a page change should look like. */
+  ::view-transition-old(root) {
+    animation: vt-out-up 140ms cubic-bezier(0.4, 0, 1, 1) both;
+    mix-blend-mode: normal;
+  }
+  ::view-transition-new(root) {
+    animation: vt-in-up 300ms var(--ease-soft) 80ms both;
+    mix-blend-mode: normal;
+  }
+  /* Matched pairs (the morphs) ride the same clock + curve. */
+  ::view-transition-group(*) {
+    animation-duration: 320ms;
+    animation-timing-function: var(--ease-soft);
+  }
+
+  @keyframes vt-out-up {
+    to {
+      opacity: 0;
+      transform: translate3d(0, -6px, 0);
+    }
+  }
+  @keyframes vt-in-up {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 10px, 0);
+    }
+  }
+  /* STAY · a change inside one room (the /work card opening over its own
+     gallery). The gallery must not move at all or it slides out from under
+     the card you just opened; only the scrim needs softening. A pure, short
+     opacity pass, and the shared element carries the meaning.
+     NOTE the selector shape: ::view-transition-* pseudos hang off the ROOT
+     element, so the state attribute must be a compound on html, never a
+     descendant combinator (which would match nothing). */
+  html[data-vt='stay']::view-transition-old(root) {
+    animation: vt-fade-out 120ms linear both;
+  }
+  html[data-vt='stay']::view-transition-new(root) {
+    animation: vt-fade-in 160ms linear both;
+  }
+
+  @keyframes vt-fade-out {
     to {
       opacity: 0;
     }
   }
-  @keyframes lang-vt-in {
+  @keyframes vt-fade-in {
     from {
       opacity: 0;
     }
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

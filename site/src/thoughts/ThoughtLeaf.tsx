@@ -35,7 +35,7 @@ function CtrlIcon({ name }: { name: 'list' | 'clock' | 'arrow' }) {
 }
 
 const CTRL =
-  '-m-1 inline-flex min-h-9 items-center gap-1.5 p-1 font-mono text-[10px] tracking-[0.08em] no-underline hover:underline hover:decoration-2 hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
+  '-m-1 inline-flex min-h-9 items-center gap-1.5 p-1 font-mono text-label tracking-[0.08em] no-underline hover:underline hover:decoration-2 hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
 
 export default function ThoughtLeaf(props: {
   number?: string
@@ -57,7 +57,7 @@ export default function ThoughtLeaf(props: {
   // and the way to leaf through the record both ride the header line.
   const headerInfo = (
     <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1">
-      <div className="flex flex-wrap items-center gap-x-3 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
+      <div className="flex flex-wrap items-center gap-x-3 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
         <span>~ THOUGHT · {date}</span>
         <LensPill lens={lens} />
         {number && <span>{number}</span>}
@@ -83,12 +83,12 @@ export default function ThoughtLeaf(props: {
   )
 
   return (
-    <SheetPage center={false} pillTools={headerInfo}>
+    <SheetPage center={false} pillTools={headerInfo} toolsKey="leaf">
       <article className="mx-auto w-full max-w-[680px] pt-8 pb-12">
         {/* Only the title in the content now (Emilie's ruling round 2): the
             meta moved to the header line. */}
         <h1
-          className="mb-6 max-w-[22ch] font-serif text-[27px] leading-[1.22] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
+          className="mb-6 max-w-[22ch] font-serif text-display leading-[1.22] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
           style={{ viewTransitionName: id ? vtName(`/thoughts/${id}`) : undefined }}
         >
           {title}
@@ -97,7 +97,7 @@ export default function ThoughtLeaf(props: {
         {/* Words only, on the ground. Child selectors keep the note files
             plain <p> + NB dots. [&_p]:relative anchors the sketch-dot's
             floating drawing to the paragraph's margin (S5). */}
-        <div className="max-w-[62ch] font-serif text-[16.5px] leading-[1.75] text-[var(--lang-ink)] [&_p]:relative [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
+        <div className="max-w-[62ch] font-serif text-prose leading-[1.75] text-[var(--lang-ink)] [&_p]:relative [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
           {children}
         </div>
       </article>

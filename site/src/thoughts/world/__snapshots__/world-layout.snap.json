@@ -1,5 +1,5 @@
 {
-  "w": 6730,
+  "w": 6860,
   "h": 860,
   "nodes": [
     {
@@ -363,26 +363,34 @@
       "route": "/work/urban-risk"
     },
     {
-      "id": "pelagnou",
+      "id": "adjacency",
       "kind": "thought",
       "date": "2026-06",
       "x": 6065,
-      "y": 150,
+      "y": 127.7,
+      "route": "/thoughts/adjacency"
+    },
+    {
+      "id": "pelagnou",
+      "kind": "thought",
+      "date": "2026-06",
+      "x": 6195,
+      "y": 102.8,
       "route": "/thoughts/pelagnou"
     },
     {
       "id": "respond",
       "kind": "thought",
       "date": "2026-06",
-      "x": 6195,
-      "y": 89,
+      "x": 6325,
+      "y": 137.2,
       "route": "/thoughts/respond"
     },
     {
       "id": "site-live",
       "kind": "milestone",
       "date": "2026-07",
-      "x": 6325,
+      "x": 6455,
       "y": 600,
       "route": null
     },
@@ -390,8 +398,8 @@
       "id": "explain",
       "kind": "thought",
       "date": "2026-07",
-      "x": 6455,
-      "y": 247.8,
+      "x": 6585,
+      "y": 294.4,
       "route": "/thoughts/explain"
     }
   ]

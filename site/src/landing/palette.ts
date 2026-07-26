@@ -13,10 +13,14 @@ export const REDLINE_WIRE = '#FF4D6D' // --color-redline-wire
 
 export type LensKey = 'c' | 'p' | 'e'
 
-export const LENSES: Record<LensKey, { wire: string; label: string; tick: 'square' | 'diamond' | 'triangle' }> = {
-  c: { wire: '#22D3EE', label: 'COMPUTATION & RESEARCH', tick: 'square' }, // --color-cyan-wire
-  p: { wire: '#F472B6', label: 'DESIGN & PRACTICE', tick: 'diamond' }, // --color-magenta-wire
-  e: { wire: '#FACC15', label: 'EXPLORATIONS', tick: 'triangle' }, // --color-yellow-wire
+// The dark-ground wire per lens. No `label` here any more (#20 sweep): the
+// lens NAMES live once, in components/Lens.tsx, and MindGraphSrNav reads them
+// from there. This map stays literal + Node-safe because the prerender bundles
+// it (mindGraph.ts imports LENS_TO_KEY below), and Node has no CSS.
+export const LENSES: Record<LensKey, { wire: string; tick: 'square' | 'diamond' | 'triangle' }> = {
+  c: { wire: '#22D3EE', tick: 'square' }, // --color-cyan-wire
+  p: { wire: '#F472B6', tick: 'diamond' }, // --color-magenta-wire
+  e: { wire: '#FACC15', tick: 'triangle' }, // --color-yellow-wire
 }
 
 export const LENS_TO_KEY: Record<Lens, LensKey> = {
@@ -25,16 +29,12 @@ export const LENS_TO_KEY: Record<Lens, LensKey> = {
   explorations: 'e',
 }
 
-// Mode-aware lens accents for the LIVE graph (DL-1, one mode whole site):
-// wire on the dark ground, the darker pen on the light ground, resolved by
-// the browser via light-dark() (the same pen/wire pairs as LENS_UI in
-// components/ui/Pill.tsx and the @theme lens tokens). The Node fallback
-// generator keeps using the literal `wire` values above: the static
-// mind-graph.svg stays the dark composition.
-export const LENS_ACCENT: Record<LensKey, string> = {
-  c: 'light-dark(#0e7490, #22d3ee)',
-  p: 'light-dark(#a8186b, #f472b6)',
-  e: 'light-dark(#7a5e00, #facc15)',
+// The inverse, so browser-side consumers of the graph model (which speaks in
+// LensKey) can reach the one lens source in components/Lens.tsx.
+export const KEY_TO_LENS: Record<LensKey, Lens> = {
+  c: 'computation',
+  p: 'practice',
+  e: 'explorations',
 }
 
 // Dev-only drift guard: warn if the mirror and the CSS tokens diverge.

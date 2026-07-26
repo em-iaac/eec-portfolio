@@ -21,23 +21,23 @@ import { LENS_TO_KEY, type LensKey } from './palette'
 // viewBox matches it and preserveAspectRatio slices to fill any viewport.
 export const VIEWBOX = { w: 1440, h: 860 } as const
 
-// The woven question (LOCKED copy). The fragment runs along the COMFORT thread
-// as a textPath (a reward for looking, never a headline); the full sentence is
-// the thread's accessible name. No em dashes (voice rule); the apostrophe is a
-// real typographic one.
-export const QUESTION = 'how will this space make someone feel?'
-export const QUESTION_FULL =
-  'I started asking buildings a question my software couldn’t answer: how will this space make someone feel?'
-
-// The thread that carries the question; it has no edge label of its own.
-export const COMFORT_ID = 'COMFORT'
+// THE WOVEN QUESTION IS RESOLVED OUT (Emilie, 2026-07-26, DL amendment 31).
+// REDESIGN-SPEC §3.1 asked for the locked line to run along the COMFORT thread
+// as a textPath. It was never built, and the two constants sat here unimported
+// for four sessions. Drawn on the real spline it turns out the spec asked for
+// something the geometry will not give: COMFORT drops 560 canvas units while
+// moving only 45 sideways, so a textPath on it reads TOP TO BOTTOM. Moving the
+// line to a horizontal thread buys legibility by taking it off the idea it
+// names, which is the only reason it existed. So the constants are deleted
+// rather than left as a promise nobody can keep. DO NOT RE-ADD THEM.
 
 export type Anchor = 'start' | 'middle' | 'end'
 
 export interface Thread {
   id: string
-  // Edge-label anchor point in canvas space; null for COMFORT (the question is
-  // its label instead).
+  // Edge-label anchor point in canvas space; null for COMFORT, which carries
+  // no name in the drawing (the woven question that was to be its label is
+  // resolved out, see the note above).
   label: readonly [number, number] | null
   anchor: Anchor
   pts: ReadonlyArray<readonly [number, number]>
@@ -221,6 +221,12 @@ const GEOM: Record<string, Geom> = {
   charcoal: { ...pointOnThread('GEOMETRY', 0.33), th: ['GEOMETRY'], a: 'middle', d: [0, 22] },
   pelagnou: { ...pointOnThread('AI', 0.1), th: ['AI'], a: 'middle', d: [0, -16] },
   explain: { ...pointOnThread('AI', 0.85), th: ['AI'], a: 'start', d: [12, -12] },
+  // ---- S7 append (2026-07-26): the graph note rides DATA, the thread its
+  // subject actually belongs to (adjacency, access, sightlines as graphs). t
+  // chosen by measuring clearance to every shipped mark: at 0.58 it lands at
+  // (956,460) with 113 canvas units to its nearest neighbour, the widest gap
+  // anywhere on this thread. Label above the line; nothing sits there.
+  adjacency: { ...pointOnThread('DATA', 0.58), th: ['DATA'], a: 'middle', d: [0, -16] },
 }
 
 export interface MindNode {

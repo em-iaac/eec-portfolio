@@ -9,7 +9,8 @@
 // screen reader's virtual cursor but are pulled OUT of the Tab order
 // (tabIndex=-1) so they don't add a second run of invisible tab stops.
 import { Link } from 'react-router-dom'
-import { LENSES } from './palette'
+import { LENSES } from '../components/Lens'
+import { KEY_TO_LENS } from './palette'
 import { MIND } from './mindGraph'
 
 export default function MindGraphSrNav() {
@@ -18,7 +19,9 @@ export default function MindGraphSrNav() {
       <ul>
         {MIND.nodes.map((n) => (
           <li key={n.id}>
-            {n.label} ({n.kind}, {LENSES[n.lens].label}
+            {/* the LONG lens name, title case: a screen reader should not be
+                handed an all-caps string it may spell out letter by letter. */}
+            {n.label} ({n.kind}, {LENSES[KEY_TO_LENS[n.lens]].label}
             {n.award ? ', award-winning' : ''}){' '}
             {n.sheetRoute && (
               <Link to={n.sheetRoute} viewTransition tabIndex={-1}>

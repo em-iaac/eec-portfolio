@@ -82,13 +82,17 @@ export function HeaderNav() {
       ref={navRef}
       aria-label="Primary"
       onPointerLeave={() => setHover(null)}
-      className="nav-mag relative flex min-w-0 items-center font-mono text-[10px] tracking-[0.08em]"
+      className="nav-mag relative flex min-w-0 items-center font-mono text-label tracking-[0.08em]"
     >
       {lens && lens.width > 0 && (
         <span
           aria-hidden="true"
           className="nav-lens pointer-events-none absolute"
-          style={{ left: lens.left, width: lens.width }}
+          // The magnifier is the one thing in the chrome that MOVES between
+          // rooms: named, it SLIDES from the old door to the new one across
+          // the navigation instead of cross-dissolving in place. This is her
+          // own magnifier grammar (DL amendment 17) carried across the seam.
+          style={{ left: lens.left, width: lens.width, viewTransitionName: 'chrome-lens' }}
         />
       )}
       <Link
@@ -134,7 +138,22 @@ export function HeaderNav() {
   )
 }
 
-export default function TitleBlock({ tools }: { tools?: React.ReactNode }) {
+export default function TitleBlock({
+  tools,
+  toolsKey = 'page',
+}: {
+  tools?: React.ReactNode
+  /** The IDENTITY of this tool set, not its route. Two surfaces share a key
+   *  only when their tools are literally the same thing (/work and /work/:id
+   *  render the same filter row). Everything else gets its own key, because a
+   *  SHARED view-transition-name across differently-sized boxes makes the
+   *  browser MORPH one into the other: /work's 794px filter row was being
+   *  squashed into /thoughts' 149px WATCH IT GROW button, stretching the old
+   *  snapshot to 19% of its width while it faded. That squash is what read as
+   *  lag (Emilie, 2026-07-26). Distinct keys leave each set to fade in place
+   *  at its own size, which is what the frame's stillness actually needs. */
+  toolsKey?: string
+}) {
   return (
     // The frozen frame (SheetPage) keeps this header put; the pill floats
     // with a breath of air, anchored LEFT on every page (Emilie 2026-07-19:
@@ -146,7 +165,14 @@ export default function TitleBlock({ tools }: { tools?: React.ReactNode }) {
         <span aria-hidden="true" className="mx-1 h-6 w-px shrink-0 bg-[var(--lang-hairline)]" />
         <ModeToggle />
       </div>
-      {tools && <div className="pill-tools pointer-events-auto">{tools}</div>}
+      {tools && (
+        <div
+          className="pill-tools pointer-events-auto"
+          style={{ viewTransitionName: `page-tools-${toolsKey}` }}
+        >
+          {tools}
+        </div>
+      )}
     </header>
   )
 }

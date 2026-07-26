@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import SheetPage from '../components/SheetPage'
-import DownloadChip from '../components/ui/DownloadChip'
+import DownloadPill from '../components/ui/DownloadPill'
 import ContactLinks from '../components/ui/ContactLinks'
 import { DocGlyph } from '../components/ui/glyphs'
 import { EDUCATION, EXPERIENCE, AWARDS, SKILLS, LANGUAGES, CERTIFICATES, UPDATED } from '../data/cv'
@@ -77,7 +77,7 @@ function SecIcon({ name }: { name: keyof typeof SECTIONS }) {
 
 function SecTitle({ name, children }: { name: keyof typeof SECTIONS; children: ReactNode }) {
   return (
-    <h2 className="mb-2.5 flex items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.12em] text-[var(--lang-ink)]">
+    <h2 className="mb-2.5 flex items-center gap-2 font-mono text-nav font-semibold tracking-[0.12em] text-[var(--lang-ink)]">
       {/* Colour rides the icon only (Board 1 C); the label holds ink. */}
       <span className="inline-flex" style={{ color: SECTIONS[name] }}>
         <SecIcon name={name} />
@@ -90,13 +90,13 @@ function SecTitle({ name, children }: { name: keyof typeof SECTIONS; children: R
 function Entry({ dates, title, org, notes }: { dates: string; title: string; org: string; notes: string }) {
   return (
     <div className="mb-2.5">
-      <div className="font-mono text-[10px] leading-[13px] tracking-[0.04em] text-[var(--lang-ink-muted)] tabular-nums">
+      <div className="font-mono text-label leading-[13px] tracking-[0.04em] text-[var(--lang-ink-muted)] tabular-nums">
         {dates}
       </div>
-      <h3 className="text-[13.5px] leading-snug font-semibold text-[var(--lang-ink)]">
+      <h3 className="text-small leading-snug font-semibold text-[var(--lang-ink)]">
         {title} <span className="font-normal text-[var(--lang-ink-muted)]">· {org}</span>
       </h3>
-      <p className="mt-0.5 font-serif text-[13px] leading-[1.35] text-[var(--lang-ink)]">{notes}</p>
+      <p className="mt-0.5 font-serif text-small leading-[1.35] text-[var(--lang-ink)]">{notes}</p>
     </div>
   )
 }
@@ -110,23 +110,23 @@ function CvHeaderTools() {
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
       <ContactLinks />
-      <DownloadChip href={`${BASE}assets/cv-emilie-el-chidiac.pdf`} download="Emilie-El-Chidiac-CV.pdf" icon={<DocGlyph />}>
+      <DownloadPill href={`${BASE}assets/cv-emilie-el-chidiac.pdf`} download="Emilie-El-Chidiac-CV.pdf" icon={<DocGlyph />}>
         DOWNLOAD PDF
-      </DownloadChip>
+      </DownloadPill>
     </div>
   )
 }
 
 export default function CV() {
   return (
-    <SheetPage wide center={false} footer={false} pillTools={<CvHeaderTools />}>
+    <SheetPage wide center={false} footer={false} pillTools={<CvHeaderTools />} toolsKey="cv">
       {/* The name + title back in the content (Emilie's ruling round 2). */}
       <div className="pt-0 pb-2">
-        <h1 className="text-2xl font-semibold tracking-[-0.01em]">
+        <h1 className="text-title font-semibold tracking-[-0.01em]">
           Emilie El Chidiac{' '}
           <span className="font-normal text-[var(--lang-ink-muted)]">| Design Technology Architect</span>
         </h1>
-        <p className="mt-1 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]">
+        <p className="mt-1 font-mono text-micro tracking-[0.1em] text-[var(--lang-ink-muted)]">
           UPDATED {UPDATED.toUpperCase()}
         </p>
       </div>
@@ -144,7 +144,7 @@ export default function CV() {
             <SecTitle name="certificates">CERTIFICATES</SecTitle>
             <ul className="grid gap-1.5">
               {CERTIFICATES.map(c => (
-                <li key={c} className="font-mono text-[10px] leading-relaxed text-[var(--lang-ink)]">
+                <li key={c} className="font-mono text-label leading-relaxed text-[var(--lang-ink)]">
                   {c}
                 </li>
               ))}
@@ -164,19 +164,19 @@ export default function CV() {
           <ul className="mb-4 grid gap-1">
             {AWARDS.map(a => (
               <li key={a.text} className="grid grid-cols-[40px_1fr] gap-x-2">
-                <span className="font-mono text-[10px] leading-5 text-[var(--lang-ink-muted)] tabular-nums">{a.year}</span>
-                <span className="font-serif text-[13px] leading-snug">{a.text}</span>
+                <span className="font-mono text-label leading-5 text-[var(--lang-ink-muted)] tabular-nums">{a.year}</span>
+                <span className="font-serif text-small leading-snug">{a.text}</span>
               </li>
             ))}
           </ul>
           <SecTitle name="skills">SKILLS</SecTitle>
           {SKILLS.map(s => (
-            <div key={s.group} className="mb-2 font-mono text-[10.5px] leading-[1.5]">
+            <div key={s.group} className="mb-2 font-mono text-label leading-[1.5]">
               <span className="tracking-[0.1em] text-[var(--lang-ink-muted)]">{s.group}</span>
               <span className="mt-0.5 block text-[var(--lang-ink)]">{s.items}</span>
             </div>
           ))}
-          <div className="mt-1 font-mono text-[10.5px] leading-[1.5]">
+          <div className="mt-1 font-mono text-label leading-[1.5]">
             <span className="tracking-[0.1em] text-[var(--lang-ink-muted)]">LANGUAGES</span>
             <span className="mt-0.5 block text-[var(--lang-ink)]">{LANGUAGES}</span>
           </div>

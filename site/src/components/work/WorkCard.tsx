@@ -16,7 +16,8 @@
 import { useState } from 'react'
 import Card from '../ui/Card'
 import Img, { findImage } from '../Img'
-import { LENSES, LensTick } from '../Lens'
+import { LENSES } from '../Lens'
+import { LensMark } from '../ui/Pill'
 import { vtName } from '../../lib/viewTransition'
 import { WORK_ARTIFACTS } from './artifacts'
 import type { WorkEntry } from '../../data/work'
@@ -47,25 +48,25 @@ export default function WorkCard({
       className="work-plate aspect-video w-full"
       style={{ '--plate-accent': LENSES[entry.lens].pen } as CSSProperties}
     >
-      <span className="work-plate__num font-mono text-[8px] tracking-[0.1em] text-[var(--lang-ink-muted)]">
+      <span className="work-plate__num font-mono text-micro tracking-[0.1em] text-[var(--lang-ink-muted)]">
         {entry.number} · {entry.origin}
       </span>
       <span className="work-art" aria-hidden="true">
         {/* every project has a signed drawing; a future entry without one
             rests on its quiet number until its plate is drawn */}
         {WORK_ARTIFACTS[entry.id] ?? (
-          <span className="font-mono text-[10px] tracking-[0.14em] text-[var(--lang-ink-muted)]">
+          <span className="font-mono text-label tracking-[0.14em] text-[var(--lang-ink-muted)]">
             {entry.number}
           </span>
         )}
       </span>
       <span className="work-plate__foot">
-        <span className="flex min-w-0 items-center gap-1.5 text-[13px] leading-tight font-semibold text-[var(--lang-ink)]">
-          <LensTick lens={entry.lens} />
+        <span className="flex min-w-0 items-center gap-1.5 text-small leading-tight font-semibold text-[var(--lang-ink)]">
+          <LensMark lens={entry.lens} size={9} />
           <span className="truncate">{entry.title}</span>
         </span>
         {entry.awardFace && (
-          <span className="truncate font-mono text-[8px] tracking-[0.08em] text-[var(--lang-ink)]">
+          <span className="truncate font-mono text-micro tracking-[0.08em] text-[var(--lang-ink)]">
             <span aria-hidden="true">✦ </span>
             {entry.awardFace}
           </span>

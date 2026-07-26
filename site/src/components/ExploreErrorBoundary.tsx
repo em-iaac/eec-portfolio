@@ -1,19 +1,17 @@
-// Guardrail (Session 4): a graph invariant throw inside the lazy EXPLORE
-// chunk (or any render error in the scene) must degrade to a message on the
-// carbon table, never a blank app. Class component: error boundaries have no
-// hook equivalent. Links are redline-wire (interaction on dark ground).
+// Guardrail (Session 4): a graph invariant throw inside the lazy mind-graph
+// chunk (or any render error in the scene) must degrade quietly, never to a
+// blank app. Class component: error boundaries have no hook equivalent.
+//
+// #20 sweep, 2026-07-26: the full-screen carbon message was removed. It was
+// unreachable — the only consumer, LandingCover, passes `fallback={null}` —
+// and it was the last thing on the site using --color-anno, text-ink-dark,
+// bg-carbon and text-redline-wire. `fallback` is now required, so a future
+// consumer has to decide what a failure looks like rather than inheriting a
+// screen nobody has seen since Session 13.
 import { Component, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-
-const WIRE_LINK =
-  '-m-2 p-2 text-redline-wire underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-redline-wire'
 
 export default class ExploreErrorBoundary extends Component<
-  // `fallback` (Session 13; the landing passes null today): when the surface
-  // is EMBEDDED (the landing hero), a chunk-load or scene throw must degrade
-  // quietly (no graph, the honest DOM hero still painted), never the
-  // full-screen carbon message. Standalone use omits it and keeps the message.
-  { children: ReactNode; fallback?: ReactNode },
+  { children: ReactNode; fallback: ReactNode },
   { error: Error | null }
 > {
   state = { error: null as Error | null }
@@ -23,36 +21,10 @@ export default class ExploreErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error) {
-    console.error('EXPLORE failed to load:', error)
+    console.error('the mind-graph failed to plot:', error)
   }
 
   render() {
-    if (!this.state.error) return this.props.children
-    if (this.props.fallback !== undefined) return this.props.fallback
-    // Fallback wording approved Session 11 (rolling batch #1).
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-carbon px-6">
-        <div
-          role="alert"
-          className="max-w-md font-mono text-[11px] leading-[2] tracking-[0.06em] text-ink-dark"
-        >
-          <p className="mb-4">
-            THE NETWORK FAILED TO PLOT.
-            <br />
-            <span className="text-anno-dark">
-              THE WORDS ARE FINE; THE MAP MISBEHAVED. READ MODE HAS EVERYTHING.
-            </span>
-          </p>
-          <p className="flex flex-wrap gap-x-6 gap-y-2">
-            <Link to="/work" viewTransition className={WIRE_LINK}>
-              OPEN THE WORK &gt;
-            </Link>
-            <Link to="/" viewTransition className={WIRE_LINK}>
-              BACK HOME &gt;
-            </Link>
-          </p>
-        </div>
-      </div>
-    )
+    return this.state.error ? this.props.fallback : this.props.children
   }
 }

@@ -19,6 +19,8 @@ import ModeToggle from '../components/ui/ModeToggle'
 import MindGraphSrNav from './MindGraphSrNav'
 import { MIND, nodeRoute, starPath } from './mindGraph'
 import { assertPaletteMatchesTheme } from './palette'
+import { RED_LINK } from '../lib/linkStyles'
+import { hasOvertured, markOvertured } from '../lib/develop'
 import LensGroup from '../components/ui/LensGroup'
 
 // The artwork is split out of the entry chunk (LCP, 2026-07-12): the honest
@@ -69,7 +71,7 @@ function LegendMarks() {
           <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" className="overflow-visible">
             {mark}
           </svg>
-          <span className="font-mono text-[9px] tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">{label}</span>
+          <span className="font-mono text-micro tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">{label}</span>
         </span>
       ))}
     </>
@@ -187,7 +189,7 @@ function JumpBar() {
         aria-expanded={open && matches.length > 0}
         aria-controls="jump-list"
         role="combobox"
-        className="lang-glass-1 h-11 w-full rounded-[var(--r-pill)] px-4 font-mono text-[12px] tracking-[0.06em] text-[var(--lang-ink)] placeholder:text-[var(--lang-ink-muted)] focus:border-[var(--lang-interaction)] focus:outline-none"
+        className="lang-glass-1 h-11 w-full rounded-[var(--r-pill)] px-4 font-mono text-nav tracking-[0.06em] text-[var(--lang-ink)] placeholder:text-[var(--lang-ink-muted)] focus:border-[var(--lang-interaction)] focus:outline-none"
       />
       {open && matches.length > 0 && (
         <ul
@@ -201,10 +203,10 @@ function JumpBar() {
                 id={`jump-opt-${i}`}
                 to={m.to}
                 onClick={() => go(m.to)}
-                className="flex items-center justify-between gap-3 px-3 py-2 font-mono text-[10px] tracking-[0.06em] text-[var(--lang-ink)] hover:bg-[color-mix(in_srgb,var(--lang-ink)_10%,transparent)] focus:bg-[color-mix(in_srgb,var(--lang-ink)_10%,transparent)] focus:outline-none"
+                className="flex items-center justify-between gap-3 px-3 py-2 font-mono text-label tracking-[0.06em] text-[var(--lang-ink)] hover:bg-[color-mix(in_srgb,var(--lang-ink)_10%,transparent)] focus:bg-[color-mix(in_srgb,var(--lang-ink)_10%,transparent)] focus:outline-none"
               >
                 <span className="truncate">{m.label}</span>
-                <span className="shrink-0 text-[8px] tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">{m.hint}</span>
+                <span className="shrink-0 text-micro tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">{m.hint}</span>
               </Link>
             </li>
           ))}
@@ -215,16 +217,18 @@ function JumpBar() {
 }
 
 export default function LandingCover() {
+  // THE OVERTURE (DL amendment 30). The identity column enters in READING
+  // ORDER over ~1.1s. Once per visit, like the draw-in.
+  const [overture] = useState(() => !hasOvertured())
+  useEffect(() => {
+    markOvertured()
+  }, [])
+
   useEffect(() => {
     assertPaletteMatchesTheme()
-    // Paint the whole document with the mode's ground so any
-    // overscroll/rubber-band matches the cover.
-    const html = document.documentElement
-    const prev = html.style.background
-    html.style.background = 'var(--lang-ground)'
-    return () => {
-      html.style.background = prev
-    }
+    // (The html-background patch that used to live here is GONE: it existed
+    // only because `body` painted --color-mylar, a different white from the
+    // --lang-ground every surface uses. body joins the one system now.)
   }, [])
 
   return (
@@ -237,19 +241,61 @@ export default function LandingCover() {
       {/* Hero copy FIRST in the DOM so screen readers and keyboard users reach the
           name + positioning before the graph's node list; z-10 keeps it above the
           artwork and scrim. One fixed-measure stack, vertically centered on sm+. */}
-      <div className="relative z-10 flex flex-col px-6 pt-9 pb-5 sm:absolute sm:inset-y-0 sm:left-0 sm:w-[548px] sm:justify-center sm:px-14 sm:py-12">
+      <div
+        className={`relative z-10 flex flex-col px-6 pt-9 pb-5 sm:absolute sm:inset-y-0 sm:left-0 sm:w-[548px] sm:justify-center sm:px-14 sm:py-12${
+          overture ? ' ov' : ''
+        }`}
+      >
         <header className="flex flex-col">
           {/* TIER 1 — name */}
-          <div className="flex items-center gap-3">
+          <div className="ov-t1 flex items-center gap-3">
             <LogoMark size={40} className="shrink-0" />
-            <h1 className="font-display text-[27px] font-semibold leading-[0.98] tracking-[0.01em] whitespace-nowrap text-[var(--lang-ink)] sm:text-[41.83px]">
+            {/* THE NAME, ON THE WIDTH AXIS (Emilie, 2026-07-26; DL amendment 24).
+                It was 41.83px, a fit-by-trial number: it rendered 388.8px into
+                exactly 389px of space beside the mark, 0.2px of slack, tuned to a
+                hundredth of a pixel and guaranteed to break the day the mark, the
+                column or the name changed. It is `whitespace-nowrap`, so an
+                overflow does not wrap, it pushes out of the column.
+                Now a round size, condensed to --wdth-fit: 45px renders 376.7px,
+                7.6% larger with 12.3px of slack (sixty times today's). 46px was
+                considered and rejected at 4px of slack; 47px overflows.
+                PHONE: 30px at the same width renders 251px, which is EXACTLY
+                today's rendered width, so the lockup is unmoved and the type is
+                11% bigger. Both faces here are preloaded (index.html), so
+                whichever element ends up carrying LCP, its font is already there. */}
+            <h1
+              className="font-display text-[30px] font-semibold leading-[0.98] tracking-[0.01em] whitespace-nowrap text-[var(--lang-ink)] sm:text-[45px]"
+              style={{ fontStretch: 'var(--wdth-fit)' }}
+            >
               EMILIE EL CHIDIAC
             </h1>
           </div>
 
-          {/* TIER 2a — the role adjectives (signed). One line on the name-row
-              measure on sm+ (10px keeps all four inside it); wraps calmly on phones. */}
-          <p className="mt-5 font-mono text-[11px] leading-relaxed tracking-[0.08em] text-[var(--lang-hero-muted)] lowercase sm:whitespace-nowrap sm:text-[11px] sm:tracking-[0.02em]">
+          {/* TIER 2a — the role adjectives (signed).
+              S2 (2026-07-26, the /llm-council landing gate): this row now rides FULL INK
+              instead of --lang-hero-muted. The council's finding was that the words were
+              never the whole problem: at 11px muted the row read "as decoration before
+              information", so swapping a word inside it changed nothing about whether a
+              stranger stopped to read it. Ink is what turns the same sentence from a
+              flourish into a claim, and it costs zero height.
+              SIZE AND FACE RESOLVED (Emilie's pick C, 2026-07-26, the width-axis gate).
+              The row was 562px of Martian Mono inside a 436px column, so it wrapped to two
+              lines on desktop. Mono cannot be made to fit at any setting: 547px at zero
+              tracking, 511px even at 10px. So the row had to leave mono or lose a signed
+              word, and it keeps all four words.
+              It is now ARCHIVO, and it is CONDENSED to --wdth-fit. That is the whole
+              argument for the width axis in one measurement: 14px is 465px at width 100
+              (wraps) and 420px at width 87.5 (fits, 16px of slack). Without the axis the
+              ceiling for one line is 12px. So the axis buys a whole type step, and the
+              step is what answers the council's finding that the row read as decoration
+              before information: it is now 27% larger AND full ink.
+              The face change is deliberate: mono read as a technical tag, Archivo reads as
+              a subtitle. PHONE: 12px, because every option wraps to two lines at 390 anyway
+              and 14px there would cost ~9px of a page already 22px past the fold. */}
+          <p
+            className="ov-t2 mt-5 font-display text-[12px] leading-relaxed tracking-[0.04em] text-[var(--lang-ink)] lowercase sm:text-[14px]"
+            style={{ fontStretch: 'var(--wdth-fit)' }}
+          >
             {ADJECTIVES}
           </p>
 
@@ -258,7 +304,7 @@ export default function LandingCover() {
               red pen for interaction only). One line on the 360px measure on sm+;
               wraps calmly on phones. (Caveat sized past the usual margin-note cap
               here is a sanctioned redesign departure from the old rule 8.) */}
-          <p className="mt-3 font-hand text-[21px] leading-tight text-[var(--lang-hand-warm)] sm:whitespace-nowrap sm:text-[30.97px]">
+          <p className="ov-t3 mt-3 font-hand text-[21px] leading-tight text-[var(--lang-hand-warm)] sm:whitespace-nowrap sm:text-[30.97px]">
             {VOICE}
           </p>
 
@@ -270,7 +316,7 @@ export default function LandingCover() {
               The magnifier lens rides them too (round 3, Emilie's pick): the
               same four doors as the header pill, the same glass under the
               pointer, one nav feel sitewide. */}
-          <nav aria-label="Primary" className="mt-6 font-mono text-[12px] tracking-[0.08em]">
+          <nav aria-label="Primary" className="ov-t4 mt-6 font-mono text-nav tracking-[0.08em]">
             <LensGroup className="flex justify-between">
               {DOORS.map((d) => (
                 <Link
@@ -288,7 +334,7 @@ export default function LandingCover() {
           {/* TIER 3 — the jump pill + the mode toggle (G4, Emilie's option b:
               the cover gains the same 44px control every room carries, in the
               pressable-controls tier; no layout, motion, or copy changes). */}
-          <div className="mt-4 flex items-center gap-2">
+          <div className="ov-t5 mt-4 flex items-center gap-2">
             <div className="min-w-0 flex-1">
               <JumpBar />
             </div>
@@ -334,11 +380,11 @@ export default function LandingCover() {
         <LegendMarks />
       </div>
 
-      <div className="pointer-events-none mt-3 px-6 text-center font-mono text-[9px] tracking-[0.14em] text-[var(--lang-ink-muted)] sm:absolute sm:bottom-8 sm:left-14 sm:z-10 sm:mt-0 sm:px-0 sm:text-left">
+      <div className="pointer-events-none mt-3 px-6 text-center font-mono text-micro tracking-[0.14em] text-[var(--lang-ink-muted)] sm:absolute sm:bottom-8 sm:left-14 sm:z-10 sm:mt-0 sm:px-0 sm:text-left">
         THIS IS WHAT'S ON MY MIND ·{' '}
         <Link
           to="/about"
-          className="pointer-events-auto text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+          className={`pointer-events-auto ${RED_LINK}`}
         >
           WHAT'S IN YOURS? &gt;
         </Link>

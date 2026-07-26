@@ -29,4 +29,6 @@ export const THOUGHT_OPENINGS: Record<string, string> = {
   pelagnou: 'Some projects hand you a tool; Pelagñou handed me a library card.',
   explain:
     'How do you explain a complex, honestly boring technical subject so someone leans in instead of glazing over?',
+  adjacency:
+    'A floor plan tells you which rooms touch. It will not tell you which rooms you can actually reach, and the gap between those two drawings is where the architecture is hiding.',
 }

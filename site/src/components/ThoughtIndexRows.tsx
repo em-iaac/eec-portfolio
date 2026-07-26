@@ -65,17 +65,17 @@ function ScreenRow({
       <span className="flex min-w-0 items-center gap-3">
         <ThoughtMark />
         <span
-          className="thought-title min-w-0 flex-1 font-serif text-[17px] leading-snug font-medium lowercase italic tracking-[-0.005em] text-[var(--lang-ink)]"
+          className="thought-title min-w-0 flex-1 font-serif text-prose leading-snug font-medium lowercase italic tracking-[-0.005em] text-[var(--lang-ink)]"
           style={e.note ? { viewTransitionName: vtName(e.note.route) } : undefined}
         >
           {e.title}
         </span>
-        <span className="shrink-0 font-mono text-[9px] tracking-[0.08em] whitespace-nowrap text-[var(--lang-ink-muted)]">
+        <span className="shrink-0 font-mono text-micro tracking-[0.08em] whitespace-nowrap text-[var(--lang-ink-muted)]">
           {meta}
         </span>
       </span>
       {opening && (
-        <span className="thought-open text-[12px] leading-relaxed text-[var(--lang-ink-muted)]">
+        <span className="thought-open text-nav leading-relaxed text-[var(--lang-ink-muted)]">
           <span className="line-clamp-2">{opening}</span>
         </span>
       )}

@@ -10,6 +10,8 @@ import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import SheetRoute from './pages/SheetRoute'
 import { useRouteHead } from './lib/routeHead'
+import { preloadPath, warmDoors } from './lib/preloadRoute'
+import { setNavIntent } from './lib/navIntent'
 
 // Split out of the landing chunk so the perf-budgeted cover stays lean: the
 // gallery (with its overlay + video code) and the note prose only load when
@@ -45,10 +47,13 @@ const PrintCvRoute = lazy(() => import('./print/CvRoute'))
 // thought / the pillar. Same print rules: unlinked, noindexed, lazy.
 const PrintOgRoute = lazy(() => import('./print/OgRoute'))
 
-// Ground-coloured hold while a lazy READ-mode chunk resolves (matches
-// SheetRoute); bg-mylar is mode-aware since the DL-1 token bridge.
-function MylarScreen() {
-  return <div className="min-h-dvh bg-mylar" aria-hidden="true" />
+// Ground-coloured hold while a lazy chunk resolves. It rides --lang-ground
+// like every other surface: it used to be `bg-mylar`, a DIFFERENT white
+// (#f7f7f4 against the site's #f5f6f7), so the hold flashed a slightly wrong
+// paper. Route warming (lib/preloadRoute.ts) means this is rarely seen at all
+// now, but "rarely seen" is not "allowed to be wrong".
+function GroundHold() {
+  return <div className="min-h-dvh bg-[var(--lang-ground)]" aria-hidden="true" />
 }
 
 // On PUSH navigation: scroll to top (or hash target) and move focus to the
@@ -122,16 +127,62 @@ function NotebookRedirect() {
   return <Navigate to="/thoughts" replace />
 }
 
+// ROUTE WARMING (2026-07-26; lib/preloadRoute.ts has the full why). Every page
+// is lazy behind an EMPTY Suspense hold, so a cold navigation spent its whole
+// 250ms crossfade fading into a blank rectangle and then hard-cut to the real
+// page when the chunk landed. Warming the chunk BEFORE the click means the
+// transition captures the actual page. Two passes, both after first paint:
+// the four doors on idle, and anything else the moment a pointer or focus
+// touches its link. Delegated on the document so no <Link> needs touching and
+// links that appear later (an opened overlay, the jump bar) are covered too.
+function RouteWarming() {
+  useEffect(() => {
+    warmDoors()
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+    const onIntent = (e: Event) => {
+      const el = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null
+      if (!el || el.target === '_blank') return
+      const href = el.getAttribute('href') || ''
+      // same-document paths only: never touch mailto:, external links or files
+      if (!href.startsWith('/') || href.startsWith('//')) return
+      preloadPath(base && href.startsWith(base + '/') ? href.slice(base.length) : href)
+    }
+    // THE MOTION INTENT (lib/navIntent.ts). Capture phase, so it runs before
+    // react-router's own click handler and the attribute is on <html> by the
+    // time startViewTransition captures the old snapshot. Anything set after
+    // that point is simply too late.
+    const onNav = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+      const el = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null
+      if (!el || el.target === '_blank') return
+      const href = el.getAttribute('href') || ''
+      if (!href.startsWith('/') || href.startsWith('//')) return
+      const to = base && href.startsWith(base + '/') ? href.slice(base.length) : href
+      setNavIntent(to, window.location.pathname.slice(base.length) || '/')
+    }
+    document.addEventListener('pointerover', onIntent, { passive: true })
+    document.addEventListener('focusin', onIntent, { passive: true })
+    document.addEventListener('click', onNav, true)
+    return () => {
+      document.removeEventListener('pointerover', onIntent)
+      document.removeEventListener('focusin', onIntent)
+      document.removeEventListener('click', onNav, true)
+    }
+  }, [])
+  return null
+}
+
 // The pathless chrome route wrapping every page: scroll/focus handling, page
-// counting, and the per-route <head> stopgap (lib/routeHead.ts) travel with
-// the outlet. The print routes sit OUTSIDE this wrapper, so they never get the
-// public head rewrite (they keep their own noindex meta).
+// counting, route warming, and the per-route <head> stopgap (lib/routeHead.ts)
+// travel with the outlet. The print routes sit OUTSIDE this wrapper, so they
+// never get the public head rewrite (they keep their own noindex meta).
 function Chrome() {
   useRouteHead()
   return (
     <>
       <ScrollToTop />
       <PageCount />
+      <RouteWarming />
       <Outlet />
     </>
   )
@@ -182,7 +233,7 @@ export const routes: RouteObject[] = [
       {
         path: '/work',
         element: (
-          <Suspense fallback={<MylarScreen />}>
+          <Suspense fallback={<GroundHold />}>
             <Work />
           </Suspense>
         ),
@@ -190,7 +241,7 @@ export const routes: RouteObject[] = [
       {
         path: '/work/:id',
         element: (
-          <Suspense fallback={<MylarScreen />}>
+          <Suspense fallback={<GroundHold />}>
             <Work />
           </Suspense>
         ),
@@ -200,7 +251,7 @@ export const routes: RouteObject[] = [
       {
         path: '/thoughts',
         element: (
-          <Suspense fallback={<MylarScreen />}>
+          <Suspense fallback={<GroundHold />}>
             <Thoughts />
           </Suspense>
         ),
@@ -209,7 +260,7 @@ export const routes: RouteObject[] = [
       {
         path: '/about',
         element: (
-          <Suspense fallback={<MylarScreen />}>
+          <Suspense fallback={<GroundHold />}>
             <About />
           </Suspense>
         ),
@@ -217,7 +268,7 @@ export const routes: RouteObject[] = [
       {
         path: '/cv',
         element: (
-          <Suspense fallback={<MylarScreen />}>
+          <Suspense fallback={<GroundHold />}>
             <CV />
           </Suspense>
         ),
@@ -226,7 +277,7 @@ export const routes: RouteObject[] = [
         // THE PILLAR (S3): the exact phrase IS the slug (D6).
         path: '/behavior-information-modeling',
         element: (
-          <Suspense fallback={<MylarScreen />}>
+          <Suspense fallback={<GroundHold />}>
             <Pillar />
           </Suspense>
         ),
@@ -235,7 +286,7 @@ export const routes: RouteObject[] = [
       {
         path: '/thoughts/:id',
         element: (
-          <Suspense fallback={<MylarScreen />}>
+          <Suspense fallback={<GroundHold />}>
             <ThoughtRoute />
           </Suspense>
         ),
@@ -245,7 +296,7 @@ export const routes: RouteObject[] = [
             {
               path: '/lab',
               element: (
-                <Suspense fallback={<MylarScreen />}>
+                <Suspense fallback={<GroundHold />}>
                   <Lab />
                 </Suspense>
               ),

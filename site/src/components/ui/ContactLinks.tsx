@@ -27,7 +27,7 @@ export default function ContactLinks({ className = '' }: { className?: string })
             key={label}
             href={href}
             {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-            className="inline-flex min-h-11 items-center gap-1.5 px-2 font-mono text-[10px] tracking-[0.06em] text-[var(--lang-ink)] no-underline hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+            className="inline-flex min-h-11 items-center gap-1.5 px-2 font-mono text-label tracking-[0.06em] text-[var(--lang-ink)] no-underline hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
           >
             <Icon />
             {label}

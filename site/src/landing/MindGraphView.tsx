@@ -9,22 +9,50 @@
 // one, then the marks land on them, then the labels settle) so the field reads
 // as being drawn and connected; reduced motion renders the identical final
 // composition instantly.
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
+import { hasMindDrawn, markMindDrawn } from '../lib/develop'
 import { vtName } from '../lib/viewTransition'
-import { LENS_ACCENT } from './palette'
+import { preloadPath } from '../lib/preloadRoute'
+import { travelTo } from '../lib/navIntent'
+import { LENSES } from '../components/Lens'
+import { KEY_TO_LENS, type LensKey } from './palette'
 import { MIND, THREADS, VIEWBOX, nodeRoute, spline, starPath, type MindNode } from './mindGraph'
 
 // The mode-aware ink (light ink on carbon, dark ink on cool white): the same
 // token the mg-* styles use, so JS-driven blooms match the CSS.
 const INK = 'var(--lang-ink)'
 
+// The graph model speaks LensKey ('c'|'p'|'e'); the one lens source speaks
+// Lens. The accent is the literal light-dark() pair because it lands on SVG
+// presentation attributes, where var() is not reliable (see components/Lens).
+const LENS_ACCENT: Record<LensKey, string> = {
+  c: LENSES[KEY_TO_LENS.c].accent,
+  p: LENSES[KEY_TO_LENS.p].accent,
+  e: LENSES[KEY_TO_LENS.e].accent,
+}
+
+// THE PHONE FRAME (Emilie's pick B, 2026-07-26). A phone does not see the
+// whole canvas: at 390px the full 1440x860 sliced into the 46svh band renders
+// every mark at 3.2px, which is a drawing you cannot use. So the phone gets
+// its OWN CAMERA on the same drawing: a 557x554 window over the dense middle,
+// framing the headline work (Sensi, NeuroSpace, lEgoarCh, The Lungs, The
+// Huddle, Ring 4000) and 5 of the 7 award marks, at 0.70 scale instead of
+// 0.451 so marks land 56% bigger. It deliberately drops the lower shelf of
+// older, smaller work, which is the right thing to lose on a phone.
+// A viewBox is a CAMERA, not geometry: no coordinate moves and the frozen
+// layout snapshot stays green. The window's aspect ratio matches the phone
+// band's exactly, so `slice` crops nothing further.
+// (390 / 557 = 0.70 scale. The phone canvas type in index.css is calibrated to
+// that number: change this window and those sizes must change with it.)
+const PHONE_VIEWBOX = '530 200 557 554'
+
 type Active = { kind: 'node' | 'thread'; id: string } | null
 
 function nodeAria(n: MindNode): string {
   return (
-    `${n.label} — ${n.kind === 'project' ? 'project' : 'thought'}` +
+    `${n.label} · ${n.kind === 'project' ? 'project' : 'thought'}` +
     (n.award ? ' (award-winning)' : '') +
     ` · threads: ${n.th.join(', ').toLowerCase()}`
   )
@@ -44,17 +72,78 @@ export default function MindGraph() {
   const svgRef = useRef<SVGSVGElement>(null)
   const [active, setActive] = useState<Active>(null)
   const [armedId, setArmedId] = useState<string | null>(null)
-  const [intro, setIntro] = useState(!prm)
+  // THE "START HERE" STATE (REDESIGN-SPEC §3.4, promised and never built).
+  // One mark arrives with its NAME showing, so the field says "these dots are
+  // things, touch one" before any input. It is NOT the full bloom: setting
+  // `active` would switch the stage to is-focus and dim every other thread to
+  // 0.08, which is the opposite of the spec's "never a dead grey field". It
+  // clears the moment the visitor touches anything.
+  // GATED ON THE SAME QUERY AS THE CSS (max-width: 639px), NOT on pointer
+  // type. The rest labels disappear because of SCALE, which is a function of
+  // viewport width; gating the invitation on `pointer: coarse` instead left a
+  // narrow desktop window with no rest labels AND no invitation, i.e. a field
+  // of anonymous dots. The two must agree or the phone rules half-apply.
+  const [startId, setStartId] = useState<string | null>(null)
+  // The draw-in is an ARRIVAL, not a page load: once per visit (lib/develop).
+  const [intro, setIntro] = useState(() => !prm && !hasMindDrawn())
   const lastPointer = useRef<'mouse' | 'touch' | 'pen'>('mouse')
 
   useEffect(() => {
-    if (prm) {
+    if (prm || hasMindDrawn()) {
       setIntro(false)
+      markMindDrawn()
       return
     }
-    const t = window.setTimeout(() => setIntro(false), INTRO_MS)
+    const t = window.setTimeout(() => {
+      setIntro(false)
+      markMindDrawn()
+    }, INTRO_MS)
+    // Mark on unmount too: leaving mid-draw still counts as having seen it,
+    // so a fast visitor never gets the ceremony twice.
+    return () => {
+      window.clearTimeout(t)
+      markMindDrawn()
+    }
+  }, [prm])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!window.matchMedia('(max-width: 639px)').matches) return
+    const first = MIND.nodes.find((n) => n.award) ?? MIND.nodes[0]
+    if (!first) return
+    // after the draw-in, so the invitation is the last thing to arrive
+    const t = window.setTimeout(() => setStartId(first.id), prm ? 0 : INTRO_MS + 200)
     return () => window.clearTimeout(t)
   }, [prm])
+
+  // the invitation retires the instant the visitor takes it up
+  useEffect(() => {
+    if (active) setStartId(null)
+  }, [active])
+
+  // Which camera. Kept in sync, not read once, so a rotation or a resized
+  // window swaps the frame instead of stranding the wrong one.
+  //
+  // TWO listeners on purpose, and this was CAUGHT IN VERIFICATION, not
+  // theorised: `matchMedia('...').matches` flipped to false on a 390 -> 1280
+  // resize and the CSS media query re-evaluated correctly, but the
+  // MediaQueryList 'change' event never fired, so the phone camera stayed on a
+  // desktop viewport. `resize` always fires. The state setter makes this free:
+  // React bails out of a re-render when the value is unchanged, so the extra
+  // listener costs a boolean compare per resize event and nothing else.
+  const [phoneFrame, setPhoneFrame] = useState(false)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia('(max-width: 639px)')
+    const sync = () => setPhoneFrame(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    window.addEventListener('resize', sync)
+    return () => {
+      mq.removeEventListener('change', sync)
+      window.removeEventListener('resize', sync)
+    }
+  }, [])
 
   const byId = useMemo(() => {
     const m = new Map<string, MindNode>()
@@ -76,6 +165,10 @@ export default function MindGraph() {
 
   function activateNode(id: string) {
     setActive({ kind: 'node', id })
+    // Warm the destination chunk on the SAME beat that arms the morph: a mark
+    // is a <g>, so the delegated link warming in App cannot see it.
+    const n = byId.get(id)
+    if (n) preloadPath(nodeRoute(n))
   }
   function activateThread(id: string) {
     setActive({ kind: 'thread', id })
@@ -147,7 +240,7 @@ export default function MindGraph() {
     }
     e.preventDefault()
     if (armedId === n.id) {
-      navigate(nodeRoute(n), { viewTransition: true })
+      navigate(travelTo(nodeRoute(n)), { viewTransition: true })
       return
     }
     setActive({ kind: 'node', id: n.id })
@@ -157,7 +250,7 @@ export default function MindGraph() {
   return (
     <svg
       ref={svgRef}
-      viewBox={`0 0 ${VIEWBOX.w} ${VIEWBOX.h}`}
+      viewBox={phoneFrame ? PHONE_VIEWBOX : `0 0 ${VIEWBOX.w} ${VIEWBOX.h}`}
       preserveAspectRatio="xMidYMid slice"
       className={`mg-stage absolute inset-0 block h-full w-full ${intro ? 'mg-intro ' : ''}${
         isFocus ? 'is-focus' : ''
@@ -251,7 +344,9 @@ export default function MindGraph() {
           return (
             <g
               key={n.id}
-              className={`mg-node${n.rest ? ' rest' : ''}${extra ? ' ' + extra : ''}`}
+              className={`mg-node${n.rest ? ' rest' : ''}${extra ? ' ' + extra : ''}${
+                n.id === startId ? ' start' : ''
+              }`}
               tabIndex={0}
               role="link"
               aria-label={nodeAria(n)}
@@ -261,12 +356,12 @@ export default function MindGraph() {
               onBlur={clear}
               onClick={() => {
                 if (lastPointer.current === 'touch') return // touch handled on the surface
-                navigate(nodeRoute(n), { viewTransition: true })
+                navigate(travelTo(nodeRoute(n)), { viewTransition: true })
               }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
-                  navigate(nodeRoute(n), { viewTransition: true })
+                  navigate(travelTo(nodeRoute(n)), { viewTransition: true })
                 }
               }}
               // The shared-element source: only the ACTIVE node (hover / focus /
@@ -288,12 +383,16 @@ export default function MindGraph() {
                     cy={n.y}
                     r={11}
                     fill="url(#mg-glow-grad)"
-                    style={{ animationDelay: `${-(awardOrder.get(n.id) ?? 0) * 730}ms` }}
+                    // A NAMED delay, not a raw animation-delay: a bare inline
+                    // animationDelay applies to EVERY animation the element
+                    // ever runs, so the desync offset was leaking into the
+                    // hover breath and starting it up to 2s late.
+                    style={{ '--mg-halo-delay': `${-(awardOrder.get(n.id) ?? 0) * 730}ms` } as CSSProperties}
                   />
                   <path
                     className="mg-core p mg-award"
                     d={starPath(n.x, n.y, 5.6)}
-                    style={{ ...(coreStyle[n.id] ?? null), animationDelay: `${delay}ms` }}
+                    style={{ ...(coreStyle[n.id] ?? null), '--mg-in-delay': `${delay}ms` } as CSSProperties}
                   />
                 </>
               ) : isProject ? (
@@ -326,6 +425,7 @@ export default function MindGraph() {
           )
         })}
       </g>
+
     </svg>
   )
 }

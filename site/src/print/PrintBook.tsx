@@ -11,7 +11,7 @@
 // Emilie's pick when she signs.
 import type { ReactNode } from 'react'
 import LogoMark from '../components/LogoMark'
-import { LENSES, LensTick, type Lens } from '../components/Lens'
+import { LENSES, LensGlyph, type Lens } from '../components/Lens'
 import { VOICE } from '../landing/identity'
 import { MIND, THREADS, VIEWBOX, spline, starPath } from '../landing/mindGraph'
 import { MASTERS_BY_SLUG } from '../content/projects'
@@ -53,10 +53,23 @@ const AWARD_FACT = MASTERS_BY_SLUG['sensi']?.award ?? ''
 // REINDEX, 2026-07-16): the /work index and this book render the same rows.
 const fmtDate = fmtMonthYear
 
+// PAPER's lens mark. The screen's LensMark (ui/Pill.tsx) carries Tailwind
+// classes and a currentColor accent; print has its own type, its own tokens
+// and a pinned-light ground, so it keeps its own six-line renderer rather than
+// inheriting screen chrome. The GEOMETRY is still single-source (LensGlyph):
+// that was the audit's actual finding, not the number of wrappers.
+function PrLensTick({ lens, size }: { lens: Lens; size: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 10 10" aria-hidden="true" className="inline-block shrink-0">
+      <LensGlyph shape={LENSES[lens].shape} fill={LENSES[lens].pen} />
+    </svg>
+  )
+}
+
 function LensPill({ lens }: { lens: Lens }) {
   return (
     <span className="pr-pill">
-      <LensTick lens={lens} size={8} />
+      <PrLensTick lens={lens} size={8} />
       {LENSES[lens].label}
     </span>
   )
@@ -346,7 +359,7 @@ function IndexPage({ side }: { side: PageSide }) {
         <div className="pr-legend pr-kicker" style={{ marginBottom: '3.5mm' }}>
           {(Object.keys(LENSES) as Lens[]).map(l => (
             <span key={l}>
-              <LensTick lens={l} size={6} /> {LENSES[l].label.toUpperCase()}
+              <PrLensTick lens={l} size={6} /> {LENSES[l].label.toUpperCase()}
             </span>
           ))}
           <span>✦ RECOGNITION</span>
@@ -373,7 +386,7 @@ function IndexPage({ side }: { side: PageSide }) {
                   )}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '1.6mm', marginTop: '1.6mm' }}>
-                  <LensTick lens={w.lens} size={6} />
+                  <PrLensTick lens={w.lens} size={6} />
                   <span className="pr-body" style={{ fontSize: '8pt', fontFamily: 'var(--font-display)', fontWeight: 600 }}>
                     {w.title}
                   </span>

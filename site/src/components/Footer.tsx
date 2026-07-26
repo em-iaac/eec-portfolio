@@ -13,12 +13,12 @@ import ContactLinks from './ui/ContactLinks'
 export default function Footer() {
   return (
     <footer className="shrink-0 px-3 pt-1 pb-3">
-      <div className="lang-glass-1 flex flex-wrap items-center justify-between gap-x-8 gap-y-1 rounded-[var(--r-pill)] px-5 py-2.5 sm:px-7">
+      <div className="foot-pill lang-glass-1 flex flex-wrap items-center justify-between gap-x-8 gap-y-1 rounded-[var(--r-pill)] px-5 py-2.5 sm:px-7">
         <div className="flex min-w-0 flex-col">
-          <span className="text-[13px] font-semibold tracking-[0.02em] text-[var(--lang-ink)]">
+          <span className="text-small font-semibold tracking-[0.02em] text-[var(--lang-ink)]">
             EMILIE EL CHIDIAC
           </span>
-          <span className="mt-0.5 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
+          <span className="mt-0.5 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
             DESIGN TECHNOLOGY ARCHITECT
           </span>
         </div>

@@ -138,11 +138,11 @@ export default function NB({
           // inside an already-blurred panel (the showcase sheet), so glass
           // here would gamble the note's contrast on the text behind it
           // (the AA floor; same ruling as the Card's on-photo award pill).
-          className={`nbtip-enter pointer-events-none absolute top-5 z-10 block w-[218px] rounded-[var(--r-control)] border-[0.5px] border-[var(--lang-glass-2-border)] bg-[var(--lang-glass-2-solid)] px-[11px] py-2 text-left font-serif text-[13px] leading-[1.45] font-normal tracking-normal normal-case italic text-[var(--lang-ink)] ${
+          className={`nbtip-enter pointer-events-none absolute top-5 z-10 block w-[218px] rounded-[var(--r-control)] border-[0.5px] border-[var(--lang-glass-2-border)] bg-[var(--lang-glass-2-solid)] px-[11px] py-2 text-left font-serif text-small leading-[1.45] font-normal tracking-normal normal-case italic text-[var(--lang-ink)] ${
             align === 'right' ? 'right-0' : 'left-[-60px]'
           }`}
         >
-          <span className="font-mono text-[10px] not-italic text-[var(--lang-interaction)]">n.b.</span>{' '}
+          <span className="font-mono text-label not-italic text-[var(--lang-interaction)]">n.b.</span>{' '}
           {note}
         </span>
       )}

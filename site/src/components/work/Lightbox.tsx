@@ -11,7 +11,7 @@ import Img from '../Img'
 import type { WorkPicture } from '../../data/work'
 
 const NAV_BTN =
-  'flex size-11 items-center justify-center rounded-[var(--r-pill)] bg-[rgba(11,14,19,0.55)] font-mono text-[15px] leading-none text-white transition-colors hover:bg-[rgba(11,14,19,0.8)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
+  'flex size-11 items-center justify-center rounded-[var(--r-pill)] bg-[var(--lang-scrim-rest)] font-mono text-body leading-none text-white transition-colors hover:bg-[var(--lang-scrim-hover)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
 
 export default function Lightbox({
   pictures,
@@ -91,7 +91,7 @@ export default function Lightbox({
           sizes="92vw"
           className="max-h-[80dvh] max-w-full rounded-[var(--r-image)] bg-white object-contain"
         />
-        <p className="max-w-[62ch] text-center font-mono text-[10px] tracking-[0.08em] text-white/85">
+        <p className="max-w-[62ch] text-center font-mono text-label tracking-[0.08em] text-white/85">
           {pic.alt}
           {many && (
             <span className="text-white/60">

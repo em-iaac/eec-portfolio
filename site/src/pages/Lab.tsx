@@ -8,9 +8,9 @@ import TitleBlock from '../components/TitleBlock'
 import Surface from '../components/ui/Surface'
 import Card from '../components/ui/Card'
 import { FilterPill, LensPill, Pill, StatusPill } from '../components/ui/Pill'
-import type { Lens } from '../components/Lens'
+import { LENSES, type Lens } from '../components/Lens'
 
-const LENSES: Lens[] = ['computation', 'practice', 'explorations']
+const LENS_ORDER: Lens[] = ['computation', 'practice', 'explorations']
 
 // A stand-in "photograph" so the Card face reads image-forward without
 // touching the asset pipeline: flat blocks, roughly a facade.
@@ -30,19 +30,19 @@ function FakePhoto({ dark = false }: { dark?: boolean }) {
 function ThreadField() {
   return (
     <svg className="pointer-events-none absolute inset-0 h-full w-full" preserveAspectRatio="none" viewBox="0 0 600 400" aria-hidden="true">
-      <path d="M-10 90 C120 20 320 180 610 60" style={{ stroke: 'light-dark(#0e7490, #22d3ee)' }} strokeOpacity="0.55" strokeWidth="2" fill="none" />
-      <path d="M-10 260 C180 340 380 190 610 300" style={{ stroke: 'light-dark(#a8186b, #f472b6)' }} strokeOpacity="0.5" strokeWidth="2" fill="none" />
-      <path d="M-10 180 C220 120 420 260 610 170" style={{ stroke: 'light-dark(#7a5e00, #facc15)' }} strokeOpacity="0.45" strokeWidth="2" fill="none" />
-      <circle cx="140" cy="70" r="7" style={{ fill: 'light-dark(#0e7490, #22d3ee)' }} fillOpacity="0.6" />
-      <circle cx="420" cy="250" r="7" style={{ fill: 'light-dark(#a8186b, #f472b6)' }} fillOpacity="0.55" />
-      <circle cx="300" cy="150" r="6" style={{ fill: 'light-dark(#7a5e00, #facc15)' }} fillOpacity="0.55" />
+      <path d="M-10 90 C120 20 320 180 610 60" style={{ stroke: LENSES.computation.accent }} strokeOpacity="0.55" strokeWidth="2" fill="none" />
+      <path d="M-10 260 C180 340 380 190 610 300" style={{ stroke: LENSES.practice.accent }} strokeOpacity="0.5" strokeWidth="2" fill="none" />
+      <path d="M-10 180 C220 120 420 260 610 170" style={{ stroke: LENSES.explorations.accent }} strokeOpacity="0.45" strokeWidth="2" fill="none" />
+      <circle cx="140" cy="70" r="7" style={{ fill: LENSES.computation.accent }} fillOpacity="0.6" />
+      <circle cx="420" cy="250" r="7" style={{ fill: LENSES.practice.accent }} fillOpacity="0.55" />
+      <circle cx="300" cy="150" r="6" style={{ fill: LENSES.explorations.accent }} fillOpacity="0.55" />
     </svg>
   )
 }
 
 function SectionTitle({ children }: { children: string }) {
   return (
-    <h2 className="mt-10 mb-3 font-mono text-[11px] tracking-[0.12em] text-[var(--lang-ink-muted)]">
+    <h2 className="mt-10 mb-3 font-mono text-nav tracking-[0.12em] text-[var(--lang-ink-muted)]">
       {children}
     </h2>
   )
@@ -55,24 +55,24 @@ function PrimitiveSet({ dark = false, label }: { dark?: boolean; label?: string 
       <ThreadField />
 
       <div className="relative">
-        <div className="mb-4 font-mono text-[10px] tracking-[0.14em] text-[var(--lang-ink-faint)]" data-lab="ground-label">
+        <div className="mb-4 font-mono text-label tracking-[0.14em] text-[var(--lang-ink-faint)]" data-lab="ground-label">
           {label ?? `GROUND ${dark ? 'DARK #0b0e13' : 'LIGHT #f5f6f7'}`}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <Surface tier={1} radius="card" className="p-4">
-            <div className="text-[15px] font-semibold text-[var(--lang-ink)]" data-lab="g1-ink">
+            <div className="text-body font-semibold text-[var(--lang-ink)]" data-lab="g1-ink">
               glass-1 · raised
             </div>
-            <p className="mt-1 text-[13px] text-[var(--lang-ink-muted)]" data-lab="g1-muted">
+            <p className="mt-1 text-small text-[var(--lang-ink-muted)]" data-lab="g1-muted">
               Cards and panels. The ground breathes through; the ink does the work.
             </p>
           </Surface>
           <Surface tier={2} radius="card" className="p-4">
-            <div className="text-[15px] font-semibold text-[var(--lang-ink)]" data-lab="g2-ink">
+            <div className="text-body font-semibold text-[var(--lang-ink)]" data-lab="g2-ink">
               glass-2 · floating
             </div>
-            <p className="mt-1 text-[13px] text-[var(--lang-ink-muted)]" data-lab="g2-muted">
+            <p className="mt-1 text-small text-[var(--lang-ink-muted)]" data-lab="g2-muted">
               Overlays, sheets, menus. Brighter fill, stronger border.
             </p>
           </Surface>
@@ -85,10 +85,10 @@ function PrimitiveSet({ dark = false, label }: { dark?: boolean; label?: string 
             className="rounded-[var(--r-card)] border-[0.5px] border-[var(--lang-glass-1-border)] p-4"
             style={{ background: 'var(--lang-glass-1-solid)' }}
           >
-            <div className="text-[15px] font-semibold text-[var(--lang-ink)]" data-lab="g1solid-ink">
+            <div className="text-body font-semibold text-[var(--lang-ink)]" data-lab="g1solid-ink">
               glass-1 fallback · solid
             </div>
-            <p className="mt-1 text-[13px] text-[var(--lang-ink-muted)]" data-lab="g1solid-muted">
+            <p className="mt-1 text-small text-[var(--lang-ink-muted)]" data-lab="g1solid-muted">
               No blur support: same tone, fully opaque, always legible.
             </p>
           </div>
@@ -96,17 +96,17 @@ function PrimitiveSet({ dark = false, label }: { dark?: boolean; label?: string 
             className="rounded-[var(--r-card)] border-[0.5px] border-[var(--lang-glass-2-border)] p-4"
             style={{ background: 'var(--lang-glass-2-solid)' }}
           >
-            <div className="text-[15px] font-semibold text-[var(--lang-ink)]" data-lab="g2solid-ink">
+            <div className="text-body font-semibold text-[var(--lang-ink)]" data-lab="g2solid-ink">
               glass-2 fallback · solid
             </div>
-            <p className="mt-1 text-[13px] text-[var(--lang-ink-muted)]" data-lab="g2solid-muted">
+            <p className="mt-1 text-small text-[var(--lang-ink-muted)]" data-lab="g2solid-muted">
               Mirrors the @supports-not path exactly.
             </p>
           </div>
         </div>
 
         <div className="mt-5 flex flex-wrap items-center gap-2" data-lab="pills">
-          {LENSES.map(l => (
+          {LENS_ORDER.map(l => (
             <LensPill key={l} lens={l} />
           ))}
           <Pill>sentence-case tag</Pill>
@@ -119,7 +119,7 @@ function PrimitiveSet({ dark = false, label }: { dark?: boolean; label?: string 
           <FilterPill active={facet === null} onClick={() => setFacet(null)}>
             ALL
           </FilterPill>
-          {LENSES.map(l => (
+          {LENS_ORDER.map(l => (
             <FilterPill key={l} active={facet === l} onClick={() => setFacet(l)}>
               {l.toUpperCase()}
             </FilterPill>
@@ -155,7 +155,7 @@ export default function Lab() {
       <TitleBlock />
       <main className="mx-auto w-full max-w-5xl px-5 sm:px-8">
         <h1 className="mt-8 text-xl font-semibold">Primitives lab</h1>
-        <p className="mt-1 max-w-[60ch] text-[14px] text-[var(--lang-ink-muted)]">
+        <p className="mt-1 max-w-[60ch] text-body text-[var(--lang-ink-muted)]">
           Dev-only. This surface follows the mode; the two pinned strips below never move. Flip
           the toggle in the pill above and only this ground should change.
         </p>
@@ -179,10 +179,10 @@ export default function Lab() {
           <div className="relative grid grid-cols-2 gap-4 sm:grid-cols-3" data-lab="perf-field">
             {Array.from({ length: 12 }, (_, i) => (
               <Surface key={i} tier={i % 2 === 0 ? 1 : 2} radius="card" className="p-4">
-                <div className="font-mono text-[10px] tracking-[0.1em] text-[var(--lang-ink-muted)]">
+                <div className="font-mono text-label tracking-[0.1em] text-[var(--lang-ink-muted)]">
                   PANEL {String(i + 1).padStart(2, '0')}
                 </div>
-                <div className="mt-1 text-[14px] font-semibold text-[var(--lang-ink)]">16px blur, bounded</div>
+                <div className="mt-1 text-body font-semibold text-[var(--lang-ink)]">16px blur, bounded</div>
               </Surface>
             ))}
           </div>

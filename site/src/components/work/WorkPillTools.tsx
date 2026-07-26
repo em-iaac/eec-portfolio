@@ -15,7 +15,7 @@
 // means alone, nor does the ✦).
 import { Link } from 'react-router-dom'
 import { FilterPill, LensMark } from '../ui/Pill'
-import DownloadChip from '../ui/DownloadChip'
+import DownloadPill from '../ui/DownloadPill'
 import { BookGlyph } from '../ui/glyphs'
 import { LENSES, type Lens } from '../Lens'
 import { WORK_LENSES } from '../../data/work'
@@ -68,19 +68,19 @@ export function WorkFilterRow({ active, flat = false }: { active: Lens | null; f
 
 // THE BOOK (G5): the proof room hands out its printed rendition; the PDF
 // regenerates on every build from the same masters as the grid. The one
-// download affordance sitewide (DownloadChip: a hairline pill + tray icon),
+// download affordance sitewide (DownloadPill: a hairline pill + tray icon),
 // so /work's book and /cv's + /about's downloads read as one control (the
 // audit's consistency ruling, 2026-07-19).
 export function BookDownloadLink({ className = '' }: { className?: string }) {
   return (
-    <DownloadChip
+    <DownloadPill
       href={`${import.meta.env.BASE_URL}assets/portfolio-emilie-el-chidiac.pdf`}
       download="Emilie-El-Chidiac-Portfolio.pdf"
       icon={<BookGlyph />}
       className={className}
     >
       THE BOOK (PDF)
-    </DownloadChip>
+    </DownloadPill>
   )
 }
 

@@ -15,9 +15,8 @@
 import { type ReactNode } from 'react'
 import NBDot from '../components/ui/NB'
 import SketchDot from './SketchDot'
+import { RED_LINK } from '../lib/linkStyles'
 
-const RED_LINK =
-  'text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
 
 // THE OPENINGS (G2) live in openings.ts (JSX-free so index surfaces can
 // import them without pulling this prose into their chunk). Each string there
@@ -361,6 +360,51 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
         buildings treat people read as the most boring ones, standards, data layers, scoring
         models, and they'll only get argued about by more than five people if someone makes them
         worth looking at.
+      </p>
+    </>
+  ),
+
+  // T-114 · the MaCAD Module 03 graph work. Written as a NOTE, not a project
+  // entry: Emilie's ruling (2026-07-26) is that the notebook scaffolds came from
+  // the IAAC GraphML course and she adapted them, so the honest subject is the
+  // analysis and the judgement, not a build. Authorship is stated in the first
+  // paragraph rather than buried in a credit line. Ships draftCopy until signed.
+  adjacency: (
+    <>
+      <p>
+        A floor plan tells you which rooms touch. It will not tell you which rooms you can
+        actually reach, and the gap between those two drawings is where the architecture is
+        hiding. In a graph machine learning course at IAAC I took a police station in Salt,
+        Spain and rebuilt it three times as a graph: once for which rooms touch, once for
+        which rooms you can walk between, once for which rooms can see each other. The
+        notebook scaffolds came with the course. The building, the argument for choosing it,
+        and every analysis on top of it were mine.
+      </p>
+      <p>
+        A police station is an extreme case of designed spatial control. Its plan keeps three
+        groups of people apart, public, staff and detainees, whose paths are not supposed to
+        cross by accident, and it rations every crossing through a door. Officers need to
+        survey rooms they are not standing in. If a plan encodes a protocol anywhere, it
+        encodes one here, which makes it the right thing to point a graph at.
+      </p>
+      <p>
+        The first graph connects any two rooms that share a wall. The second connects them
+        only if there is a door in that wall. Subtract one from the other and what is left is
+        not noise, it is the design: every place where two rooms were allowed to touch and
+        deliberately not allowed to connect. Adjacency is not access. The interesting result
+        was a gap, not a number, which is why both graphs are built and not just the useful
+        one.
+        <NBDot note="the third graph, sightlines, is the one that argues with the other two." />
+      </p>
+      <p>
+        The weakest link is worth saying out loud, because nobody would find it on their own.
+        Rooms are sorted into public, private, circulation and cell by matching keywords
+        against the layer names in the Rhino file. It works, and it means the entire analysis
+        quietly inherits whoever named those layers. One careless layer moves a room into the
+        wrong zone and nothing raises an error, nothing turns red, the graph just draws a
+        confident picture of a building that is not there. A robust version would classify on
+        geometry and connectivity instead of on strings. The failure modes that do not throw
+        are the expensive ones.
       </p>
     </>
   ),

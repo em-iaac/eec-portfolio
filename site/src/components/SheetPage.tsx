@@ -15,6 +15,7 @@ export default function SheetPage({
   children,
   wide = false,
   pillTools,
+  toolsKey,
   center = true,
   footer = true,
   fill = false,
@@ -24,6 +25,8 @@ export default function SheetPage({
   wide?: boolean
   /** A page's own tools on the header line, right of the pill. */
   pillTools?: ReactNode
+  /** see TitleBlock: the tools' identity, so unlike sets never morph. */
+  toolsKey?: string
   /** Content centres vertically in the middle band (auto margins); a
       document that reads top-first can opt out. */
   center?: boolean
@@ -39,11 +42,11 @@ export default function SheetPage({
     <div className="flex h-dvh flex-col overflow-hidden">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-[var(--lang-interaction)] focus:px-4 focus:py-2 focus:font-mono focus:text-xs focus:text-[var(--lang-ground)]"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-[var(--lang-interaction)] focus:px-4 focus:py-2 focus:font-mono focus:text-nav focus:text-[var(--lang-ground)]"
       >
         Skip to content
       </a>
-      <TitleBlock tools={pillTools} />
+      <TitleBlock tools={pillTools} toolsKey={toolsKey} />
       <main
         id="main"
         tabIndex={-1}

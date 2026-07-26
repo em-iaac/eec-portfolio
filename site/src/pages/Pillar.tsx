@@ -16,9 +16,8 @@ import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import { ENTRIES } from '../data/registry'
 import { isPillarRelated } from '../lib/pillar'
+import { RED_LINK_TAP } from '../lib/linkStyles'
 
-const RED_LINK =
-  '-m-2 p-2 text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
 
 // The cluster, derived, never listed by hand: tag a new project 'neuro' in
 // the registry and it appears here (and gains its door back) by existing.
@@ -30,10 +29,10 @@ const NEURO_THOUGHTS = ENTRIES.filter(
 function DoorRow({ to, title, hint }: { to: string; title: string; hint: string }) {
   return (
     <li className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t-[0.5px] border-[var(--lang-hairline)] py-2.5 first:border-t-0">
-      <Link to={to} viewTransition className={`font-mono text-[11px] tracking-[0.08em] ${RED_LINK}`}>
+      <Link to={to} viewTransition className={`font-mono text-nav tracking-[0.08em] ${RED_LINK_TAP}`}>
         {title} ›
       </Link>
-      <span className="font-mono text-[9px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
+      <span className="font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
         {hint}
       </span>
     </li>
@@ -48,12 +47,12 @@ export default function Pillar() {
             exception to the DL amendment-9 kicker grammar. The pillar is not
             a nav room; the h1 IS the sign, and the endmatter's THE SPINE
             label keeps the page's identity. */}
-        <h1 className="mb-6 max-w-[22ch] font-serif text-[27px] leading-[1.22] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]">
+        <h1 className="mb-6 max-w-[22ch] font-serif text-display leading-[1.22] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]">
           behavior information modeling
         </h1>
 
         {/* The definitive prose (S5, 2026-07-18). */}
-        <div className="max-w-[62ch] font-serif text-[16.5px] leading-[1.75] text-[var(--lang-ink)] [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
+        <div className="max-w-[62ch] font-serif text-prose leading-[1.75] text-[var(--lang-ink)] [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
           <p>
             What if how a space will make someone feel could be treated as design data, scored
             and estimated and argued with before anything is built? Behavior information
@@ -70,7 +69,7 @@ export default function Pillar() {
           </p>
           <p>
             The name happened on air. An hour into{' '}
-            <Link to="/work/podcast" viewTransition className={RED_LINK}>
+            <Link to="/work/podcast" viewTransition className={RED_LINK_TAP}>
               our podcast conversation
             </Link>{' '}
             with Dr. Cleo Valentine, the researcher building the field of architectural
@@ -86,7 +85,7 @@ export default function Pillar() {
               href="https://hi-em.github.io/neurospace"
               target="_blank"
               rel="noreferrer"
-              className={RED_LINK}
+              className={RED_LINK_TAP}
             >
               NeuroSpace
               <span className="sr-only"> (opens in new tab)</span>
@@ -94,7 +93,7 @@ export default function Pillar() {
             runs the bet live in your browser, scoring plans against published neuroarchitecture
             research; Sensi turns it into a copilot that treats comfort as six coupled senses;
             both show their work and leave you room to argue back. The long version lives in{' '}
-            <Link to="/thoughts/bim" viewTransition className={RED_LINK}>
+            <Link to="/thoughts/bim" viewTransition className={RED_LINK_TAP}>
               the note that carries it
             </Link>
             ; every door below is the bet being tested.
@@ -102,7 +101,7 @@ export default function Pillar() {
         </div>
 
         <section className="mt-10" aria-label="Projects that test behavior information modeling">
-          <h2 className="font-mono text-[9px] font-normal tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
+          <h2 className="font-mono text-micro font-normal tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
             THE TOOLS THAT TEST IT
           </h2>
           <ul className="mt-3">
@@ -120,7 +119,7 @@ export default function Pillar() {
         </section>
 
         <section className="mt-8" aria-label="Thought notes around behavior information modeling">
-          <h2 className="font-mono text-[9px] font-normal tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
+          <h2 className="font-mono text-micro font-normal tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
             THE NOTES AROUND IT
           </h2>
           <ul className="mt-3">
@@ -130,8 +129,8 @@ export default function Pillar() {
           </ul>
         </section>
 
-        <div className="mt-9 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-t-[0.5px] border-[var(--lang-hairline)] pt-3.5 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
-          <Link to="/" viewTransition className={RED_LINK}>
+        <div className="mt-9 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-t-[0.5px] border-[var(--lang-hairline)] pt-3.5 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
+          <Link to="/" viewTransition className={RED_LINK_TAP}>
             ‹ BACK TO THE MIND
           </Link>
           <span className="ml-auto">THE SPINE</span>

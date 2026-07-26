@@ -1,13 +1,12 @@
 import SheetPage from '../components/SheetPage'
 import LogoMark from '../components/LogoMark'
-import DownloadChip from '../components/ui/DownloadChip'
+import DownloadPill from '../components/ui/DownloadPill'
 import ContactLinks from '../components/ui/ContactLinks'
 import { BookGlyph, DocGlyph } from '../components/ui/glyphs'
+import { RED_LINK } from '../lib/linkStyles'
 
 const BASE = import.meta.env.BASE_URL
 
-const RED_LINK =
-  'text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
 
 // The prose step: 17px is the short-laptop fit, 19px when the room breathes
 // (the `tall:` variant, index.css). Class strings stay LITERAL.
@@ -37,7 +36,7 @@ export default function About() {
                 The h1 carries the invitation, SIGNED (2026-07-12). */}
             <h1
               id="about-heading"
-              className="mt-1 text-3xl font-semibold tracking-[-0.01em] text-[var(--lang-ink)] tall:text-4xl"
+              className="mt-1 text-title font-semibold tracking-[-0.01em] text-[var(--lang-ink)] tall:text-4xl"
             >
               Say hi
             </h1>
@@ -77,20 +76,20 @@ export default function About() {
               own hover, and the lens belongs to the links. */}
           <ContactLinks className="mt-5" />
           <nav aria-label="Downloads" className="mt-3 flex flex-wrap items-center gap-2">
-            <DownloadChip
+            <DownloadPill
               href={`${BASE}assets/portfolio-emilie-el-chidiac.pdf`}
               download="Emilie-El-Chidiac-Portfolio.pdf"
               icon={<BookGlyph />}
             >
               THE BOOK (PDF)
-            </DownloadChip>
-            <DownloadChip
+            </DownloadPill>
+            <DownloadPill
               href={`${BASE}assets/cv-emilie-el-chidiac.pdf`}
               download="Emilie-El-Chidiac-CV.pdf"
               icon={<DocGlyph />}
             >
               CV (PDF)
-            </DownloadChip>
+            </DownloadPill>
           </nav>
         </div>
       </section>

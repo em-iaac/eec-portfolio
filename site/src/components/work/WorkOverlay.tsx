@@ -42,16 +42,12 @@ import { LensPill } from '../ui/Pill'
 import { vtName } from '../../lib/viewTransition'
 import { PILLAR_PATH, isPillarRelated } from '../../lib/pillar'
 import type { WorkEntry, WorkPicture } from '../../data/work'
+import { INK_LINK, RED_LINK_ROW } from '../../lib/linkStyles'
 
-const ACCENT_LINK =
-  'text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
-// Text links wear a transparent >= 44px hit box (the touch floor, a FLOORS
-// rule): the visible link stays a quiet mono line, the box does the catching.
-const ROW_LINK = `inline-flex min-h-11 min-w-11 items-center ${ACCENT_LINK}`
 
 // Compact serif for the two-column spine (tighter than the old single-column
 // prose, so the whole plate fits without scrolling).
-const PROSE = 'font-serif text-[13px] leading-[1.5] text-[var(--lang-ink)]'
+const PROSE = 'font-serif text-small leading-[1.5] text-[var(--lang-ink)]'
 
 // The stage's true rendered size (Emilie's quality pass, 2026-07-14): without
 // this hint the browser assumed the Img default (~640px) and loaded the soft
@@ -70,7 +66,7 @@ const STAGE_SIZES = '(max-width: 640px) 92vw, 480px'
 
 // The ‹ › page-turn buttons (shared style with the Lightbox nav).
 const FLIP_BTN =
-  'absolute top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-[var(--r-pill)] bg-[rgba(11,14,19,0.55)] font-mono text-[15px] leading-none text-white transition-colors hover:bg-[rgba(11,14,19,0.8)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
+  'absolute top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-[var(--r-pill)] bg-[var(--lang-scrim-rest)] font-mono text-body leading-none text-white transition-colors hover:bg-[var(--lang-scrim-hover)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
 
 // ---- THE ASSET SIDE (the flip-through gallery) ----------------------------
 // One page per piece of media: the hero first, then every supporting frame.
@@ -123,16 +119,16 @@ function StageContent({ page, onZoom }: { page: MediaPage; onZoom: (imgIndex: nu
     return (
       <div className="relative h-full w-full">
         <Img slug={page.cover.slug} name={page.cover.name} alt={page.cover.alt} develop priority sizes={STAGE_SIZES} className="block h-full w-full object-cover" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[rgba(11,14,19,0.45)]">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[var(--lang-scrim-soft)]">
           <a
             href={page.live.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center rounded-[var(--r-pill)] border-[0.5px] border-white/70 bg-[rgba(11,14,19,0.35)] px-5 font-mono text-[11px] tracking-[0.12em] text-white no-underline backdrop-blur-sm hover:bg-[rgba(11,14,19,0.55)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+            className="inline-flex min-h-11 items-center rounded-[var(--r-pill)] border-[0.5px] border-white/70 bg-[var(--lang-scrim-faint)] px-5 font-mono text-nav tracking-[0.12em] text-white no-underline backdrop-blur-sm hover:bg-[var(--lang-scrim-rest)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
           >
             TRY IT LIVE &gt;<span className="sr-only"> (opens in new tab)</span>
           </a>
-          {wakes && <span className="font-mono text-[9px] tracking-[0.1em] text-white/85">WAKES IN ~30S</span>}
+          {wakes && <span className="font-mono text-micro tracking-[0.1em] text-white/85">WAKES IN ~30S</span>}
         </div>
       </div>
     )
@@ -140,15 +136,15 @@ function StageContent({ page, onZoom }: { page: MediaPage; onZoom: (imgIndex: nu
   if (page.kind === 'audio') {
     return (
       <div className="flex h-full w-full flex-col justify-center bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)] px-5 py-6 sm:px-7">
-        <blockquote className="max-w-[40ch] font-serif text-[17px] leading-snug text-[var(--lang-ink)]">
+        <blockquote className="max-w-[40ch] font-serif text-prose leading-snug text-[var(--lang-ink)]">
           “{page.quote.text}”
         </blockquote>
-        <p className="mt-3 font-mono text-[9px] tracking-[0.1em] text-[var(--lang-ink-muted)]">{page.quote.source}</p>
+        <p className="mt-3 font-mono text-micro tracking-[0.1em] text-[var(--lang-ink-muted)]">{page.quote.source}</p>
         <a
           href={page.audio.href}
           target="_blank"
           rel="noopener noreferrer"
-          className={`mt-2 font-mono text-[10px] tracking-[0.12em] ${ROW_LINK}`}
+          className={`mt-2 font-mono text-label tracking-[0.12em] ${RED_LINK_ROW}`}
         >
           LISTEN ON SPOTIFY &gt;<span className="sr-only"> (opens in new tab)</span>
         </a>
@@ -175,7 +171,7 @@ function StageContent({ page, onZoom }: { page: MediaPage; onZoom: (imgIndex: nu
 function SpineBeat({ label, beat, children }: { label: string; beat: string; children: ReactNode }) {
   return (
     <section data-beat={beat} className="mb-3 break-inside-avoid">
-      <h3 className="font-mono text-[9px] font-normal tracking-[0.12em] text-[var(--lang-ink-muted)]">{label}</h3>
+      <h3 className="font-mono text-micro font-normal tracking-[0.12em] text-[var(--lang-ink-muted)]">{label}</h3>
       {children}
     </section>
   )
@@ -283,7 +279,7 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
         type="button"
         onClick={close}
         aria-label="Close project"
-        className="absolute top-2.5 right-2.5 z-10 flex size-11 items-center justify-center rounded-[var(--r-pill)] font-mono text-[13px] leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+        className="absolute top-2.5 right-2.5 z-10 flex size-11 items-center justify-center rounded-[var(--r-pill)] font-mono text-small leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
       >
         ✕
       </button>
@@ -294,7 +290,7 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
             proof); desktop puts the asset left (sm:order-first). */}
         <div className={current ? 'grid grid-cols-1 gap-x-7 gap-y-4 sm:grid-cols-[1.05fr_1fr]' : ''}>
           <div className="pr-9 sm:pr-8">
-            <h2 id={titleId} className="text-[21px] leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)]">
+            <h2 id={titleId} className="text-lead leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)]">
               {entry.title}
             </h2>
             <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1">
@@ -305,14 +301,14 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                     href={entry.awardHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-mono text-[9px] font-medium tracking-[0.1em] text-[var(--lang-ink)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+                    className={`font-mono text-micro font-medium tracking-[0.1em] ${INK_LINK}`}
                   >
                     <span aria-hidden="true">✦ </span>
                     {entry.awardFace}
                     <span className="sr-only"> (opens in new tab)</span>
                   </a>
                 ) : (
-                  <span className="font-mono text-[9px] font-medium tracking-[0.1em] text-[var(--lang-ink)]">
+                  <span className="font-mono text-micro font-medium tracking-[0.1em] text-[var(--lang-ink)]">
                     <span aria-hidden="true">✦ </span>
                     {entry.awardFace}
                   </span>
@@ -324,7 +320,7 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                 the other questions the project answers; pressing one lights
                 the spine section that holds the answer. */}
             {entry.question && (
-              <p className="mt-3.5 max-w-[48ch] font-serif text-[16px] leading-snug italic text-[var(--lang-ink)]">
+              <p className="mt-3.5 max-w-[48ch] font-serif text-prose leading-snug italic text-[var(--lang-ink)]">
                 {entry.question}
                 {entry.alsoAnswers && entry.alsoAnswers.length > 0 && (
                   <>
@@ -334,15 +330,15 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                 )}
               </p>
             )}
-            <p className={`${entry.question ? 'mt-1.5' : 'mt-3.5'} max-w-[48ch] font-serif text-[14.5px] leading-snug text-[var(--lang-ink)]`}>
+            <p className={`${entry.question ? 'mt-1.5' : 'mt-3.5'} max-w-[48ch] font-serif text-body leading-snug text-[var(--lang-ink)]`}>
               {entry.dek}
             </p>
 
             {/* The plate's meta credit row + the mono tech (+ stat) line. */}
-            <p className="mt-3.5 font-mono text-[9px] tracking-[0.08em] text-[var(--lang-ink-muted)]">
+            <p className="mt-3.5 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
               {entry.meta}
             </p>
-            <p className="mt-1.5 font-mono text-[9px] tracking-[0.06em] text-[var(--lang-ink-muted)]">
+            <p className="mt-1.5 font-mono text-micro tracking-[0.06em] text-[var(--lang-ink-muted)]">
               {entry.tech}
               {entry.stat && <span> · {entry.stat}</span>}
             </p>
@@ -351,14 +347,14 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                 door first (internal), then the links OUT. The negative margin
                 keeps the 44px hit boxes from inflating the row rhythm. */}
             {hasLinks && (
-              <div className="mt-2 flex flex-wrap items-center gap-x-5 font-mono text-[10px] tracking-[0.1em]">
+              <div className="mt-2 flex flex-wrap items-center gap-x-5 font-mono text-label tracking-[0.1em]">
                 {isPillarRelated(entry.tags) && (
-                  <Link to={PILLAR_PATH} viewTransition className={`-my-2 ${ROW_LINK}`}>
+                  <Link to={PILLAR_PATH} viewTransition className={`-my-2 ${RED_LINK_ROW}`}>
                     BEHAVIOR INFORMATION MODELING ›
                   </Link>
                 )}
                 {entry.links.map((l) => (
-                  <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className={`-my-2 ${ROW_LINK}`}>
+                  <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className={`-my-2 ${RED_LINK_ROW}`}>
                     {/* A live deployment wears the liveness dot (Emilie,
                         2026-07-15: clearer than words; red = liveness,
                         governance rule 1). */}
@@ -389,7 +385,7 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                     <button type="button" onClick={nextPage} aria-label="Next picture" className={`${FLIP_BTN} right-2`}>
                       &rsaquo;
                     </button>
-                    <span className="absolute right-3 bottom-2 rounded-[var(--r-pill)] bg-[rgba(11,14,19,0.55)] px-2.5 py-1 font-mono text-[9px] tracking-[0.1em] text-white">
+                    <span className="absolute right-3 bottom-2 rounded-[var(--r-pill)] bg-[var(--lang-scrim-rest)] px-2.5 py-1 font-mono text-micro tracking-[0.1em] text-white">
                       {Math.min(page, pages.length - 1) + 1} / {pages.length}
                     </span>
                   </>

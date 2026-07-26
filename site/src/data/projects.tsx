@@ -9,12 +9,11 @@
 // grouping survives as each master's `lens` field; Design & Practice stays
 // locked to Marsception + SOMA only (Session 1 ruling; Dynamic Solution
 // appears in the CV experience list, not the Work lens).
-import { ALL_PROJECT_MASTERS, MASTERS_BY_SLUG, type ProjectMaster } from '../content/projects'
+import { MASTERS_BY_SLUG, type ProjectMaster } from '../content/projects'
 
 // The historical name: consumers typed against `Project`; the master file is
 // a superset (card fields + the G1 showcase spine).
 export type Project = ProjectMaster
 
-export const ALL_PROJECTS: Project[] = ALL_PROJECT_MASTERS
 
 export const PROJECTS_BY_SLUG: Record<string, Project> = MASTERS_BY_SLUG

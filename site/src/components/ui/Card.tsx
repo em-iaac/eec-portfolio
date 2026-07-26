@@ -78,7 +78,7 @@ export default function Card({
         {image ?? (
           <div className="flex h-full w-full items-center justify-center bg-[color-mix(in_srgb,var(--lang-ink)_5%,transparent)]">
             {/* muted, not faint (G4): faint fell to 3.2:1 on the dark ground */}
-            <span className="font-mono text-[10px] tracking-[0.14em] text-[var(--lang-ink-muted)]">
+            <span className="font-mono text-label tracking-[0.14em] text-[var(--lang-ink-muted)]">
               PHOTO PENDING
             </span>
           </div>
@@ -99,12 +99,12 @@ export default function Card({
         }`}
       >
         <span
-          className={`truncate leading-tight font-semibold text-[var(--lang-ink)] ${dense ? 'text-[13px]' : 'text-[15px]'}`}
+          className={`truncate leading-tight font-semibold text-[var(--lang-ink)] ${dense ? 'text-small' : 'text-body'}`}
         >
           {title}
         </span>
         {recognition && (
-          <span className="truncate font-mono text-[8px] tracking-[0.08em] text-[var(--lang-ink)]">
+          <span className="truncate font-mono text-micro tracking-[0.08em] text-[var(--lang-ink)]">
             <span aria-hidden="true">✦ </span>
             {recognition}
           </span>
@@ -120,7 +120,7 @@ export default function Card({
             /* -mr cancels the tracking's trailing space: letter-spacing adds
                it after the LAST glyph too, and the row's overflow-hidden was
                clipping the ✦'s edge at 320px (S2 index fix). */
-            <span className="ml-auto -mr-[0.08em] shrink-0 pl-1 font-mono text-[9px] tracking-[0.08em] whitespace-nowrap text-[var(--lang-ink-muted)]">
+            <span className="ml-auto -mr-[0.08em] shrink-0 pl-1 font-mono text-micro tracking-[0.08em] whitespace-nowrap text-[var(--lang-ink-muted)]">
               {meta}
             </span>
           )}

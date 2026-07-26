@@ -27,6 +27,7 @@ import WorkCard from '../components/work/WorkCard'
 import WorkGroundTools, { BookDownloadLink, WorkFilterRow } from '../components/work/WorkPillTools'
 import WorkOverlay from '../components/work/WorkOverlay'
 import { LENSES, type Lens } from '../components/Lens'
+import { travelTo } from '../lib/navIntent'
 import { CORRELATIONS, thoughtIndexEntries } from '../data/registry'
 import { WORK_ENTRIES, workEntryById } from '../data/work'
 
@@ -100,8 +101,8 @@ export default function Work() {
   // viewTransition: the card face morphs into the showcase sheet and back
   // (shared view-transition-name, lib/viewTransition.ts); browsers without
   // the API just swap.
-  const open = (entryId: string) => navigate(`/work/${entryId}${hash}`, { viewTransition: true })
-  const close = () => navigate(`/work${hash}`, { replace: true, viewTransition: true })
+  const open = (entryId: string) => navigate(travelTo(`/work/${entryId}${hash}`), { viewTransition: true })
+  const close = () => navigate(travelTo(`/work${hash}`), { replace: true, viewTransition: true })
 
   // THE CROSS-GLOW state: the rail lifts the hovered thought id; the tiles it
   // correlates to wear data-glow (language.css draws the quiet ink ring).
@@ -125,7 +126,7 @@ export default function Work() {
     ))
 
   const SECTION_LABEL =
-    'font-mono text-[10px] tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase'
+    'font-mono text-label tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase'
 
   return (
     // TOOLS ON THE GROUND, ON THE SIDE (the design audit, Emilie's ruling
@@ -134,13 +135,13 @@ export default function Work() {
     // TitleBlock's slot; placement in .pill-tools, language.css). The grid
     // takes the full width, THE THOUGHTS close the page, and below lg the
     // stacked header returns (minus the retired kicker tier).
-    <SheetPage wide pillTools={<WorkGroundTools active={activeLens} />}>
+    <SheetPage wide pillTools={<WorkGroundTools active={activeLens} />} toolsKey="work">
       {/* ONE h1 for every size: visible under the pill on small screens,
           sr-only on lg+ (the lit WORK door on the header line names the room;
           repeating it next to itself is the redundancy this audit retired). */}
       <h1
         id="work-heading"
-        className="pt-4 text-3xl font-semibold tracking-[-0.01em] text-[var(--lang-ink)] lg:sr-only lg:pt-0"
+        className="pt-4 text-title font-semibold tracking-[-0.01em] text-[var(--lang-ink)] lg:sr-only lg:pt-0"
       >
         Work
       </h1>

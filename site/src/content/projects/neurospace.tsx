@@ -32,7 +32,14 @@ const neurospace: ProjectMaster = {
     "You're sitting in a room right now, and its defaults are quietly shaping your cortisol, your circadian rhythm, your cognitive load. NeuroSpace makes those effects visible: move a slider, watch the score respond · Rhino.Compute geometry on the server, behavioral scoring live in the browser. It's BIM, reframed as Behavior Information Modeling.",
   tech: 'GRASSHOPPER · RHINO.COMPUTE · VUE 3 · THREE.JS',
   links: [
-    { label: 'TRY IT LIVE', href: 'https://hi-em.github.io/neurospace' },
+    // THE HONEST LABEL (2026-07-26). IAAC's Rhino Compute server is gone, so the
+    // room geometry never renders: the sliders, the score and the report still
+    // work because the scoring runs in the browser. The link stays, because the
+    // working half is the interesting half, but nobody should click into a
+    // half-broken demo unwarned. Emilie's voice for it ("maybe try it, almost").
+    // CONSTRAINT: `live` must survive as a standalone word or the red liveness
+    // dot in the links row (WorkOverlay's /\blive\b/i test) silently vanishes.
+    { label: 'TRY IT LIVE, ALMOST · NO 3D', href: 'https://hi-em.github.io/neurospace' },
     { label: 'GITHUB', href: 'https://github.com/hi-em/neurospace' },
     { label: 'BLOG', href: 'https://blog.iaac.net/the-data-pipeline-behind-neurospace-from-sliders-to-synapses/' },
   ],
