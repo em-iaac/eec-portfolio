@@ -739,7 +739,14 @@ export const ENTRIES: RegistryEntry[] = [
     id: 'sensi-macad-award',
     kind: 'award',
     date: '2026-06',
-    title: 'MaCAD Awards · Design Copilots · winner (Sensi)',
+    // THE YEAR JOINS THE TITLE (THE SCROLL, 2026-07-27). It was carried by the
+    // `date` field alone, which is enough on a chronological surface (the world,
+    // the CV graph) and not enough anywhere else. The landing's recognition line
+    // reads this title VERBATIM, and the wording every other surface uses is
+    // "MACAD AWARDS 2026 · DESIGN COPILOTS · WINNER" (content/projects/sensi.tsx).
+    // Putting the year here is what lets the landing quote the record instead of
+    // re-typing the claim, so the two can never drift.
+    title: 'MaCAD Awards 2026 · Design Copilots · winner (Sensi)',
     lens: 'computation',
     tags: ['ai', 'research'],
     refId: 'sensi',

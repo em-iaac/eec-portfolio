@@ -58,7 +58,11 @@ function ScreenRow({
   e: RegistryEntry
   onThoughtHover?: (id: string | null) => void
 }) {
-  const meta = `${e.note?.number ?? ''} · ${fmtMonthYear(e.date)}`
+  // THE T-NUMBER RETIRED from the screen row (Emilie's cut, 2026-07-27, THE
+  // SCROLL gate), alongside the P-numbers on the work faces. The PRINT skin
+  // below keeps it: the book is an archive with a contents page, and a
+  // contents page is exactly where a catalogue number earns its line.
+  const meta = fmtMonthYear(e.date)
   const opening = THOUGHT_OPENINGS[e.id]
   const body = (
     <>

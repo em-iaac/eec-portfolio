@@ -48,8 +48,15 @@ export default function WorkCard({
       className="work-plate aspect-video w-full"
       style={{ '--plate-accent': LENSES[entry.lens].pen } as CSSProperties}
     >
+      {/* THE CATALOGUE NUMBER RETIRED from the face (Emilie's cut, 2026-07-27,
+          THE SCROLL gate). "P-108 · SOMA" spent a line on every tile to tell a
+          stranger a number that means nothing outside the archive. The ORIGIN
+          stamp stays, because school-versus-practice is the one thing that row
+          was genuinely saying. The number is untouched everywhere it earns its
+          keep: the registry id, the showcase, the printed book's index and the
+          OG cards. */}
       <span className="work-plate__num font-mono text-micro tracking-[0.1em] text-[var(--lang-ink-muted)]">
-        {entry.number} · {entry.origin}
+        {entry.origin}
       </span>
       <span className="work-art" aria-hidden="true">
         {/* every project has a signed drawing; a future entry without one

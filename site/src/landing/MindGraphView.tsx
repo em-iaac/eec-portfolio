@@ -84,7 +84,20 @@ export default function MindGraph() {
   // narrow desktop window with no rest labels AND no invitation, i.e. a field
   // of anonymous dots. The two must agree or the phone rules half-apply.
   const [startId, setStartId] = useState<string | null>(null)
-  // The draw-in is an ARRIVAL, not a page load: once per visit (lib/develop).
+  // THE DRAW-IN: an ARRIVAL, not a page load. Once per visit (lib/develop),
+  // on its own clock — threads sweep in one by one, the marks land on them,
+  // the labels settle, ~3.4s. The landing mounts this component only when the
+  // bio section is properly on screen, so the ceremony plays in front of the
+  // visitor instead of to an empty room.
+  //
+  // THE CLEANUP NO LONGER MARKS IT DRAWN, and that is a real bug fix, not
+  // tidying (2026-07-27). It used to, on the reasoning that leaving mid-draw
+  // still counts as having seen it. But StrictMode double-invokes effects in
+  // dev — mount, cleanup, mount — so the cleanup set the flag before the
+  // second run ever read it, and every run after the first found
+  // hasMindDrawn() already true and killed the intro on the spot. The draw-in
+  // could not play in development AT ALL, which is exactly what Emilie kept
+  // reporting. The flag is now set only when the ceremony actually finishes.
   const [intro, setIntro] = useState(() => !prm && !hasMindDrawn())
   const lastPointer = useRef<'mouse' | 'touch' | 'pen'>('mouse')
 
@@ -98,12 +111,7 @@ export default function MindGraph() {
       setIntro(false)
       markMindDrawn()
     }, INTRO_MS)
-    // Mark on unmount too: leaving mid-draw still counts as having seen it,
-    // so a fast visitor never gets the ceremony twice.
-    return () => {
-      window.clearTimeout(t)
-      markMindDrawn()
-    }
+    return () => window.clearTimeout(t)
   }, [prm])
 
   useEffect(() => {
@@ -276,11 +284,16 @@ export default function MindGraph() {
             d={spline(t.pts)}
             pathLength={1}
             strokeDasharray={1}
-            style={{
-              ...(threadColor[t.id] ? { stroke: threadColor[t.id] } : null),
-              animationDelay: `${i * THREAD_STEP}ms`,
-              animationDuration: `${THREAD_DUR}ms`,
-            }}
+            // A NAMED delay, never a raw animationDelay: a bare inline
+            // animation-delay applies to EVERY animation the element ever
+            // runs, so the intro stagger leaks into any later one.
+            style={
+              {
+                ...(threadColor[t.id] ? { stroke: threadColor[t.id] } : null),
+                '--mg-in-delay': `${i * THREAD_STEP}ms`,
+                animationDuration: `${THREAD_DUR}ms`,
+              } as CSSProperties
+            }
           />
         ))}
       </g>
@@ -401,7 +414,7 @@ export default function MindGraph() {
                   cx={n.x}
                   cy={n.y}
                   r={3.6}
-                  style={{ ...(coreStyle[n.id] ?? null), animationDelay: `${delay}ms` }}
+                  style={{ ...(coreStyle[n.id] ?? null), '--mg-in-delay': `${delay}ms` } as CSSProperties}
                 />
               ) : (
                 <circle
@@ -409,7 +422,7 @@ export default function MindGraph() {
                   cx={n.x}
                   cy={n.y}
                   r={3.2}
-                  style={{ animationDelay: `${delay}ms` }}
+                  style={{ '--mg-in-delay': `${delay}ms` } as CSSProperties}
                 />
               )}
               <circle className="mg-hit" cx={n.x} cy={n.y} r={15} />

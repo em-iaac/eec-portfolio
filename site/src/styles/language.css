@@ -679,3 +679,88 @@ li[data-glow] > button {
     rotate: -2.5deg;
   }
 }
+
+/* ============================================================
+   THE STRIPS (THE SCROLL, Emilie's direction 2026-07-27): the landing's two
+   hover-scrubbed columns, one of projects and one of thoughts. See
+   landing/Strips.tsx for the why (and for why this is NOT a carousel).
+
+   THE MECHANIC. The track holds the tiles TWICE and travels exactly -50%, so
+   the loop is seamless. Spacing is a per-tile margin, never a flex gap: a gap
+   puts (2n - 1) gutters between 2n tiles, so half the track falls one gutter
+   short of one full set and the column jumps every cycle.
+
+   THE BARGAIN, REVISED (Emilie's pick 3, 2026-07-27). It used to be still and
+   run on hover. The flaw she named: a still column does not announce itself,
+   so nobody discovers that it moves. So it DRIFTS at rest now, and stops the
+   moment you point at it, tab into it, or press pause.
+
+   THE SPEED IS THE WHOLE DESIGN. ~2.5px per second, which is one screen every
+   several minutes. Fast enough to read as alive, slow enough that the award
+   tile pinned at the top of the work column drifts about 25px in the ten
+   seconds a recruiter spends here — it is still on screen when they look up.
+   At the old speed it was gone, which would have rebuilt the carousel failure
+   with a nicer mechanic. Durations are per-column because the columns hold
+   different amounts: 21 work tiles at ~150px is a 3150px half-track, 14
+   thought leaves at ~180px is 2520px.
+
+   THREE WAYS TO STOP IT, and that is not belt and braces, it is WCAG 2.2.2:
+   content that moves automatically for more than five seconds alongside other
+   content needs a real pause mechanism. Hover is NOT one, because it does not
+   exist for keyboard or touch. So: :hover for the pointer, :focus-within for
+   the keyboard, and an explicit [data-paused] button for everyone including
+   touch. Reduced motion never declares the animation at all.
+   ============================================================ */
+.lstrip {
+  position: relative;
+  overflow: hidden;
+  /* the tiles fade at both ends rather than being guillotined by the frame */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+.lstrip__track {
+  display: flex;
+  flex-direction: column;
+}
+/* THE AIR (Emilie, 2026-07-27: "both belts just shrink in size and let the
+   page breathe"). The gutter opened 12 -> 16px with the tiles; the loop's
+   -50% still lands exactly, because the spacing is a per-tile margin and not
+   a flex gap (see the note above). */
+.lstrip__cell {
+  margin-bottom: 16px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* 800s / 640s at Emilie's ask (2026-07-27): ~4px/s on the work column, ~3.4
+     on the thoughts. That is 40px in the ten-second scan window, so the award
+     tile is still plainly on screen; much past this and it reads as scrolling
+     rather than breathing. */
+  .lstrip__track {
+    animation: lstrip-up 800s linear infinite;
+    will-change: transform;
+  }
+  .lstrip__track--down {
+    animation-name: lstrip-down;
+    animation-duration: 640s;
+  }
+  .lstrip:hover .lstrip__track,
+  .lstrip:focus-within .lstrip__track,
+  [data-belts-paused] .lstrip__track {
+    animation-play-state: paused;
+  }
+}
+@keyframes lstrip-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+@keyframes lstrip-down {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

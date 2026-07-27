@@ -306,59 +306,16 @@ h3 {
   text-wrap: balance;
 }
 
-/* THE OVERTURE (2026-07-26). The identity column gets its own entrance: the
-   five tiers arrive in READING ORDER over ~1.1s, so the eye is led down the
-   column instead of meeting all of it at once.
-
-   THE NON-NEGOTIABLE, and the reason this is a transform and not a fade:
-   TEXT RISES, TEXT NEVER FADES. A text tier starting at opacity 0 is text
-   that PAINTS LATE, and the late-painting thing here is the sentence a
-   recruiter came to read. The handwritten voice line is the measured LCP
-   element; animating its opacity would push the one number the landing is
-   judged on. A transform costs LCP nothing: the element paints on frame one
-   at full opacity, merely translated. So every keyframe below moves and
-   NOTHING below touches opacity.
-   The single exception is the MARK, which is a graphic, not a sentence.
-
-   ~1.1s total: 5 tiers x 120ms stagger + 620ms = 1100ms.
-   Once per visit (lib/develop.ts): an entrance that replays every time you
-   come home is the opposite of the site being one continuous place. */
-@media (prefers-reduced-motion: no-preference) {
-  .ov .ov-t1,
-  .ov .ov-t2,
-  .ov .ov-t3,
-  .ov .ov-t4,
-  .ov .ov-t5 {
-    animation: ov-rise 620ms var(--ease-soft) both;
-  }
-  .ov .ov-t2 {
-    animation-delay: 120ms;
-  }
-  .ov .ov-t3 {
-    animation-delay: 240ms;
-  }
-  .ov .ov-t4 {
-    animation-delay: 360ms;
-  }
-  .ov .ov-t5 {
-    animation-delay: 480ms;
-  }
-  /* the mark is the one thing here that is not a sentence, so it may fade */
-  .ov .ov-t1 svg {
-    animation: ov-mark 620ms var(--ease-soft) both;
-  }
-  @keyframes ov-rise {
-    from {
-      transform: translateY(9px);
-    }
-  }
-  @keyframes ov-mark {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-  }
-}
+/* THE OVERTURE RETIRED (Emilie's cut, THE SCROLL 2026-07-27). It staged the
+   identity column's five tiers over ~1.1s in reading order, and it was well
+   built: transforms only, never opacity, so it never cost LCP a millisecond.
+   It was cut anyway, for the only reason that matters here. The landing's
+   whole budget is ten seconds, and a tenth of it was being spent introducing
+   the page rather than answering it. The tiers now simply arrive.
+   (.ov / .ov-t1..t5 and the ov-rise / ov-mark keyframes went with it. If an
+   entrance is ever wanted again, the rule it obeyed is worth keeping: TEXT
+   RISES, TEXT NEVER FADES, because a text tier starting at opacity 0 is the
+   sentence a recruiter came to read, painting late.) */
 
 /* THE PHONE FIELD MADE HONEST (REDESIGN-SPEC §3.4, 2026-07-26).
    Measured at 390x844: the 1440x860 canvas is sliced at scale 0.451, so a mark
@@ -411,6 +368,9 @@ h3 {
 @media (prefers-reduced-motion: no-preference) {
   .mg-intro .mg-thread {
     animation: mg-thread-draw 900ms cubic-bezier(0.25, 0.7, 0.3, 1) both;
+    /* named, like the marks below, so the stagger cannot leak into any other
+       animation the thread runs later (see MindGraphView). */
+    animation-delay: var(--mg-in-delay, 0ms);
   }
   .mg-intro .mg-core {
     transform-box: fill-box;
@@ -424,6 +384,14 @@ h3 {
   .mg-intro .mg-edge-lbl {
     animation: mg-fade-in 560ms ease-out 2.7s both;
   }
+
+  /* (A SCROLL-SCRUBBED variant of all this was built and REMOVED on the same
+     day, 2026-07-27: Emilie wanted the original choreography playing on its own
+     clock when you arrive, not a drawing tied to the scroll wheel. The named
+     --mg-in-delay above is what survives of it, and it is an improvement on the
+     raw inline animation-delay it replaced: a bare inline delay applies to
+     EVERY animation the element ever runs, so the intro stagger used to leak
+     into the hover breath.) */
   /* ARRIVAL: TWO slow breaths, then the halo settles and stays. `both` holds
      the 100% keyframe, which is the resting value, so the pulse lands exactly
      on rest with no step. The per-node negative animation-delay (set inline

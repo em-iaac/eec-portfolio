@@ -35,7 +35,7 @@ function activeDoor(pathname: string): number {
 // The magnifier tracks the HOME MARK (index 0) + the four doors (1..4), so
 // hovering the logo magnifies it too (Emilie's bonus ask, 2026-07-19). The
 // lens rests on the active room and slides to whatever the pointer is over.
-export function HeaderNav() {
+export function HeaderNav({ collapsed = false }: { collapsed?: boolean }) {
   const { pathname } = useLocation()
   const activeIdx = activeDoor(pathname)
 
@@ -75,7 +75,9 @@ export function HeaderNav() {
   // door.
   const activeTracked = activeIdx >= 0 ? activeIdx + 1 : null
   const target = hover ?? activeTracked
-  const lens = target != null ? rects[target] : null
+  // Collapsed, the doors have no width, so a lens resting on one would be a
+  // stray 0px sliver. The mark keeps its own.
+  const lens = target != null && (!collapsed || target === 0) ? rects[target] : null
 
   return (
     <nav
@@ -109,16 +111,29 @@ export function HeaderNav() {
           <LogoMark size={26} />
         </span>
       </Link>
+      {/* THE COLLAPSE (the landing's scrolling header, 2026-07-27). The doors
+          are never unmounted, they are SQUEEZED: max-width to zero with the
+          overflow clipped, so the pill contracts around the mark as one smooth
+          width change instead of items popping out of existence. The DOM stays
+          stable, which matters because the magnifier measures these rects.
+          `inert` (React 19) is what makes it honest: it removes them from the
+          tab order AND the accessibility tree in one go, so there is never a
+          focusable link inside something a screen reader is told to skip. */}
       {NAV.map((item, i) => (
         <NavLink
           key={item.to}
           to={item.to}
           viewTransition
+          inert={collapsed}
           ref={el => {
             itemRefs.current[i + 1] = el
           }}
           onPointerEnter={() => setHover(i + 1)}
-          className="relative z-[1] flex h-11 min-w-11 items-center justify-center px-0.5 no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] sm:px-1"
+          className={`relative z-[1] flex h-11 items-center justify-center overflow-hidden no-underline transition-[max-width,opacity] duration-300 ease-[var(--ease-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] motion-reduce:transition-none ${
+            collapsed
+              ? 'max-w-0 px-0 opacity-0'
+              : 'max-w-[10rem] min-w-11 px-0.5 opacity-100 sm:px-1'
+          }`}
         >
           {({ isActive }) => (
             <span
@@ -141,8 +156,14 @@ export function HeaderNav() {
 export default function TitleBlock({
   tools,
   toolsKey = 'page',
+  collapsed = false,
 }: {
   tools?: React.ReactNode
+  /** THE LANDING ONLY (2026-07-27). Scrolling DOWN squeezes the pill to the
+   *  mark alone and the tools to their compact form; scrolling UP opens it
+   *  again. Every interior page is a frozen frame that never scrolls, so it
+   *  never passes this and its header is untouched. */
+  collapsed?: boolean
   /** The IDENTITY of this tool set, not its route. Two surfaces share a key
    *  only when their tools are literally the same thing (/work and /work/:id
    *  render the same filter row). Everything else gets its own key, because a
@@ -160,10 +181,28 @@ export default function TitleBlock({
     // the pill never moves between rooms, so the crossfade is seamless). The
     // strip lets clicks through; only the pill and the ground tools interact.
     <header className="pointer-events-none relative z-40 flex shrink-0 flex-wrap items-center justify-start px-3 pt-3 pb-1.5">
-      <div className="nav-pill lang-glass-2 pointer-events-auto flex max-w-full items-center gap-0.5 rounded-[var(--r-pill)] py-1.5 pr-1.5 pl-2">
-        <HeaderNav />
-        <span aria-hidden="true" className="mx-1 h-6 w-px shrink-0 bg-[var(--lang-hairline)]" />
-        <ModeToggle />
+      <div
+        className={`nav-pill lang-glass-2 pointer-events-auto flex max-w-full items-center gap-0.5 rounded-[var(--r-pill)] py-1.5 transition-[padding] duration-300 ease-[var(--ease-soft)] motion-reduce:transition-none ${
+          collapsed ? 'pr-1.5 pl-1.5' : 'pr-1.5 pl-2'
+        }`}
+      >
+        <HeaderNav collapsed={collapsed} />
+        <span
+          aria-hidden="true"
+          className={`h-6 w-px shrink-0 bg-[var(--lang-hairline)] transition-[margin,opacity] duration-300 ease-[var(--ease-soft)] motion-reduce:transition-none ${
+            collapsed ? 'mx-0 opacity-0' : 'mx-1 opacity-100'
+          }`}
+        />
+        {/* The mode toggle squeezes out with the doors: collapsed, the pill is
+            the mark and nothing else, which is the whole point of collapsing. */}
+        <div
+          inert={collapsed}
+          className={`flex items-center overflow-hidden transition-[max-width,opacity] duration-300 ease-[var(--ease-soft)] motion-reduce:transition-none ${
+            collapsed ? 'max-w-0 opacity-0' : 'max-w-16 opacity-100'
+          }`}
+        >
+          <ModeToggle />
+        </div>
       </div>
       {tools && (
         <div
