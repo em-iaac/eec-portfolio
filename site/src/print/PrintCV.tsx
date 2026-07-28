@@ -121,10 +121,21 @@ export default function PrintCV() {
         </ul>
 
         <Sec name="awards">AWARDS &amp; RECOGNITION</Sec>
+        {/* THE YEAR LEADS THE BLOCK, on paper too (her call 2026-07-28, after
+            the same fix on the screen). This list was the last thing on the
+            page ignoring her own rule that whatever leads a block leads every
+            block the same way: the year and its citation were one undifferen-
+            tiated run of ink, while a degree name, a job title and a skills
+            group all lead bold with the rest muted behind them.
+            It reuses .pr-label / .pr-skill rather than inventing a step — that
+            IS the consistency (print.css's ladder note). Nothing about the
+            extracted text changes: the string is still "2026 · <citation>", so
+            the ATS parse test and the one-page fit are untouched. */}
         <ul>
           {AWARDS.map(a => (
             <li key={a.text}>
-              {a.year} · {a.text}
+              <span className="pr-label">{a.year}</span> ·{' '}
+              <span className="pr-skill">{a.text}</span>
             </li>
           ))}
         </ul>
