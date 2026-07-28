@@ -53,7 +53,9 @@ type Active = { kind: 'node' | 'thread'; id: string } | null
 function nodeAria(n: MindNode): string {
   return (
     `${n.label} · ${n.kind === 'project' ? 'project' : 'thought'}` +
-    (n.award ? ' (award-winning)' : '') +
+    // "carries a recognition", never "award-winning": the star's source set
+    // includes a Top 100, a Top 50 and a finalist. See MindGraphSrNav.
+    (n.award ? ' (carries a recognition)' : '') +
     ` · threads: ${n.th.join(', ').toLowerCase()}`
   )
 }

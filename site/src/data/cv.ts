@@ -380,7 +380,15 @@ export const SKILLS = [
 // thought entries and the project masters carrying a blog.iaac.net link.
 // Publish a new essay and the build fails until this number is corrected,
 // which is the same guarantee as deriving it, at none of the cost.
-export const ESSAY_COUNT = 14
+// 14 -> 18 (THE WORDS, 2026-07-28). THE ONLY CHANGE THIS SESSION MADE TO THE
+// CV, and it was not a copy decision: the CV was explicitly out of scope
+// ("I don't want to touch anything in the CV anymore"). Four new thought notes
+// shipped, printBook.test.tsx asserts this integer against the registry's real
+// thought count, and the build fails until it agrees. So the number moved and
+// nothing else on the document did. Visible effect: the WRITING & RESEARCH
+// line now reads "18 essays" instead of "14 essays", on the page and in the
+// PDF. Flagged to her rather than changed quietly.
+export const ESSAY_COUNT = 18
 export const BLOG_COUNT = 12
 
 // ---- THE WRITING LINE RESOLVES (board B2, her ruling 2026-07-28) -----------

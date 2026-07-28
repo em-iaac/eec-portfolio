@@ -55,8 +55,18 @@ jobs:
       # clean attribution, before the heavier build (which also runs them).
       - run: npm test
         working-directory: site
+      # /contact posts to Web3Forms. The access key is public by design (Vite
+      # inlines VITE_* into the bundle, so it ships in the deployed JS either
+      # way), but it is kept out of the repo, so the deploy reads it from a
+      # repo secret exactly the way the PII guard above reads PII_TERMS.
+      # This one FAILS OPEN on purpose: with the secret unset the key is empty
+      # and the form composes a mailto: instead of posting, which is a working
+      # contact page rather than a broken one. If messages stop arriving, check
+      # this secret first.
       - run: npm run build
         working-directory: site
+        env:
+          VITE_WEB3FORMS_KEY: ${{ secrets.WEB3FORMS_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site/dist

@@ -219,7 +219,9 @@ const GEOM: Record<string, Geom> = {
   // astroidal sits above; pelagñou + explaining-things ride AI (the theory
   // reading + the explaining instinct, whose proof is the AI work).
   charcoal: { ...pointOnThread('GEOMETRY', 0.33), th: ['GEOMETRY'], a: 'middle', d: [0, 22] },
-  pelagnou: { ...pointOnThread('AI', 0.1), th: ['AI'], a: 'middle', d: [0, -16] },
+  // (pelagnou's mark removed 2026-07-29 with the note. Its slot on AI at 0.1
+  // is free again; nothing else moved, because every coord here is hand-placed
+  // rather than derived, so a removal is a removal and not a reflow.)
   explain: { ...pointOnThread('AI', 0.85), th: ['AI'], a: 'start', d: [12, -12] },
   // ---- S7 append (2026-07-26): the graph note rides DATA, the thread its
   // subject actually belongs to (adjacency, access, sightlines as graphs). t
@@ -227,6 +229,34 @@ const GEOM: Record<string, Geom> = {
   // (956,460) with 113 canvas units to its nearest neighbour, the widest gap
   // anywhere on this thread. Label above the line; nothing sits there.
   adjacency: { ...pointOnThread('DATA', 0.58), th: ['DATA'], a: 'middle', d: [0, -16] },
+  // ---- THE WORDS append (2026-07-28): the four vocabulary notes ----------
+  // Placed by MEASUREMENT, not by eye: a probe walked every thread at 0.02
+  // intervals reporting the nearest shipped mark, and these are the four
+  // widest gaps on the entire board. Clearances in canvas units, at the moment
+  // of placing: NEURO 0.40 = 168 · AI 0.20 = 158 · GEOMETRY 0.60 = 106 ·
+  // DATA 0.78 = 89. (They are also clear of each other: the four sit on four
+  // different threads.) Label sides alternate so no two labels can collide.
+  //
+  // Each rides the thread its subject actually belongs to. The one worth
+  // defending is `latent`, which is filed under GEOMETRY rather than AI: the
+  // note's whole claim is that latent space is a spatial idea that machine
+  // learning borrowed from architecture, so filing it under AI would quietly
+  // concede the argument the note is making.
+  scoring: { ...pointOnThread('NEURO', 0.4), th: ['NEURO'], a: 'middle', d: [0, -16] },
+  llm: { ...pointOnThread('AI', 0.2), th: ['AI'], a: 'middle', d: [0, 22] },
+  latent: { ...pointOnThread('GEOMETRY', 0.6), th: ['GEOMETRY'], a: 'middle', d: [0, -16] },
+  learning: { ...pointOnThread('DATA', 0.78), th: ['DATA'], a: 'middle', d: [0, 22] },
+  // T-119 computation, appended 2026-07-29. Re-probed AFTER the four above
+  // landed, because they changed the clearances the earlier run reported. The
+  // probe was also taught to reject candidates that sit outside the
+  // composition's mass: XR's opening stretch shows 490 units clear only
+  // because the thread has flown off into empty canvas, and a mark there would
+  // be stranded in a corner rather than comfortably spaced. Inside the field,
+  // AI at 0.68 is the widest gap left at 129 units (nearest mark: adjacency).
+  // AI rather than GEOMETRY because the note's turn is an optimiser doing
+  // exactly what it was told; GEOMETRY's best remaining slot was 66 units and
+  // would have crowded the drawing for the sake of taxonomy.
+  rules: { ...pointOnThread('AI', 0.68), th: ['AI'], a: 'middle', d: [0, -16] },
 }
 
 export interface MindNode {

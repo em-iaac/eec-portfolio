@@ -26,9 +26,24 @@ export const THOUGHT_OPENINGS: Record<string, string> = {
     'Right now a building is a fixed guess. Someone chose the ceiling height and the window size years before you arrived, and you live inside their averaged assumptions whether they fit you or not.',
   charcoal:
     'When the art class was asked who here dislikes drawing, mine was the only hand that went up. Awkward.',
-  pelagnou: 'Some projects hand you a tool; Pelagñou handed me a library card.',
+  // (pelagnou cut 2026-07-29, note and all.)
   explain:
     'How do you explain a complex, honestly boring technical subject so someone leans in instead of glazing over?',
   adjacency:
     'A floor plan tells you which rooms touch. It will not tell you which rooms you can actually reach, and the gap between those two drawings is where the architecture is hiding.',
+  // THE WORDS (2026-07-28). Each of these four is the VERBATIM first sentence
+  // of its note, and each carries a findable noun in the first line on purpose
+  // (data, large language model, machine learning, score): they are the
+  // vocabulary notes, so the word being explained has to be in the excerpt a
+  // reader meets on the index and in the route's meta description, which is
+  // derived from this string.
+  learning:
+    'You learned what a room does to you by being in rooms. Nobody sat you down with a dataset.',
+  llm: 'A large language model is a machine that guesses the next word. That is not me being kind to you, that is the whole thing.',
+  latent:
+    'Machine learning borrowed the word space from us, and I would like to check what it did with it.',
+  scoring:
+    'I build things that give a room a score. The obvious next question, and the one I would ask me, is what happens the day somebody uses that score to decide who gets the room.',
+  rules:
+    'Computation is not the same as using a computer, and separating the two took me longer than I would like to admit.',
 }

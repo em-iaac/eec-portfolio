@@ -14,6 +14,13 @@ archive/
 # Claude Code local session config
 .claude/
 
+# Vite env files. Today this holds the Web3Forms access key for /contact.
+# NOTE the key is public by design: Vite inlines VITE_* into the built bundle,
+# so it ships in the deployed JavaScript either way. This rule is repo hygiene,
+# not secrecy. CI reads the same value from the WEB3FORMS_KEY repo secret.
+.env.local
+.env*.local
+
 # Build output + deps
 node_modules/
 site/node_modules/

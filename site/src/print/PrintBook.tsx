@@ -347,7 +347,14 @@ function IndexPage({ side }: { side: PageSide }) {
   return (
     <A4Page>
       <div className={`pr-index pr-index--${side}`}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '3mm' }}>
+        {/* THE WORDS (2026-07-28): four new thoughts pushed this page 17px
+            (~4.5mm) past its A4 box. Same remedy as the S4b and S2 overruns
+            recorded below, because the page is dense by design and the fix has
+            always been margin rather than content: the header, the legend and
+            THE THOUGHTS heading each give back ~2mm, which is 6mm against a
+            4.5mm overrun. Re-measure if a fifth note ships; the next one
+            probably wants the thoughts list to run in more columns instead. */}
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '1.6mm' }}>
           <h2 className="pr-title" style={{ fontSize: '20pt', margin: 0 }}>Index</h2>
           <span className="pr-kicker">
             EVERYTHING · {WORK_ENTRIES.length} PROJECTS + {THOUGHTS.length} THOUGHTS · {SITE}
@@ -356,7 +363,7 @@ function IndexPage({ side }: { side: PageSide }) {
         {/* Colour never means alone: the ticks are named once per page.
             (S4b: 15 projects = a third tile row; the legend + THE THOUGHTS
             margins each gave back ~1.75mm so the page keeps its box.) */}
-        <div className="pr-legend pr-kicker" style={{ marginBottom: '3.5mm' }}>
+        <div className="pr-legend pr-kicker" style={{ marginBottom: '1.8mm' }}>
           {(Object.keys(LENSES) as Lens[]).map(l => (
             <span key={l}>
               <PrLensTick lens={l} size={6} /> {LENSES[l].label.toUpperCase()}
@@ -402,7 +409,7 @@ function IndexPage({ side }: { side: PageSide }) {
             )
           })}
         </div>
-        <h3 className="pr-kicker" style={{ margin: '5mm 0 2.4mm' }}>THE THOUGHTS</h3>
+        <h3 className="pr-kicker" style={{ margin: '3mm 0 1.6mm' }}>THE THOUGHTS</h3>
         <ThoughtIndexRows skin="print" />
       </div>
     </A4Page>

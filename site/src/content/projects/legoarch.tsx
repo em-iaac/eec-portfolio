@@ -30,7 +30,7 @@ const legoarch: ProjectMaster = {
   ],
   stat: 'LORA · 40 IMAGES · 3 BENCHMARKS',
   blurb:
-    'A render is a promise, not a product: you cannot snap a JPEG together on your living-room floor. lEgoarCh takes a text prompt and returns a LEGO set that actually builds: AI imagines it, deterministic code makes it buildable, brick by brick.',
+    'A render is a promise, not a product: you cannot snap a JPEG together on your living-room floor. lEgoarCh takes a text prompt and returns a LEGO set verified buildable in software: AI imagines it, deterministic code checks it, brick by brick.',
   tech: 'FLUX.2 KLEIN · TRELLIS-2 · LORA · LDRAW',
   links: [
     { label: 'GITHUB', href: 'https://github.com/hi-em/genai-legoarch' },

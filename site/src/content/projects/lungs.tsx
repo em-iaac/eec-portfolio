@@ -29,8 +29,8 @@ const lungs: ProjectMaster = {
   blurb: (
     <>
       Santiago has an air problem, the kind that sits in the valley like a guest who won't leave. The Lungs is a
-      hyperbuilding that filters 12 million m³ of air a year. We turned the studio itself into a web app, because the
-      data <em>was</em> the architecture.
+      hyperbuilding designed to filter 12 million m³ of air a year. We turned the studio itself into a web app, because
+      the data <em>was</em> the architecture.
     </>
   ),
   tech: 'VUE 3 · VITE · TAILWIND · SPECKLE',

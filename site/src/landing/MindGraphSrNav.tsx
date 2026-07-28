@@ -21,8 +21,13 @@ export default function MindGraphSrNav() {
           <li key={n.id}>
             {/* the LONG lens name, title case: a screen reader should not be
                 handed an all-caps string it may spell out letter by letter. */}
+            {/* "carries a recognition", never "award-winning": the star is
+                derived from AWARD_WINNER_IDS, which includes Tamayouz (Top
+                100), the Cemetery Challenge (finalist) and Marsception (Top
+                50). None of those was won, and the registry's own comment
+                already says awards read as recognition, never a stamp. */}
             {n.label} ({n.kind}, {LENSES[KEY_TO_LENS[n.lens]].label}
-            {n.award ? ', award-winning' : ''}){' '}
+            {n.award ? ', carries a recognition' : ''}){' '}
             {n.sheetRoute && (
               <Link to={n.sheetRoute} viewTransition tabIndex={-1}>
                 Open project

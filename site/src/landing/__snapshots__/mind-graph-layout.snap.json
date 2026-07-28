@@ -360,17 +360,6 @@
     "y": 745
   },
   {
-    "id": "pelagnou",
-    "kind": "thought",
-    "lens": "c",
-    "award": false,
-    "threads": [
-      "AI"
-    ],
-    "x": 478,
-    "y": 662
-  },
-  {
     "id": "explain",
     "kind": "thought",
     "lens": "p",
@@ -391,5 +380,60 @@
     ],
     "x": 956,
     "y": 460
+  },
+  {
+    "id": "learning",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "DATA"
+    ],
+    "x": 1225,
+    "y": 522
+  },
+  {
+    "id": "llm",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "AI"
+    ],
+    "x": 512,
+    "y": 460
+  },
+  {
+    "id": "latent",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "GEOMETRY"
+    ],
+    "x": 846,
+    "y": 621
+  },
+  {
+    "id": "scoring",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "NEURO"
+    ],
+    "x": 924,
+    "y": 295
+  },
+  {
+    "id": "rules",
+    "kind": "thought",
+    "lens": "c",
+    "award": false,
+    "threads": [
+      "AI"
+    ],
+    "x": 1059,
+    "y": 382
   }
 ]

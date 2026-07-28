@@ -138,15 +138,26 @@ export default function ThoughtIndexRows({
       // S5: 2 -> 3 columns when the thoughts grew 10 -> 13; at two columns
       // the extra rows overflowed the index page's A4 box by 26px (the
       // build's overflow probe caught it and refused the PDF).
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', columnGap: '6mm' }}>
+      //
+      // THE WORDS (2026-07-29): 3 -> 4 when they grew 14 -> 19, same probe,
+      // 21px over. Margin was already spent on the 18-note overrun, so this
+      // round takes the structural fix instead: 19 rows across four columns is
+      // five rows rather than seven.
+      //
+      // AND THE DATE COMES OFF THE PRINT ROW. Four columns leaves each cell
+      // about 40mm on A4, which is not enough for "when the tool scores
+      // people" AND "T-118 · JUL 2026" without wrapping, and a wrapped row
+      // would give back the height the extra column just bought. The T-number
+      // is the thing that earns its place on a contents page (the book's index
+      // is ordered by it); the date is already on every leaf and in the
+      // record. Screen rows keep their date: they have the width.
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '5mm' }}>
         {thoughts.map((t) => (
           <div key={t.id} className="pr-row">
             <span className="pr-mark pr-mark--thought" />
-            <span style={{ display: 'flex', justifyContent: 'space-between', gap: '4mm', alignItems: 'baseline' }}>
+            <span style={{ display: 'flex', justifyContent: 'space-between', gap: '2.5mm', alignItems: 'baseline' }}>
               <span className="pr-body" style={{ fontStyle: 'italic' }}>{t.title}</span>
-              <span className="pr-mono pr-mono--muted">
-                {t.note?.number} · {fmtMonthYear(t.date)}
-              </span>
+              <span className="pr-mono pr-mono--muted">{t.note?.number}</span>
             </span>
           </div>
         ))}

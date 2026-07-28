@@ -1,5 +1,5 @@
 {
-  "w": 6860,
+  "w": 7380,
   "h": 860,
   "nodes": [
     {
@@ -371,26 +371,18 @@
       "route": "/thoughts/adjacency"
     },
     {
-      "id": "pelagnou",
-      "kind": "thought",
-      "date": "2026-06",
-      "x": 6195,
-      "y": 102.8,
-      "route": "/thoughts/pelagnou"
-    },
-    {
       "id": "respond",
       "kind": "thought",
       "date": "2026-06",
-      "x": 6325,
-      "y": 137.2,
+      "x": 6195,
+      "y": 89,
       "route": "/thoughts/respond"
     },
     {
       "id": "site-live",
       "kind": "milestone",
       "date": "2026-07",
-      "x": 6455,
+      "x": 6325,
       "y": 600,
       "route": null
     },
@@ -398,9 +390,49 @@
       "id": "explain",
       "kind": "thought",
       "date": "2026-07",
-      "x": 6585,
-      "y": 294.4,
+      "x": 6455,
+      "y": 247.8,
       "route": "/thoughts/explain"
+    },
+    {
+      "id": "latent",
+      "kind": "thought",
+      "date": "2026-07",
+      "x": 6585,
+      "y": 266.7,
+      "route": "/thoughts/latent"
+    },
+    {
+      "id": "learning",
+      "kind": "thought",
+      "date": "2026-07",
+      "x": 6715,
+      "y": 218.5,
+      "route": "/thoughts/learning"
+    },
+    {
+      "id": "llm",
+      "kind": "thought",
+      "date": "2026-07",
+      "x": 6845,
+      "y": 123.4,
+      "route": "/thoughts/llm"
+    },
+    {
+      "id": "rules",
+      "kind": "thought",
+      "date": "2026-07",
+      "x": 6975,
+      "y": 79.8,
+      "route": "/thoughts/rules"
+    },
+    {
+      "id": "scoring",
+      "kind": "thought",
+      "date": "2026-07",
+      "x": 7105,
+      "y": 146.9,
+      "route": "/thoughts/scoring"
     }
   ]
 }

@@ -622,20 +622,26 @@ export const ENTRIES: RegistryEntry[] = [
     // SIGNED by Emilie 2026-07-18 off the live page ("Everything is good").
     explore: { label: 'connecting the dots', nodeKind: 'thought', order: 31 },
   },
-  {
-    // Her reading of the team theory project (Aditya Kossambe + Eleni
-    // Maglari, AI in Architecture Theory, IAAC); the note declares itself
-    // a reading, the desire path centered at her direction (2026-07-18).
-    id: 'pelagnou',
-    kind: 'thought',
-    date: '2026-06',
-    title: 'pelagñou',
-    lens: 'computation',
-    tags: ['ai', 'research', 'future'],
-    note: note('pelagnou', 'T-112'),
-    // SIGNED by Emilie 2026-07-18 off the live page ("Everything is good").
-    explore: { label: 'pelagñou', nodeKind: 'thought', order: 32 },
-  },
+  // T-112 pelagñou WAS CUT (Emilie, 2026-07-29, at the walk through the
+  // thoughts). It was the only note mostly about other people's ideas and it
+  // opened by conceding as much ("only my reading of our reading"), which is a
+  // strange thing for a note to have to say about itself. She had already ruled
+  // once (S4b, 2026-07-14) that Pelagñou was not her project for the same
+  // reason. Offered the choice of halving it to keep the desire-path passage,
+  // she cut the whole note.
+  //
+  // THE ORDERS AFTER IT RENUMBERED, 33..39 down to 32..38. I assumed a gap
+  // would be fine and it is not: the validator asserts explore orders are
+  // "unique and contiguous from 0", and it caught this. Renumbering is safe
+  // here for a reason worth writing down, because the file header warns that
+  // reordering "SHIFTS EVERY WORD in the constellation": that was true of the
+  // seeded EXPLORE simulation, which retired at S4b. The mind-graph reads
+  // GEOM[n.id], keyed by ID and hand-placed, so order now only decides array
+  // position and no mark moves. Verified against the layout snapshot.
+  //
+  // T-NUMBERS DO NOT RENUMBER. There is simply no T-112 any more: those are
+  // catalogue numbers on published pieces, and renumbering them would rewrite
+  // the record rather than correct it.
   {
     // Her named thought ("how do we explain complex, sometimes boring
     // technical subjects in a fun and captivating way, because it matters"),
@@ -648,7 +654,7 @@ export const ENTRIES: RegistryEntry[] = [
     lens: 'practice',
     tags: ['play', 'education', 'ai'],
     note: note('explain', 'T-113'),
-    explore: { label: 'explaining things', nodeKind: 'thought', order: 33 },
+    explore: { label: 'explaining things', nodeKind: 'thought', order: 32 },
   },
   {
     // ---- S7 append (2026-07-26): the MaCAD Module 03 graph work joins the
@@ -665,8 +671,98 @@ export const ENTRIES: RegistryEntry[] = [
     lens: 'computation',
     tags: ['data', 'geometry'],
     note: note('adjacency', 'T-114'),
-    explore: { label: 'adjacency is not access', nodeKind: 'thought', order: 34 },
-    draftCopy: true, // unsigned until Emilie reads the leaf
+    explore: { label: 'adjacency is not access', nodeKind: 'thought', order: 33 },
+    // SIGNED by Emilie at the walk, 2026-07-29.
+  },
+
+  // ---- THE WORDS append (2026-07-28): the four vocabulary notes ----------
+  //
+  // Emilie's ask: technical words from her domain, explained her way, starting
+  // from her own seed about experience and data. APPENDS ONLY, per the
+  // mind-graph contract: orders continue at 35, note numbers at T-115, and
+  // every one has a hand-placed geometry entry in landing/mindGraph.ts.
+  //
+  // THREAD PLACEMENT WAS MEASURED, NOT GUESSED. A probe walked every thread at
+  // 0.02 intervals and reported the nearest shipped mark, the same method the
+  // T-114 append used. The four widest gaps on the whole board went to these
+  // four: NEURO 0.40 (168 canvas units clear), AI 0.20 (158), GEOMETRY 0.60
+  // (106), DATA 0.78 (89). So nothing crowds anything, and the shipped
+  // composition does not move.
+  //
+  // All four are dated 2026-07, which ties NOW rather than beating it: NOW is
+  // prepended and Array.sort is stable, so it stays the newest thing on the
+  // record.
+  //
+  // ALL FOUR SIGNED by Emilie 2026-07-29 ("the 4 new thoughts are signed i
+  // liked them"), so the draftCopy flags are retired. T-114 `adjacency` is
+  // NOT signed and keeps its flag: it belongs to the walk through the older
+  // notes, which has not happened yet.
+  {
+    id: 'learning',
+    kind: 'thought',
+    date: '2026-07',
+    title: 'experiences are data',
+    lens: 'computation',
+    tags: ['data', 'neuro', 'research'],
+    note: note('learning', 'T-115'),
+    explore: { label: 'experiences are data', nodeKind: 'thought', order: 34 },
+  },
+  {
+    id: 'llm',
+    kind: 'thought',
+    date: '2026-07',
+    title: 'what an llm actually is',
+    lens: 'computation',
+    tags: ['ai', 'research'],
+    note: note('llm', 'T-116'),
+    explore: { label: 'what an llm actually is', nodeKind: 'thought', order: 35 },
+    // WITHDRAWN, REWRITTEN, THEN SIGNED. It was signed with the other three on
+    // 2026-07-28 and she withdrew it the same day ("I don't love the llm
+    // thought and the figure we use here"). The rewrite came off her own
+    // diagnosis: open on the joke that the acronym explains nothing, then
+    // define it by what it is NOT, and get the facts checked first. The figure
+    // was redrawn with it. SIGNED at the walk, 2026-07-29.
+  },
+  {
+    id: 'latent',
+    kind: 'thought',
+    date: '2026-07',
+    title: 'latent space',
+    lens: 'computation',
+    tags: ['ai', 'geometry'],
+    note: note('latent', 'T-117'),
+    explore: { label: 'latent space', nodeKind: 'thought', order: 36 },
+  },
+  {
+    id: 'scoring',
+    kind: 'thought',
+    date: '2026-07',
+    title: 'when the tool scores people',
+    lens: 'computation',
+    tags: ['neuro', 'comfort', 'research'],
+    note: note('scoring', 'T-118'),
+    explore: { label: 'when the tool scores people', nodeKind: 'thought', order: 37 },
+  },
+  {
+    // T-119, appended 2026-07-29. She asked for "llm and computation"; the llm
+    // note already existed as T-116, so computation is the one that was
+    // genuinely missing from the shortlist.
+    //
+    // THE ID IS `rules`, NOT `computation`, and that is deliberate: the world
+    // graph tie-breaks alphabetically within a date, so an id starting with c
+    // would sort ahead of `explain` and shove a shipped node sideways. Ids from
+    // f to z append cleanly. `rules` is also honestly what the note is about
+    // (the rule that decides where the wall goes), and the site already has
+    // title/id mismatches by design: bim, charcoal, learning.
+    id: 'rules',
+    kind: 'thought',
+    date: '2026-07',
+    title: 'computation',
+    lens: 'computation',
+    tags: ['geometry', 'ai', 'research'],
+    note: note('rules', 'T-119'),
+    explore: { label: 'computation', nodeKind: 'thought', order: 38 },
+    // SIGNED by Emilie at the walk, 2026-07-29 ("I like the computation thought").
   },
 
   // ---- Milestones (where Em shows up on the record; dates from cv.ts) ----
@@ -971,7 +1067,32 @@ export const CORRELATIONS: readonly Correlation[] = [
   // S5 appends (2026-07-18, Emilie confirmed the set at the batch gate):
   ['charcoal', 'drawiface', 2], // the drawing lesson grew into drawing-as-interface
   ['charcoal', 'solvers', 1], // the pull: tension drawn, then simulated
-  ['genai', 'pelagnou', 1], // the AI thinking, read through theory
+  // (['genai','pelagnou',1] removed with the note itself, 2026-07-29.)
   ['podcast', 'explain', 2], // explaining on air = the thought lived first
   ['legoarch', 'explain', 1], // the film that made the pipeline captivating
+  // THE WORDS appends (2026-07-29, Emilie confirmed the set at the walk). The
+  // five notes written this session threaded to NOTHING, which meant they
+  // glowed no tiles on /work and grew no fibres in the neural world: five
+  // neurons with no synapses, on a site whose whole argument is connection.
+  ['comfort', 'learning', 2], // experience-as-data is the premise under scoring a room
+  ['learning', 'sensi', 2],
+  ['llm', 'sensi', 3], // Sensi IS an LLM copilot: the strongest link of the set
+  ['genai', 'llm', 1],
+  ['genai', 'latent', 2], // diffusion runs on it
+  ['latent', 'legoarch', 1],
+  ['comfort', 'scoring', 3], // the ethics thread, now owned by the scoring note
+  ['scoring', 'neurospace', 2], // the weights are public so you can disagree
+  // COMPUTATION GETS THE WIDER SET (her instruction: "computation gets much
+  // more connections in terms of projects"). It is the one note that names a
+  // method rather than a subject, so it is upstream of everything built by
+  // describing a rule instead of drawing a result. Kept to projects where the
+  // RULE is genuinely the artifact, not merely projects that used software.
+  ['rules', 'legoarch', 2], // the incident the note turns on
+  ['evosearch', 'rules', 2],
+  ['solvers', 'rules', 2],
+  ['rules', 'huddle', 2], // WASP aggregation: the growth rule is the building
+  ['rules', 'cappelletti', 2], // the lattice came out of the loop, not the pen
+  ['rules', 'ballooning', 1], // Kangaroo gave the balloons their physics
+  ['rules', 'playscape', 1],
+  ['drawiface', 'rules', 1], // the drawing as the place the thinking happens
 ]

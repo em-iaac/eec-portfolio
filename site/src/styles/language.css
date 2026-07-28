@@ -809,6 +809,188 @@ li[data-glow] > button {
 }
 
 /* ============================================================
+   THE SEND (THE WORDS, Emilie's ask 2026-07-29: "a fun animation with a small
+   message that confirms it was sent").
+
+   Drawn in the site's own hand rather than borrowed: a THREAD draws itself
+   left to right and a mark lands on the end of it, which is the mind-graph's
+   whole grammar (a thread, a node) and a direct echo of the `scoring` note's
+   figure, where a number travels away from its box. No paper plane, no tick
+   in a green circle: this site has never once used a stock UI gesture.
+
+   Sequence, ~900ms total: the line draws (520ms), the mark pops onto its end
+   (240ms, overlapping), the words rise last. Reduced motion gets the finished
+   state instantly, which is the same contract SketchDot and the graph use.
+   ============================================================ */
+.sent-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: sent-draw 520ms var(--ease-soft) forwards;
+}
+.sent-mark {
+  opacity: 0;
+  transform-origin: center;
+  animation: sent-pop 240ms var(--ease-soft) 420ms forwards;
+}
+.sent-word {
+  opacity: 0;
+  animation: sent-rise 320ms var(--ease-soft) 620ms forwards;
+}
+@keyframes sent-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes sent-pop {
+  from {
+    opacity: 0;
+    scale: 0.2;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes sent-rise {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+  to {
+    opacity: 1;
+    translate: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sent-line,
+  .sent-mark,
+  .sent-word {
+    animation: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ============================================================
+   THE THOUGHT FIGURE · THE PLATE (THE WORDS, Emilie's ruling 2026-07-28,
+   board look 2 of 3).
+
+   The notes were words-only, and she asked for figures that VARY by kind:
+   "some are plots, some graphs, some diagrams, some sketches, some abstract,
+   some maths equations". So this is a SYSTEM, not a set of pictures, and it
+   is deliberately the SAME INK GRAMMAR she already signed for the /work
+   plates (.work-art above): .ln the ink line, .th the thin line, .dt the dot,
+   .ac / .acs the ONE accent per drawing, never two. A reader who has been
+   through /work has already learned to read these.
+
+   TWO CLASSES ARE NEW, because a plot is not a parti: .ax (an axis: thinner
+   and quieter than .th, and never round-capped, because an axis is a ruled
+   line) and .dash (a relationship that is absent, which turns out to be what
+   half these figures are actually about).
+
+   HELD BETWEEN TWO HAIRLINES, NEVER IN A BOX. The site puts no box around
+   words anywhere. The caption below is the mono micro type, the same grammar
+   as every other label on the site, and it is a SENTENCE about the drawing
+   rather than a number: these are notes, not a paper, and "FIG 3.1" would be
+   a costume.
+
+   WHY NOT the sketch dot's margin: a dot that blooms is right for a charcoal
+   drawing that ILLUSTRATES a feeling, and wrong for a plot that carries the
+   argument. The two now coexist on purpose. Rule of thumb for future notes:
+   if the prose spends a paragraph describing a shape, it wants a plate; if
+   the prose is remembering something, it wants a dot.
+   ============================================================ */
+.thought-fig {
+  margin: 1.9em 0;
+  border-top: 0.5px solid var(--lang-hairline);
+  border-bottom: 0.5px solid var(--lang-hairline);
+  padding: 18px 0 12px;
+  color: var(--lang-ink);
+}
+/* THE RULES SPAN THE MEASURE, THE DRAWING DOES NOT. At full 543px measure the
+   plate came to 377px tall, in a column whose paragraphs run about 120px: it
+   read as a hero image interrupting the argument rather than as a figure
+   serving it. Capped and centred between its rules, which is also what a plate
+   has looked like since plates existed. Measured, not guessed. */
+.thought-fig svg {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  margin-inline: auto;
+  overflow: visible;
+}
+.thought-fig svg * {
+  vector-effect: non-scaling-stroke;
+}
+.thought-fig .ln {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.thought-fig .th {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+/* An axis is a ruled line, so it is butt-capped and quieter than .th. */
+.thought-fig .ax {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.45;
+}
+.thought-fig .dash {
+  stroke-dasharray: 4 4;
+}
+.thought-fig .dt {
+  fill: currentColor;
+  stroke: none;
+}
+/* THE ONE ACCENT. On /work it is the tile's lens pen; in a note there is no
+   lens, so it is the interaction colour, which is the site's only other ink.
+   Colour never means alone: whatever the accent marks is also named in the
+   caption underneath. */
+.thought-fig .ac {
+  fill: var(--lang-interaction);
+  stroke: none;
+}
+.thought-fig .acs {
+  fill: none;
+  stroke: var(--lang-interaction);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+/* Labels inside a drawing: the mono micro type, same as every other label. */
+.thought-fig text.lbl {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: currentColor;
+  opacity: 0.6;
+}
+/* Set maths in the serif italic, the way maths has been set for 400 years. */
+.thought-fig text.mth {
+  font-family: var(--font-serif);
+  font-style: italic;
+  fill: currentColor;
+}
+.thought-fig figcaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--lang-ink-muted);
+}
+
+/* ============================================================
    THE STRIPS (THE SCROLL, Emilie's direction 2026-07-27): the landing's two
    hover-scrubbed columns, one of projects and one of thoughts. See
    landing/Strips.tsx for the why (and for why this is NOT a carousel).

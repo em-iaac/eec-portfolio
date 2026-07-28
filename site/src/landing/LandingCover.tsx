@@ -25,7 +25,7 @@
 // Merging them made the top of the page stop feeling like an answer.
 //
 // Copy: ADJECTIVES / VOICE / WINK were SIGNED at G4 (2026-07-12). ROLE is the
-// title the site already declared to search engines, said out loud. BIO_DRAFT
+// title the site already declared to search engines, said out loud. BIO
 // is NEW and UNSIGNED (see identity.ts).
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -52,7 +52,7 @@ import { ENTRIES, thoughtIndexEntries } from '../data/registry'
 const MindGraph = lazy(() => import('./MindGraphView'))
 
 // SIGNED (G4, 2026-07-12) + the 2026-07-27 additions. See identity.ts.
-import { ADJECTIVES, BIO_DRAFT, VOICE, WINK } from './identity'
+import { ADJECTIVES, BIO, VOICE, WINK } from './identity'
 
 // Top-page doors. WORK and THOUGHTS still open their rooms; ABOUT is the
 // contact sheet ("Say hi"), which is a different thing from the bio that now
@@ -944,7 +944,7 @@ function MindSection() {
           About
         </h2>
         {/* draftCopy: NEW, UNSIGNED (identity.ts). */}
-        {BIO_DRAFT.map((para, i) => (
+        {BIO.map((para, i) => (
           <p
             key={i}
             className="prose-rag mt-4 font-serif text-[17px] leading-relaxed text-[var(--lang-ink)] tall:text-[19px]"
