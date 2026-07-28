@@ -9,7 +9,7 @@
 // nothing). PrintContext is on, exactly as the real routes mount them.
 import { describe, expect, test } from 'vitest'
 import { renderToString } from 'react-dom/server'
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { PrintContext } from './PrintContext'
@@ -19,7 +19,7 @@ import { BOOK_SLUGS, BOOK_SPREADS } from './bookContents'
 import printImages from '../data/print-images.json'
 import { WORK_ENTRIES } from '../data/work'
 import { ENTRIES } from '../data/registry'
-import { EDUCATION, EXPERIENCE } from '../data/cv'
+import { EDUCATION, EXPERIENCE, ESSAY_COUNT, BLOG_COUNT } from '../data/cv'
 
 const PUBLIC = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'public')
 
@@ -117,10 +117,30 @@ describe('the ATS CV page', () => {
     expect(count(cvHtml, 'pr-page--portrait')).toBe(1)
     expect(cvHtml).toContain('Emilie El Chidiac')
     expect(cvHtml).toContain('chidiacemilie@gmail.com')
-    for (const e of [...EDUCATION, ...EXPERIENCE]) {
+    // Education carries no dates by design since the CV pass (2026-07-27):
+    // years live in EXPERIENCE and AWARDS, where a reader computes tenure.
+    // Every entry that DOES declare dates must still print them.
+    const dated = [...EDUCATION, ...EXPERIENCE].filter(e => e.dates)
+    expect(dated.length).toBe(EXPERIENCE.length)
+    for (const e of dated) {
       expect(cvHtml).toContain(e.dates)
     }
     expect(cvHtml).toContain('Rhino Compute')
     expect(cvHtml).not.toContain('—')
+  })
+
+  // THE WRITING COUNTS CANNOT GO STALE. cv.ts states them as literals so the
+  // CV bundle never has to import the content graph; these two assertions are
+  // what make the literals safe. Publish an essay or add a blog link and the
+  // build fails here until cv.ts is corrected.
+  test('the writing counts still match the real sources', () => {
+    const essays = ENTRIES.filter(e => e.kind === 'thought').length
+    expect(ESSAY_COUNT).toBe(essays)
+
+    const mastersDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'content', 'projects')
+    const withBlog = readdirSync(mastersDir)
+      .filter(f => f.endsWith('.tsx'))
+      .filter(f => readFileSync(join(mastersDir, f), 'utf8').includes('blog.iaac.net')).length
+    expect(BLOG_COUNT).toBe(withBlog)
   })
 })

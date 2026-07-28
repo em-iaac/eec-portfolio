@@ -26,6 +26,15 @@
   --pr-magenta: #a8186b;
   --pr-yellow: #7a5e00;
   --pr-red: #be123c; /* the emblem's one red node only; never text, never category */
+  /* THE CV'S ONE ACCENT: the site's own red (her call 2026-07-27, after
+     burgundy and slate were both tried). It touches SECTION HEADINGS, RULES
+     AND ICONS ONLY; the name stays plain ink to match the landing.
+     The old objection to red was that on SCREEN it would look clickable
+     without being clickable. She dissolved that by making the screen headings
+     genuinely clickable, so the affordance is now true rather than avoided.
+     On paper there is nothing to click and nothing to explain.
+     5.9:1 on white. Screen twin: --cv-accent in language.css. */
+  --pr-accent: #be123c;
 
   color: var(--pr-ink);
   font-family: var(--font-serif);
@@ -498,10 +507,21 @@
   line-height: 1.34;
 }
 
-/* ---- The standalone ATS CV (fully plain; single column) ------------------ */
+/* ---- The standalone ATS CV (fully plain; single column) ------------------
+   THE CV PASS (2026-07-27) tightened the leading and the section margins
+   rather than the type size. Measured: the tightening recovers ~150px of a
+   1123px page, which is most of a 20 percent overflow, and it costs nothing a
+   reader notices. Shrinking the body face was the alternative and was
+   rejected: at 8.6pt this document already sits at the small end of readable,
+   so the space had to come from rhythm, not from size. */
 .pr-ats {
   height: 100%;
-  padding: 13mm 18mm;
+  /* Column flex so the footer stamp can be pushed to the foot with margin-top
+     auto instead of being absolutely positioned, which would let content grow
+     underneath it without the overflow probe noticing. */
+  display: flex;
+  flex-direction: column;
+  padding: 11mm 17mm;
   font-family: var(--font-serif);
 }
 .pr-ats h1 {
@@ -510,22 +530,111 @@
   font-size: 15pt;
   letter-spacing: 0; /* NEVER letter-spaced: the text layer must read contiguously */
   margin: 0;
+  /* 1.5 leading on a 15pt heading was inherited body rhythm, not a decision:
+     it opened 7pt of dead air under the name for no reason. */
+  line-height: 1.2;
+  /* RED on paper (her call): the print page has no interaction to confuse, so
+     the name can carry the accent. The SCREEN name stays ink, where red is
+     reserved for things you can click. */
+  color: var(--pr-accent);
 }
 .pr-ats h2 {
   font-family: var(--font-mono);
   font-size: 8pt;
   font-weight: 400;
   letter-spacing: 0.1em;
-  margin: 3.4mm 0 1.6mm;
-  padding-top: 1.6mm;
-  border-top: 0.5pt solid var(--pr-hairline);
-  color: var(--pr-ink-muted);
+  /* SECTION RHYTHM, mirroring --cv-gap-section on the screen page: the gap
+     between sections must clearly out-measure the gap between entries or the
+     headers end up carrying section separation alone. */
+  margin: 4mm 0 1.4mm;
+  padding-top: 1.4mm;
+  /* THE ONE ACCENT (the CV pass, 2026-07-27). Red on the section RULE, the
+     same rule under every section. This is an accent, not a category: a
+     category system would give each section its own hue, which is precisely
+     the pattern the 2026 research names as a negative signal, and it is what
+     the five muted icon colours used to be. Red still never touches text and
+     never encodes a category, so §4.5's rule holds. On screen the same red
+     sits on the same rule, where it cannot be confused with a link, because
+     links are red TEXT. */
+  border-top: 0.75pt solid var(--pr-accent);
+  color: var(--pr-accent);
+}
+/* The section glyph rides BESIDE the label, never in place of it.
+   display:inline-block is load-bearing: Tailwind's preflight sets
+   `svg { display: block }`, which pushed the glyph onto its own line above the
+   heading and made vertical-align inert. Block elements ignore vertical-align,
+   so the alignment only starts working once the display is corrected. */
+.pr-ats h2 svg {
+  display: inline-block;
+  vertical-align: -0.12em;
+  margin-right: 1.4mm;
 }
 .pr-ats p,
 .pr-ats li {
   font-size: 8.6pt;
-  line-height: 1.34;
-  margin: 0 0 1mm;
+  line-height: 1.26;
+  margin: 0 0 0.6mm;
+}
+/* LEAD, the same step as .cv-lead on screen: the summary sits above body size
+   so the most important line on the page is not set identically to the least. */
+.pr-ats .pr-lead {
+  font-size: 9.4pt;
+  line-height: 1.35;
+}
+
+/* THE LADDER, corrected at the hierarchy audit (2026-07-27). Three pairs of
+   DIFFERENT hierarchy levels were rendering IDENTICALLY, which is why the page
+   felt flat even though every individual line was fine:
+     contact line    == entry lines == award lines   (all 8.6pt ink serif)
+     skills labels   == entry titles                 (all 8.6pt bold ink serif)
+     entry notes     == bullets                      (all 8.6pt muted serif)
+   Each now gets its own step. The order top to bottom is: NAME, LEAD, SECTION,
+   ENTRY TITLE, NOTES, BULLET, LABEL, META. */
+
+/* META: the contact row and the updated stamp. Mono, small, muted. Contact is
+   machine-ish text (addresses and URLs) so mono suits it, and it stops the row
+   competing with the summary directly above it. */
+.pr-ats .pr-contact {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--pr-ink-muted);
+}
+/* LABEL: the skills group names. HER RULE (2026-07-27): whatever leads a
+   block leads every block the same way. A job title, a degree name and a
+   skills group name all open their entry, so all three share one treatment,
+   bold body serif at full ink, sentence case. This is deliberately NOT a
+   separate level: the shared step IS the consistency. */
+.pr-ats .pr-label {
+  font-weight: 700;
+  color: var(--pr-ink);
+}
+/* Skill ITEMS sit muted, like bullets: the bold ink label leads the block and
+   the list under it recedes. They were both full ink, differing only by
+   weight, which made a group name hard to pick out of its own list. */
+.pr-ats .pr-skill {
+  color: var(--pr-ink-muted);
+}
+
+/* NOTES sit at full ink and bullets stay muted, so the honours line and the
+   project lines under it stop reading as one block. */
+.pr-ats .pr-notes {
+  color: var(--pr-ink);
+  margin-bottom: 1.2mm;
+}
+/* ENTRY rhythm, mirroring --cv-gap-entry. Raised at the audit: the last
+   bullet of one entry sat too close to the next entry's title, so a reader
+   scanning for the next role had to re-find the boundary. */
+.pr-ats .pr-entry + .pr-entry {
+  margin-top: 2.8mm;
+}
+/* THE CONTACT LINE fills the measure (her audit). text-align-last justifies
+   the single line so the four items span edge to edge instead of trailing off
+   two thirds across. The text and its separators are untouched, so the
+   extracted string is identical: this is spacing, not markup. Its TYPE is set
+   in the ladder below. */
+.pr-ats .pr-contact {
+  text-align: justify;
+  text-align-last: justify;
 }
 .pr-ats ul {
   list-style: none;

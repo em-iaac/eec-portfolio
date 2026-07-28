@@ -96,12 +96,15 @@ function assertCv(text) {
   check(all.includes('Rhino Compute'), '"Rhino Compute" spelled with the space')
   check(!all.includes('—'), 'zero em dashes')
 
-  // Single column ⇒ the sections extract in reading order.
-  const order = ['EDUCATION', 'EXPERIENCE', 'AWARDS & RECOGNITION', 'SKILLS', 'CERTIFICATES']
+  // Single column ⇒ the sections extract in reading order. The order changed at
+  // the CV pass (2026-07-27): education leads, skills moved above the awards,
+  // and WRITING & RESEARCH joined. The screen page renders the same sequence.
+  // CERTIFICATES left the CV at the same pass; the book still carries it.
+  const order = ['EDUCATION', 'EXPERIENCE', 'SKILLS', 'AWARDS & RECOGNITION', 'WRITING & RESEARCH']
   const idx = order.map(h => lines.findIndex(l => l === h))
   check(
     idx.every(i => i >= 0) && idx.every((v, i) => i === 0 || v > idx[i - 1]),
-    'sections extract in single-column reading order (EDUCATION → CERTIFICATES)',
+    'sections extract in single-column reading order (EDUCATION → WRITING & RESEARCH)',
   )
 
   // Keyword spot-check against the LOCAL calibration file (git-ignored;

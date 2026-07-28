@@ -3,100 +3,108 @@ import SheetPage from '../components/SheetPage'
 import DownloadPill from '../components/ui/DownloadPill'
 import ContactLinks from '../components/ui/ContactLinks'
 import { DocGlyph } from '../components/ui/glyphs'
-import { EDUCATION, EXPERIENCE, AWARDS, SKILLS, LANGUAGES, CERTIFICATES, UPDATED } from '../data/cv'
+import { CvIcon, type CvSection } from '../components/ui/cvIcons'
+import { EDUCATION, EXPERIENCE, AWARDS, SKILLS, WRITING, LANGUAGES, FOCUS, FOCUS_NOBREAK } from '../data/cv'
+import type { CvEntry } from '../data/cv'
 
 const BASE = import.meta.env.BASE_URL
 
-// THE RECORD, FOUR COLUMNS (the design audit round 2, Emilie's ruling
-// 2026-07-19): full-bleed columns Education | Experience | Awards +
-// Certificates | Skills; a column that overflows scrolls inside itself on a
-// hidden wheel (.cv-col, language.css). The name + title live in the content
-// again; the reach-me links + the download ride the header line; the footer
-// retired here (it just repeated the contact). The downloadable PDF is
-// unchanged and stays the plain PORTRAIT single column ATS parses (same
-// data/cv.ts) : the web page is never ATS-parsed, so its layout is free.
-// The FOCUS phrase left the screen; it still rides the PDF, where it carries
-// the keyword cluster. Header string LOCKED: "Emilie El Chidiac | Design
-// Technology Architect".
+// THE RECORD, ONE COLUMN (the CV pass, Emilie's ruling 2026-07-27). The
+// landscape three-column layout is retired: the page reads as one vertical
+// column at every width, in the order the PDF prints, so the screen and the
+// paper finally say the same thing in the same sequence.
+//
+// EDUCATION LEADS (her call). The 6-11 second scan spends most of itself just
+// under the name, and her most recent role is the one whose project work
+// cannot be disclosed, so MaCAD and the 2026 award take that slot instead.
+//
+// Projects are NAMED IN PLACE under the degree or role that produced them
+// (`projects` in data/cv.ts), so there is no SELECTED WORK section and nothing
+// repeats. The AWARDS block holds every recognition once, each naming its
+// project.
+//
+// FOCUS is back on the screen. It used to ride the PDF only; it is the line a
+// six-second scan actually reads, so it renders in both places now.
+//
+// The name + title live in the content; the reach-me links + the download ride
+// the header line; the footer stays retired here (it just repeated the
+// contact). Header string LOCKED: "Emilie El Chidiac | Design Technology
+// Architect".
 
-// A small accent per column, MUTED and on the ICON ONLY (S6-A, Emilie
-// 2026-07-24, Board 1 option C: "I like them but I don't want to overwhelm").
-// The five saturated hues read as a rainbow competing with the words, so the
-// colour steps back to a muted tonal family and rides the icon alone; the
-// label goes to ink. The icon shape + the ink label carry the category, so
-// colour is never the sole signal (the a11y rule), and the muted values only
-// need the 3:1 graphical floor on their ground, not text AA. Red is NOT used
-// (it means interaction/liveness, not a category).
-const SECTIONS = {
-  education: 'light-dark(#5b6b7a, #97a8ba)',
-  experience: 'light-dark(#4f7a6b, #83b6a4)',
-  awards: 'light-dark(#8a7038, #cbb073)',
-  certificates: 'light-dark(#6f5f86, #b4a7cd)',
-  skills: 'light-dark(#5c6187, #a6abd1)',
-} as const
-
-function SecIcon({ name }: { name: keyof typeof SECTIONS }) {
-  const p = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.4, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
+// THE ONE ACCENT (the CV pass, 2026-07-27). The five muted per-section hues
+// are RETIRED. They were a CATEGORY system, and 2026 research is consistent
+// that multiple accents backfire and that inconsistent header colour reads as
+// poor attention to detail. One accent replaces them, and it is the site red,
+// on the section RULE.
+//
+// Why that does not break the sitewide "red means interaction" rule: red here
+// is a hairline, never text, and it is IDENTICAL under every section. A link
+// is red TEXT, so nothing here can be mistaken for one, and a uniform rule
+// encodes no category. The print page carries the same red on the same rule,
+// which is what finally makes the two surfaces read as one document.
+//
+// The glyphs now come from components/ui/cvIcons, shared with the print page,
+// and inherit muted ink rather than carrying colour of their own.
+function SecTitle({ name, id, children }: { name: CvSection; id: string; children: ReactNode }) {
+  // The heading is a LINK to its own section, and clicking it centres that
+  // section in the scroller. That is what earns the red: on this site red has
+  // always meant "interactive", and these now genuinely are. The href is a
+  // real fragment so it works without JS and shows a target on hover; the
+  // handler only upgrades the jump from "align to top" to "centre", which is
+  // the nicer read on a long record.
+  const centre = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const target = document.getElementById(id)
+    if (!target) return
+    e.preventDefault()
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' })
+    // The URL still updates, so the section stays linkable and the back button
+    // behaves; replaceState avoids stacking a history entry per click.
+    history.replaceState(null, '', `#${id}`)
+  }
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" className="shrink-0">
-      {name === 'education' && (
-        <>
-          <path {...p} d="M2 6l6-2.8 6 2.8-6 2.8L2 6z" />
-          <path {...p} d="M5 7.4v3c0 .9 1.3 1.8 3 1.8s3-.9 3-1.8v-3" />
-        </>
-      )}
-      {name === 'experience' && (
-        <>
-          <rect {...p} x="2.5" y="5" width="11" height="8" rx="1.2" />
-          <path {...p} d="M6 5V3.9c0-.6.4-1 1-1h2c.6 0 1 .4 1 1V5" />
-          <path {...p} d="M2.5 8.6h11" />
-        </>
-      )}
-      {name === 'awards' && (
-        <>
-          <circle {...p} cx="8" cy="6" r="3.4" />
-          <path {...p} d="M6 9l-1 4 3-1.6 3 1.6-1-4" />
-        </>
-      )}
-      {name === 'certificates' && (
-        <>
-          <rect {...p} x="3" y="2.5" width="10" height="11" rx="1.2" />
-          <path {...p} d="M5.5 6h5M5.5 8.4h5M5.5 10.8h3" />
-        </>
-      )}
-      {name === 'skills' && (
-        <>
-          <path {...p} d="M3 5h5M11.5 5h1.5M3 11h1.5M7.5 11h5.5" />
-          <circle {...p} cx="9.5" cy="5" r="1.4" />
-          <circle {...p} cx="5" cy="11" r="1.4" />
-        </>
-      )}
-    </svg>
-  )
-}
-
-function SecTitle({ name, children }: { name: keyof typeof SECTIONS; children: ReactNode }) {
-  return (
-    <h2 className="mb-2.5 flex items-center gap-2 font-mono text-nav font-semibold tracking-[0.12em] text-[var(--lang-ink)]">
-      {/* Colour rides the icon only (Board 1 C); the label holds ink. */}
-      <span className="inline-flex" style={{ color: SECTIONS[name] }}>
-        <SecIcon name={name} />
-      </span>
-      {children}
+    <h2 className="cv-h2 mb-3 border-t border-t-[var(--cv-accent)]">
+      <a
+        href={`#${id}`}
+        onClick={centre}
+        className="flex min-h-11 items-center gap-2 py-2.5 font-mono font-semibold tracking-[0.12em] text-[var(--cv-accent)] no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+      >
+        <span className="inline-flex">
+          <CvIcon name={name} />
+        </span>
+        {children}
+      </a>
     </h2>
   )
 }
 
-function Entry({ dates, title, org, notes }: { dates: string; title: string; org: string; notes: string }) {
+function Entry({ dates, title, org, notes, projects }: CvEntry) {
   return (
-    <div className="mb-2.5">
-      <div className="font-mono text-label leading-[13px] tracking-[0.04em] text-[var(--lang-ink-muted)] tabular-nums">
-        {dates}
-      </div>
-      <h3 className="text-small leading-snug font-semibold text-[var(--lang-ink)]">
-        {title} <span className="font-normal text-[var(--lang-ink-muted)]">· {org}</span>
+    <div className="cv-entry">
+      {/* SERIF, matching the print page and matching the skills labels beside
+          it. It rendered in the sans display face only because nothing had
+          told it otherwise, which made the block-leading level inconsistent
+          with itself on screen while print had it right. */}
+      <h3 className="cv-block font-serif font-semibold text-[var(--lang-ink)]">
+        {title}{' '}
+        <span className="font-normal text-[var(--lang-ink-muted)]">
+          · {org}
+          {dates ? <span className="tabular-nums"> · {dates}</span> : null}
+        </span>
       </h3>
-      <p className="mt-0.5 font-serif text-small leading-[1.35] text-[var(--lang-ink)]">{notes}</p>
+      {notes ? (
+        <p className="cv-text cv-prose mt-1 mb-1.5 font-serif text-[var(--lang-ink)]">{notes}</p>
+      ) : null}
+      {projects?.length ? (
+        <ul className="cv-bullets">
+          {projects.map(p => (
+            <li key={p} className="cv-bullet font-serif text-[var(--lang-ink-muted)]">
+              <span aria-hidden="true">› </span>
+              {p}
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   )
 }
@@ -119,67 +127,86 @@ function CvHeaderTools() {
 
 export default function CV() {
   return (
-    <SheetPage wide center={false} footer={false} pillTools={<CvHeaderTools />} toolsKey="cv">
-      {/* The name + title back in the content (Emilie's ruling round 2). */}
-      <div className="pt-0 pb-2">
-        <h1 className="text-title font-semibold tracking-[-0.01em]">
+    <SheetPage wide center={false} footer={false} fadeTop pillTools={<CvHeaderTools />} toolsKey="cv">
+      {/* The header shares .cv-measure with the column below, so the name, the
+          summary and the whole record hang on one centred axis. The UPDATED
+          stamp rides the name line, right, exactly as the print page does. */}
+      <div className="cv-measure cv-top pb-7">
+        {/* NO UPDATED STAMP HERE (her call, 2026-07-27). It exists to tell a
+            reader holding a downloaded PDF which month that file was made in.
+            The web page is always current by definition, so the stamp would be
+            answering a question nobody is asking. It rides the PRINT header
+            only. */}
+        <h1 className="cv-name font-semibold tracking-[-0.01em] text-[var(--lang-ink)]">
           Emilie El Chidiac{' '}
           <span className="font-normal text-[var(--lang-ink-muted)]">| Design Technology Architect</span>
         </h1>
-        <p className="mt-1 font-mono text-micro tracking-[0.1em] text-[var(--lang-ink-muted)]">
-          UPDATED {UPDATED.toUpperCase()}
+        {/* LEAD step: the summary now sits ABOVE body size. It used to match
+            the bullets exactly, which gave the most important line on the page
+            no hierarchy at all. draftCopy: FOCUS is unsigned. */}
+        {/* The break is FORCED here, not left to the measure: the printed page
+            starts its second line on "AI-assisted, of course." and the screen
+            now does the same. Split on the same named phrase both surfaces
+            share, so the two can never drift apart. */}
+        <p className="cv-lead mt-3 font-serif text-[var(--lang-ink)]">
+          {(FOCUS.split(FOCUS_NOBREAK)[0] ?? '').trimEnd()}
+          <br />
+          {FOCUS_NOBREAK}
+          {FOCUS.split(FOCUS_NOBREAK)[1] ?? ''}
         </p>
       </div>
 
-      {/* THREE columns, no scrolling (Emilie's ruling round 2): column 1 =
-          Education then Certificates, column 2 = Experience, column 3 =
-          Awards then Skills. */}
-      <div className="cv-cols pb-0">
-        <section aria-label="Education and certificates">
-          <SecTitle name="education">EDUCATION</SecTitle>
+      {/* ONE centred column, in the PDF's own order (the CV pass): Education
+          leads, then Experience, Skills, Awards, Writing. Section rhythm comes
+          from .cv-section, entry rhythm from .cv-entry: see the ladder in
+          language.css. */}
+      <div className="cv-col cv-bottom">
+        <section id="education" className="cv-section scroll-mt-24" aria-label="Education">
+          <SecTitle name="education" id="education">EDUCATION</SecTitle>
           {EDUCATION.map(e => (
             <Entry key={e.title} {...e} />
           ))}
-          <div className="mt-5">
-            <SecTitle name="certificates">CERTIFICATES</SecTitle>
-            <ul className="grid gap-1.5">
-              {CERTIFICATES.map(c => (
-                <li key={c} className="font-mono text-label leading-relaxed text-[var(--lang-ink)]">
-                  {c}
-                </li>
-              ))}
-            </ul>
-          </div>
         </section>
 
-        <section aria-label="Experience">
-          <SecTitle name="experience">EXPERIENCE</SecTitle>
+        <section id="experience" className="cv-section scroll-mt-24" aria-label="Experience">
+          <SecTitle name="experience" id="experience">EXPERIENCE</SecTitle>
           {EXPERIENCE.map(e => (
-            <Entry key={e.org + e.dates} {...e} />
+            <Entry key={e.org + (e.dates ?? '')} {...e} />
           ))}
         </section>
 
-        <section aria-label="Awards and skills">
-          <SecTitle name="awards">AWARDS &amp; RECOGNITION</SecTitle>
-          <ul className="mb-4 grid gap-1">
+        <section id="skills" className="cv-section scroll-mt-24" aria-label="Skills">
+          <SecTitle name="skills" id="skills">SKILLS</SecTitle>
+          {[...SKILLS, { group: 'Languages', items: LANGUAGES }].map(s => (
+            <div key={s.group} className="cv-entry cv-text font-serif text-[var(--lang-ink)]">
+              {/* Same treatment as a job title or a degree name: whatever leads
+                  a block leads every block the same way (her rule). Colon and
+                  sentence case match the print page exactly. */}
+              {/* Items recede to muted, like bullets, so the bold ink label
+                  reads as the leader instead of dissolving into its own list. */}
+              <span className="font-semibold">{s.group}:</span>{' '}
+              <span className="text-[var(--lang-ink-muted)]">{s.items}</span>
+            </div>
+          ))}
+        </section>
+
+        <section id="awards" className="cv-section scroll-mt-24" aria-label="Awards and recognition">
+          <SecTitle name="awards" id="awards">AWARDS &amp; RECOGNITION</SecTitle>
+          <ul className="grid gap-1">
             {AWARDS.map(a => (
-              <li key={a.text} className="grid grid-cols-[40px_1fr] gap-x-2">
-                <span className="font-mono text-label leading-5 text-[var(--lang-ink-muted)] tabular-nums">{a.year}</span>
-                <span className="font-serif text-small leading-snug">{a.text}</span>
+              <li key={a.text} className="grid grid-cols-[46px_1fr] gap-x-3">
+                <span className="cv-meta font-mono leading-6 text-[var(--lang-ink-muted)] tabular-nums">{a.year}</span>
+                <span className="cv-text cv-prose font-serif">{a.text}</span>
               </li>
             ))}
           </ul>
-          <SecTitle name="skills">SKILLS</SecTitle>
-          {SKILLS.map(s => (
-            <div key={s.group} className="mb-2 font-mono text-label leading-[1.5]">
-              <span className="tracking-[0.1em] text-[var(--lang-ink-muted)]">{s.group}</span>
-              <span className="mt-0.5 block text-[var(--lang-ink)]">{s.items}</span>
-            </div>
-          ))}
-          <div className="mt-1 font-mono text-label leading-[1.5]">
-            <span className="tracking-[0.1em] text-[var(--lang-ink-muted)]">LANGUAGES</span>
-            <span className="mt-0.5 block text-[var(--lang-ink)]">{LANGUAGES}</span>
-          </div>
+        </section>
+
+        {/* CERTIFICATES retired here (her review + a unanimous council call);
+            the printed book still carries them. */}
+        <section id="writing" className="cv-section scroll-mt-24" aria-label="Writing and research">
+          <SecTitle name="writing" id="writing">WRITING &amp; RESEARCH</SecTitle>
+          <p className="cv-text cv-prose font-serif text-[var(--lang-ink)]">{WRITING}</p>
         </section>
       </div>
     </SheetPage>

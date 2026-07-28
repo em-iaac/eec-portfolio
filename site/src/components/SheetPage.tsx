@@ -19,6 +19,7 @@ export default function SheetPage({
   center = true,
   footer = true,
   fill = false,
+  fadeTop = false,
 }: {
   children: ReactNode
   /** /work + /cv run full-width (cap 1920); other pages keep the column. */
@@ -37,6 +38,10 @@ export default function SheetPage({
   /** The content FILLS the middle band (so its own children can scroll
       inside it, like /cv's per-column scroll) instead of centring. */
   fill?: boolean
+  /** A sticky band of glass at the top of the scroller: content passes under
+      it and blurs rather than being sliced at a hard edge. Opt-in per page,
+      because it costs a compositing layer and only long documents need it. */
+  fadeTop?: boolean
 }) {
   return (
     <div className="flex h-dvh flex-col overflow-hidden">
@@ -52,6 +57,7 @@ export default function SheetPage({
         tabIndex={-1}
         className="no-scrollbar flex flex-1 flex-col overflow-y-auto px-5 outline-none sm:px-8"
       >
+        {fadeTop ? <div aria-hidden="true" className="scroll-scrim" /> : null}
         <div
           className={`mx-auto w-full ${wide ? 'max-w-[1920px]' : 'max-w-5xl'} ${
             fill ? 'flex min-h-0 flex-1 flex-col' : center ? 'my-auto' : ''

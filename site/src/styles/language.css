@@ -179,25 +179,148 @@ textarea,
   }
 }
 
-/* THE CV COLUMNS (the design audit round 2, Emilie's ruling 2026-07-19:
-   THREE columns, no scrolling system). Education + Certificates | Experience
-   | Awards + Skills. Three wider columns let the whole record sit on one
-   screen without any per-column wheel. Steps 1 -> 2 -> 3 with width (plain
-   media queries: Tailwind min-[...] variants do not generate here). */
-.cv-cols {
+/* THE CV COLUMN (the CV pass, Emilie's ruling 2026-07-27). The three-column
+   landscape record is RETIRED: the page is one vertical column at every width,
+   in the same order the PDF prints, so the screen and the paper read alike.
+   The only job left for this rule is the measure. Long prose lines (the
+   summary, the in-place project lines, the award lines) get unreadable past
+   ~90 characters on a wide screen, so the column is capped rather than
+   full-bleed. It stays a plain media-query-free max-width: nothing about the
+   layout needs to change with the viewport. */
+.cv-col,
+.cv-measure {
+  /* WIDE ENOUGH THAT EVERY BULLET IS ONE LINE, exactly as the printed page
+     (her call 2026-07-27). Measured: at 16px the longest bullet needs 906px,
+     so the column is 57rem. That is a ~118 character measure, which is far
+     past the comfortable 65-90 for PROSE, and fine for what actually lives at
+     this width: discrete one-line items where the eye never has to find the
+     start of a continuation line.
+     Everything that IS prose (the summary, entry notes, award text, the
+     writing line) is capped narrower by .cv-prose below, so the long measure
+     is paid only where it buys the one-line rule. */
+  max-width: 57rem;
+  /* CENTRED, not left-hung (her call 2026-07-27). */
+  margin-inline: auto;
+
+  /* THE CV LADDER, one place, both surfaces (print.css mirrors these names at
+     print sizes). Scaled 1.35x for the screen at her call 2026-07-27: the page
+     had been carrying PRINT sizes onto a display, so body sat at 13px when 16
+     is the reading norm on the web. Scale B: body lands exactly on 16. The measure widens with it so lines
+     do not turn short and choppy.
+
+     NAME  > LEAD > SECTION > BLOCK > BODY > META
+     BLOCK is whatever leads an entry: a job title, a degree name, a skills
+     group name. Her rule: one level leads every block the same way, which is
+     why BLOCK and BODY share a size and separate on weight alone. */
+  --cv-name: 2.25rem; /* 36px */
+  --cv-lead: 1.125rem; /* 18px */
+  --cv-section: 0.75rem; /* 12px */
+  --cv-block: 1rem; /* 16px */
+  --cv-body: 1rem; /* 16px */
+  --cv-meta: 0.8125rem; /* 13px */
+  --cv-gap-section: 2.4rem;
+  --cv-gap-entry: 1.05rem;
+  --cv-gap-bullet: 0.18rem;
+
+  /* THE CV'S ONE ACCENT is now literally --lang-interaction, the site red.
+     That used to be forbidden here because a red heading that did nothing
+     would be a false affordance. Her fix removed the premise: the section
+     headings ARE links now, each one centring its own section, so red means
+     exactly what it means everywhere else on this site. The name stays ink,
+     matching the landing. */
+  --cv-accent: var(--lang-interaction);
+}
+/* ROOM TO BREATHE (her call 2026-07-27): the record used to start flush under
+   the header pill and end flush at the viewport foot. */
+.cv-top {
+  padding-top: 4rem;
+}
+.cv-bottom {
+  padding-bottom: 7rem;
+}
+
+/* THE GLASS SCRIM (her call 2026-07-27, replacing a mask fade). Content used
+   to be sliced off at a hard edge as it scrolled to the top of the band. A
+   mask dissolved it instead, which was softer but explained nothing: text
+   evaporating for no reason.
+   This is the site's own vocabulary applied to the problem. A sticky band of
+   glass sits at the top of the scroller and content passes UNDER it, blurring
+   as it goes. "Slides under glass" is a physical explanation, which is why it
+   reads as natural where a fade read as an effect.
+   It is inert: pointer-events none so it never eats a click, aria-hidden in
+   the markup, and its own mask feathers the glass out rather than ending it
+   on a line (a hard-edged blur band would just be a different hard edge). */
+.scroll-scrim {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 3.5rem;
+  margin-bottom: -3.5rem;
+  /* flex:none is load-bearing: the scroller is a flex column, so an empty
+     child with a height and a default flex-shrink of 1 collapsed to 0 and the
+     scrim rendered as literally nothing. */
+  flex: none;
+  pointer-events: none;
+  /* A GRADIENT OF THE GROUND, not backdrop-filter. The first build used
+     backdrop blur plus a mask and rendered as nothing: Chrome does not
+     compose mask-image with backdrop-filter reliably, and a blur over a flat
+     single-colour ground has almost nothing to blur anyway. Painting the
+     ground itself, fading to transparent, is what actually reads as content
+     sliding under the header. */
+  background: linear-gradient(
+    to bottom,
+    var(--lang-ground) 0%,
+    var(--lang-ground) 55%,
+    transparent 100%
+  );
+}
+.cv-name {
+  font-size: var(--cv-name);
+  line-height: 1.1;
+}
+.cv-lead {
+  font-size: var(--cv-lead);
+  line-height: 1.45;
+}
+/* Kept as a hook, deliberately unconstrained: capping prose narrower than the
+   bullets produced ragged one-word last lines and a summary that broke to
+   three lines while the record ran to 912px. One measure, whole page. */
+.cv-prose {
+  max-width: none;
+}
+.cv-h2 {
+  font-size: var(--cv-section);
+}
+.cv-block {
+  font-size: var(--cv-block);
+  line-height: 1.35;
+}
+.cv-text {
+  font-size: var(--cv-body);
+  line-height: 1.4;
+}
+.cv-meta {
+  font-size: var(--cv-meta);
+}
+.cv-section + .cv-section {
+  margin-top: var(--cv-gap-section);
+}
+.cv-entry + .cv-entry {
+  margin-top: var(--cv-gap-entry);
+}
+.cv-bullets {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0 2.5rem;
+  gap: var(--cv-gap-bullet);
+  margin-top: 0.3rem;
 }
-@media (min-width: 700px) {
-  .cv-cols {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-@media (min-width: 1024px) {
-  .cv-cols {
-    grid-template-columns: repeat(3, 1fr);
-  }
+/* Hanging indent so a wrapped bullet aligns under its first word, never under
+   the chevron. The chevron is decorative and aria-hidden; the list is a real
+   ul/li, so screen readers announce the list, not the glyph. */
+.cv-bullet {
+  font-size: var(--cv-body);
+  line-height: 1.4;
+  padding-left: 0.9em;
+  text-indent: -0.9em;
 }
 /* Hide the scroll wheel everywhere the frame's middle band scrolls (Emilie:
    "the scrolling control should be invisible"); the region stays scrollable

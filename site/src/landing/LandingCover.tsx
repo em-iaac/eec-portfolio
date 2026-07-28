@@ -628,7 +628,7 @@ export default function LandingCover() {
                 className="font-display text-[30px] font-semibold leading-[0.98] tracking-[0.01em] whitespace-nowrap text-[var(--lang-ink)] sm:text-[45px] lg:text-[46px]"
                 style={{ fontStretch: 'var(--wdth-fit)' }}
               >
-                EMILIE EL CHIDIAC
+                Emilie El Chidiac
               </h1>
             </div>
 
