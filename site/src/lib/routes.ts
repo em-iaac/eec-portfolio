@@ -24,7 +24,7 @@ export const THOUGHT_IDS: string[] = ENTRIES.filter(
   (e) => e.kind === 'thought' && e.note?.status === 'drafted',
 ).map((e) => e.id)
 
-export const STATIC_ROUTES = ['/', '/work', '/thoughts', '/about', '/cv', PILLAR_PATH]
+export const STATIC_ROUTES = ['/', '/work', '/thoughts', '/cv', '/contact', PILLAR_PATH]
 
 export const PUBLIC_ROUTES: string[] = [
   ...STATIC_ROUTES,
@@ -41,6 +41,11 @@ export const PUBLIC_ROUTES: string[] = [
 export const LEGACY_REDIRECTS: { from: string; to: string }[] = [
   { from: '/notebook', to: '/thoughts' },
   { from: '/explore', to: '/' },
+  // /about became /contact (2026-07-28). This one is NOT a retired sheet
+  // number nobody typed: it was a door for the site's whole public life, it
+  // sits in the sitemap Google has already crawled, and it is the address in
+  // every link shared before today. It redirects forever.
+  { from: '/about', to: '/contact' },
   ...ENTRIES.filter((e) => e.explore != null).map((e) => ({
     from: `/explore/${e.id}`,
     to: '/',

@@ -23,7 +23,7 @@ const NAV: { label: string; to: string }[] = [
   { label: 'WORK', to: '/work' },
   { label: 'THOUGHTS', to: '/thoughts' },
   { label: 'CV', to: '/cv' },
-  { label: 'ABOUT', to: '/about' },
+  { label: 'CONTACT', to: '/contact' },
 ]
 
 // Which door owns the current path (deep pages light their door: /work/sensi

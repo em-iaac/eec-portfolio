@@ -18,6 +18,8 @@ export default function SheetPage({
   toolsKey,
   center = true,
   footer = true,
+  footerTools,
+  footerInFlow = false,
   fill = false,
   fadeTop = false,
 }: {
@@ -31,10 +33,26 @@ export default function SheetPage({
   /** Content centres vertically in the middle band (auto margins); a
       document that reads top-first can opt out. */
   center?: boolean
-  /** Pages whose contact/identity already lives elsewhere drop the footer
-      to kill repetition (/cv puts it on the header line, /about in the
-      middle as the contact sheet). */
+  /** Pages whose contact/identity already lives elsewhere drop the footer to
+      kill repetition (/contact IS the contact sheet, so its middle band
+      already holds every link the footer would repeat). */
   footer?: boolean
+  /** A page's own control inside the footer's right-hand group, beside the
+      contact links (/cv's PDF download; board C2, 2026-07-28). Ignored when
+      `footer` is false. */
+  footerTools?: ReactNode
+  /** THE FOOTER SCROLLS WITH THE RECORD (her review 2026-07-28, /cv). The
+      frozen band is right for a page you look AT; /cv is a page you read
+      THROUGH, and a permanently parked pill under a long document is a wall,
+      not a frame. In flow it renders as the last thing inside the scroller,
+      so you reach the end of the record and the contact row is simply there.
+      It drops the `page-foot` view-transition name for the same reason the
+      landing's does: a name shared between a scrolled-away box and a frozen
+      one makes the browser fly it across the viewport on the way out.
+      `-mx` cancels the scroller's own gutter so the pill keeps the exact inset
+      the frozen one has; `mt-auto` parks it at the foot if the content is ever
+      short enough not to overflow. */
+  footerInFlow?: boolean
   /** The content FILLS the middle band (so its own children can scroll
       inside it, like /cv's per-column scroll) instead of centring. */
   fill?: boolean
@@ -65,8 +83,13 @@ export default function SheetPage({
         >
           {children}
         </div>
+        {footer && footerInFlow && (
+          <div className="-mx-5 mt-auto sm:-mx-8">
+            <Footer inFlow tools={footerTools} />
+          </div>
+        )}
       </main>
-      {footer && <Footer />}
+      {footer && !footerInFlow && <Footer tools={footerTools} />}
     </div>
   )
 }

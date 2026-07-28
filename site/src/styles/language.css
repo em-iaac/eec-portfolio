@@ -235,8 +235,13 @@ textarea,
 .cv-top {
   padding-top: 4rem;
 }
+/* 7rem here was the whole "I can scroll past the footer" bug (her report,
+   2026-07-28). It existed to stop the record ending flush against the viewport
+   foot back when /cv had NO footer. The in-flow footer now occupies that space,
+   so the old value was 112px of empty scroll travel below the last line with
+   nothing in it. What is left is the gap between the record and the pill. */
 .cv-bottom {
-  padding-bottom: 7rem;
+  padding-bottom: 2.5rem;
 }
 
 /* THE GLASS SCRIM (her call 2026-07-27, replacing a mask fade). Content used
@@ -493,7 +498,7 @@ textarea,
      own default cross-fade is between two
      pixel-identical images, which is invisible and costs nothing.
      Forcing `animation: none` here was WRONG and was tried first: /work
-     carries a footer and /about does not, so an unpaired footer would hold
+     carries a footer and /contact does not, so an unpaired footer would hold
      full opacity for the whole transition and then vanish in one frame. The
      default fade handles the paired and unpaired cases correctly on its own. */
   /* THE MAGNIFIER TRAVELS. It is the one piece of chrome that means

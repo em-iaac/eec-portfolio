@@ -12,21 +12,28 @@ const BASE = import.meta.env.BASE_URL
 // (the `tall:` variant, index.css). Class strings stay LITERAL.
 const PROSE = 'prose-rag font-serif text-[17px] leading-relaxed tall:text-[19px]'
 
-// THE ABOUT + CONTACT SHEET (the design audit round 2, Emilie's ruling
-// 2026-07-19: "design the page from a landscape lens: Say hi + logo on the
-// left, a vertical line, the useful links on the other side"). A landscape
-// split centred in the frame: LEFT is the person (the cube, the h1
-// invitation, the short script); a hairline divider; RIGHT is the contact
-// (the callback + all the ways to reach me: the three socials + the two
-// downloads). No footer (the contact IS the content). Below the split
-// breaks it stacks. COPY: the script is a NEW draft from Emilie's 2026-07-19
-// brief, draftCopy until she signs; the h1 "Say hi" + callback stay SIGNED.
+// THE CONTACT SHEET (the design audit round 2, Emilie's ruling 2026-07-19:
+// "design the page from a landscape lens: Say hi + logo on the left, a
+// vertical line, the useful links on the other side"). A landscape split
+// centred in the frame: LEFT is the person (the cube, the h1 invitation, the
+// short script); a hairline divider; RIGHT is the contact (the callback + all
+// the ways to reach me: the three socials + the two downloads). No footer
+// (the contact IS the content). Below the split breaks it stacks. COPY: the
+// script is a NEW draft from Emilie's 2026-07-19 brief, draftCopy until she
+// signs; the h1 "Say hi" + callback stay SIGNED.
+//
+// THE DOOR IS NOW CALLED CONTACT (her ruling 2026-07-28). This page stopped
+// being an About the moment the bio moved onto the scrolling landing: what is
+// left is a name, an invitation and every way to reach her, which is a contact
+// sheet wearing an About sign. The route moved with the label (/about ->
+// /contact, redirected forever in lib/routes.ts); the ONE paragraph that stays
+// is the human beat before the email address, not a biography.
 
-export default function About() {
+export default function Contact() {
   return (
     <SheetPage footer={false}>
       <section
-        aria-labelledby="about-heading"
+        aria-labelledby="contact-heading"
         className="mx-auto flex w-full max-w-[1040px] flex-col gap-8 py-6 md:flex-row md:items-center md:gap-12"
       >
         {/* LEFT · the person. */}
@@ -35,7 +42,7 @@ export default function About() {
             {/* The room-sign kicker retired at the audit gate (2026-07-19).
                 The h1 carries the invitation, SIGNED (2026-07-12). */}
             <h1
-              id="about-heading"
+              id="contact-heading"
               className="mt-1 text-title font-semibold tracking-[-0.01em] text-[var(--lang-ink)] tall:text-4xl"
             >
               Say hi

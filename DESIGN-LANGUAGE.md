@@ -160,10 +160,10 @@ agreed with itself about**.
 | `--text-nav` | 12 | mono kickers, status pills, the landing nav + jump bar |
 | `--text-small` | 13 | compact serif: card deks, the footer name |
 | `--text-body` | 15 | body copy |
-| `--text-prose` | 17 | the reading measure: About, the pillar, thought leaves |
+| `--text-prose` | 17 | the reading measure: Contact, the pillar, thought leaves |
 | `--text-lead` | 21 | a surface's own title (the work overlay's h2) |
 | `--text-display` | 27 | SERIF titles: the pillar, thought leaves |
-| `--text-title` | 30 | ARCHIVO page titles: /work, /about, /cv |
+| `--text-title` | 30 | ARCHIVO page titles: /work, /contact, /cv |
 
 The last two are separate on purpose: different faces do not share a rung.
 
@@ -174,13 +174,13 @@ here, that is a design decision, not a CSS one.
 ladder cannot know: the name (45/30) and the descriptor row (14/12) are
 MEASURE-BOUND via `--wdth-fit`; the voice line (30.97/21) and the n.b. wink
 (18/16) are Caveat, and the voice line is also the measured LCP element and the
-printed book's cover subtitle; About's `tall:` bumps are responsive comfort
+printed book's cover subtitle; Contact's `tall:` bumps are responsive comfort
 variants, not roles; the 404 numeral (64/80) is one decorative glyph; the share
 cards are a fixed 1200x630 canvas. `src/print/` is a separate `pt` system.
 
 **A `text-[Npx]` grep is NOT the inventory.** Page titles used standard Tailwind
 classes (`text-3xl`, `text-2xl`), which that grep misses entirely — which is how
-/cv's h1 came to be 24px while /work's and /about's were 30px. Always check the
+/cv's h1 came to be 24px while /work's and /contact's were 30px. Always check the
 standard scale AND raw `font-size:` in CSS.
 
 ### The width axis
@@ -264,16 +264,23 @@ scroll; its content does.
 - **A page's own TOOLS ride the header line beside the pill**, never inside it
   (`.pill-tools`). They are FRAME, not content.
 - **The FOOTER is a frozen wide pill**: near-full-width with a breath of margin,
-  the same stadium the header wears, name lockup left, contact right. `/about`
-  and `/cv` drop it — their contact lives in the content. That inconsistency is
-  deliberate and correct.
+  the same stadium the header wears, name lockup left, contact right. ONE page
+  drops it: `/contact`, whose middle band already IS the contact sheet. A page
+  may add its own control to the right-hand group via the `tools` slot — `/cv`
+  puts its PDF download there (2026-07-28).
+- **The footer is a BAND, not an end-of-document moment.** It is frozen and
+  always on screen, so anything placed in it is placed permanently, not "at the
+  bottom". This is why `/cv` SWAPPED its header tools down rather than adding a
+  second copy: the same contact row in both places would have been visible
+  simultaneously, not sequentially. Check this before proposing "put it in the
+  footer too".
 - **NO ROOM SIGNS.** The old kicker tier (`WORK · THE PROOF`, `CV · THE RECORD`
   …) is gone sitewide: the nav says where you are, the title says it once, a
   third repetition is scaffolding. ONE survivor: the 404's bare mono `404`,
   because the status number is real information its voiced h1 lacks.
 - **A page title is either a ROOM LABEL or CONTENT, and they behave
   differently.** `/work`'s h1 is `lg:sr-only` because the pill already says
-  WORK; `/about`'s "Say hi" and `/cv`'s name are content and show. Not an
+  WORK; `/contact`'s "Say hi" and `/cv`'s name are content and show. Not an
   inconsistency.
 - **The thought leaf** carries its meta (kind · date · lens · number) and its
   three controls on the header line, each an icon + its own AA accent: ALL
@@ -355,7 +362,7 @@ The fix for "it feels like pages" was not an effect, it was **naming**. A
 moving underneath can no longer drag it along.
 
 - **The frame holds still**: `chrome-pill`, `page-tools`, `page-foot` are named.
-  Do NOT force `animation: none` on them — `/work` has a footer and `/about`
+  Do NOT force `animation: none` on them — `/work` has a footer and `/contact`
   does not, so an unpaired name would hold full opacity and then vanish in one
   frame. The default fade handles paired and unpaired correctly.
 - **The magnifier is the one moving piece of chrome**: it slides from the old

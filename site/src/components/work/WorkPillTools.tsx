@@ -69,7 +69,7 @@ export function WorkFilterRow({ active, flat = false }: { active: Lens | null; f
 // THE BOOK (G5): the proof room hands out its printed rendition; the PDF
 // regenerates on every build from the same masters as the grid. The one
 // download affordance sitewide (DownloadPill: a hairline pill + tray icon),
-// so /work's book and /cv's + /about's downloads read as one control (the
+// so /work's book and /cv's + /contact's downloads read as one control (the
 // audit's consistency ruling, 2026-07-19).
 export function BookDownloadLink({ className = '' }: { className?: string }) {
   return (
@@ -89,12 +89,15 @@ export default function WorkGroundTools({ active }: { active: Lens | null }) {
     // /work is the one page that hides its header tools below lg (its
     // stacked mobile header repeats them); every other page keeps its tools
     // on the header line at all sizes.
+    //
+    // THE BOOK LEFT THIS ROW (her call 2026-07-28), and with it the divider
+    // that existed only to mark the shift from facets to action. It now rides
+    // the footer, centred, exactly as /cv's CV (PDF) does — the two rooms that
+    // hand out a PDF hand it out from the same place. What is left here is
+    // what the header line should have held all along: the page's FILTER and
+    // nothing else.
     <div className="hidden min-w-0 flex-wrap items-center justify-end gap-x-1 gap-y-0.5 lg:flex">
       <WorkFilterRow active={active} flat />
-      {/* A thin divider marks the shift from facets (filter) to action
-          (download); both now ride the same compact pill height (option A). */}
-      <span aria-hidden="true" className="mx-1.5 h-5 w-px shrink-0 bg-[var(--lang-hairline)]" />
-      <BookDownloadLink />
     </div>
   )
 }

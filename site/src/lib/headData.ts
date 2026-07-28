@@ -53,13 +53,16 @@ const DEFAULT_OG_ALT =
 // 2026-07-13) + the pillar's line (SIGNED as interim 2026-07-13; S5 still
 // writes the definitive pillar copy). Standard-vocabulary keywords in
 // natural prose; verbs score / model, never measure; no em dashes.
+// draftCopy: '/contact' is NEW (2026-07-28) and unsigned. The old /about line
+// described a person, which the landing now does; this one describes what the
+// page is actually for, so a search result promises what the page delivers.
 const PAGE_DESCRIPTIONS: Record<string, string> = {
   '/work':
     'Selected computational design and design-technology work by Emilie El Chidiac: comfort copilots, neuroarchitecture tools, and parametric studies, each linked to its live app, repo, or writeup.',
   '/thoughts':
     'Short essays by Emilie El Chidiac on neuroarchitecture, computational design, and behavior information modeling: the thinking behind the tools.',
-  '/about':
-    'Emilie El Chidiac is a Design Technology Architect building computational tools that model how architecture affects the people inside it.',
+  '/contact':
+    'Get in touch with Emilie El Chidiac, Design Technology Architect: email, LinkedIn, GitHub, and the portfolio and CV as PDFs.',
   '/cv':
     'The CV of Emilie El Chidiac, Design Technology Architect: computational design, neuroarchitecture research, and AI-assisted tools. Download the PDF.',
   [PILLAR_PATH]:
@@ -69,8 +72,8 @@ const PAGE_DESCRIPTIONS: Record<string, string> = {
 const PAGE_TITLES: Record<string, string> = {
   '/work': 'Work' + SUFFIX,
   '/thoughts': 'Thoughts' + SUFFIX,
-  '/about': 'About' + SUFFIX,
   '/cv': 'CV' + SUFFIX,
+  '/contact': 'Contact' + SUFFIX,
   [PILLAR_PATH]: PILLAR_PHRASE + SUFFIX,
 }
 
@@ -124,7 +127,7 @@ function graph(...nodes: Record<string, unknown>[]): Record<string, unknown> {
 }
 
 function pageNode(
-  type: 'WebPage' | 'CollectionPage' | 'ProfilePage',
+  type: 'WebPage' | 'CollectionPage' | 'ProfilePage' | 'ContactPage',
   canonical: string,
   name: string,
   description: string,
@@ -289,7 +292,12 @@ export async function headForRoute(pathname: string): Promise<RouteHead> {
   }
 
   if (PAGE_TITLES[path]) {
-    const type = path === '/about' ? 'ProfilePage' : path === '/cv' ? 'WebPage' : 'CollectionPage'
+    // ContactPage is the schema.org type for exactly this page (2026-07-28).
+    // It was ProfilePage while the route was /about and carried the bio; the
+    // bio lives on the landing now, so ProfilePage would describe the wrong
+    // document and the landing is the honest profile.
+    const type =
+      path === '/contact' ? 'ContactPage' : path === '/cv' ? 'WebPage' : 'CollectionPage'
     return {
       title: PAGE_TITLES[path]!,
       description: PAGE_DESCRIPTIONS[path]!,

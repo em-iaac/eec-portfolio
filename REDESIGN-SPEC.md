@@ -102,10 +102,12 @@ door retired; see §6). Nav (visible + scannable on every page):
 ├── /cv                 the plain ATS-safe list, nothing else (§9; the G3 graph
 │                         view + ghost rail retired at the meta build; old
 │                         ?view=graph URLs degrade to the list, never 404).
-├── /about              the person; THE CONTACT SHEET (2026-07-12): ONE SCREEN,
-│                         no scroll · "Say hi" h1 + cube + short signed bio +
-│                         invitation ("what's in yours?"); THE FOOTER IS the
-│                         contact row; story, headshot + NOW module retired.
+├── /contact            THE CONTACT SHEET (2026-07-12; renamed from /about
+│                         2026-07-28, which now redirects here forever): ONE
+│                         SCREEN, no scroll · "Say hi" h1 + cube + one warm
+│                         paragraph + invitation ("what's in yours?") + the
+│                         reach-me row and both downloads. The BIO lives on the
+│                         landing, which is why this stopped being an About.
 └── (404)               a warm "this thought wandered off, back to the mind ›".
 ```
 

@@ -1,7 +1,7 @@
 // THE CONTACT ROW, ONE GRAMMAR SITEWIDE (S6-A tweaks, Emilie 2026-07-24,
 // Board 2 option B). Before this the three reach-me links wore three different
 // skins: red underlined text on /cv, glass pills under the magnifier on the
-// footer + /about. Now there is ONE row: plain text links, each with its app
+// footer + /contact. Now there is ONE row: plain text links, each with its app
 // icon, ink at rest and the interaction hue on hover (red = interaction, the
 // governance law), wrapped in the magnifier LensGroup so the lens is the only
 // glass and slides under whichever link the pointer or keyboard focus is over.

@@ -135,7 +135,24 @@ export default function Work() {
     // TitleBlock's slot; placement in .pill-tools, language.css). The grid
     // takes the full width, THE THOUGHTS close the page, and below lg the
     // stacked header returns (minus the retired kicker tier).
-    <SheetPage wide pillTools={<WorkGroundTools active={activeLens} />} toolsKey="work">
+    <SheetPage
+      wide
+      pillTools={<WorkGroundTools active={activeLens} />}
+      toolsKey="work"
+      /* THE BOOK RIDES THE FOOTER FROM `sm` UP, and the stacked header keeps
+         it below that. Not a whim: /work's footer is FROZEN, so anything added
+         to it is paid on every screen. Measured at 375px, the three-part pill
+         wraps to three rows and grows 112px -> 169px, which is 21% of the
+         viewport permanently spent on chrome, on the page whose entire job is
+         the grid. /cv can afford the same pill because ITS footer scrolls in
+         flow. So the tool is hidden here at phone widths and the stacked
+         header carries it there instead; the two never both show. */
+      footerTools={
+        <span className="hidden sm:contents">
+          <BookDownloadLink />
+        </span>
+      }
+    >
       {/* ONE h1 for every size: visible under the pill on small screens,
           sr-only on lg+ (the lit WORK door on the header line names the room;
           repeating it next to itself is the redundancy this audit retired). */}
@@ -149,10 +166,14 @@ export default function Work() {
           The room-sign kicker retired at the audit gate (2026-07-19): the
           nav says where you are, the title says it once. */}
       <section className="pt-3 pb-4 lg:hidden" aria-label="Work filters">
-        {/* The intro line retired at G2; the count line retired at G-FLUFF. */}
+        {/* The intro line retired at G2; the count line retired at G-FLUFF.
+            The book download moved to the FOOTER at `sm` and up (2026-07-28),
+            so it survives here only at phone widths, where a third row in the
+            frozen footer would cost 21% of the viewport. The two are mutually
+            exclusive: `sm:hidden` here, `hidden sm:contents` there. */}
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
           <WorkFilterRow active={activeLens} />
-          <BookDownloadLink className="-my-2 -mx-2" />
+          <BookDownloadLink className="-my-2 -mx-2 sm:hidden" />
         </div>
       </section>
       {/* An invisible announcer keeps the filter change audible for screen

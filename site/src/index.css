@@ -105,7 +105,7 @@
   --text-prose: 17px; /* the reading measure: About, the pillar, thought leaves */
   --text-lead: 21px; /* a surface's own title (the work overlay's h2) */
   --text-display: 27px; /* serif display: the pillar + thought-leaf titles */
-  --text-title: 30px; /* the ARCHIVO page title (/work, /about, /cv). A
+  --text-title: 30px; /* the ARCHIVO page title (/work, /contact, /cv). A
      separate step from --text-display on purpose: that one is Source Serif
      italic, this one is Archivo semibold, and the two faces do not share a
      rung. Found late: the page titles were using STANDARD Tailwind classes

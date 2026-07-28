@@ -3,7 +3,7 @@
 // consistent way, maybe add an icon"). ONE download affordance sitewide: a
 // hairline pill, ink at rest, the interaction hue on hover/focus (download is
 // an action, and hover/focus is the interaction, so red enters only there).
-// Used by /work (the book), /cv, and /about.
+// Used by /work (the book), /cv, and /contact.
 //
 // The LEADING icon tells the two downloads apart (S6-A, Emilie 2026-07-24,
 // Board 2): the book download leads with a book, the CV with a document, so a

@@ -15,7 +15,7 @@ import { setNavIntent } from './lib/navIntent'
 
 // Split out of the landing chunk so the perf-budgeted cover stays lean: the
 // gallery (with its overlay + video code) and the note prose only load when
-// someone actually opens /work or /thoughts/:id. About + CV joined them at
+// someone actually opens /work or /thoughts/:id. Contact + CV joined them at
 // the LCP pass (2026-07-12): they pull SheetPage/Surface and their data
 // files, none of which the landing needs. NotFound stays eager (a chunk
 // error on the error page is the worst failure mode); SheetRoute is a
@@ -23,7 +23,7 @@ import { setNavIntent } from './lib/navIntent'
 const Work = lazy(() => import('./pages/Work'))
 const Thoughts = lazy(() => import('./pages/Thoughts'))
 const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
-const About = lazy(() => import('./pages/About'))
+const Contact = lazy(() => import('./pages/Contact'))
 const CV = lazy(() => import('./pages/CV'))
 // THE PILLAR (S3): the one Behavior Information Modeling definition surface
 // (CONTENT-STRATEGY.md D6, topical authority). Lazy like every interior page.
@@ -258,13 +258,18 @@ export const routes: RouteObject[] = [
       },
       { path: '/notebook', element: <NotebookRedirect /> },
       {
-        path: '/about',
+        // THE CONTACT DOOR (her ruling 2026-07-28). Was /about until the bio
+        // moved onto the landing and left a contact sheet behind; the old
+        // address redirects forever (LEGACY_REDIRECTS), because it has been
+        // shared and it is in the sitemap Google already crawled.
+        path: '/contact',
         element: (
           <Suspense fallback={<GroundHold />}>
-            <About />
+            <Contact />
           </Suspense>
         ),
       },
+      { path: '/about', element: <Navigate to="/contact" replace /> },
       {
         path: '/cv',
         element: (

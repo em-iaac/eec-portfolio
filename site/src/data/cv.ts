@@ -213,6 +213,66 @@ export const EXPERIENCE: CvEntry[] = [
   },
 ]
 
+// ---- THE PROJECT NAME IS A DOOR (board B1, her ruling 2026-07-28) ----------
+//
+// The web CV's one interactive move, and it needed no new data: because every
+// project is NAMED IN PLACE under the degree or role that produced it, the
+// link was already written into the bullets above. It just was not clickable.
+//
+// Only the LEADING name of a bullet is live. The rest of the sentence stays
+// flat text, so the record still reads as a document rather than a link farm,
+// and a reader's eye lands on the same word it would have landed on anyway.
+//
+// WHY THIS IS A MAP AND NOT A FIELD ON `projects`: the bullets are also the
+// PRINTED CV (src/print/PrintCV.tsx renders these exact strings, and the
+// build's ATS parse test reads the resulting text layer). Threading a link
+// type through them would push a web-only concern into the one artifact that
+// must stay plain text. A lookup keeps the strings untouched and the print
+// page entirely unaware this exists.
+//
+// The AWARDS block is deliberately NOT linked. Its lines name projects too,
+// but they name them mid-sentence and every target except The Huddle is
+// already reachable from a bullet above; linking them would put seven links
+// into six short lines and turn the recognitions into navigation.
+//
+// The keys are matched as PREFIXES and validated at build time: cv.test.ts
+// asserts every key leads exactly one bullet and every value is a real work
+// entry, so a reworded bullet fails the build instead of silently going dead.
+export const CV_PROJECT_LINKS: Record<string, string> = {
+  Sensi: 'sensi',
+  'The Lungs': 'lungs',
+  lEgoarCh: 'legoarch',
+  'The Homage': 'homage',
+  // The showcase is filed under the practice that made them, not under one of
+  // the four tower names the bullet lists.
+  'Verve City Walk': 'soma',
+  'Rings of Mars: Ring 4000': 'mars',
+  'The Encounter': 'encounter',
+  'Falcon Square': 'falcon',
+}
+
+// Longest key first, so "The Homage" can never be shadowed by a shorter key
+// that happens to prefix it. Computed once.
+const LINK_KEYS = Object.keys(CV_PROJECT_LINKS).sort((a, b) => b.length - a.length)
+
+/**
+ * Split a bullet into its linkable leading project name and the rest, or null
+ * when the bullet does not open with one (the duty bullets, the methods line,
+ * the licensure line). The character after the name must be punctuation or a
+ * space, so a name is never matched inside a longer word.
+ */
+export function splitProjectLink(
+  bullet: string,
+): { name: string; id: string; rest: string } | null {
+  for (const key of LINK_KEYS) {
+    if (!bullet.startsWith(key)) continue
+    const next = bullet.charAt(key.length)
+    if (next !== '' && next !== ',' && next !== ':' && next !== '.' && next !== ' ') continue
+    return { name: key, id: CV_PROJECT_LINKS[key]!, rest: bullet.slice(key.length) }
+  }
+  return null
+}
+
 // ONE block, every recognition exactly once, each naming its project (the
 // projects above stay bare so nothing is said twice). FLAG-07: the externally
 // verifiable ones carry the context that makes them checkable; the
@@ -323,7 +383,53 @@ export const SKILLS = [
 export const ESSAY_COUNT = 14
 export const BLOG_COUNT = 12
 
-export const WRITING = `${ESSAY_COUNT} essays at emiliechidiac.com/thoughts · ${BLOG_COUNT} project write-ups on blog.iaac.net · MaCAD Theory Podcast, co-hosted with Charles Abi Chahine: Optimizing for the Mind, with Dr. Cleo Valentine`
+// ---- THE WRITING LINE RESOLVES (board B2, her ruling 2026-07-28) -----------
+//
+// This section NAMED two addresses and linked neither, which is the one thing
+// a printed CV is forced to do and a web page has no excuse for. The line is
+// now three PARTS, each with the span that should be a destination isolated
+// from the prose around it.
+//
+// WRITING is still assembled from those parts and is BYTE-IDENTICAL to the
+// string it was before, because the print page and the build's ATS parse test
+// both read it: the structure is added for the screen and costs the paper
+// nothing. cv.test.ts pins the joined string so a future edit to a part cannot
+// quietly change what the PDF says.
+//
+// `to` is an internal route, `href` an external site. FLAG: blog.iaac.net has
+// no author archive that I could find, so that one lands on the blog's front
+// page rather than on her twelve write-ups. If IAAC has an author URL, it
+// belongs here.
+export type WritingPart = {
+  before: string
+  link: string
+  after: string
+  to?: string
+  href?: string
+}
+
+export const WRITING_PARTS: WritingPart[] = [
+  {
+    before: `${ESSAY_COUNT} essays at `,
+    link: 'emiliechidiac.com/thoughts',
+    after: '',
+    to: '/thoughts',
+  },
+  {
+    before: `${BLOG_COUNT} project write-ups on `,
+    link: 'blog.iaac.net',
+    after: '',
+    href: 'https://blog.iaac.net',
+  },
+  {
+    before: 'MaCAD Theory Podcast, co-hosted with Charles Abi Chahine: ',
+    link: 'Optimizing for the Mind',
+    after: ', with Dr. Cleo Valentine',
+    to: '/work/podcast',
+  },
+]
+
+export const WRITING = WRITING_PARTS.map((p) => p.before + p.link + p.after).join(' · ')
 
 export const LANGUAGES = 'Arabic (native) · English (advanced) · French (advanced)'
 

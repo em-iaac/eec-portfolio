@@ -32,7 +32,7 @@ type Loader = () => Promise<unknown>
 const WORK: Loader = () => import('../pages/Work')
 const THOUGHTS: Loader = () => import('../pages/Thoughts')
 const THOUGHT_LEAF: Loader = () => import('../pages/ThoughtRoute')
-const ABOUT: Loader = () => import('../pages/About')
+const CONTACT: Loader = () => import('../pages/Contact')
 const CV: Loader = () => import('../pages/CV')
 const PILLAR: Loader = () => import('../pages/Pillar')
 
@@ -43,7 +43,9 @@ function loaderFor(path: string): Loader | null {
   if (p === '/work' || p.startsWith('/work/')) return WORK
   if (p === '/thoughts') return THOUGHTS
   if (p.startsWith('/thoughts/')) return THOUGHT_LEAF
-  if (p === '/about') return ABOUT
+  // Both addresses warm the same chunk: /about only redirects, but a visitor
+  // hovering an old shared link is heading for the same page.
+  if (p === '/contact' || p === '/about') return CONTACT
   if (p === '/cv') return CV
   // '/' is in the entry bundle; /sheets/* only redirects; unknown -> 404, which
   // is not lazy. Nothing to warm.
@@ -66,7 +68,7 @@ export function preloadPath(path: string): void {
 /** After first paint, warm the four doors: the common path off the landing. */
 export function warmDoors(): void {
   const run = () => {
-    ;[WORK, THOUGHTS, ABOUT, CV].forEach((load) => {
+    ;[WORK, THOUGHTS, CONTACT, CV].forEach((load) => {
       if (started.has(load)) return
       started.add(load)
       load().catch(() => started.delete(load))

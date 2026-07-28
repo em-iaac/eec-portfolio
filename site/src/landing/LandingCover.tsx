@@ -61,7 +61,7 @@ const DOORS: { label: string; to: string }[] = [
   { label: 'WORK', to: '/work' },
   { label: 'THOUGHTS', to: '/thoughts' },
   { label: 'CV', to: '/cv' },
-  { label: 'ABOUT', to: '/about' },
+  { label: 'CONTACT', to: '/contact' },
 ]
 
 // THE PROOF (2026-07-27). Sensi: the award-winning project, and the only one
@@ -954,7 +954,7 @@ function MindSection() {
         ))}
         <p className="mt-6 font-mono text-micro tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">
           This is what&apos;s on my mind ·{' '}
-          <Link to="/about" viewTransition className={`pointer-events-auto ${RED_LINK}`}>
+          <Link to="/contact" viewTransition className={`pointer-events-auto ${RED_LINK}`}>
             What&apos;s in yours? &gt;
           </Link>
         </p>

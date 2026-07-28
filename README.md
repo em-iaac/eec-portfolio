@@ -29,7 +29,7 @@ npm run videos   # re-encode the demo videos (ffmpeg, per-item crop filters)
 | `/thoughts` | the essays, laid out as a neural world |
 | `/thoughts/:id` | one essay |
 | `/behavior-information-modeling` | the pillar page for the term |
-| `/about`, `/cv` | who and what. `/cv` prints |
+| `/cv`, `/contact` | the record and the ways in. `/cv` prints |
 | `/print/book`, `/print/cv` | the print surfaces the build renders to PDF |
 
 ## How it stays consistent

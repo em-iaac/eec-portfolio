@@ -20,7 +20,7 @@ export const WINK = 'this whole mess is my head. touch a piece of it.'
 // job board does. Nothing else consumes this constant, so it is not exported.
 
 // THE BIO (THE SCROLL, 2026-07-27). DRAFT, unsigned. The site had no bio
-// anywhere: /about is a contact sheet ("Say hi"), not a biography. This closes
+// anywhere: /contact is a contact sheet ("Say hi"), not a biography. This closes
 // the scroll beside the mind-graph, where a reader arrives at it rather than
 // being asked to decode a drawing first. Three beats: where she came from, what
 // she builds now (and what it is called), and the question underneath all of

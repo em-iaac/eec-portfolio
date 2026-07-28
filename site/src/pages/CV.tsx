@@ -1,10 +1,20 @@
-import { type ReactNode } from 'react'
+import { Fragment, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import DownloadPill from '../components/ui/DownloadPill'
-import ContactLinks from '../components/ui/ContactLinks'
 import { DocGlyph } from '../components/ui/glyphs'
 import { CvIcon, type CvSection } from '../components/ui/cvIcons'
-import { EDUCATION, EXPERIENCE, AWARDS, SKILLS, WRITING, LANGUAGES, FOCUS, FOCUS_NOBREAK } from '../data/cv'
+import {
+  EDUCATION,
+  EXPERIENCE,
+  AWARDS,
+  SKILLS,
+  WRITING_PARTS,
+  LANGUAGES,
+  FOCUS,
+  FOCUS_NOBREAK,
+  splitProjectLink,
+} from '../data/cv'
 import type { CvEntry } from '../data/cv'
 
 const BASE = import.meta.env.BASE_URL
@@ -26,10 +36,13 @@ const BASE = import.meta.env.BASE_URL
 // FOCUS is back on the screen. It used to ride the PDF only; it is the line a
 // six-second scan actually reads, so it renders in both places now.
 //
-// The name + title live in the content; the reach-me links + the download ride
-// the header line; the footer stays retired here (it just repeated the
-// contact). Header string LOCKED: "Emilie El Chidiac | Design Technology
-// Architect".
+// The name + title live in the content. THE FOOTER IS BACK (board C2, her
+// ruling 2026-07-28): the reach-me links and the PDF download moved off the
+// header line and into the frozen footer pill, so the download is reachable
+// from any scroll position rather than only from the top, and /cv finally wears
+// the same contact row as every other room. It costs the scroller ~56px, which
+// she took knowingly. Header string LOCKED: "Emilie El Chidiac | Design
+// Technology Architect".
 
 // THE ONE ACCENT (the CV pass, 2026-07-27). The five muted per-section hues
 // are RETIRED. They were a CATEGORY system, and 2026 research is consistent
@@ -78,6 +91,41 @@ function SecTitle({ name, id, children }: { name: CvSection; id: string; childre
   )
 }
 
+// THE RECORD LINK (board B1/B2, 2026-07-28). NOT the red prose recipe, and
+// that is the whole point: the CV pass made red a HAIRLINE on this page and
+// never text, so resting red type here would break the one rule that lets the
+// section rules carry the accent at all. This is the contact row's grammar
+// instead — INK at rest, the interaction hue on hover and focus — so red stays
+// a state rather than a colour, and it is the same "a link is ink until you
+// touch it" behaviour a reader already met in the footer.
+//
+// No tap pad. These sit inside dense one-line bullets where a -m-2/p-2 would
+// overlap the neighbouring line's hit box; RED_LINK (the running-prose recipe)
+// carries none either, for the same reason.
+// Two passes to get the weight right. --lang-hairline was INVISIBLE (10% ink
+// under 15px serif is a decoration nobody can see, so the mechanic was a
+// secret); semibold + a solid rule then overcorrected and the names shouted
+// (her review 2026-07-28: "less bold, more of a dashed line, a bit more
+// subtle"). This is the settled version: NORMAL weight — ink against the
+// bullet's muted grey is already enough to lead the line — and a 1px DASHED
+// rule, which reads as "there is more here" rather than as emphasis. Hover
+// brings the red and keeps the dash, so touching it firms up the colour, not
+// the weight, and the line never shifts.
+//
+// `relative` IS LOAD-BEARING, and leaving it off cost a real bug (her report,
+// 2026-07-28: "I can still scroll past the footer"). The external link carries
+// a visually-hidden "(opens in new tab)", and Tailwind's `sr-only` is
+// `position: absolute` with no offsets. With no POSITIONED ancestor its
+// containing block is the initial containing block, so it is laid out against
+// the DOCUMENT rather than inside the scroller — and an `overflow: hidden`
+// ancestor cannot clip an absolute child it is not the containing block of.
+// The span landed at document y=1791 and stretched <html> to 1792px, giving
+// the whole frozen frame 921px of blank scroll underneath it. This is exactly
+// why every anchor in ContactLinks is `relative`; measured after the fix, the
+// window's scroll range is 0.
+const RECORD_LINK =
+  'relative text-[var(--lang-ink)] underline decoration-dashed decoration-1 decoration-[var(--lang-ink-muted)] underline-offset-4 transition-colors hover:text-[var(--lang-interaction)] hover:decoration-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]'
+
 function Entry({ dates, title, org, notes, projects }: CvEntry) {
   return (
     <div className="cv-entry">
@@ -97,37 +145,63 @@ function Entry({ dates, title, org, notes, projects }: CvEntry) {
       ) : null}
       {projects?.length ? (
         <ul className="cv-bullets">
-          {projects.map(p => (
-            <li key={p} className="cv-bullet font-serif text-[var(--lang-ink-muted)]">
-              <span aria-hidden="true">› </span>
-              {p}
-            </li>
-          ))}
+          {projects.map(p => {
+            // The leading project name becomes the door to its showcase; a
+            // bullet that opens with a verb (the duty lines) stays flat text.
+            const link = splitProjectLink(p)
+            return (
+              <li key={p} className="cv-bullet font-serif text-[var(--lang-ink-muted)]">
+                <span aria-hidden="true">› </span>
+                {link ? (
+                  <>
+                    <Link to={`/work/${link.id}`} viewTransition className={RECORD_LINK}>
+                      {link.name}
+                    </Link>
+                    {link.rest}
+                  </>
+                ) : (
+                  p
+                )}
+              </li>
+            )
+          })}
         </ul>
       ) : null}
     </div>
   )
 }
 
-// The reach-me links + the download on the header line (pillTools). The links
-// are now the shared ContactLinks (S6-A, Board 2 grammar B): the /cv links used
-// to sit red-at-rest and unlensed; they join the sitewide row (ink at rest,
-// red on hover, the magnifier under them) so contact reads as one thing on
-// every surface. The download leads with the document mark.
-function CvHeaderTools() {
+// ONE LABEL GRAMMAR, NOUN-LED (her call 2026-07-28). This pill read "DOWNLOAD
+// PDF" and was the only verb-led one of the site's four: /work and /contact
+// both say THE BOOK (PDF), /contact also says CV (PDF). Matching them changes
+// one label instead of three, and prefixing all four with DOWNLOAD would have
+// put the same word at the head of the two pills that sit SIDE BY SIDE on
+// /contact, which is the exact collision the two type icons were added to fix
+// (S6-A). The verb is carried by the pill, the icon and the `download`
+// attribute; the noun is what tells you which of the two files this is, which
+// "DOWNLOAD PDF" never did.
+//
+// THE DOWNLOAD MOVED TO THE FOOTER (board C2, her ruling 2026-07-28). It used
+// to ride the header line beside the reach-me links; the reach-me links are now
+// the footer's own row (ContactLinks, the same one every other page carries),
+// so all this page contributes is the one control that is specifically its own.
+// The header line is empty here as a result, which is the point: the name and
+// the summary lead, and nothing sits beside them competing.
+function CvDownload() {
   return (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-      <ContactLinks />
-      <DownloadPill href={`${BASE}assets/cv-emilie-el-chidiac.pdf`} download="Emilie-El-Chidiac-CV.pdf" icon={<DocGlyph />}>
-        DOWNLOAD PDF
-      </DownloadPill>
-    </div>
+    <DownloadPill
+      href={`${BASE}assets/cv-emilie-el-chidiac.pdf`}
+      download="Emilie-El-Chidiac-CV.pdf"
+      icon={<DocGlyph />}
+    >
+      CV (PDF)
+    </DownloadPill>
   )
 }
 
 export default function CV() {
   return (
-    <SheetPage wide center={false} footer={false} fadeTop pillTools={<CvHeaderTools />} toolsKey="cv">
+    <SheetPage wide center={false} footer footerInFlow footerTools={<CvDownload />} fadeTop>
       {/* The header shares .cv-measure with the column below, so the name, the
           summary and the whole record hang on one centred axis. The UPDATED
           stamp rides the name line, right, exactly as the print page does. */}
@@ -192,11 +266,23 @@ export default function CV() {
 
         <section id="awards" className="cv-section scroll-mt-24" aria-label="Awards and recognition">
           <SecTitle name="awards" id="awards">AWARDS &amp; RECOGNITION</SecTitle>
+          {/* THE YEAR LEADS THE BLOCK (her call 2026-07-28). This was the one
+              section breaking her own rule that whatever leads a block leads
+              every block the same way: a degree title, a job title and a
+              skills group are all BOLD INK with the rest of the line muted,
+              and the awards had it exactly backwards — a muted year in front
+              of full-ink text. Now the year is the leader and the citation
+              recedes, so all four sections scan identically down the column.
+              (The PRINT page sets awards inline as "2026 · text", a different
+              grammar entirely, so nothing here puts the two surfaces out of
+              step.) */}
           <ul className="grid gap-1">
             {AWARDS.map(a => (
               <li key={a.text} className="grid grid-cols-[46px_1fr] gap-x-3">
-                <span className="cv-meta font-mono leading-6 text-[var(--lang-ink-muted)] tabular-nums">{a.year}</span>
-                <span className="cv-text cv-prose font-serif">{a.text}</span>
+                <span className="cv-meta font-mono leading-6 font-semibold text-[var(--lang-ink)] tabular-nums">
+                  {a.year}
+                </span>
+                <span className="cv-text cv-prose font-serif text-[var(--lang-ink-muted)]">{a.text}</span>
               </li>
             ))}
           </ul>
@@ -206,7 +292,34 @@ export default function CV() {
             the printed book still carries them. */}
         <section id="writing" className="cv-section scroll-mt-24" aria-label="Writing and research">
           <SecTitle name="writing" id="writing">WRITING &amp; RESEARCH</SecTitle>
-          <p className="cv-text cv-prose font-serif text-[var(--lang-ink)]">{WRITING}</p>
+          {/* The addresses this line NAMES are the addresses it now GOES to
+              (board B2). The separator is rebuilt here rather than read off
+              the joined string, so the parts stay the single source and the
+              printed line and this one can never drift. */}
+          <p className="cv-text cv-prose font-serif text-[var(--lang-ink)]">
+            {WRITING_PARTS.map((part, i) => (
+              <Fragment key={part.link}>
+                {i > 0 ? ' · ' : null}
+                {part.before}
+                {part.to ? (
+                  <Link to={part.to} viewTransition className={RECORD_LINK}>
+                    {part.link}
+                  </Link>
+                ) : (
+                  <a
+                    href={part.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={RECORD_LINK}
+                  >
+                    {part.link}
+                    <span className="sr-only"> (opens in new tab)</span>
+                  </a>
+                )}
+                {part.after}
+              </Fragment>
+            ))}
+          </p>
         </section>
       </div>
     </SheetPage>
