@@ -25,6 +25,13 @@
 // Below `sm` the three stack back into the wrapping flex row.
 // It takes no height of its own either way: DownloadPill and a ContactLinks
 // link share the same 44px hit box.
+// THE OWNERSHIP LINE IS NOT IN HERE (her ruling, rights pass round 2,
+// 2026-07-30: "the footline should be not inside the footer but below it as one
+// line"). It lives in components/Footline.tsx as its own band underneath this
+// pill, which is also how it reaches /contact, a page that drops this footer
+// entirely. The pill is back to exactly what it was: name, role, links, tool.
+// This file gives back its `pb-3` to the footline below, which now closes the
+// frame, so the new band costs 15px of content height rather than 27.
 import { type ReactNode } from 'react'
 import ContactLinks from './ui/ContactLinks'
 
@@ -43,7 +50,9 @@ export default function Footer({ inFlow = false, tools }: {
   tools?: ReactNode
 } = {}) {
   return (
-    <footer className="shrink-0 px-3 pt-1 pb-3">
+    // pb-1, not pb-3: the Footline band below now provides the frame's closing
+    // breath, so paying for it twice would cost 27px of content, not 15.
+    <footer className="shrink-0 px-3 pt-1 pb-1">
       <div
         className={`lang-glass-1 flex flex-wrap items-center justify-between gap-x-8 gap-y-1 rounded-[var(--r-pill)] px-5 py-2.5 sm:px-7 ${
           tools ? 'sm:grid sm:grid-cols-[1fr_auto_1fr] sm:gap-x-4' : ''

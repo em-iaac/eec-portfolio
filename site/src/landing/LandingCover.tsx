@@ -31,6 +31,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } 
 import { Link, useNavigate } from 'react-router-dom'
 import ExploreErrorBoundary from '../components/ExploreErrorBoundary'
 import Footer from '../components/Footer'
+import Footline from '../components/Footline'
 import Img from '../components/Img'
 import LogoMark from '../components/LogoMark'
 import TitleBlock from '../components/TitleBlock'
@@ -805,6 +806,10 @@ export default function LandingCover() {
           `page-foot` name (see Footer). Outside <main> so it is a real
           contentinfo landmark, as on every interior page. */}
       <Footer inFlow />
+      {/* The ownership line, scrolling with the footer it belongs to (rights
+          pass round 2, 2026-07-30). The landing does not use SheetPage, so it
+          wires its own, exactly as it does for the Footer above. */}
+      <Footline />
     </>
   )
 }

@@ -509,8 +509,19 @@ function Colophon() {
         {/* The sanctioned functional touch (§9's UPDATED line), nothing more:
             the "rendered from the live site" provenance line the critique
             flagged left; unsigned voice stays off the page. */}
+        {/* THE OWNERSHIP LINE (the rights pass, 2026-07-30). A book that hands
+            21 projects to a stranger with no notice anywhere in it reads
+            unfinished, and the colophon is where a book has always said this.
+            It joins the EXISTING muted line rather than adding a row, so
+            BOOK_PAGE_COUNT cannot move and the render script's page assertion
+            still holds. The credits themselves are NOT here: they are woven
+            into every spread's meta row, which is the better place for them.
+            No year, for the same reason the site's footer has none: this file
+            renders on every build and a stale year would be baked into a PDF
+            people keep. The ATS CV gets nothing; a © line is noise to a
+            résumé parser. */}
         <span className="pr-mono pr-mono--muted">
-          {SITE} · UPDATED {UPDATED.toUpperCase()}
+          © EMILIE EL CHIDIAC · {SITE} · UPDATED {UPDATED.toUpperCase()}
         </span>
       </div>
     </A4Page>

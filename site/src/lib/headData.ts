@@ -65,6 +65,12 @@ const PAGE_DESCRIPTIONS: Record<string, string> = {
     'Get in touch with Emilie El Chidiac, Design Technology Architect: email, LinkedIn, GitHub, and the portfolio and CV as PDFs.',
   '/cv':
     'The CV of Emilie El Chidiac, Design Technology Architect: computational design, neuroarchitecture research, and AI-assisted tools. Download the PDF.',
+  // draftCopy: NEW at the rights pass (2026-07-30), unsigned. Says what the
+  // page is for without pretending to be a legal document, and carries no
+  // keyword freight: nobody is searching for this page, it just has to be
+  // honest when someone lands on it.
+  '/rights':
+    'Authorship and credit, copyright and reuse, data collected, and third-party material for this site: how collaborators are credited, what may be reused, and what the contact form collects.',
   [PILLAR_PATH]:
     'Behavior information modeling treats how a space will make someone feel as design data: score it, model it, and change the building before it is built.',
 }
@@ -74,6 +80,8 @@ const PAGE_TITLES: Record<string, string> = {
   '/thoughts': 'Thoughts' + SUFFIX,
   '/cv': 'CV' + SUFFIX,
   '/contact': 'Contact' + SUFFIX,
+  // The h1's words, so the tab and the page agree (draft until she signs it).
+  '/rights': 'The small print' + SUFFIX,
   [PILLAR_PATH]: PILLAR_PHRASE + SUFFIX,
 }
 
@@ -296,8 +304,13 @@ export async function headForRoute(pathname: string): Promise<RouteHead> {
     // It was ProfilePage while the route was /about and carried the bio; the
     // bio lives on the landing now, so ProfilePage would describe the wrong
     // document and the landing is the honest profile.
+    // /rights is a WebPage like /cv: a document, not a collection of anything.
     const type =
-      path === '/contact' ? 'ContactPage' : path === '/cv' ? 'WebPage' : 'CollectionPage'
+      path === '/contact'
+        ? 'ContactPage'
+        : path === '/cv' || path === '/rights'
+          ? 'WebPage'
+          : 'CollectionPage'
     return {
       title: PAGE_TITLES[path]!,
       description: PAGE_DESCRIPTIONS[path]!,

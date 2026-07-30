@@ -363,6 +363,17 @@ export default function Contact() {
                   {status === 'idle' && !W3F_KEY && 'opens your mail app, already filled in'}
                 </span>
               </div>
+
+              {/* NO DATA NOTE UNDER SEND (her ruling, rights pass round 2,
+                  2026-07-30: "nothing in the contact under send"). A version
+                  did ship here for an afternoon and was cut: the argument for
+                  it was that a notice belongs where the collecting happens, and
+                  she would rather the form stayed a form. The obligation is met
+                  by the FOOTLINE, which this page now carries even though it
+                  drops the footer pill (SheetPage wires it separately for
+                  exactly this reason), so /rights is one tap away from the
+                  bottom of the page without a paragraph of housekeeping sitting
+                  under her send button. Do not put it back without asking. */}
             </form>
           )}
         </div>

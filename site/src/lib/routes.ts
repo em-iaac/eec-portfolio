@@ -24,7 +24,18 @@ export const THOUGHT_IDS: string[] = ENTRIES.filter(
   (e) => e.kind === 'thought' && e.note?.status === 'drafted',
 ).map((e) => e.id)
 
-export const STATIC_ROUTES = ['/', '/work', '/thoughts', '/cv', '/contact', PILLAR_PATH]
+// '/rights' is a public route like any other (prerendered, in the sitemap, and
+// held to the same complete-and-unique head by headData.test.ts). It is simply
+// not a DOOR: the footline is its only link, per her ruling at the rights pass.
+export const STATIC_ROUTES = [
+  '/',
+  '/work',
+  '/thoughts',
+  '/cv',
+  '/contact',
+  '/rights',
+  PILLAR_PATH,
+]
 
 export const PUBLIC_ROUTES: string[] = [
   ...STATIC_ROUTES,

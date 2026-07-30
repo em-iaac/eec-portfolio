@@ -30,6 +30,7 @@ npm run videos   # re-encode the demo videos (ffmpeg, per-item crop filters)
 | `/thoughts/:id` | one essay |
 | `/behavior-information-modeling` | the pillar page for the term |
 | `/cv`, `/contact` | the record and the ways in. `/cv` prints |
+| `/rights` | ownership, credit and what the site collects. Linked from the footline only |
 | `/print/book`, `/print/cv` | the print surfaces the build renders to PDF |
 
 ## How it stays consistent
@@ -70,4 +71,13 @@ after it nearly does.
 ## Not open source
 
 The code is public so it can be read. The writing, the drawings and the project content are
-mine and are not offered for reuse.
+mine and are not offered for reuse. There is deliberately no `LICENSE` file: the default is
+all rights reserved, and for a repository that is mostly sentences the default is the right
+answer. Ask if you want to use something.
+
+Most of the work shown here was made with other people, and every collaborator is named in
+the prose of the project they worked on. Employer work belongs to the practice that paid for
+it and says so in its credit row. The four typefaces are under the SIL Open Font License and
+their notice travels with the files, at
+[`site/src/assets/fonts/OFL.txt`](site/src/assets/fonts/OFL.txt). The full picture is at
+[`/rights`](https://emiliechidiac.com/rights).

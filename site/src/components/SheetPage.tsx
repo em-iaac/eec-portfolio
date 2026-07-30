@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import TitleBlock from './TitleBlock'
 import Footer from './Footer'
+import Footline from './Footline'
 
 // THE FROZEN FRAME (rebuilt at the design audit, Emilie's ruling round 2,
 // 2026-07-19: "header with all info, the footer full bleed, the content in
@@ -62,7 +63,26 @@ export default function SheetPage({
   fadeTop?: boolean
 }) {
   return (
-    <div className="flex h-dvh flex-col overflow-hidden">
+    // `relative` FIXES A REAL SCROLL BUG (her report, 2026-07-30: "sometimes i
+    // can scroll past the footer and footline"). Reproduced on /rights with the
+    // drawers open: the whole frame scrolled 819px, taking the header off screen
+    // and leaving white below the footline.
+    //
+    // The cause was `.sr-only`, which is `position: absolute`. With no
+    // positioned ancestor, such a span resolves its containing block to the
+    // INITIAL one (the viewport), not to this frame. It therefore escapes this
+    // frame's `overflow-hidden` and contributes to the DOCUMENT's scrollable
+    // height. On a long page the "(opens in new tab)" spans sit far down the
+    // article, so the document grew to exactly the lowest one (1690px against
+    // an 871px viewport) and the window became scrollable.
+    //
+    // Making the frame a containing block puts those spans back inside the box
+    // that clips them. It cannot move anything visually: this element already
+    // sits at the viewport's origin at exactly the viewport's size, so every
+    // descendant that previously resolved against the viewport now resolves
+    // against an identical box. It also immunises every OTHER page from the
+    // same trap, which is why it is fixed here and not in Rights.tsx.
+    <div className="relative flex h-dvh flex-col overflow-hidden">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-[var(--lang-interaction)] focus:px-4 focus:py-2 focus:font-mono focus:text-nav focus:text-[var(--lang-ground)]"
@@ -70,10 +90,21 @@ export default function SheetPage({
         Skip to content
       </a>
       <TitleBlock tools={pillTools} toolsKey={toolsKey} />
+      {/* `relative` HERE IS THE ACTUAL FIX for "sometimes i can scroll past the
+          footer" (2026-07-30, round 2 of the report). Putting it only on the
+          frame above was not enough: it moved the overflow off the DOCUMENT but
+          left it on the FRAME, which `overflow-hidden` still makes a scroll
+          container (measured with /rights' drawers open: frame scrollHeight
+          1259 against a 700 client height, and `frame.scrollTop = 9999` moved
+          it 559px). `overflow: hidden` clips, it does not refuse to scroll.
+          The escaping elements are `.sr-only` spans, which are
+          `position: absolute`, and they belong to THIS scroller's content, so
+          THIS is their correct containing block. With it, they scroll along
+          with the text they annotate and the frame's overflow drops to 0. */}
       <main
         id="main"
         tabIndex={-1}
-        className="no-scrollbar flex flex-1 flex-col overflow-y-auto px-5 outline-none sm:px-8"
+        className="no-scrollbar relative flex flex-1 flex-col overflow-y-auto px-5 outline-none sm:px-8"
       >
         {fadeTop ? <div aria-hidden="true" className="scroll-scrim" /> : null}
         <div
@@ -83,13 +114,25 @@ export default function SheetPage({
         >
           {children}
         </div>
+        {/* THE FOOTLINE FOLLOWS ITS FOOTER (rights pass round 2, 2026-07-30).
+            When the pill scrolls in flow the ownership line scrolls with it, so
+            you reach the end of the document and the whole closing block is
+            simply there; when the pill is frozen the line is frozen under it.
+            A line stranded at the foot of the frame while its pill scrolled
+            away would read as a stray sentence. */}
         {footer && footerInFlow && (
           <div className="-mx-5 mt-auto sm:-mx-8">
             <Footer inFlow tools={footerTools} />
+            <Footline />
           </div>
         )}
       </main>
       {footer && !footerInFlow && <Footer tools={footerTools} />}
+      {/* IT RENDERS EVEN WHEN THE PILL DOES NOT. /contact drops the footer
+          because its contact IS the content, but it is also the only page that
+          collects anything, so the one line saying where a message goes has to
+          survive there. This is why the footline is not part of Footer. */}
+      {!(footer && footerInFlow) && <Footline />}
     </div>
   )
 }

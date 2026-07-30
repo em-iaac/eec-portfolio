@@ -25,6 +25,10 @@ const Thoughts = lazy(() => import('./pages/Thoughts'))
 const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
 const Contact = lazy(() => import('./pages/Contact'))
 const CV = lazy(() => import('./pages/CV'))
+// THE SMALL PRINT (the rights pass, 2026-07-30): ownership, credit and what
+// the site collects. Lazy like every interior page, and reached from the
+// footline only, never from the four doors.
+const Rights = lazy(() => import('./pages/Rights'))
 // THE PILLAR (S3): the one Behavior Information Modeling definition surface
 // (CONTENT-STRATEGY.md D6, topical authority). Lazy like every interior page.
 const Pillar = lazy(() => import('./pages/Pillar'))
@@ -275,6 +279,17 @@ export const routes: RouteObject[] = [
         element: (
           <Suspense fallback={<GroundHold />}>
             <CV />
+          </Suspense>
+        ),
+      },
+      {
+        // THE SMALL PRINT (the rights pass, 2026-07-30). No door lights for it
+        // (activeDoor returns -1 for non-door rooms, like the pillar and 404),
+        // which is correct: the footline is its only way in.
+        path: '/rights',
+        element: (
+          <Suspense fallback={<GroundHold />}>
+            <Rights />
           </Suspense>
         ),
       },
