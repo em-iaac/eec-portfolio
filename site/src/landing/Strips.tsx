@@ -30,8 +30,10 @@
 // bundle, the mind graph reads it) or in artifacts.tsx (11kB of pure SVG). So
 // the strip tile IS the /work plate, rendered from the record, at zero extra
 // weight. The dek lives one click away, where it always did.
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import useBeltDrift from './useBeltDrift'
+import useHasHover from '../hooks/useHasHover'
 import Img from '../components/Img'
 import { LensMark } from '../components/ui/Pill'
 import { WORK_ARTIFACTS } from '../components/work/artifacts'
@@ -112,6 +114,7 @@ export function StripTile({
   awardLabel?: string
 }) {
   const [hovered, setHovered] = useState(false)
+  const hasHover = useHasHover()
   return (
     <Link
       to={`/work/${project.id}`}
@@ -127,11 +130,20 @@ export function StripTile({
       // morph at all. `tabbable` already marks the real run, so it doubles as
       // the flag here rather than threading a second one through.
       style={tabbable ? { viewTransitionName: vtName(`/work/${project.id}`) } : undefined}
-      onPointerEnter={() => setHovered(true)}
+      // Mouse only, same reason as the /work tile (WorkCard.tsx): pointerenter
+      // fires for touch, so a tap used to flash the cover on for the instant
+      // before the page changed. The belt tile always renders the STILL rung,
+      // so no animated file was ever pulled here, but the flash was real.
+      onPointerEnter={(e) => {
+        if (e.pointerType === 'mouse') setHovered(true)
+      }}
       onPointerLeave={() => setHovered(false)}
       onFocus={() => setHovered(true)}
       onBlur={() => setHovered(false)}
-      className="lang-glass-1 lang-lift block w-full overflow-hidden rounded-[var(--r-card)] no-underline transition-colors hover:border-[var(--lang-ink-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+      // h-full for the same reason as the thought leaf below: the row stretches
+      // its slots, so the card must fill its slot or a taller neighbour leaves
+      // it short.
+      className="lang-glass-1 lang-lift block h-full w-full overflow-hidden rounded-[var(--r-card)] no-underline transition-colors hover:border-[var(--lang-ink-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
     >
       <div
         className="work-plate aspect-video w-full"
@@ -165,7 +177,9 @@ export function StripTile({
             </span>
           )}
         </span>
-        {project.image && (
+        {/* Same rule as the /work tile: a cover that only appears under a
+            resting pointer is dead weight on a device that has none. */}
+        {project.image && hasHover && (
           <span className={`work-plate__cover ${hovered ? 'is-on' : ''}`} aria-hidden={!hovered}>
             <Img
               slug={project.image.slug}
@@ -207,24 +221,43 @@ export function ThoughtTile({
       tabIndex={tabbable ? undefined : -1}
       // Same morph contract as the work tile, same one-copy rule.
       style={tabbable ? { viewTransitionName: vtName(route) } : undefined}
-      className="lang-glass-1 lang-lift block w-full overflow-hidden rounded-[var(--r-card)] px-3.5 py-3 no-underline transition-colors hover:border-[var(--lang-ink-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+      // h-full: EVERY LEAF IS THE SAME SIZE (Emilie, 2026-08-02: "make sure
+      // that all thoughts tiles are the same size, right now the bim one is
+      // bigger"). The row's <li> slots were already equal (flex stretches
+      // them), but the card inside only grew to its own content, so the one
+      // title long enough to wrap, "behavior information modeling", made a
+      // 163px card while every other made a 139px one. Measured on the phone
+      // belt. Filling the slot makes them a set again, on both belts.
+      className="lang-glass-1 lang-lift flex h-full w-full flex-col overflow-hidden rounded-[var(--r-card)] px-3.5 py-3 no-underline transition-colors hover:border-[var(--lang-ink-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
     >
-      <span className="flex items-start gap-2.5">
-        <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true" className="mt-1.5 shrink-0">
+      {/* ONE ANATOMY FOR BOTH CARDS (Emilie's ruling 2026-08-02, board option A:
+          "the title of the card should be smaller, matching the title of the
+          project, and the date should be consistent placing across all cards,
+          let's revise this system").
+          The project plate reads DRAWING, then title, then a meta line (its ✦
+          award). This read title, then excerpt, then date: a different order at
+          a different size, so the two belts were two designs sharing a page.
+          Now both are the same three parts in the same places, and the foot is
+          where a card's title and its one piece of meta always live.
+          THE TITLE KEEPS ITS VOICE. She asked for the SIZE to match, not the
+          face: lowercase serif italic is how a thought is set everywhere on
+          this site, so it stays that and steps 17px -> 13px (--text-small),
+          which is the project title's rung. */}
+      <span className="min-h-0 flex-1 text-nav leading-relaxed text-[var(--lang-ink-muted)]">
+        {opening && <span className="line-clamp-3">{opening}</span>}
+      </span>
+      <span className="mt-2.5 flex flex-none items-start gap-2">
+        <svg width="11" height="11" viewBox="0 0 14 14" aria-hidden="true" className="mt-0.5 shrink-0">
           <circle cx="7" cy="7" r="4.6" fill="none" stroke="var(--lang-ink)" strokeWidth="1.6" />
         </svg>
-        <span className="font-serif text-prose leading-snug font-medium lowercase italic tracking-[-0.005em] text-[var(--lang-ink)]">
+        <span className="font-serif text-small leading-tight font-medium lowercase italic tracking-[-0.005em] text-[var(--lang-ink)]">
           {title}
         </span>
       </span>
-      {opening && (
-        <span className="mt-2 block text-nav leading-relaxed text-[var(--lang-ink-muted)]">
-          <span className="line-clamp-3">{opening}</span>
-        </span>
-      )}
       {/* The T-number retired from the face with the P-numbers (Emilie's cut,
-          2026-07-27); the date is the part a reader actually uses. */}
-      <span className="mt-2.5 block font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
+          2026-07-27); the date is the part a reader actually uses. It sits
+          exactly where the project tile's ✦ line sits. */}
+      <span className="mt-1 flex-none font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
         {fmtMonthYear(date)}
       </span>
     </Link>
@@ -250,22 +283,74 @@ export function ThoughtTile({
  *  width of the phone while keeping the page's own gutter as its first inset. */
 export function HorizontalBelt({
   label,
-  children,
+  paused = false,
+  reverse = false,
+  items,
 }: {
   label: string
-  children: React.ReactNode
+  paused?: boolean
+  reverse?: boolean
+  /** Called TWICE, exactly like the desktop Column: once for the real run and
+   *  once for the loop seam, which must render its links unfocusable. */
+  items: (tabbable: boolean) => React.ReactNode
 }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLUListElement>(null)
+  useBeltDrift({ ref, trackRef, axis: 'x', paused, reverse })
   return (
     <section aria-label={label} className="lg:hidden">
-      <ul
-        className="no-scrollbar -mx-6 flex snap-x snap-mandatory list-none gap-2.5 overflow-x-auto px-6 pb-1"
+      {/* IT DRIFTS, AND THE THUMB STILL OWNS IT (Emilie, 2026-08-02). The row
+          used to be deliberately still, on the reasoning that "a row that moves
+          while you are trying to swipe it is fighting the one input the device
+          has". Sound, and too strong: the fight only happens if the drift
+          ignores the thumb. Here a touch takes the belt, a flick throws it, and
+          the drift picks up from wherever it was left.
+          IT IS CLIPPED, NOT SCROLLED, and that is the second build. As a native
+          scroller the drift ticked one whole pixel every 250ms, because
+          scrollLeft is an integer and she set 4px/s; she saw it immediately.
+          useBeltDrift carries the full account. `touch-action: pan-y` (in
+          .hbelt) is what lets the page still scroll vertically through it. */}
+      <div
+        ref={ref}
+        className="hbelt -mx-6 px-6"
         style={{
           WebkitMaskImage: 'linear-gradient(to right, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%)',
           maskImage: 'linear-gradient(to right, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%)',
         }}
       >
-        {children}
-      </ul>
+        {/* THE SPACING IS A PER-TILE MARGIN, NOT A FLEX GAP, for the same
+            reason the column's is: the loop wraps by exactly half the track,
+            and a gap puts (2n - 1) gutters between 2n tiles, so half a track
+            would fall one gutter short and jump every cycle. The margin is on
+            the tiles themselves (LandingCover), so the seam copy carries it
+            too. */}
+        <ul ref={trackRef} className="flex w-max list-none pb-1">
+          {/* THE REAL RUN GOES SECOND ON A REVERSE BELT, and that is not a
+              detail. One of the two runs is the SEAM: it duplicates items
+              already in the tab order, so it is aria-hidden and unfocusable. A
+              reverse belt starts at half the track (it has to, or it would run
+              off its own beginning), which means the run sitting ON SCREEN at
+              rest is the SECOND one. Put the real run first and every tile a
+              visitor can see at rest is the aria-hidden copy, which is exactly
+              backwards. Ordering by direction keeps what is visible and what is
+              announced as the same thing. */}
+          {reverse ? (
+            <>
+              <li aria-hidden="true" className="contents">
+                {items(false)}
+              </li>
+              {items(true)}
+            </>
+          ) : (
+            <>
+              {items(true)}
+              <li aria-hidden="true" className="contents">
+                {items(false)}
+              </li>
+            </>
+          )}
+        </ul>
+      </div>
     </section>
   )
 }
@@ -280,17 +365,22 @@ function Column({
   label,
   down = false,
   className = '',
+  paused = false,
   items,
 }: {
   label: string
   down?: boolean
   className?: string
+  paused?: boolean
   /** Called TWICE: once for the real run and once for the loop seam, which
    *  must render its links unfocusable. A plain children node cannot express
    *  that, and an aria-hidden subtree containing focusable links is a WCAG
    *  failure, not a detail. */
   items: (tabbable: boolean) => React.ReactNode
 }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  useBeltDrift({ ref, trackRef, axis: 'y', paused, reverse: down })
   return (
     <div className={`flex min-w-0 flex-1 flex-col ${className}`}>
       {/* THE HEADER ROW IS GONE, THE HEADING IS NOT (Emilie's cut, 2026-07-27,
@@ -302,19 +392,45 @@ function Column({
           what they had entered. So the h2 stays, sr-only: the outline keeps its
           structure and the screen keeps its quiet. */}
       <h2 className="sr-only">{label}</h2>
-      <div className="lstrip min-h-0 flex-1">
-        <div className={`lstrip__track${down ? ' lstrip__track--down' : ''}`}>
+      {/* THE CURSOR CAN TAKE HOLD OF IT NOW (Emilie, 2026-08-02: "I actually
+          would want to add the swipe to the desktop through the cursor"). The
+          box is UNCHANGED: still `overflow: hidden`, still masked at both ends,
+          still a transformed track. What changed is who moves the track, from a
+          CSS keyframe nothing could interrupt to useBeltDrift, which drifts it
+          at the same ~4px/s and hands it to the mouse on a press.
+          It stays clipped rather than becoming a scroller ON PURPOSE: a
+          scroller only gives the wheel back to the page at its own end, and a
+          belt that loops has no end, so the cursor resting over the belts would
+          have stopped the page scrolling. See useBeltDrift.
+          The tiles keep their per-tile MARGIN rather than a flex gap: the loop
+          wraps by exactly half the track, and a gap puts (2n - 1) gutters
+          between 2n tiles, so half a track would fall one gutter short and jump
+          every cycle. */}
+      <div ref={ref} className="lstrip min-h-0 flex-1">
+        <div ref={trackRef} className="lstrip__track">
           {/* display:contents keeps each copy's keys in their own parent (one
               array rendered twice as siblings would collide) while the tiles
               stay direct flex items of the track. */}
-          <div className="contents">{items(true)}</div>
-          {/* THE SECOND COPY IS THE SEAM, NOT CONTENT. It exists so -50% loops
-              without a jump; every item in it duplicates one already in the tab
-              order, so it is hidden from assistive tech AND rendered
-              unfocusable. Tabbing a belt walks each project exactly once. */}
-          <div className="contents" aria-hidden="true">
-            {items(false)}
-          </div>
+          {/* THE SEAM COPY LEADS ON A REVERSE COLUMN (same reasoning as the
+              horizontal belt): a reverse belt rests at half the track, so
+              whichever run is second is the one on screen, and the run on
+              screen must be the real one rather than the aria-hidden duplicate.
+              Tabbing a belt walks each project exactly once either way. */}
+          {down ? (
+            <>
+              <div className="contents" aria-hidden="true">
+                {items(false)}
+              </div>
+              <div className="contents">{items(true)}</div>
+            </>
+          ) : (
+            <>
+              <div className="contents">{items(true)}</div>
+              <div className="contents" aria-hidden="true">
+                {items(false)}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -389,6 +505,7 @@ export default function Strips({
       <div className="flex min-h-0 flex-1 gap-5">
         <Column
           label={`The work · ${STRIP_PROJECTS.length}`}
+          paused={paused}
           items={(tabbable) =>
             BELT_PROJECTS.map((p) => (
               <div key={p.id} className="lstrip__cell">
@@ -410,6 +527,7 @@ export default function Strips({
           className="hidden xl:flex"
           label={`The thoughts · ${thoughts.length}`}
           down
+          paused={paused}
           items={(tabbable) =>
             thoughts.map((t) => (
               <div key={t.id} className="lstrip__cell">

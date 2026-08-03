@@ -40,6 +40,7 @@ import { preloadPath } from '../../lib/preloadRoute'
 import { travelTo } from '../../lib/navIntent'
 import { useProximityEngine, TUNE, type ConnHandle, type NodeHandle } from './useProximityEngine'
 import WorldSrNav from './WorldSrNav'
+import { PRERENDERING } from '../../lib/prerender'
 
 // The lens accents come from the one source (components/Lens.tsx): these land
 // on SVG presentation attributes, so they must be the literal light-dark()
@@ -87,6 +88,13 @@ interface CardState {
 
 const HIT_R = 34 // 68 canvas units: >= 44px down to ~560px-tall viewports
 
+// THE DRAWING IS NOT PRERENDERED (Emilie's ruling 2026-08-02, phone pass; the
+// full why is in lib/prerender.ts). thoughts.html was 118.5KB gzipped for this
+// SVG alone, and a phone paid for it twice: once as document bytes, then again
+// when createRoot threw the prerendered DOM away and rebuilt it. WorldSrNav
+// below carries the readable record either way, so the snapshot keeps the page
+// and the drawing arrives with the JavaScript that was always going to redraw
+// it. Nothing about the loaded page changes.
 export default function NeuralWorld() {
   const prm = usePrefersReducedMotion()
   const navigate = useNavigate()
@@ -97,6 +105,11 @@ export default function NeuralWorld() {
   const plumbLineRef = useRef<SVGLineElement>(null)
   const plumbDotRef = useRef<SVGCircleElement>(null)
   const [card, setCard] = useState<CardState | null>(null)
+  // THE CARD FOLDING AWAY UNDER A DRAG (Emilie, 2026-08-02). `true` for the one
+  // beat between a pan starting and the card finishing its retraction; the node
+  // it belongs to STAYS locked and lit throughout, which is the whole point.
+  // State, not a ref, because it drives a class.
+  const [collapsing, setCollapsing] = useState(false)
   // The LOCKED node id lives in a ref (not state) so the mount-time drag/Escape
   // handlers close over a stable handle, never a stale render's card (S6-A,
   // Emilie 2026-07-24: hover glances, a click LOCKS the card, click again /
@@ -158,9 +171,16 @@ export default function NeuralWorld() {
         }, 2600)
       } else {
         const stored = Number(sessionStorage.getItem('nw-scroll'))
-        stage.scrollLeft = Number.isFinite(stored) && stored > 0
-          ? stored
-          : (stage.scrollWidth - stage.clientWidth) * 0.35
+        // LAND ON TODAY (Emilie's pick 2026-08-02). A first arrival used to
+        // start at 35% of the track, which is a number, not a place: a stranger
+        // was dropped into the middle of a timeline with no way of knowing
+        // which way was forward. The live tip is where the record currently
+        // is, so the map opens on the present and reads backwards, the way a
+        // record is read. Returning from a note still restores where you were.
+        stage.scrollLeft =
+          Number.isFinite(stored) && stored > 0
+            ? stored
+            : Math.max(0, WORLD.skeleton.nowAt.x * scale - stage.clientWidth / 2)
       }
     })
     return () => {
@@ -179,19 +199,51 @@ export default function NeuralWorld() {
     if (!stage) return
     let drag: { x: number; s: number } | null = null
     let saveTimer = 0
+    // A TAP ON EMPTY FIELD CLOSES THE CARD. A DRAG DOES NOT (Emilie,
+    // 2026-08-02: "when I press I see the connections form but some are out of
+    // the screen, and when I swipe to go there it retracts").
+    //
+    // `dismiss()` used to run on POINTERDOWN, before the gesture had told
+    // anyone what it was. With a mouse that is invisible: you click empty space
+    // to dismiss, and panning is a separate deliberate act. On a phone, panning
+    // IS a press on empty field, so the very gesture for going to look at a
+    // connection was the gesture that threw it away. The world could show you a
+    // thread to something off screen and then refuse to let you follow it.
+    // So the decision waits for pointerUP and only fires if the finger stayed
+    // put. Same tap-versus-drag rule as the landing belts (useBeltDrift).
+    // THE MAP STICKS TO THE FINGER (Emilie, 2026-08-02, asking to maximise the
+    // phone experience). The stage is `overflow-x: auto` with
+    // `touch-action: pan-x pan-y`, so the BROWSER already pans it on touch, and
+    // this handler was panning it a second time by the same delta. Measured: a
+    // 120px swipe moved the world 144px, so the map slid out from under the
+    // thumb and a flick's momentum fought the script the whole way.
+    // A mouse gets nothing from the browser here and still needs this. Touch
+    // needs only the tap-versus-drag bookkeeping, which is why `moved` is
+    // tracked for every pointer type while only a mouse drives the scroll.
+    let moved = 0
+    let scrolls = false
     const down = (e: PointerEvent) => {
       if ((e.target as Element).closest('.nw-node, a, button')) return
-      // a press on empty field closes the locked card (1.4.13; her "empty
-      // space closes it")
-      dismiss()
+      moved = 0
+      scrolls = e.pointerType === 'mouse'
       drag = { x: e.clientX, s: stage.scrollLeft }
-      stage.classList.add('dragging')
+      if (scrolls) stage.classList.add('dragging')
     }
     const move = (e: PointerEvent) => {
       if (!drag) return
-      stage.scrollLeft = drag.s - (e.clientX - drag.x)
+      const dx = e.clientX - drag.x
+      const wasStill = moved <= 4
+      moved = Math.max(moved, Math.abs(dx))
+      // The moment a press becomes a pan, the card folds back into its mark
+      // (her ask, same day). The LOCK is untouched, so the node stays awake and
+      // its threads stay drawn while you travel along them. Fired once, on the
+      // crossing, not on every move event.
+      if (wasStill && moved > 4) collapseCard()
+      if (scrolls) stage.scrollLeft = drag.s - dx
     }
     const up = () => {
+      // 4px, the same slop the belts use to tell a tap from a drag.
+      if (drag && moved <= 4) dismiss()
       drag = null
       stage.classList.remove('dragging')
     }
@@ -349,6 +401,64 @@ export default function NeuralWorld() {
 
   const hideCard = () => setCard(null)
 
+  // FOLD THE CARD AWAY, KEEP THE NODE (Emilie, 2026-08-02). Distinct from
+  // dismiss() below, and the distinction is the feature: dismiss RELEASES the
+  // locked node, this only puts its card away. A pan calls this, so the thread
+  // you are following stays lit while the panel stops covering it.
+  // Idempotent: a second call mid-retraction is ignored, so a long drag folds
+  // the card once rather than restarting the animation every frame.
+  const collapseTimer = useRef(0)
+  function collapseCard() {
+    if (!lockedId.current || collapsing) return
+    setCollapsing(true)
+    window.clearTimeout(collapseTimer.current)
+    // Matches .infocard-exit in index.css. A timer rather than animationend
+    // because the element is aria-hidden decoration and a missed event would
+    // strand it half-folded.
+    collapseTimer.current = window.setTimeout(() => {
+      setCard(null)
+      setCollapsing(false)
+    }, 170)
+  }
+  useEffect(() => () => window.clearTimeout(collapseTimer.current), [])
+
+  // THE WORLD BRINGS WHAT YOU TAPPED INTO VIEW (Emilie's pick 2026-08-02).
+  // A mark near a side edge had most of its threads off screen, and following
+  // one meant panning, which is exactly when the card used to vanish. Sliding
+  // the tapped mark to the middle means its connections are always reachable in
+  // both directions. Reduced motion jumps instead of gliding, and a mark that
+  // is already near enough to the middle is left alone: re-centring by 12px is
+  // a twitch, not a movement.
+  const HORIZON_PX = 90
+  function scrollToWorldX(worldX: number, smooth = true) {
+    const stage = stageRef.current
+    const svg = svgRef.current
+    if (!stage || !svg) return
+    const scale = svg.getBoundingClientRect().height / WORLD.h || 1
+    const target = worldX * scale - stage.clientWidth / 2
+    const max = stage.scrollWidth - stage.clientWidth
+    const left = Math.max(0, Math.min(max, target))
+    const distance = Math.abs(left - stage.scrollLeft)
+    if (distance < 8) return
+    // A GLIDE ONLY WHERE A GLIDE MEANS SOMETHING. Smooth scrolling a track this
+    // wide is a several-second ride: measured, a tap on the far end of the
+    // record asked for a 4900px journey, which is not a transition, it is a
+    // wait. Under two screens the movement shows you the relationship between
+    // where you were and where you are; beyond that it only shows you a blur,
+    // so it cuts.
+    const glide = smooth && !prm && distance < stage.clientWidth * 2
+    stage.scrollTo({ left, behavior: glide ? 'smooth' : 'auto' })
+  }
+  function centreOn(id: string) {
+    const stage = stageRef.current
+    const h = nodesRef.current.get(id)
+    if (!stage || !h) return
+    const x = h.soma?.getBoundingClientRect().left ?? 0
+    // Already comfortably inside the frame: leave it where it is.
+    if (x > HORIZON_PX && x < stage.clientWidth - HORIZON_PX) return
+    scrollToWorldX(h.x)
+  }
+
   function setForce(id: string, t: number) {
     const h = nodesRef.current.get(id)
     if (!h) return
@@ -364,6 +474,10 @@ export default function NeuralWorld() {
       setForce(lockedId.current, 0)
       lockedId.current = null
     }
+    // A close during a fold must win outright, or the pending timer would
+    // clear a card that has already been replaced by a newly tapped one.
+    window.clearTimeout(collapseTimer.current)
+    setCollapsing(false)
     setCard(null)
   }
 
@@ -386,6 +500,7 @@ export default function NeuralWorld() {
     if (lockedId.current && lockedId.current !== n.id) setForce(lockedId.current, 0)
     lockedId.current = n.id
     setForce(n.id, 1)
+    centreOn(n.id)
     showCard(n, true)
   }
 
@@ -418,6 +533,13 @@ export default function NeuralWorld() {
           lines identical everywhere, the canvas clean of chrome): the pill
           left, WATCH IT GROW on the header line right, exactly like every
           other page's tools. */}
+      {/* ON THE HEADER LINE FROM lg UP, and nowhere near it below (Emilie,
+          2026-08-02: "we need to find a better placement for the WATCH IT GROW
+          and spacing and size"). Measured at 390: the button was 149x32 with
+          its top edge at 70px, which is the pill's bottom edge exactly, so it
+          touched the chrome above it AND missed the 44px touch floor by 12px.
+          Below lg it moves to the corner (further down), as a round 44px
+          control. The header line keeps it where there is room for words. */}
       <TitleBlock
         toolsKey="world"
         tools={
@@ -425,7 +547,7 @@ export default function NeuralWorld() {
             <button
               type="button"
               onClick={engine.replay}
-              className="inline-flex min-h-8 items-center rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3 font-mono text-label tracking-[0.1em] text-[var(--lang-ink)] hover:border-[var(--lang-interaction)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+              className="hidden min-h-11 items-center rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3 font-mono text-label tracking-[0.1em] text-[var(--lang-ink)] hover:border-[var(--lang-interaction)] hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)] lg:inline-flex"
             >
               ⟳ WATCH IT GROW
             </button>
@@ -448,11 +570,36 @@ export default function NeuralWorld() {
             the legend (left) + the drag hint (right), one glass line at the
             footer's height + insets so it reads the same as every page.
             pointer-events-none so a drag still passes through to the stage. */}
-        <div className="pointer-events-none fixed inset-x-0 bottom-2 z-[3] px-5 sm:px-8">
-          <div className="lang-glass-1 mx-auto flex max-w-[1856px] flex-wrap items-center justify-between gap-x-6 gap-y-1 rounded-[var(--r-card)] px-5 py-2.5 sm:px-7">
+        {/* THE KEY READS AT THE TOP, THE CONTROLS SIT IN THE THUMB (Emilie's
+            ruling 2026-08-02, board option C, from her own question: "what
+            about the legend at the top below the header and the control below
+            as a band?"). They were one band at the foot doing two unrelated
+            jobs. Split, each goes where its job belongs: a key is reference you
+            glance at, so it sits at the top where the eye starts, and the
+            controls are the one thing you TOUCH, so they sit at the bottom,
+            which is the only part of a phone a thumb reaches without
+            re-gripping. It also gives the world a line above and a line below,
+            which is the header-line/footer-line frame the rest of the site
+            already wears.
+            pointer-events-none on both wrappers so a drag passes through to the
+            stage; only the button re-enables its own. */}
+        {/* top-[5.5rem] = 88px, an 18px breath under the pill's 70px bottom
+            edge (Emilie, 2026-08-02: "the legend at the top doesn't have a gap
+            between it and the header"). At 4.25rem it began at 68px and
+            actually overlapped the pill by 2px.
+            AND IT IS NOT A PILL (her call, same message: "maybe the legend
+            doesn't need to be inside a pill for a cleaner look"). She is right,
+            and it is safe here in a way it would not have been at the foot: the
+            world is inset to start BELOW this band, so nothing passes behind
+            these marks and there is nothing for glass to lift them off. A key
+            is not chrome, it is a caption; bare on the ground is what a caption
+            looks like. The control band at the foot keeps its pill, because
+            that one IS chrome and the world does run under it. */}
+        <div className="pointer-events-none fixed inset-x-0 top-[5.5rem] z-[3] px-5 sm:px-8">
+          <div className="mx-auto flex max-w-[1856px] flex-wrap items-center justify-center gap-x-6 gap-y-1 px-1">
             <div
               aria-hidden="true"
-              className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)] sm:gap-x-4 sm:text-micro sm:tracking-[0.1em]"
+              className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)] sm:gap-x-4 sm:text-micro sm:tracking-[0.1em]"
             >
               <span className="inline-flex items-center gap-1.5">
                 <svg width="16" height="16" viewBox="0 0 16 16" className="overflow-visible">
@@ -481,12 +628,54 @@ export default function NeuralWorld() {
               </span>
               <span className="text-[var(--lang-interaction)]">RED = LIVE</span>
             </div>
+          </div>
+        </div>
+
+        {/* THE CONTROL BAND. WATCH IT GROW on the left, the drag hint on the
+            right, one line at the foot. The button is a real labelled control
+            here rather than the cornered glyph of the previous build: down here
+            there is a whole row for it, so it can say what it does. */}
+        <div className="pointer-events-none fixed inset-x-0 bottom-2 z-[3] px-5 sm:px-8">
+          <div className="lang-glass-1 mx-auto flex max-w-[1856px] flex-wrap items-center justify-between gap-x-6 gap-y-1 rounded-[var(--r-card)] px-5 py-1.5 sm:px-7">
+            <span className="flex items-center gap-x-4">
+              {!prm && (
+                <button
+                  type="button"
+                  onClick={engine.replay}
+                  className="pointer-events-auto inline-flex min-h-11 items-center gap-1.5 font-mono text-micro tracking-[0.12em] text-[var(--lang-ink)] transition-colors hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] lg:hidden"
+                >
+                  <span aria-hidden="true">⟳</span> WATCH IT GROW
+                </button>
+              )}
+              {/* THE WAY BACK TO TODAY (Emilie's pick 2026-08-02). The map opens
+                  on the present now, but it is a wide thing to pan and there was
+                  no way home once you had travelled: you could get lost in 2022
+                  and only find your way out by dragging. One tap returns to the
+                  live tip. It reads TODAY rather than NOW because NOW is already
+                  the name of the mark it travels to, and a control should not
+                  share a name with its destination. */}
+              <button
+                type="button"
+                onClick={() => scrollToWorldX(WORLD.skeleton.nowAt.x)}
+                className="pointer-events-auto inline-flex min-h-11 items-center gap-1.5 font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+              >
+                <span aria-hidden="true">→</span> TODAY
+              </button>
+            </span>
             <p
               aria-hidden="true"
               className="font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)]"
             >
-              <b className="font-normal text-[var(--lang-ink)]">DRAG</b> TO EXPLORE ·{' '}
-              <b className="font-normal text-[var(--lang-ink)]">IT WAKES WHERE YOU LOOK</b>
+              {/* The second clause waits for sm. At 390 the button and the full
+                  sentence are 340px against 342 of row, so it wrapped and the
+                  control band doubled to 76px. "IT WAKES WHERE YOU LOOK"
+                  describes a POINTER anyway, which is the one thing the phone
+                  reading this does not have. */}
+              <b className="font-normal text-[var(--lang-ink)]">DRAG</b> TO EXPLORE
+              <span className="hidden sm:inline">
+                {' '}
+                · <b className="font-normal text-[var(--lang-ink)]">IT WAKES WHERE YOU LOOK</b>
+              </span>
             </p>
           </div>
         </div>
@@ -504,6 +693,7 @@ export default function NeuralWorld() {
           aria-label="The whole mind as one neural world: every project, thought, milestone and award in time. It wakes near your pointer; drag sideways to explore."
         >
           <svg ref={svgRef} viewBox={`0 0 ${WORLD.w} ${WORLD.h}`} preserveAspectRatio="xMidYMid meet">
+            {PRERENDERING ? null : <>
             {/* year columns */}
             <g aria-hidden="true">
               {sk.years.map((y) => (
@@ -770,6 +960,7 @@ export default function NeuralWorld() {
                 <stop offset="100%" stopColor="var(--lang-ink)" stopOpacity={0} />
               </radialGradient>
             </defs>
+            </>}
           </svg>
         </section>
 
@@ -781,7 +972,9 @@ export default function NeuralWorld() {
         {card && (
           <aside
             aria-hidden="true"
-            className={`nw-fieldcard lang-glass-2 infocard-enter fixed z-[6] rounded-[var(--r-sheet)] ${
+            className={`nw-fieldcard lang-glass-2 fixed z-[6] rounded-[var(--r-sheet)] ${
+              collapsing ? 'infocard-exit' : 'infocard-enter'
+            } ${
               card.locked
                 ? 'pointer-events-auto max-w-[300px] px-4 py-3.5'
                 : 'pointer-events-none max-w-[264px] px-3.5 py-2.5'
@@ -798,11 +991,34 @@ export default function NeuralWorld() {
               viewTransitionName: card.route ? vtName(card.route) : undefined,
             }}
           >
-            <div className="flex justify-between gap-3 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
-              <span>{card.date}</span>
-              <span className={card.red ? 'text-[var(--lang-interaction)]' : 'text-[var(--lang-ink)]'}>
-                {card.kind}
+            <div className="flex items-start justify-between gap-3 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
+              <span className="flex min-w-0 flex-wrap items-center gap-x-2">
+                <span>{card.date}</span>
+                <span className={card.red ? 'text-[var(--lang-interaction)]' : 'text-[var(--lang-ink)]'}>
+                  {card.kind}
+                </span>
               </span>
+              {/* A WAY OUT THAT IS NOT A GUESS (Emilie, 2026-08-02: "I want to
+                  have an x button on the thought card in case I want to close
+                  it"). Until now the ways to close were tapping the same node
+                  again, tapping empty field, or Escape, and a phone visitor is
+                  told none of them. The date and kind moved onto one line to
+                  make room; the glyph is small but its hit box is the 44px
+                  `after:` extender the footline and the pill links use, so the
+                  target is full size while the card stays a chip.
+                  tabIndex -1 like the OPEN button beside it: this whole aside is
+                  aria-hidden decoration and the keyboard travels via
+                  WorldSrNav, where Escape already closes. */}
+              {card.locked && (
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={dismiss}
+                  className="relative -mt-0.5 shrink-0 text-body leading-none text-[var(--lang-ink-muted)] transition-colors after:absolute after:top-1/2 after:left-1/2 after:size-11 after:-translate-x-1/2 after:-translate-y-1/2 after:content-[''] hover:text-[var(--lang-ink)]"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              )}
             </div>
             <p
               className={`mt-1.5 leading-snug font-semibold text-[var(--lang-ink)] ${

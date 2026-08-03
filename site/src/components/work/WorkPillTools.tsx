@@ -26,11 +26,24 @@ import { WORK_LENSES } from '../../data/work'
 // colour never means alone. `flat` renders the same semantics with
 // display:contents wrappers so each pill wraps independently inside the
 // corner cluster (a rigid row block cannot reflow there).
-export function WorkFilterRow({ active, flat = false }: { active: Lens | null; flat?: boolean }) {
+export function WorkFilterRow({
+  active,
+  flat = false,
+  nowrap = false,
+}: {
+  active: Lens | null
+  flat?: boolean
+  /** THE PHONE'S ROW DOES NOT WRAP (Emilie's ruling 2026-08-02). Wrapped, four
+   *  lenses took three lines and 148px of a 844px screen; on one row that runs
+   *  off the frame they take 52. The caller owns the scrolling and the bleed;
+   *  this only has to stop the pills folding and stop them being squeezed. */
+  nowrap?: boolean
+}) {
+  const rowCls = nowrap ? 'flex items-center' : 'flex flex-wrap items-center'
   return (
-    <div className={flat ? 'contents' : '-mx-1 flex flex-wrap items-center'}>
+    <div className={flat ? 'contents' : `-mx-1 ${rowCls}`}>
       <div
-        className={flat ? 'contents' : 'flex flex-wrap items-center'}
+        className={flat ? 'contents' : rowCls}
         role="group"
         aria-label="Filter by lens"
       >
@@ -40,7 +53,8 @@ export function WorkFilterRow({ active, flat = false }: { active: Lens | null; f
           viewTransition
           active={active === null}
           aria-current={active === null ? 'true' : undefined}
-          className="px-1"
+          dense={nowrap}
+          className={nowrap ? 'shrink-0 px-0.5' : 'px-1'}
         >
           ALL
         </FilterPill>
@@ -53,9 +67,20 @@ export function WorkFilterRow({ active, flat = false }: { active: Lens | null; f
             active={active === l}
             aria-current={active === l ? 'true' : undefined}
             leading={<LensMark lens={l} active={active === l} />}
-            className="px-1"
+            dense={nowrap}
+            className={nowrap ? 'shrink-0 px-0.5' : 'px-1'}
+            // THE SHORT FORM ON THE CHIP (Emilie, 2026-08-02: "let's have alias
+            // for the filters so they fit, so research, practice, instead of
+            // the full names"). No new wording was needed: components/Lens.tsx
+            // has carried both forms since 2026-07-26 and says why, that the
+            // long name is what a screen reader hears and the short one is what
+            // a chip can hold. The filter row had simply been using the long
+            // one, which took three wrapped lines at 390 and still ran off the
+            // frame once flattened to a row. `aria-label` keeps the long name
+            // where that file says it belongs.
+            aria-label={LENSES[l].label}
           >
-            {LENSES[l].label.toUpperCase()}
+            {LENSES[l].short.toUpperCase()}
           </FilterPill>
         ))}
       </div>

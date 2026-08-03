@@ -194,10 +194,20 @@ export default function TitleBlock({
           }`}
         />
         {/* The mode toggle squeezes out with the doors: collapsed, the pill is
-            the mark and nothing else, which is the whole point of collapsing. */}
+            the mark and nothing else, which is the whole point of collapsing.
+            THE CUT MOON (Emilie, 2026-08-02, phone pass). This wrapper clips
+            (it has to, that is how the squeeze reads as a squeeze), and it was
+            the ONLY flex item in the pill without shrink-0. At 390px the mark +
+            four doors + divider + toggle ask for more than the pill's 366px, so
+            flex took the difference out of the one item that would give: the
+            wrapper collapsed 44 -> 40.7px and sliced 3.3px off the right of the
+            circle. Invisible in light (the sun is an outline), obvious in dark
+            (the moon is a filled shape). shrink-0 is the fix: the round control
+            is a 44px touch target, not slack. The pill's real crowding at phone
+            widths is a separate, larger question. */}
         <div
           inert={collapsed}
-          className={`flex items-center overflow-hidden transition-[max-width,opacity] duration-300 ease-[var(--ease-soft)] motion-reduce:transition-none ${
+          className={`flex shrink-0 items-center overflow-hidden transition-[max-width,opacity] duration-300 ease-[var(--ease-soft)] motion-reduce:transition-none ${
             collapsed ? 'max-w-0 opacity-0' : 'max-w-16 opacity-100'
           }`}
         >

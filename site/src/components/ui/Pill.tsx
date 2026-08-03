@@ -39,6 +39,7 @@ export function FilterPill({
   as,
   active = false,
   leading,
+  dense = false,
   className = '',
   children,
   ...rest
@@ -46,6 +47,12 @@ export function FilterPill({
   as?: ElementType
   active?: boolean
   leading?: ReactNode
+  /** THE PHONE'S FILTER ROW (Emilie, 2026-08-02). Five pills on one row at 390
+   *  is 427px of pill against 350px of screen even with the short labels, so
+   *  the row's own padding is the only place left to find it. 14px -> 8px each
+   *  side, which is 12px back per pill. The 44px touch target is untouched: it
+   *  lives on the outer element's min-h/min-w, not on this padding. */
+  dense?: boolean
   className?: string
   children: ReactNode
   [prop: string]: unknown
@@ -61,7 +68,9 @@ export function FilterPill({
       className={`inline-flex min-h-11 min-w-11 items-center justify-center no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] ${className}`}
       {...rest}
     >
-      <span className={`${BASE} px-3.5 py-2 font-mono text-label tracking-[0.06em] transition-colors ${skin}`}>
+      <span
+        className={`${BASE} ${dense ? 'px-2' : 'px-3.5'} py-2 font-mono text-label tracking-[0.06em] transition-colors ${skin}`}
+      >
         {leading}
         {children}
       </span>

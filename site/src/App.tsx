@@ -21,6 +21,9 @@ import { setNavIntent } from './lib/navIntent'
 // error on the error page is the worst failure mode); SheetRoute is a
 // 15-line redirect whose registry import ships in the entry anyway.
 const Work = lazy(() => import('./pages/Work'))
+// /work/:id only. It imports `routes` from this file to read the single route
+// table, so it must be lazy: a static import would be a cycle at module load.
+const ShowcaseRoute = lazy(() => import('./pages/ShowcaseRoute'))
 const Thoughts = lazy(() => import('./pages/Thoughts'))
 const ThoughtRoute = lazy(() => import('./pages/ThoughtRoute'))
 const Contact = lazy(() => import('./pages/Contact'))
@@ -56,8 +59,16 @@ const PrintOgRoute = lazy(() => import('./print/OgRoute'))
 // (#f7f7f4 against the site's #f5f6f7), so the hold flashed a slightly wrong
 // paper. Route warming (lib/preloadRoute.ts) means this is rarely seen at all
 // now, but "rarely seen" is not "allowed to be wrong".
+// THE HOLD MUST BE IDENTIFIABLE BY SOMETHING THAT IS NOT ITS PAINT (the phone
+// pass, 2026-08-02). scripts/prerender.mjs waits for this element to leave
+// before it snapshots a route. It used to look for `.bg-mylar`, and when the
+// class changed to --lang-ground above, the selector silently matched nothing:
+// the wait resolved on the first tick and SIX routes shipped their loading
+// state to crawlers (/work, /cv, /thoughts, /contact, /rights, the pillar; 29
+// words each against the landing's 2454). data-route-hold is a CONTRACT, not a
+// style. Renaming the class is free; this attribute is not.
 function GroundHold() {
-  return <div className="min-h-dvh bg-[var(--lang-ground)]" aria-hidden="true" />
+  return <div data-route-hold className="min-h-dvh bg-[var(--lang-ground)]" aria-hidden="true" />
 }
 
 // On PUSH navigation: scroll to top (or hash target) and move focus to the
@@ -243,10 +254,14 @@ export const routes: RouteObject[] = [
         ),
       },
       {
+        // THE SHOWCASE OPENS OVER WHERE YOU WERE (Emilie, 2026-08-02).
+        // pages/ShowcaseRoute.tsx carries the why; in short it renders the page
+        // you came from with the sheet over it, and falls back to the full
+        // gallery for a cold arrival, a shared link or the prerenderer.
         path: '/work/:id',
         element: (
           <Suspense fallback={<GroundHold />}>
-            <Work />
+            <ShowcaseRoute />
           </Suspense>
         ),
       },

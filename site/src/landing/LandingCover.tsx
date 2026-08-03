@@ -32,17 +32,17 @@ import { Link, useNavigate } from 'react-router-dom'
 import ExploreErrorBoundary from '../components/ExploreErrorBoundary'
 import Footer from '../components/Footer'
 import Footline from '../components/Footline'
-import Img from '../components/Img'
 import LogoMark from '../components/LogoMark'
 import TitleBlock from '../components/TitleBlock'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
+import useIsDesktop from '../hooks/useIsDesktop'
 import MindGraphSrNav from './MindGraphSrNav'
+import { PRERENDERING } from '../lib/prerender'
 import Strips, { HorizontalBelt, PauseToggle, STRIP_PROJECTS, StripTile, ThoughtTile } from './Strips'
 import { MIND, nodeRoute, starPath } from './mindGraph'
 import { assertPaletteMatchesTheme } from './palette'
 import { RED_LINK } from '../lib/linkStyles'
 import { LensMark } from '../components/ui/Pill'
-import { vtName } from '../lib/viewTransition'
 import type { Lens } from '../components/Lens'
 import { ENTRIES, thoughtIndexEntries } from '../data/registry'
 
@@ -73,7 +73,6 @@ const DOORS: { label: string; to: string }[] = [
 // NeuroSpace's live demo is deliberately NOT the proof: its Rhino Compute
 // server is dead and the site already says so honestly.
 const PROOF_ID = 'sensi'
-const PROOF = ENTRIES.find((e) => e.id === PROOF_ID)
 const PROOF_AWARD = ENTRIES.find((e) => e.kind === 'award' && e.refId === PROOF_ID)
 // "MaCAD Awards 2026 · Design Copilots · winner (Sensi)" ->
 // "MaCAD Awards 2026 · winner". The middle segment (the category) and the
@@ -91,25 +90,11 @@ const THOUGHT_COUNT = THOUGHTS.length
 
 const KICKER = 'block font-mono text-micro tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase'
 
-// The ✦ recognition, in ink, never red, never a box (REDESIGN-SPEC §1: awards
-// read as recognition, not a stamp). It rides the WORK now, not the biography
-// (Emilie's cut, 2026-07-27), so it is short enough to sit on a card face: the
-// registry title's first and last segments only, which is exactly the wording
-// family the rest of the site uses ("MACAD AWARDS 2026 · WINNER"). Derived, not
-// re-typed, so the record stays the one source.
-function AwardMark({ className = '' }: { className?: string }) {
-  if (!AWARD_SHORT) return null
-  return (
-    <span
-      className={`flex items-center gap-1.5 font-mono text-micro tracking-[0.11em] text-[var(--lang-ink)] uppercase ${className}`}
-    >
-      <span aria-hidden="true" className="shrink-0">
-        ✦
-      </span>
-      {AWARD_SHORT}
-    </span>
-  )
-}
+// (The landing's own AwardMark component retired 2026-08-02, with the 280px
+// lead card it was built for. AWARD_SHORT above survives and is what matters:
+// it is passed to the Sensi tile's `awardLabel`, so the recognition now rides
+// the same tile face on the phone as it does in the desktop column, one piece
+// of markup instead of two. In ink, never red, never a box, REDESIGN-SPEC §1.)
 
 // The mark legend, rendered as REAL 1:1 marks (not glyphs) so the key matches the
 // field exactly. Ink only, never a lens colour (shape-tick + label rule). It
@@ -405,78 +390,79 @@ function LandingSearch({ collapsed, onExpand }: { collapsed: boolean; onExpand: 
   )
 }
 
-// THE PHONE'S PROOF. There is no hover on a touch screen, so there are no
-// strips there: the award-winning project simply LEADS, cover showing, with
-// four plates under it. Everything the ten-second scan needs — name, role,
-// award, and one piece of work with its interface visible — sits above 844px
-// at 390 wide without scrolling.
-function PhoneProof() {
-  if (!PROOF?.image) return null
+// THE PHONE'S BELTS (Emilie, 2026-07-27; rebuilt to her ruling 2026-08-02:
+// "the belts should move just like the desktop landing page but instead
+// horizontally, and I don't want sensi to be bigger, let's keep it the same as
+// the desktop, it moves with the stop button and all, same for the thoughts,
+// all same size and they move").
+//
+// So: EVERY TILE IS THE SAME TILE. The 280px lead card built earlier that day
+// is gone, and with it the last place where the phone was a different design
+// rather than the same one lying down. Sensi is an ordinary tile carrying the
+// spelled-out award on its face, exactly as it does in the desktop column.
+//
+// THE ONE THING THAT IS NOT LIKE THE DESKTOP, and it is deliberate: Sensi is
+// FIRST here, not two tiles in. The desktop rotation exists to drop the award
+// to the middle of a tall column where the mask is clear; a row 390px wide has
+// no middle, and a proof tile starting off screen would undo the ten-second
+// scan this landing was rebuilt around.
+//
+// The tiles are 200px, not the old 168. At 168 the award line truncated, and a
+// tile that cannot finish saying "MACAD '26 WINNER" is a tile carrying no
+// award. 200 still leaves the next tile visibly cut by the frame, which is the
+// row's own invitation to push it.
+function PhoneProof({ paused }: { paused: boolean }) {
   return (
-    <div className="lg:hidden">
-      <Link
-        to={`/work/${PROOF_ID}`}
-        viewTransition
-        // The phone's morph source. Safe alongside the belt's copy of the same
-        // name: the belts are display:none below lg and an unrendered element
-        // takes no part in a view transition, so exactly one claimant exists at
-        // any width.
-        style={{ viewTransitionName: vtName(`/work/${PROOF_ID}`) }}
-        className="lang-glass-1 lang-lift block overflow-hidden rounded-[var(--r-card)] no-underline transition-colors hover:border-[var(--lang-ink-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
-      >
-        <Img
-          slug={PROOF.image.slug}
-          name={PROOF.image.name}
-          alt={PROOF.image.alt}
-          priority
-          still
-          sizes="(max-width: 1024px) 100vw, 600px"
-          className="block aspect-video w-full object-cover object-top"
-        />
-        {/* THE AWARD, ON THE CARD (Emilie's direction, 2026-07-27). It sits
-            above the name, on the piece it recognises, which is the whole
-            point of moving it off the identity column: a recruiter reads the
-            claim and sees the evidence in one glance instead of two. */}
-        <span className="flex flex-col gap-1 px-3.5 py-3">
-          <AwardMark />
-          <span className="text-body leading-tight font-semibold text-[var(--lang-ink)]">{PROOF.title}</span>
-          <span className="font-mono text-micro tracking-[0.1em] text-[var(--lang-ink-muted)] uppercase">
-            Open the project &gt;
-          </span>
-        </span>
-      </Link>
-      {/* THE PHONE GETS THE BELTS TOO (Emilie, 2026-07-27), lying down and
-          driven by the thumb. The four-tile grid that used to sit here showed
-          four of twenty-one and stopped; these carry the whole record, in the
-          same tiles, in the same order, and the row running off the right edge
-          is its own invitation to push it. */}
-      <div className="mt-3 space-y-2.5">
-        {/* Sensi is NOT in this belt, for two reasons that happen to agree: it
-            is the card directly above, so a tile would be the same project
-            twice in one screen; and both would claim the `page-work-sensi`
-            morph name, which makes the browser abandon the entire transition
-            rather than pick one. */}
-        <HorizontalBelt label={`The work · ${STRIP_PROJECTS.length} projects`}>
-          {STRIP_PROJECTS.filter((p) => p.id !== PROOF_ID).map((p) => (
-            <li key={p.id} className="w-[168px] shrink-0 snap-start">
-              <StripTile project={p} tabbable />
+    <div className="space-y-2.5 lg:hidden">
+      <HorizontalBelt
+        label={`The work · ${STRIP_PROJECTS.length} projects`}
+        paused={paused}
+        items={(tabbable) =>
+          STRIP_PROJECTS.map((p) => (
+            <li key={p.id} className="mr-2.5 w-[200px] shrink-0">
+              <StripTile
+                project={p}
+                tabbable={tabbable}
+                awardLabel={p.id === PROOF_ID ? AWARD_SHORT : undefined}
+              />
             </li>
-          ))}
-        </HorizontalBelt>
-        <HorizontalBelt label={`The thoughts · ${THOUGHT_COUNT} notes`}>
-          {THOUGHTS.map((t) => (
-            <li key={t.id} className="w-[228px] shrink-0 snap-start">
+          ))
+        }
+      />
+      {/* The second belt runs the other way, the same reason the desktop's
+          second column does: two rows travelling together read as one belt cut
+          in half. */}
+      <HorizontalBelt
+        label={`The thoughts · ${THOUGHT_COUNT} notes`}
+        paused={paused}
+        reverse
+        // 232px, NOT the project tile's 200 (Emilie, 2026-08-02: "behavior
+        // information modeling is 2 lines instead of one like all the other...
+        // we can change the width of this one instead of having two lines").
+        // Measured at 13px serif italic: the longest title runs 184px and the
+        // card left it 151, so exactly one leaf in the belt wrapped and broke
+        // the row's rhythm. 232 was tried first and left it 183px against a
+        // 184px title, still wrapping by ONE pixel; 240 gives it 191px, which
+        // is 7px of slack for the font metric differences between her phone and
+        // this machine. Every other title was already well inside it.
+        // It knowingly gives up the equal width agreed earlier the same day:
+        // the titles reading as a set matters more than two separate rows
+        // measuring the same, and a horizontal belt has width to spend where a
+        // grid would not.
+        items={(tabbable) =>
+          THOUGHTS.map((t) => (
+            <li key={t.id} className="mr-2.5 w-[240px] shrink-0">
               <ThoughtTile
                 id={t.id}
                 title={t.title}
                 route={t.note?.route ?? '/thoughts'}
                 date={t.date}
-                tabbable
+                tabbable={tabbable}
               />
             </li>
-          ))}
-        </HorizontalBelt>
-      </div>
+          ))
+        }
+      />
     </div>
   )
 }
@@ -517,6 +503,14 @@ export default function LandingCover() {
   // column's tiers now simply arrive.)
   const [collapsed, setCollapsed] = useHeaderCollapse()
   const [beltsPaused, setBeltsPaused] = useState(false)
+  // ONE BELT SYSTEM IN THE DOM AT A TIME (the phone pass, 2026-08-02). Both
+  // used to be built and one hidden with `display: none`; on a phone that was
+  // 1150 of 1980 nodes and 40 of 60 images belonging to columns it can never
+  // show. hooks/useIsDesktop.ts has the measurement and why it is read
+  // synchronously. The `lg:hidden` / `hidden lg:flex` classes STAY on the two
+  // blocks: the hook decides what is built, the classes still decide what is
+  // seen, and a resize across the breakpoint is then correct in both.
+  const isDesktop = useIsDesktop()
 
   useEffect(() => {
     assertPaletteMatchesTheme()
@@ -612,7 +606,21 @@ export default function LandingCover() {
           name sat on the section's own padding. Now the padding IS the inset
           on both edges (80px at lg, 96px at xl) and the belts run to the right
           edge of it with ml-auto, so the two margins are one number. */}
-      <section className="relative flex min-h-[calc(100svh-4.25rem)] flex-col px-6 pt-2 pb-10 lg:flex-row lg:items-stretch lg:gap-16 lg:px-20 lg:pt-0 lg:pb-20 xl:gap-20 xl:px-24">
+      {/* pt-7 ON PHONES, WAS pt-2 (the same 2026-08-02 note). Dropping the
+          duplicate mark solved which of the two cubes wins; this solves the
+          air. 8px of padding under a 70px sticky pill put the name 14px from
+          it; 28px puts it at 34px, which reads as a margin rather than a
+          near miss. Desktop keeps pt-0: the pill is nowhere near the name. */}
+      {/* THE FIRST SCREEN STOPS BEING A FULL SCREEN ON PHONES (Emilie,
+          2026-08-02, from her screenshot: "the space between the doors and the
+          belt is a lot"). `min-h: 100svh - 4.25rem` forced this section to a
+          whole viewport whether or not it had a viewport of content. On desktop
+          it does, and the height is what the two belt columns are measured
+          against. On a phone the block ends after the second belt and the pause
+          button, so the remainder was several hundred pixels of nothing between
+          the belts and the doors. Below lg the section is simply as tall as
+          what is in it, and `pb-6` leaves one gap rather than a gulf. */}
+      <section className="relative flex flex-col px-6 pt-7 pb-6 lg:min-h-[calc(100svh-4.25rem)] lg:flex-row lg:items-stretch lg:gap-16 lg:px-20 lg:pt-0 lg:pb-20 xl:gap-20 xl:px-24">
         {/* THE NAME SITS LOW (Emilie, 2026-07-27: "maybe the name would go down
             instead of the middle, hinting at the scrolling"). The identity
             block is bottom-anchored on lg, so the air stacks ABOVE it and the
@@ -624,7 +632,17 @@ export default function LandingCover() {
                 2026-07-26; DL amendment 24): a round size condensed to
                 --wdth-fit rather than a fit-by-trial decimal. */}
             <div className="flex items-center gap-3">
-              <LogoMark size={40} className="shrink-0 lg:size-[46px]" />
+              {/* THE MARK STANDS DOWN ON PHONES (Emilie, 2026-08-02: "the
+                  header pill and the name with the logo are too close to each
+                  other, so either we reorganize or remove it from somewhere in
+                  the phone version"). Measured at 390: the pill's bottom edge
+                  at 70px, this mark's top at 84px. Fourteen pixels, and the
+                  SAME cube on both sides of them, because the pill carries the
+                  mark as its home button. Two marks arguing over 14px is the
+                  collision; one of them is redundant, and it is this one, since
+                  the pill's is also the way home. From lg up the pill sits far
+                  from the name and both have earned their place. */}
+              <LogoMark size={40} className="hidden shrink-0 lg:block lg:size-[46px]" />
               <h1
                 className="font-display text-[30px] font-semibold leading-[0.98] tracking-[0.01em] whitespace-nowrap text-[var(--lang-ink)] sm:text-[45px] lg:text-[46px]"
                 style={{ fontStretch: 'var(--wdth-fit)' }}
@@ -643,7 +661,13 @@ export default function LandingCover() {
                 FULL INK, because at muted it read as decoration before
                 information. */}
             <p
-              className="mt-5 font-display text-[12px] leading-relaxed tracking-[0.04em] text-[var(--lang-ink)] lowercase sm:text-[14px]"
+              // ONE LINE ON A PHONE (Emilie, 2026-08-02). At 12px the four
+              // adjectives measure 360px against the 342px the column gives at
+              // 390, so they wrapped, and a role line that breaks mid-list
+              // reads as two half-claims. 11px measures 333px: it fits with 9px
+              // to spare and stays above the readable floor. Nothing below sm
+              // changes, and sm up is untouched at 14px.
+              className="mt-5 font-display text-[11px] leading-relaxed tracking-[0.04em] text-[var(--lang-ink)] lowercase sm:text-[14px]"
               style={{ fontStretch: 'var(--wdth-fit)' }}
             >
               {ADJECTIVES}
@@ -670,11 +694,22 @@ export default function LandingCover() {
                 went with them: there is nothing left to separate.) */}
           </header>
 
-          {/* The phone's proof rides INSIDE the identity column so the whole
+          {/* The phone's belts ride INSIDE the identity column so the whole
               first screen is one measure at 390. */}
-          <div className="mt-7 lg:mt-0">
-            <PhoneProof />
-          </div>
+          {/* THE PAUSE BUTTON REACHES THE PHONE (Emilie, 2026-08-02: "it moves
+              with the stop button and all"). The rows drift now, so WCAG 2.2.2
+              applies to them exactly as it does to the desktop columns, and the
+              same single control governs both. It sits at the end of the block
+              rather than above it, for the reason it is cornered on desktop: it
+              is chrome, not a heading. */}
+          {isDesktop ? null : (
+            <div className="mt-6">
+              <PhoneProof paused={beltsPaused} />
+              <div className="mt-2 flex justify-end">
+                <PauseToggle paused={beltsPaused} onToggle={() => setBeltsPaused((p) => !p)} />
+              </div>
+            </div>
+          )}
 
         </div>
 
@@ -704,6 +739,7 @@ export default function LandingCover() {
             column, so the big inset waits for 2xl, where they are capped at
             500px and the padding costs them nothing. */}
         <div className="hidden min-h-0 min-w-0 flex-1 gap-4 lg:flex lg:h-[calc(100svh-9.25rem)] lg:pr-8 xl:pr-16 2xl:pr-44">
+          {!isDesktop ? null : <>
           {/* THE PAUSE COMES FIRST IN THE DOM, and `order` puts it back on the
               right (accessibility audit, 2026-07-27). It was reachable only
               after all thirty-six belt links: a keyboard user had to tab
@@ -719,6 +755,7 @@ export default function LandingCover() {
           <div className="order-1 min-w-0 flex-1">
             <Strips awardProjectId={PROOF_ID} awardLabel={AWARD_SHORT} paused={beltsPaused} />
           </div>
+          </>}
         </div>
 
         {/* THE SCROLL CUE, CENTRED AT THE FOOT (Emilie, 2026-07-27: "the
@@ -757,7 +794,14 @@ export default function LandingCover() {
         <h2 id="doors-heading" className="sr-only">
           The rooms
         </h2>
-        <ul className="grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2">
+        {/* SIDE BY SIDE ON THE PHONE TOO (Emilie, 2026-08-02: "the work and
+            thoughts card door should be maybe smaller"). Stacked, the pair was
+            196px each and 427px of section, which is half a phone screen spent
+            on two links that the header pill also carries. Paired, both are one
+            glance and the section roughly halves, WITHOUT cutting either signed
+            line: the saving comes from the two cards sharing a row, not from
+            dropping copy. */}
+        <ul className="grid list-none grid-cols-2 gap-3 p-0">
           {[
             { to: '/work', name: 'The work', count: `${STRIP_PROJECTS.length} projects`, line: 'Copilots, models and the things they were built to answer.' },
             { to: '/thoughts', name: 'The thoughts', count: `${THOUGHT_COUNT} notes`, line: 'The questions underneath the work, written as they came.' },
@@ -766,11 +810,23 @@ export default function LandingCover() {
               <Link
                 to={d.to}
                 viewTransition
-                className="lang-glass-1 lang-lift flex w-full flex-col justify-between gap-6 rounded-[var(--r-card)] px-6 py-6 no-underline transition-colors hover:border-[var(--lang-ink-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+                className="lang-glass-1 lang-lift flex w-full flex-col justify-between gap-3 rounded-[var(--r-card)] px-4 py-4 no-underline transition-colors hover:border-[var(--lang-ink-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] sm:gap-6 sm:px-6 sm:py-6"
               >
                 <span className={KICKER}>{d.count}</span>
-                <span className="flex items-end justify-between gap-4">
-                  <span className="text-title font-semibold tracking-[-0.01em] text-[var(--lang-ink)]">
+                {/* The title and OPEN sit on one line from sm up. At 390 the
+                    card is 165px wide and "The thoughts" plus "OPEN >" measure
+                    171px together, so on a phone they stack instead of
+                    colliding. */}
+                <span className="flex flex-col items-start gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+                  {/* ONE RUNG DOWN ON PHONES (Emilie, 2026-08-02: "keep them
+                      same voice, just make the title smaller text"). Paired at
+                      165px wide, "The thoughts" at 30px took two lines and was
+                      most of the card's height. --text-lead is the next step in
+                      the scale, not a new number: index.css is explicit that a
+                      value not already in the scale is a design decision rather
+                      than a CSS one, and this needed no new decision. The
+                      description stays, in full, in her voice. */}
+                  <span className="text-lead font-semibold tracking-[-0.01em] text-[var(--lang-ink)] sm:text-title">
                     {d.name}
                   </span>
                   <span
@@ -809,7 +865,9 @@ export default function LandingCover() {
       {/* The ownership line, scrolling with the footer it belongs to (rights
           pass round 2, 2026-07-30). The landing does not use SheetPage, so it
           wires its own, exactly as it does for the Footer above. */}
-      <Footline />
+      {/* The landing carries the footer pill, so below sm the credit is inside
+          it (Footer.tsx) and this band waits for sm. */}
+      <Footline hideOnPhone />
     </>
   )
 }
@@ -882,7 +940,20 @@ function MindSection() {
       // about text should be a bit lower so it centres better with the mind
       // graph"). Only the in-flow children move; the graph and its ground are
       // absolute and stay where they are.
-      className="relative isolate mt-14 min-h-[86svh] overflow-hidden px-6 pt-16 pb-20 lg:mt-20 lg:flex lg:flex-col lg:justify-center lg:px-20 lg:pt-20 lg:pb-20 xl:px-24"
+      // THE DOORS SIT IN EQUAL AIR (Emilie, 2026-08-02: "the spacing between
+      // the doors and the about should be the same as the doors and the
+      // belts"). What has to match is what the eye sees, edge of the last
+      // drawn thing to edge of the next, not the boxes: the doors carry their
+      // own padding on both sides and this section carried 64px more inside its
+      // own top. Measured at 390 before: 40px above the door cards against
+      // 148px below them, which is why the pair read as belonging to the about
+      // rather than as their own band. `mt-0 pt-8` puts the lower gap at 8 + 32
+      // = 40, the same number. lg keeps its own rhythm, where this section is a
+      // full screen and the margin is doing a different job.
+      // `min-h-[86svh]` is back on phones with the drawing: the graph is a
+      // ground again, and a ground needs a section tall enough to be one. It
+      // went lg-only for the single build where the graph was a fixed band.
+      className="relative isolate mt-0 min-h-[86svh] overflow-hidden px-6 pt-8 pb-20 lg:mt-20 lg:flex lg:flex-col lg:justify-center lg:px-20 lg:pt-20 lg:pb-20 xl:px-24"
     >
       {/* THE GROUND. Full bleed behind everything in this section, no box, no
           border. It MOUNTS when the section is half a viewport in, and mounting
@@ -905,12 +976,44 @@ function MindSection() {
           column. What was NOT wanted is the drawing being unreachable there, so
           the prose is POINTER-TRANSPARENT (below) and every mark stays
           pressable straight through the text. */}
+      {/* BACKGROUND ONLY ON A PHONE (Emilie, 2026-08-02: "the mind graph behind
+          the about should not be clickable on the phone, just there as
+          background"). The marks are a POINTER affordance: they wake near a
+          cursor, and pressing one travels. A thumb has none of that, so on a
+          phone the only thing the pressable layer could do was steal taps from
+          the prose sitting on top of it and send someone to a project they
+          never aimed at. `pointer-events-none` below lg makes it what it
+          already looks like there: a drawing. Nothing is lost, because
+          MindGraphSrNav lists every node and both doors are directly above.
+          From lg up it stays fully pressable, which is where it earns it. */}
+      {/* BACKGROUND, PUSHED UP (board option C, after she tried B: "the mind
+          graph is still above the about while it should just be the background
+          instead"). B made it its own 240px band ABOVE the prose, which is what
+          "move it slightly to the top" was drawn as, and seeing it she named
+          the thing that was wrong: a band is a figure, not a ground. It is
+          behind the words again, where it was, but anchored to the TOP of the
+          section and 62% of its height rather than full bleed, so it sits
+          behind the opening lines and lets the bio finish on clean paper.
+          Still `pointer-events-none` below lg (her earlier ruling, unchanged):
+          the marks wake near a cursor and travel on a press, and a thumb has
+          neither, so all a pressable layer could do here is steal taps from the
+          prose on top of it.
+          From lg up it is exactly what it always was: full bleed, behind,
+          pressable. */}
       <div
-        className={`pointer-events-auto absolute inset-0 -z-10 transition-opacity duration-500 ease-out motion-reduce:transition-none ${
+        className={`pointer-events-none absolute inset-x-0 top-0 -z-10 h-[62%] transition-opacity duration-500 ease-out motion-reduce:transition-none lg:inset-0 lg:h-auto lg:pointer-events-auto ${
           lit ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        {lit && (
+        {/* NOT PRERENDERED (Emilie's ruling 2026-08-02; lib/prerender.ts has the
+            why). This is lazy behind `Suspense fallback={null}`, so whether the
+            drawing landed in the snapshot was a RACE between the chunk
+            resolving and the capture: two builds of the same commit produced
+            index.html at 230.8KB and 212.2KB. Skipping it in the build makes
+            the snapshot REPRODUCIBLE and lighter, and costs a crawler nothing,
+            because MindGraphSrNav below lists every node unconditionally. A
+            visitor is untouched: `lit` still fires and the graph still draws. */}
+        {lit && !PRERENDERING && (
           <ExploreErrorBoundary fallback={null}>
             <Suspense fallback={null}>
               <MindGraph />
@@ -923,6 +1026,10 @@ function MindSection() {
           a veil, so the prose never reads as faded, and narrow enough that it
           only covers the column the prose actually occupies. Never animates,
           never intercepts a pointer. */}
+      {/* THE PHONE'S SCRIM IS BACK, because the drawing is behind the words
+          again (it was retired for the one build where the graph sat above
+          them). Strong enough to be a surface rather than a veil, so the prose
+          never reads as faded. Never animates, never intercepts a pointer. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 lg:hidden"

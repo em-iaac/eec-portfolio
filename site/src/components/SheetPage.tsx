@@ -82,14 +82,38 @@ export default function SheetPage({
     // descendant that previously resolved against the viewport now resolves
     // against an identical box. It also immunises every OTHER page from the
     // same trap, which is why it is fixed here and not in Rights.tsx.
-    <div className="relative flex h-dvh flex-col overflow-hidden">
+    // THE FRAME UNFREEZES ON PHONES (Emilie's ruling 2026-08-02, the phone
+    // pass, from a drawn before/after). A phone browser only slides its address
+    // bar and toolbar away when the DOCUMENT scrolls. This frame is `h-dvh` +
+    // `overflow-hidden` with the scrolling done by an inner element, so the
+    // document never moved a pixel and both bars sat there for the whole visit:
+    // roughly 100px of permanent chrome on the screen with the least room.
+    // Measured on /cv at 390x844: document.scrollHeight === clientHeight === 844
+    // while main.scrollHeight was 3585 inside a 768px box.
+    //
+    // Below lg the frame is now an ordinary tall document: the header STICKS
+    // (the same `sticky top-0 z-40` wrapper the landing has used since
+    // 2026-07-27, so this is the site's own grammar, not a new one) and the
+    // footer simply ends the page. From lg up nothing changes at all: the
+    // frozen frame is what the named-chrome transitions stand on (DL amendment
+    // 23), and a desktop browser has no chrome to reclaim.
+    //
+    // `relative` STAYS in both, and is still load-bearing (see below).
+    <div className="relative flex min-h-dvh flex-col lg:h-dvh lg:overflow-hidden">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-[var(--lang-interaction)] focus:px-4 focus:py-2 focus:font-mono focus:text-nav focus:text-[var(--lang-ground)]"
       >
         Skip to content
       </a>
-      <TitleBlock tools={pillTools} toolsKey={toolsKey} />
+      {/* The sticky wrapper is PHONE ONLY and is copied verbatim from the
+          landing (LandingCover), including `pointer-events-none`: the band is
+          full width and content scrolls under it, so without that it would eat
+          every tap in the ~70px it covers. The pill re-enables its own events.
+          From lg up it is `static`, which is exactly what it was before. */}
+      <div className="frame-head pointer-events-none sticky top-0 z-40 lg:static lg:z-auto">
+        <TitleBlock tools={pillTools} toolsKey={toolsKey} />
+      </div>
       {/* `relative` HERE IS THE ACTUAL FIX for "sometimes i can scroll past the
           footer" (2026-07-30, round 2 of the report). Putting it only on the
           frame above was not enough: it moved the overflow off the DOCUMENT but
@@ -104,7 +128,10 @@ export default function SheetPage({
       <main
         id="main"
         tabIndex={-1}
-        className="no-scrollbar relative flex flex-1 flex-col overflow-y-auto px-5 outline-none sm:px-8"
+        // `overflow-y-auto` is now the DESKTOP frame's scroller only. On a
+        // phone this element must not scroll at all, or the document still
+        // will not, which is the whole point of the change.
+        className="no-scrollbar relative flex flex-1 flex-col px-5 outline-none sm:px-8 lg:overflow-y-auto"
       >
         {fadeTop ? <div aria-hidden="true" className="scroll-scrim" /> : null}
         <div
@@ -123,7 +150,7 @@ export default function SheetPage({
         {footer && footerInFlow && (
           <div className="-mx-5 mt-auto sm:-mx-8">
             <Footer inFlow tools={footerTools} />
-            <Footline />
+            <Footline hideOnPhone />
           </div>
         )}
       </main>
@@ -132,7 +159,10 @@ export default function SheetPage({
           because its contact IS the content, but it is also the only page that
           collects anything, so the one line saying where a message goes has to
           survive there. This is why the footline is not part of Footer. */}
-      {!(footer && footerInFlow) && <Footline />}
+      {/* hideOnPhone tracks whether a FOOTER PILL is on this page: where there
+          is one, the credit rides inside it below sm (Footer.tsx). /contact
+          drops the pill, so there it stays a band at every width. */}
+      {!(footer && footerInFlow) && <Footline hideOnPhone={footer} />}
     </div>
   )
 }

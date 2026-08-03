@@ -144,8 +144,30 @@ section[id] {
   }
 }
 
+/* THE CARD RETRACTS INTO ITS MARK (Emilie, 2026-08-02: "when I swipe while one
+   is open I want it to animate and go back to its button so I can just explore
+   the world and its connections"). Panning is how you follow a thread to
+   something off screen, and the card is exactly what is in the way while you do
+   it. So a drag folds the card back toward the node it came from and leaves the
+   node lit with its connections: the thing you were reading gets out of the way
+   without taking the thing you were following with it.
+   The origin is the top-left because the engine anchors the card just below and
+   right of its mark, so shrinking to 0,0 collapses it toward the dot. */
+.infocard-exit {
+  animation: infocard-out 170ms ease-in both;
+  transform-origin: 0 0;
+}
+
+@keyframes infocard-out {
+  to {
+    opacity: 0;
+    transform: scale(0.72) translateY(-6px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .infocard-enter {
+  .infocard-enter,
+  .infocard-exit {
     animation: none;
   }
 }
@@ -207,6 +229,22 @@ section[id] {
   fill: transparent;
   stroke: none;
   pointer-events: all;
+}
+/* THE DRAWING IS NOT PRESSABLE ON A PHONE (Emilie, 2026-08-02, second report:
+   "the mind graph should not be clickable anymore in the background").
+   The wrapper in LandingCover already carries `pointer-events: none` below lg,
+   and that was NOT enough, which is the whole lesson here: `pointer-events` is
+   not inherited-and-final, a DESCENDANT setting `all` re-enables itself
+   regardless of any ancestor's `none`. These two hit layers do exactly that, so
+   the marks stayed pressable and kept stealing taps from the bio sitting over
+   them. Verifying the wrapper's computed value said "none" and proved nothing.
+   Turn the hit layers off at the same breakpoint; from lg up they are the whole
+   interaction and are untouched. */
+@media (max-width: 1023px) {
+  .mg-hit,
+  .mg-edge-hit {
+    pointer-events: none;
+  }
 }
 .mg-lbl {
   opacity: 0;
@@ -524,8 +562,14 @@ h3 {
      shrink the mind graph slightly so everything is readable in the content
      area"). The world fits into this band, so no node ever hides under the
      chrome and the readability scrims retired. */
-  top: 66px;
-  bottom: 52px;
+  /* Inset between the TWO bands now (2026-08-02, her board option C): the key
+     sits under the header and the controls sit at the foot, so the world runs
+     between them and no node ever hides under either. Measured at 390, where
+     the key wraps to two rows: key ends at 120, controls begin at 761.
+     Hardcoded per breakpoint like the 66/52 pair before it; the bands wrap
+     differently at each width, so one number cannot serve both. */
+  top: 128px;
+  bottom: 92px;
   left: 0;
   right: 0;
   overflow-x: auto;
@@ -534,6 +578,28 @@ h3 {
   cursor: grab;
   overscroll-behavior-x: contain;
   touch-action: pan-x pan-y;
+  /* THE WORLD DISSOLVES AT ITS SIDE EDGES (Emilie's ruling 2026-08-02: "fade
+     them out, at the end of the day the map is meant to be panned").
+     A node sitting near a side edge throws its name off the frame, so half the
+     labels on screen were sliced mid-word: measured at 390, "Project Architect
+     · Dynamic So" was cut 240px off the left and "Cappelletti Pavilion" 6px off
+     the right. A hard cut reads as broken; a fade reads as "there is more this
+     way", which is exactly what is true, and it is the same mask the landing
+     belts use, so the site says "keep going" one way everywhere.
+     Only the SIDES fade. Top and bottom are the frame's own lines, and the
+     world is already inset between them. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
+}
+/* From lg both bands are single rows, so the world gets its height back. */
+@media (min-width: 1024px) {
+  .nw-stage {
+    top: 110px;
+    /* 68, not 44: the control band grew when TODAY joined WATCH IT GROW, and
+       measured at 1440 it runs 834 to 892, so a 44px inset let the world slide
+       under it. */
+    bottom: 68px;
+  }
 }
 .nw-stage::-webkit-scrollbar {
   display: none;
@@ -572,7 +638,9 @@ h3 {
 }
 .nw-lanelbl {
   font-family: var(--font-mono);
-  font-size: 8px;
+  /* 9px with the rest of the world's small type (2026-08-02): the scale's
+     floor is --text-micro, and this was the last label under it. */
+  font-size: 9px;
   letter-spacing: 0.12em;
   /* muted, not faint (G4): NOW is wayfinding text, so it holds the same
      ink the year columns hold (AA on both grounds) */
@@ -685,17 +753,22 @@ h3 {
   font-size: 12.5px;
   fill: var(--lang-ink);
 }
+/* 9px, NOT 7.5 (Emilie, 2026-08-02: "we should assess everything in terms of
+   size"). index.css's own scale opens at `--text-micro: 9px` and says nothing
+   below it exists; these two were the only type on the site under that floor,
+   at 7.5px, and they carry the award and milestone names and every date in the
+   record. The scale is the decision that was already made; this was drift. */
 .nw-lbl.a,
 .nw-lbl.m {
   font-family: var(--font-mono);
-  font-size: 7.5px;
+  font-size: 9px;
   letter-spacing: 0.08em;
   fill: var(--lang-ink);
   text-transform: uppercase;
 }
 .nw-yr {
   font-family: var(--font-mono);
-  font-size: 7.5px;
+  font-size: 9px;
   letter-spacing: 0.06em;
   /* full ink, dimmed by the engine to the SAME 62% rest as the titles (G4:
      the old muted fill x 0.8 rest multiplier landed 2.2:1, under the AA
@@ -711,12 +784,20 @@ h3 {
   opacity: 0;
   pointer-events: none;
 }
-/* the field card goes full-width on phones (the prototype rule) */
+/* THE CARD STOPS BEING THE WHOLE SCREEN (Emilie, 2026-08-02: "when we press,
+   right now the cards are a bit too big"; board option A). It was pinned to
+   both gutters, which measured 366px at 390, 94% of the width, so tapping a
+   node buried the very field you tapped it in and you lost the thread you were
+   trying to follow. Capped at 280px it is a chip beside the mark rather than a
+   sheet over the world, and the connections stay visible around it.
+   `left` keeps its !important because the engine writes an inline left to put
+   the card beside its node; the cap is what stops that reaching the far
+   gutter. */
 @media (max-width: 700px) {
   .nw-fieldcard {
     left: 12px !important;
-    right: 12px;
-    max-width: none;
+    right: auto;
+    max-width: min(280px, calc(100vw - 24px));
   }
 }
 
@@ -739,7 +820,15 @@ h3 {
 .work-dialog {
   width: 100%;
   max-width: min(66rem, 94vw);
-  max-height: min(92vh, 54rem);
+  /* dvh, NOT vh (Emilie's report 2026-08-02: on some phones the opened card
+     "doesn't open fully, it opens as a strip at the bottom"). `vh` on iOS is
+     the LARGE viewport, measured as though the browser chrome were hidden,
+     and the chrome is showing at exactly the moment someone taps a tile. A
+     bottom-docked sheet sized against a viewport taller than the visible one
+     hangs off both ends, and what is left between the address bar and the
+     toolbar is a band. `dvh` tracks the viewport that actually exists.
+     The lightbox two rules down has always used dvh; this was the odd one. */
+  max-height: min(92dvh, 54rem);
   margin: auto;
   padding: 0;
   border-radius: var(--r-sheet);
@@ -796,7 +885,9 @@ h3 {
 @media (max-width: 40rem) {
   .work-dialog {
     max-width: none;
-    max-height: 90vh;
+    /* dvh for the same reason as the rule above: this is the bottom-docked
+       phone sheet, so it is the one that was showing as a strip. */
+    max-height: 90dvh;
     margin: auto auto 0;
     border-inline-width: 0;
     border-block-end-width: 0;

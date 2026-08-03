@@ -104,6 +104,37 @@ export default function Work() {
   const open = (entryId: string) => navigate(travelTo(`/work/${entryId}${hash}`), { viewTransition: true })
   const close = () => navigate(travelTo(`/work${hash}`), { replace: true, viewTransition: true })
 
+  // THE SHOWCASE ARRIVES FIRST (Emilie, 2026-08-02, phone pass; her report:
+  // "there is a lag when I press on a project from the landing page, since it
+  // triggers the animation of creating the work grid AND opens the card").
+  // She is describing two things stacked on one tap. /work/:id renders THIS
+  // page, so arriving straight at a showcase used to mount the whole gallery
+  // first: 21 plates, 21 cover images, the thoughts rows, the full layout, all
+  // of it underneath a dialog that covers it. Nobody sees any of that work.
+  //
+  // So when the route ARRIVES with an id (a link from the landing, a shared
+  // card, a search result), the sheet paints alone and the gallery fills in
+  // behind it on the next idle. Landing on /work normally is untouched: the
+  // grid IS the page there, and this starts true. Once true it stays true, so
+  // closing the showcase reveals a gallery that has been ready for a while.
+  const [gridReady, setGridReady] = useState(() => !id)
+  useEffect(() => {
+    if (gridReady) return
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number
+      cancelIdleCallback?: (h: number) => void
+    }
+    const wake = () => setGridReady(true)
+    // A timeout on the idle call and a plain timer where there is none: the
+    // gallery must never depend on the browser finding a quiet moment.
+    if (w.requestIdleCallback) {
+      const h = w.requestIdleCallback(wake, { timeout: 800 })
+      return () => w.cancelIdleCallback?.(h)
+    }
+    const t = setTimeout(wake, 300)
+    return () => clearTimeout(t)
+  }, [gridReady])
+
   // THE CROSS-GLOW state: the rail lifts the hovered thought id; the tiles it
   // correlates to wear data-glow (language.css draws the quiet ink ring).
   const [glowThought, setGlowThought] = useState<string | null>(null)
@@ -147,33 +178,38 @@ export default function Work() {
          the grid. /cv can afford the same pill because ITS footer scrolls in
          flow. So the tool is hidden here at phone widths and the stacked
          header carries it there instead; the two never both show. */
-      footerTools={
-        <span className="hidden sm:contents">
-          <BookDownloadLink />
-        </span>
-      }
+      /* THE BOOK RIDES THE FOOTER AT EVERY WIDTH NOW (Emilie, 2026-08-02:
+         "C, also the book pdf has to be in the footer"). It used to hide below
+         sm and reappear beside the filters, because the frozen footer pill was
+         a wrapping three-part row that grew 112 -> 169px at 375 and spent 21% of
+         the viewport on chrome. That footer no longer exists: since the phone
+         pass it is one compact row, credit left and marks right, and a tool
+         simply joins the marks the way /cv's PDF does. Measured after: 74px on
+         every page, with or without a tool. So the reason for the split is
+         gone, and with it the split. */
+      footerTools={<BookDownloadLink />}
     >
-      {/* ONE h1 for every size: visible under the pill on small screens,
-          sr-only on lg+ (the lit WORK door on the header line names the room;
-          repeating it next to itself is the redundancy this audit retired). */}
-      <h1
-        id="work-heading"
-        className="pt-4 text-title font-semibold tracking-[-0.01em] text-[var(--lang-ink)] lg:sr-only lg:pt-0"
-      >
+      {/* THE h1 IS sr-only AT EVERY SIZE NOW (Emilie's ruling 2026-08-02,
+          board option C). It was already sr-only on lg for the exact reason it
+          is here: the lit WORK door sits directly above it and says the same
+          word. On a phone that repetition cost 61px, which is 7% of the screen
+          spent restating the header. It is HIDDEN, not deleted: the document
+          outline still opens with it and a screen reader still announces the
+          room. */}
+      <h1 id="work-heading" className="sr-only">
         Work
       </h1>
-      {/* The stacked tools, MOBILE ONLY (the header line carries them on lg+).
-          The room-sign kicker retired at the audit gate (2026-07-19): the
-          nav says where you are, the title says it once. */}
-      <section className="pt-3 pb-4 lg:hidden" aria-label="Work filters">
-        {/* The intro line retired at G2; the count line retired at G-FLUFF.
-            The book download moved to the FOOTER at `sm` and up (2026-07-28),
-            so it survives here only at phone widths, where a third row in the
-            frozen footer would cost 21% of the viewport. The two are mutually
-            exclusive: `sm:hidden` here, `hidden sm:contents` there. */}
-        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
-          <WorkFilterRow active={activeLens} />
-          <BookDownloadLink className="-my-2 -mx-2 sm:hidden" />
+      {/* THE FILTERS LIE DOWN ON A PHONE (same ruling). Wrapped, four lenses
+          plus the book link took three lines and 148px; on one scrolling row
+          they take 52. It is the belt grammar this landing already uses, so a
+          row that runs past the frame is a gesture the page has taught once.
+          `-mx-5` cancels SheetPage's gutter so the row bleeds the full width and
+          keeps that gutter as its own first inset, exactly like HorizontalBelt.
+          THE BOOK IS GONE FROM HERE: it lives in the footer at every width now
+          (see footerTools above), so this row is filters and nothing else. */}
+      <section className="-mx-5 pt-3 pb-4 sm:-mx-8 lg:hidden" aria-label="Work filters">
+        <div className="no-scrollbar flex items-center gap-x-1 overflow-x-auto px-5 sm:px-8">
+          <WorkFilterRow active={activeLens} nowrap />
         </div>
       </section>
       {/* An invisible announcer keeps the filter change audible for screen
@@ -187,7 +223,7 @@ export default function Work() {
           per row on phones, the printed index's 7-across on xl (21 tiles =
           exactly 3 rows at 186px, the one-page fit with the bar above). */}
       <ul className="grid list-none grid-cols-2 gap-3 p-0 pb-2 sm:grid-cols-3 lg:grid-cols-6 xl:grid-cols-7">
-        {cards(entries, 7)}
+        {gridReady ? cards(entries, 7) : null}
       </ul>
 
       {/* THE THOUGHTS (REINDEX, Emilie's IA gate 2026-07-16): the printed
@@ -196,7 +232,7 @@ export default function Work() {
           in three columns on xl so every title holds one line; the rail
           mechanic survives (ink + the verbatim opening + the cross-glow up
           onto the correlated tiles). */}
-      {thoughts.length > 0 && (
+      {gridReady && thoughts.length > 0 && (
         // S5: pt/pb trimmed 4 -> 2 when the thoughts grew to 13 (T-111..113)
         // so the one-page promise holds at 1280x800 (was 14px over).
         <section id="thoughts" aria-labelledby="thoughts-list-heading" className="pt-1 pb-0">

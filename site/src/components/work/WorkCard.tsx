@@ -13,8 +13,9 @@
 // Card's `face` override so the glass skin, the morph plumbing and the button
 // semantics stay in the primitive. Print and OG never render plates
 // (screen-only by intent; the book keeps true covers).
-import { useState } from 'react'
+import { useState, type PointerEvent as ReactPointerEvent } from 'react'
 import Card from '../ui/Card'
+import useHasHover from '../../hooks/useHasHover'
 import Img, { findImage } from '../Img'
 import { LENSES } from '../Lens'
 import { LensMark } from '../ui/Pill'
@@ -39,6 +40,7 @@ export default function WorkCard({
   // The reveal state: pointer or keyboard focus wakes the tile (every tile
   // now, not only animated covers: the cover itself is behind the plate).
   const [hovered, setHovered] = useState(false)
+  const hasHover = useHasHover()
   const animatedCover = entry.cover
     ? Boolean(findImage(entry.cover.slug, entry.cover.name)?.animated)
     : false
@@ -79,7 +81,14 @@ export default function WorkCard({
           </span>
         )}
       </span>
-      {entry.cover && (
+      {/* NOT RENDERED WHERE NOTHING CAN HOVER (Emilie's ruling 2026-08-02).
+          This <img> only ever becomes visible under a resting pointer, so on a
+          touch screen it was 21 images downloaded, decoded and laid out to stay
+          at opacity 0 forever: ~250KB on /work as the grid scrolls, and more on
+          the landing belts. The photographs are not lost, they lead the sheet
+          one tap away, which on a phone is where they can actually be looked
+          at. hooks/useHasHover.ts has why the test is hover and not width. */}
+      {entry.cover && hasHover && (
         <span className={`work-plate__cover ${hovered ? 'is-on' : ''}`} aria-hidden={!hovered}>
           <Img
             slug={entry.cover.slug}
@@ -106,7 +115,18 @@ export default function WorkCard({
       // The shared-element source: the card face morphs into the preview
       // sheet (page-work-<id>, lib/viewTransition.ts).
       style={{ viewTransitionName: morphSource ? vtName(`/work/${entry.id}`) : undefined }}
-      onPointerEnter={() => setHovered(true)}
+      // THE TAP LAG (Emilie, 2026-08-02, phone pass; her report: "there is a
+      // lag when I press on a project"). pointerenter fires for TOUCH too, so
+      // a tap flipped `hovered`, which flipped `still` off, which swapped the
+      // srcset from the static rung to the ANIMATED one and made the phone
+      // pull 400-720KB (falcon 720, urban-risk 659, verve 604) an instant
+      // before it navigated away. Not one frame of it was ever seen. The
+      // reveal is a HOVER affordance and hover is a mouse; gating on
+      // pointerType keeps it exactly where it works and costs a touch device
+      // nothing. Keyboard focus below is untouched, and reveals the still.
+      onPointerEnter={(e: ReactPointerEvent) => {
+        if (e.pointerType === 'mouse') setHovered(true)
+      }}
       onPointerLeave={() => setHovered(false)}
       // keyboard parity: focusing the card reveals (and plays) the cover too
       onFocus={() => setHovered(true)}

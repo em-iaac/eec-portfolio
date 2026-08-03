@@ -39,9 +39,31 @@ function roomOf(path: string): string {
   return '/' + (p.split('/')[1] ?? '')
 }
 
+// WHERE A SHOWCASE WAS OPENED FROM (Emilie's ruling 2026-08-02: "when we press
+// a project instead of it taking us into the work page and then opening, let it
+// open from the landing page... same interaction in the whole website").
+//
+// /work/:id needs to know which page to lift the sheet OVER. Recording it here
+// rather than threading `state` through every Link is deliberate: a project is
+// opened from the landing belts, the mind graph, the /work grid, /cv's record
+// and the pillar, two of them by programmatic navigate, and every one of those
+// call sites already funnels through this function. One place to set it, no
+// entry point that can be forgotten.
+//
+// It is null on a cold load, which is exactly right: a shared link, a refresh
+// or a crawler has no page to open over and must get the full /work page.
+let openedFrom: string | null = null
+
+/** The path the current in-app navigation started from, or null on a cold
+ *  load. Read by pages/ShowcaseRoute.tsx. */
+export function getOpenedFrom(): string | null {
+  return openedFrom
+}
+
 /** Set the intent for the navigation about to happen. Call BEFORE navigate. */
 export function setNavIntent(to: string, from: string): void {
   if (typeof document === 'undefined') return
+  openedFrom = from
   const el = document.documentElement
   if (roomOf(to) === roomOf(from)) el.dataset.vt = 'stay'
   else delete el.dataset.vt

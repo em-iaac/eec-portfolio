@@ -279,6 +279,37 @@ textarea,
     transparent 100%
   );
 }
+/* THE STICKY HEADER'S OWN SCRIM, PHONES ONLY (the phone pass, 2026-08-02).
+   Once the frame stopped freezing below lg, the header became a band that real
+   content slides under. The pill itself is glass and handles what passes behind
+   IT, but the strip around it (12px each side, 12 above, 6 below) is bare, so
+   type was sliding through those slivers unfaded. This is the same ground
+   gradient .scroll-scrim uses, just attached to the header instead of living
+   inside a scroller that no longer exists here. It sits BEHIND the header's own
+   children (the header is a z-40 stacking context, so a negative z-index cannot
+   escape it) and is inert, like every scrim in this language.
+   It stops at lg, where the frame is frozen and nothing passes under anything. */
+@media (max-width: 1023px) {
+  .frame-head::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 -1.25rem 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      var(--lang-ground) 0%,
+      var(--lang-ground) 62%,
+      transparent 100%
+    );
+  }
+  /* /cv's own top scrim is redundant now: the header carries one. Two stacked
+     gradients read as a heavier band than either was designed to be. */
+  .scroll-scrim {
+    display: none;
+  }
+}
+
 .cv-name {
   font-size: var(--cv-name);
   line-height: 1.1;
@@ -354,13 +385,22 @@ textarea,
   border: 0.5px solid color-mix(in srgb, var(--lang-ink) 14%, transparent);
   box-shadow: inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
 }
-@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .nav-lens {
-    background: color-mix(in srgb, var(--lang-ink) 5%, transparent);
-    backdrop-filter: blur(3px) brightness(1.06) saturate(1.08);
-    -webkit-backdrop-filter: blur(3px) brightness(1.06) saturate(1.08);
-  }
-}
+/* THE LENS LOST ITS BACKDROP BLUR (Emilie, 2026-08-02, with a screenshot: "I
+   still get this weird blur and rectangle whenever I press a door in the
+   header"). Her picture shows the lens over THOUGHTS as an opaque white block
+   with the label gone underneath it, which is the signature of `backdrop-filter`
+   on an element that also carries a `view-transition-name`. A named element is
+   lifted into the top layer and captured as its own snapshot, and a backdrop
+   filter has no backdrop there: it resolves against the isolated layer instead
+   of the pill, so the "glass" composites as a solid pane and hides the door it
+   is meant to magnify. Matching the two clocks (see the group rule below) fixed
+   the timing and could never have fixed this, because it is not timing.
+   The blur is what goes, not the slide. The plain fill above is the same
+   fallback this file has always shipped where backdrop-filter is unsupported,
+   and it is nearly indistinguishable at rest: the header pill is a flat single
+   colour, so a 3px blur over it had almost nothing to blur in the first place.
+   DO NOT reintroduce backdrop-filter here while the lens is a named
+   view-transition element. */
 .nav-label {
   display: inline-block;
   border-radius: var(--r-pill);
@@ -481,6 +521,20 @@ textarea,
 .foot-pill {
   view-transition-name: page-foot;
 }
+/* THE FOOTER LOSES ITS NAME ON PHONES (the phone pass, 2026-08-02). Below lg
+   the frame no longer freezes, so this pill is not chrome any more: it is the
+   last thing in a tall document, and it sits at whatever scroll offset that
+   document happens to have. A shared name is a promise that the two boxes are
+   THE SAME OBJECT (DL amendment 23), so keeping it would tell the browser to
+   FLY the footer from one page's scroll position to the other's on the way out.
+   /cv already drops the name for exactly this reason when its footer scrolls in
+   flow; below lg every footer is in flow, so every footer drops it. Unnamed, it
+   simply crossfades with the content it belongs to, which is correct. */
+@media (max-width: 1023px) {
+  .foot-pill {
+    view-transition-name: none;
+  }
+}
 /* The page's own tools ride the HEADER LINE, beside the pill. They belong to
    the frame, not to the content: unnamed they stayed in root and travelled
    with the page while the pill right next to them held perfectly still, which
@@ -505,8 +559,18 @@ textarea,
      something different in each room, so it is the one piece that moves:
      it slides from the old door to the new one ACROSS the navigation, on
      the same clock as the page. */
+  /* 300ms, NOT 240 (Emilie's report 2026-08-02: "for the magnifier in all pages
+     in the header it glitches"). The lens is animated TWICE, and that is not a
+     duplicate to delete: the `.nav-lens` CSS transition on left/width is what
+     slides it under a hovering pointer with no navigation at all, and this
+     group is what carries it across a page change. Both are needed. What was
+     wrong is that they ran on DIFFERENT CLOCKS, 240ms here against 300ms there.
+     A navigation starts both: the browser morphs the snapshot for 240ms while
+     the live element beneath is 300ms into its own slide, so at the handoff the
+     real lens was still about a fifth short of the door and visibly finished the
+     journey by itself. One clock, one slide. */
   ::view-transition-group(chrome-lens) {
-    animation-duration: 240ms;
+    animation-duration: 300ms;
     animation-timing-function: var(--ease-soft);
   }
 
@@ -1021,12 +1085,47 @@ li[data-glow] > button {
    the keyboard, and an explicit [data-paused] button for everyone including
    touch. Reduced motion never declares the animation at all.
    ============================================================ */
+/* ⚠ THE MECHANIC ABOVE IS HISTORY AS OF 2026-08-02. The transform track and
+   its keyframes are gone; landing/useBeltDrift.ts drives BOTH belts now, and
+   that file carries the current why. What survives unchanged is everything
+   Emilie ruled on: the doubled track, the per-tile margin, ~4px per second,
+   and three ways to stop it. What is new is that a cursor can take hold of it
+   (her ask, same day) and that the phone row drifts too. */
 .lstrip {
   position: relative;
+  /* STAYS CLIPPED, and that is a decision (useBeltDrift has the why): a native
+     scroller here would swallow the wheel, because an endless belt never
+     reaches the boundary at which a scroller hands scrolling back to the page.
+     The cursor drags it instead, which is what she actually asked for. */
   overflow: hidden;
   /* the tiles fade at both ends rather than being guillotined by the frame */
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+/* THE PHONE'S BELT, the same box lying down (2026-08-02). It was a native
+   scroller until Emilie saw the drift tick a whole pixel at a time; scrollLeft
+   is an integer and the speed she set is 4px/s. Clipped and translated like the
+   column, it moves in fractions.
+   `touch-action: pan-y` is the load-bearing line: it tells the browser this
+   element handles horizontal gestures itself while VERTICAL ones still scroll
+   the page, so dragging the belt sideways and scrolling the page down are never
+   the same gesture. Without it the drag would either be swallowed by the page
+   or would trap the page. */
+.hbelt {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+/* The grab cue: these are draggable, and nothing else on the page says so. */
+@media (hover: hover) and (pointer: fine) {
+  .lstrip,
+  .hbelt {
+    cursor: grab;
+  }
+  .lstrip:active,
+  .hbelt:active {
+    cursor: grabbing;
+  }
 }
 .lstrip__track {
   display: flex;
@@ -1039,38 +1138,10 @@ li[data-glow] > button {
 .lstrip__cell {
   margin-bottom: 16px;
 }
-@media (prefers-reduced-motion: no-preference) {
-  /* 800s / 640s at Emilie's ask (2026-07-27): ~4px/s on the work column, ~3.4
-     on the thoughts. That is 40px in the ten-second scan window, so the award
-     tile is still plainly on screen; much past this and it reads as scrolling
-     rather than breathing. */
-  .lstrip__track {
-    animation: lstrip-up 800s linear infinite;
-    will-change: transform;
-  }
-  .lstrip__track--down {
-    animation-name: lstrip-down;
-    animation-duration: 640s;
-  }
-  .lstrip:hover .lstrip__track,
-  .lstrip:focus-within .lstrip__track,
-  [data-belts-paused] .lstrip__track {
-    animation-play-state: paused;
-  }
-}
-@keyframes lstrip-up {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-50%);
-  }
-}
-@keyframes lstrip-down {
-  from {
-    transform: translateY(-50%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
+/* THE KEYFRAMES RETIRED 2026-08-02, with `lstrip-up` and `lstrip-down`. The
+   speed Emilie set (~4px/s) and every stop condition moved into
+   landing/useBeltDrift.ts, which now owns both belts on both axes. Nothing was
+   traded away in the move: hover, focus-within, the pause button and reduced
+   motion all still hold the belt still, and the hook adds two more stops the
+   CSS could not express (a finger or a cursor on the belt, and the belt being
+   off screen or the tab hidden, which the keyframe ran straight through). */

@@ -35,23 +35,68 @@
 // draftCopy: her wording, unsigned.
 import { Link } from 'react-router-dom'
 
-export default function Footline() {
+/** THE CREDIT ITSELF, extracted 2026-08-02 so the footer can carry it on a
+ *  phone without a second copy of signed wording. Her ruling that day (board
+ *  option B): below sm the ownership line and the contact marks share ONE row
+ *  inside the footer pill instead of standing as two thin bands, 74px of pill
+ *  above 27px of line. The sentence is unchanged and still links to /rights;
+ *  only where it sits changed. On /contact, which has no footer pill, the band
+ *  below is still the only thing carrying it. */
+export function CreditLink({ className = '' }: { className?: string }) {
+  return (
+    // The 44px touch floor rides an `after:` pseudo-element rather than a
+    // min-height, so the line stays as short as its type. The same trick the
+    // pill's links use, for the same reason: the floor is a FLOORS rule, and
+    // the height is paid on every page.
+    <Link
+      to="/rights"
+      viewTransition
+      className={`relative font-mono text-micro leading-none tracking-[0.08em] text-[var(--lang-ink-muted)] no-underline hover:text-[var(--lang-interaction)] after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] ${className}`}
+    >
+      {/* SHORTER ON A PHONE, BUT THE YEAR STAYS EVERYWHERE (Emilie, 2026-08-02,
+          in two passes: first "could we just have the name and the c in the
+          phone version", then "let's have the year on all versions"). So what
+          the phone drops is the reserved-rights clause only. That is the sound
+          half to drop: since Berne, copyright needs no notice at all to exist,
+          so the clause is convention rather than requirement, while the year is
+          the part that actually dates the claim.
+          ONE string with one optional clause, not two strings, so the signed
+          wording can never drift from a phone variant. */}
+      © {new Date().getFullYear()} Emilie El Chidiac.
+      <span className="hidden sm:inline"> All rights reserved.</span>
+    </Link>
+  )
+}
+
+export default function Footline({ hideOnPhone = false }: { hideOnPhone?: boolean }) {
   // `flex justify-center`, not `text-center`: a block wrapping an inline-block
   // adds ~10px of descender space under the line box, which on a band this
   // small was a third of its height. A flex container has no line box.
   return (
-    <div className="flex shrink-0 justify-center px-3 pb-3">
-      {/* The 44px touch floor rides an `after:` pseudo-element rather than a
-          min-height, so the band stays as short as its one line of type. The
-          same trick the pill's links use, for the same reason: the floor is a
-          FLOORS rule, and the height is paid on every page. */}
-      <Link
-        to="/rights"
-        viewTransition
-        className="relative font-mono text-micro leading-none tracking-[0.08em] text-[var(--lang-ink-muted)] no-underline hover:text-[var(--lang-interaction)] after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
-      >
-        © {new Date().getFullYear()} Emilie El Chidiac. All rights reserved.
-      </Link>
+    // THE 6px OVERFLOW, FOUND (her long-standing report, closed 2026-08-02).
+    // The band is 21px: 9px of type plus this 12px of padding. The touch floor
+    // below is a 44px pseudo CENTRED on the 9px line, so it reaches 22px either
+    // side of the type's middle and its bottom edge lands 5.5px past the band.
+    // That was invisible for as long as the frame was `overflow-hidden` and
+    // simply clipped it. The moment the document started scrolling on phones it
+    // became a real 6px of scroll on a page with nothing else to scroll: the
+    // "6px frame overflow" she has been reporting since the rights pass.
+    // Measured on /rights at 390x844: document 850 against a 844 viewport, and
+    // this element's own scrollHeight 27 against its 21px box.
+    // Six more pixels of padding is the whole fix, and it is spent ONLY where
+    // the document scrolls. From lg up the frame still clips and the content
+    // band keeps every pixel this file's opening note fought for.
+    // `hideOnPhone` is passed by every surface that ALSO renders the footer
+    // pill: below sm the credit rides inside that pill (her ruling 2026-08-02),
+    // and a band underneath repeating it would be the two-band problem again.
+    // /contact drops the pill and passes nothing, so the band is still its only
+    // route to the small print.
+    <div
+      className={`shrink-0 justify-center px-3 pb-[18px] lg:pb-3 ${
+        hideOnPhone ? 'hidden sm:flex' : 'flex'
+      }`}
+    >
+      <CreditLink />
     </div>
   )
 }

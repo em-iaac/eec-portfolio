@@ -115,6 +115,28 @@ const getJsonLd = (html) => {
 
 const routeToFile = (route) => (route === '/' ? 'index.html' : route.slice(1) + '.html')
 
+// THE CONTENT FLOOR (the phone pass, 2026-08-02). The old body assertion was
+// `<div id="root"></div>`, which only ever caught a LITERALLY empty root. When
+// the Suspense hold got snapshotted instead, the root held one empty div, the
+// check passed, and six routes shipped a 29-word shell (the noscript line and
+// nothing else) to crawlers. This counts the words a crawler actually reads in
+// the built FILE, which is the thing that ships, and is exactly the measurement
+// that found the bug. The floor sits between the two populations with room on
+// both sides: the broken shell was 29 words, the thinnest GENUINE page is
+// /contact at 107 (it is a form, it is meant to be short) and everything else
+// is 160+. 60 is double the shell and leaves /contact 47 words of headroom, so
+// editing the contact copy can never fail the build by accident.
+const MIN_BODY_WORDS = 60
+function visibleWords(html) {
+  const body = html.slice(html.indexOf('<body'))
+  return body
+    .replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&[a-z]+;|&#\d+;/gi, ' ')
+    .split(/\s+/)
+    .filter(Boolean).length
+}
+
 // ---- serve + drive ----------------------------------------------------------
 const server = await preview({
   root: SITE,
@@ -131,6 +153,17 @@ const browser = await puppeteer.launch({
 async function preparedPage(width, height) {
   const page = await browser.newPage()
   await page.setViewport({ width, height, deviceScaleFactor: 1 })
+  // THE PRERENDER FLAG (Emilie's ruling 2026-08-02). A component may opt its
+  // purely DECORATIVE markup out of the snapshot when that markup is large and
+  // a crawler cannot read it anyway. The only consumer today is the neural
+  // world's SVG, which took /thoughts to 118.5KB gzipped for a drawing the SPA
+  // immediately rebuilt (NeuralWorld.tsx has the full why). The readable
+  // content must never opt out: WorldSrNav still carries every node.
+  // evaluateOnNewDocument runs before any page script, so the flag is set by
+  // first render, and it exists ONLY in this headless build browser.
+  await page.evaluateOnNewDocument(() => {
+    window.__EEC_PRERENDER__ = true
+  })
   // Honest reduced-motion states are complete states (a FLOORS rule), so
   // prerendering under them bakes finished layouts, never a mid-animation
   // frame. Visitors with motion get the ceremonies live from the SPA boot.
@@ -179,10 +212,15 @@ try {
     )
     // The body contract: no route ships its Suspense hold; the showcase
     // dialog and the note article must be mounted where they are the page.
-    await page.waitForFunction(
-      () => !document.querySelector('div[aria-hidden="true"].bg-mylar'),
-      { timeout: 30_000 },
-    )
+    // THE ATTRIBUTE IS THE CONTRACT (the phone pass, 2026-08-02). This used to
+    // read `div[aria-hidden="true"].bg-mylar`. That class was renamed in
+    // App.tsx and the selector was never followed, so it matched nothing, the
+    // wait resolved instantly, and every route WITHOUT a second wait below
+    // snapshotted its loading state. Six of them shipped 29 words to crawlers
+    // for weeks. Wait on data-route-hold, which exists only to be waited on.
+    await page.waitForFunction(() => !document.querySelector('[data-route-hold]'), {
+      timeout: 30_000,
+    })
     if (/^\/work\/[^/]+$/.test(route)) {
       await page.waitForSelector('dialog[open]', { timeout: 30_000 })
     }
@@ -242,8 +280,15 @@ try {
       if (graph.length < 3) fail(`${route}: entity graph has no route node (${graph.length} nodes)`)
     }
 
+    const words = visibleWords(html)
     if (/<div id="root">\s*<\/div>/.test(html)) fail(`${route}: empty #root (the SPA shell, not real content)`)
-    if (failures.length === before) ok(`${route} -> ${routeToFile(route)}  ·  "${title}"`)
+    if (words < MIN_BODY_WORDS) {
+      fail(
+        `${route}: only ${words} visible words in the body (floor ${MIN_BODY_WORDS}). ` +
+          `The snapshot caught a loading state, not the page.`,
+      )
+    }
+    if (failures.length === before) ok(`${route} -> ${routeToFile(route)}  ·  ${words}w  ·  "${title}"`)
   }
 
   for (const route of PUBLIC_ROUTES) {
