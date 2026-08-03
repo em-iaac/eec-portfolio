@@ -1,8 +1,21 @@
-// THE MASTER CONTENT INDEX (G1). One file per project in this folder; this
-// index assembles them in the canonical lens order the old projects store
-// used (computation heroes, then practice, then explorations). Adding a
-// project = one registry entry + one master file here (THE ECONOMY).
-import type { ProjectMaster } from './types'
+// THE MASTER CONTENT INDEX (G1). One project per pair of files in this folder;
+// this index assembles them in the canonical lens order the old projects store
+// used (computation heroes, then practice, then explorations). Adding a project
+// = one registry entry + one meta file + one spine file here (THE ECONOMY).
+//
+// TWO HALVES, TWO LOADING STRATEGIES (2026-08-03, the phone pass; see types.ts
+// for the why). The META half is statically barrelled below, because the grid
+// face, the CV line, headData, the sitemap and the OG card all read it
+// synchronously on routes that never open a project. The SPINE half is reached
+// through import.meta.glob in LAZY mode, so opening one project downloads one
+// project's prose.
+//
+// Measured before: `work-*.js` was 61.4KB, every byte of it in the graph of any
+// module that touched data/work.ts, and preloaded on /cv and /rights.
+//
+// This is the same shape thoughts/openings.ts already uses for the notes: the
+// index surfaces get the JSX-free half, the leaf gets the prose.
+import type { ProjectMeta, ProjectSpine, ProjectMaster } from './types'
 import sensi from './sensi'
 import neurospace from './neurospace'
 import huddle from './huddle'
@@ -33,9 +46,9 @@ import astroidal from './astroidal'
 import chairSim from './chair-sim'
 import playscape from './playscape'
 
-export type { ProjectMaster } from './types'
+export type { ProjectMeta, ProjectSpine, ProjectMaster } from './types'
 
-export const ALL_PROJECT_MASTERS: ProjectMaster[] = [
+export const ALL_PROJECT_METAS: ProjectMeta[] = [
   sensi,
   neurospace,
   huddle,
@@ -59,6 +72,41 @@ export const ALL_PROJECT_MASTERS: ProjectMaster[] = [
   playscape,
 ]
 
-export const MASTERS_BY_SLUG: Record<string, ProjectMaster> = Object.fromEntries(
-  ALL_PROJECT_MASTERS.map(p => [p.slug, p]),
+export const METAS_BY_SLUG: Record<string, ProjectMeta> = Object.fromEntries(
+  ALL_PROJECT_METAS.map(p => [p.slug, p]),
 )
+
+// ---- The spines -----------------------------------------------------------
+// LAZY glob: Vite emits one chunk per spine and nothing here is in the graph
+// until a slug is asked for. The key shape is fixed by the glob pattern, so a
+// spine file that is renamed or missing fails loudly at load rather than
+// silently rendering an empty showcase.
+const SPINE_MODULES = import.meta.glob<{ default: ProjectSpine }>('./*.spine.tsx')
+
+const spineCache = new Map<string, Promise<ProjectSpine>>()
+
+/** The four beats for one project. Cached, so re-opening never refetches. */
+export function loadSpine(slug: string): Promise<ProjectSpine> {
+  const cached = spineCache.get(slug)
+  if (cached) return cached
+  const load = SPINE_MODULES[`./${slug}.spine.tsx`]
+  if (!load) return Promise.reject(new Error(`no spine file for project "${slug}"`))
+  const p = load().then(m => m.default)
+  spineCache.set(slug, p)
+  return p
+}
+
+/** Every spine at once. The guard tests only; the book uses the eager barrel. */
+export async function loadAllSpines(): Promise<Record<string, ProjectSpine>> {
+  const pairs = await Promise.all(
+    ALL_PROJECT_METAS.map(async m => [m.slug, await loadSpine(m.slug)] as const),
+  )
+  return Object.fromEntries(pairs)
+}
+
+/** Both halves for one project, for a surface that genuinely needs both. */
+export async function loadMaster(slug: string): Promise<ProjectMaster | undefined> {
+  const meta = METAS_BY_SLUG[slug]
+  if (!meta) return undefined
+  return { ...meta, ...(await loadSpine(slug)) }
+}

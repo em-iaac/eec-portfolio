@@ -49,6 +49,17 @@ export default function ModeToggle() {
   const flip = () => {
     const apply = () => {
       document.documentElement.dataset.theme = next
+      // The browser's own canvas follows the toggle too (2026-08-03). Without
+      // this, flipping to light on a phone whose OS is dark leaves Safari
+      // painting #0b0e13 around a light page — which is the surface that showed
+      // through the page crossfade and gave her a dark flash on every door
+      // press. index.html does the same at boot for a stored choice; this keeps
+      // it true when the choice changes mid-visit.
+      document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.remove())
+      const meta = document.createElement('meta')
+      meta.name = 'theme-color'
+      meta.content = next === 'dark' ? '#0b0e13' : '#f5f6f7'
+      document.head.appendChild(meta)
       try {
         localStorage.setItem(KEY, next)
       } catch {

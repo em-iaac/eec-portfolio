@@ -14,7 +14,7 @@ import LogoMark from '../components/LogoMark'
 import { LENSES, LensGlyph, type Lens } from '../components/Lens'
 import { VOICE } from '../landing/identity'
 import { MIND, THREADS, VIEWBOX, spline, starPath } from '../landing/mindGraph'
-import { MASTERS_BY_SLUG } from '../content/projects'
+import { METAS_BY_SLUG } from '../content/projects'
 import { thoughtIndexEntries } from '../data/registry'
 import { WORK_ENTRIES } from '../data/work'
 import ThoughtIndexRows, { fmtMonthYear } from '../components/ThoughtIndexRows'
@@ -47,7 +47,7 @@ const SUBTITLE = `Design Technology Architect. ${VOICE}`
 // The cover rail's award fact is the SIGNED award line from the Sensi
 // master, never authored here (the spec-era fact line retired with the
 // landing's G4 wording; the record is the single source).
-const AWARD_FACT = MASTERS_BY_SLUG['sensi']?.award ?? ''
+const AWARD_FACT = METAS_BY_SLUG['sensi']?.award ?? ''
 
 // The date grammar moved into the shared index-rows module (Session 1
 // REINDEX, 2026-07-16): the /work index and this book render the same rows.
@@ -256,24 +256,27 @@ function Spread({ data, side, plate }: { data: SpreadData; side: PageSide; plate
 
   const spine = (
     <div className="pr-spine pr-body">
+      {/* The spine reads off `master`, not `entry`: the four beats moved out of
+          WorkEntry on 2026-08-03 so a phone stops downloading all 21 of them.
+          bookContents.spreadData merges the eager spine back onto the meta. */}
       <SpineSection label="WHAT">
-        <p>{entry.what}</p>
+        <p>{master.what}</p>
       </SpineSection>
       <SpineSection label="WHY">
-        <p>{entry.why}</p>
+        <p>{master.why}</p>
       </SpineSection>
-      {entry.how && entry.how.length > 0 && (
+      {master.how && master.how.length > 0 && (
         <SpineSection label="HOW">
           <ol>
-            {entry.how.map((step, i) => (
+            {master.how.map((step, i) => (
               <li key={i}>{step}</li>
             ))}
           </ol>
         </SpineSection>
       )}
-      {entry.outcome && (
+      {master.outcome && (
         <SpineSection label="WHAT CAME OF IT">
-          <p>{entry.outcome}</p>
+          <p>{master.outcome}</p>
         </SpineSection>
       )}
     </div>

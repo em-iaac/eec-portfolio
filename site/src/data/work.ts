@@ -23,7 +23,6 @@
 // spine (signed 2026-07-10): WHAT · WHY · HOW · WHAT CAME OF IT, then tools,
 // then links OUT to repo / blog / live. Depth stays in the linked repo/blog;
 // the Pen Table sheet tier retired with G1 (/sheets/* redirects here).
-import type { ReactNode } from 'react'
 import type { Lens } from '../components/Lens'
 import { ENTRIES, awardHrefFor, type RegistryEntry, type SheetStatus } from './registry'
 import { PROJECTS_BY_SLUG, type Project } from './projects'
@@ -49,9 +48,6 @@ export interface WorkEntry {
   tags: string[]
   dek: string // the one authored "what it proves" line; the showcase's claim
   question?: string // D4 (S4/S5): the one question the project answers; headData prefers it as the meta description
-  // The question dot (Emilie, 2026-07-14): the other questions the project
-  // answers; `beat` names the spine section a press highlights.
-  alsoAnswers?: { q: string; beat?: 'what' | 'why' | 'how' | 'outcome' }[]
   meta: string // the plate's credit/context row (e.g. 'MACAD STUDIO · TEAM OF 4')
   origin: string // the face's origin stamp (MACAD/LAU/SOMA/JEMMA/SELF), derived from meta
   tech: string // the mono tech row
@@ -69,12 +65,15 @@ export interface WorkEntry {
   pullQuote?: { text: string; source: string } // the audio hero's lead line
   strip: WorkPicture[] // supporting pictures
   links: { label: string; href: string }[] // links not already used as hero
-  // The showcase spine (G1, signed): WHAT + WHY always present; HOW and
-  // OUTCOME only where real material exists (a thin showcase is honest).
-  what: ReactNode
-  why: ReactNode
-  how?: ReactNode[]
-  outcome?: ReactNode
+  // THE SPINE IS NOT HERE ANY MORE (2026-08-03, the phone pass). WHAT / WHY /
+  // HOW / WHAT CAME OF IT used to be copied onto every entry at module scope,
+  // which meant importing ANYTHING from this file — including WORK_LENSES,
+  // three strings — materialised all 21 projects' prose. `work-*.js` was
+  // 61.4KB and it was preloaded on /cv and /rights.
+  //
+  // The spine now lives in content/projects/<slug>.spine.tsx and is fetched by
+  // slug when a project is OPENED: `loadSpine(entry.slug)`. WorkOverlay is the
+  // only screen surface that reads it; the printed book uses the eager barrel.
   showcaseDraft: boolean // the spine prose is unsigned until Emilie signs it
   featured: boolean // S4 (D2): in the /work featured tier (leads, larger)
 }
@@ -223,7 +222,6 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     tags: entry.tags,
     dek: p.dek,
     question: p.question,
-    alsoAnswers: p.alsoAnswers,
     // The plate rows (S4a): the showcase now mirrors the printed spread, so
     // it reads the same meta credit line + stat the book plate prints.
     meta: p.meta,
@@ -246,10 +244,6 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     pullQuote: p.pullQuote,
     strip: stripFor(p.image?.slug, p.image?.name, p.title),
     links: p.links.filter((l) => l.href !== consumedHref),
-    what: p.what,
-    why: p.why,
-    how: p.how,
-    outcome: p.outcome,
     // The G1 spine prose ships flagged until Emilie signs it. (The dek flag
     // left this object at G4: every dek is dekSigned in its content file, and
     // nothing ever consumed the derived field.)

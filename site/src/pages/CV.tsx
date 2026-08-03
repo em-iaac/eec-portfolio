@@ -1,6 +1,7 @@
-import { Fragment, type ReactNode } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
+import type { ReachSet } from '../components/reach/verbs'
 import DownloadPill from '../components/ui/DownloadPill'
 import { DocGlyph } from '../components/ui/glyphs'
 import { CvIcon, type CvSection } from '../components/ui/cvIcons'
@@ -199,9 +200,112 @@ function CvDownload() {
   )
 }
 
+// WHAT YOU ARE IN THIS ROOM TO DO (the reach prototype, 2026-08-03). Measured
+// at 390x844: the record is 3565px, 4.2 screens, and its five section headings
+// are the only way to move around it. They are IN the document, so the only way
+// to reach EDUCATION from AWARDS is to scroll back past everything between. The
+// PDF, the other thing a recruiter comes here for, is at the very bottom.
+//
+// The same five names the headings carry, in the same order as the print page:
+// nothing new is authored, this is a second door onto copy that already exists.
+const CV_SECTIONS: { id: string; label: string }[] = [
+  { id: 'education', label: 'Education' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'awards', label: 'Awards' },
+  { id: 'writing', label: 'Writing' },
+]
+
+function jumpTo(id: string) {
+  const target = document.getElementById(id)
+  if (!target) return
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  // `start`, not `center` as SecTitle uses: arriving from the foot of the
+  // screen you want the section's heading at the TOP with its content below,
+  // not the heading halfway up with half a screen of the previous section
+  // still showing.
+  target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+  history.replaceState(null, '', `#${id}`)
+}
+
+// THE LAST TWO SECTIONS SHARE A SCROLL POSITION. Measured on /cv at 390x844:
+// the document is 3619px, so maximum scroll is 2775, and AWARDS lands at 2767.
+// AWARDS and WRITING are 8px apart and neither can reach the top of the screen
+// because the page has run out. A pure scroll-spy therefore lights WRITING when
+// you press AWARDS, which teaches a reader that the control is lying.
+//
+// So a press WINS for as long as the scroll it started is still running. This
+// is the ordinary fix for scroll-spy plus anchor jumps, and it is honest: you
+// asked to be at AWARDS, so the bar says AWARDS.
+const PRESS_HOLD_MS = 900
+
 export default function CV() {
+  // Which section is on screen, so the bar says where you are as well as where
+  // you can go. IntersectionObserver rather than a scroll handler: it costs
+  // nothing per frame on a page this tall.
+  const [here, setHere] = useState<string | null>(null)
+  const pressedRef = useRef<{ id: string; at: number } | null>(null)
+  useEffect(() => {
+    // THE RULE IS "WHICH HEADING HAVE I PASSED", not "which section covers the
+    // most pixels". The ratio version was measurably wrong: jumping to AWARDS
+    // landed at scrollY 2767 and lit WRITING, because AWARDS is short and the
+    // longer section below it filled more of the band. A reader who just
+    // pressed AWARDS and sees WRITING light up learns that the control lies.
+    const BAND_TOP = 96 // under the sticky header, at the top of the reading area
+    const pick = () => {
+      const pressed = pressedRef.current
+      if (pressed && performance.now() - pressed.at < PRESS_HOLD_MS) {
+        setHere(pressed.id)
+        return
+      }
+      let current: string | null = null
+      for (const s of CV_SECTIONS) {
+        const el = document.getElementById(s.id)
+        if (el && el.getBoundingClientRect().top <= BAND_TOP) current = s.id
+      }
+      // Before the first heading has passed the band, the first section is
+      // still the one being read.
+      setHere(current ?? CV_SECTIONS[0]!.id)
+    }
+    pick()
+    let queued = false
+    const onScroll = () => {
+      if (queued) return
+      queued = true
+      requestAnimationFrame(() => {
+        queued = false
+        pick()
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
+
+  const reachSet: ReachSet = useMemo(
+    () => ({
+      label: 'Jump to a section of the record',
+      handle: 'jump',
+      verbs: CV_SECTIONS.map((s) => ({
+        id: s.id,
+        label: s.label,
+        short: s.label,
+        active: here === s.id,
+        onPress: () => {
+          pressedRef.current = { id: s.id, at: performance.now() }
+          setHere(s.id)
+          jumpTo(s.id)
+        },
+      })),
+    }),
+    [here],
+  )
+
   return (
-    <SheetPage wide center={false} footer footerInFlow footerTools={<CvDownload />} fadeTop>
+    <SheetPage wide center={false} footer footerInFlow footerTools={<CvDownload />} fadeTop reach={reachSet}>
       {/* The header shares .cv-measure with the column below, so the name, the
           summary and the whole record hang on one centred axis. The UPDATED
           stamp rides the name line, right, exactly as the print page does. */}
@@ -276,9 +380,15 @@ export default function CV() {
               (The PRINT page sets awards inline as "2026 · text", a different
               grammar entirely, so nothing here puts the two surfaces out of
               step.) */}
+          {/* 38px of year column on a phone, 46 from `sm` up (2026-08-03). The
+              year is four tabular mono digits at 13px, which measures 36px: at
+              390 the fixed 46 plus a 12px gap was spending 58 of 350 on a
+              gutter, leaving 292 for the citation. This is the one fixed
+              measurement on the page and the only place the record loses width
+              to structure rather than to type. */}
           <ul className="grid gap-1">
             {AWARDS.map(a => (
-              <li key={a.text} className="grid grid-cols-[46px_1fr] gap-x-3">
+              <li key={a.text} className="grid grid-cols-[38px_1fr] gap-x-2.5 sm:grid-cols-[46px_1fr] sm:gap-x-3">
                 <span className="cv-meta font-mono leading-6 font-semibold text-[var(--lang-ink)] tabular-nums">
                   {a.year}
                 </span>

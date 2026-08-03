@@ -222,7 +222,12 @@ try {
       timeout: 30_000,
     })
     if (/^\/work\/[^/]+$/.test(route)) {
-      await page.waitForSelector('dialog[open]', { timeout: 30_000 })
+      // AND its prose. The showcase spine became a lazy per-project chunk on
+      // 2026-08-03 (the phone pass), so `dialog[open]` alone would now snapshot
+      // the plate WITHOUT what/why/how/outcome: about 80 words instead of 300,
+      // which is the same class of silent regression the empty-body bug was.
+      // WorkOverlay stamps data-spine-ready once the chunk has landed.
+      await page.waitForSelector('dialog[open][data-spine-ready]', { timeout: 30_000 })
     }
     if (/^\/thoughts\/[^/]+$/.test(route)) {
       await page.waitForSelector('article', { timeout: 30_000 })

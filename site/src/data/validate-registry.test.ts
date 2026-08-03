@@ -16,6 +16,7 @@ import {
 import { buildWorld, WORLD_KINDS } from '../thoughts/world/worldGraph'
 import { buildMindGraph } from '../landing/mindGraph'
 import { PROJECTS_BY_SLUG } from './projects'
+import { loadAllSpines } from '../content/projects'
 import { WORK_ENTRIES } from './work'
 import { THOUGHT_NOTES } from '../thoughts/notes'
 import images from './images.json'
@@ -47,9 +48,15 @@ test('every sheet ref routes to an existing project entry showcase', () => {
 // THE MASTER CONTENT FILE (G1, §11): every project must carry the signed
 // spine's required beats. WHAT + WHY are authored for every project (Emilie's
 // ruling); HOW and OUTCOME stay optional (a thin showcase is honest).
-test('every project master file carries WHAT + WHY', () => {
+//
+// It reads the LAZY half now (2026-08-03): the spine moved into
+// <slug>.spine.tsx so a phone stops downloading all 21. loadAllSpines() also
+// proves every meta file has a spine file beside it, which is the join the
+// split created and the one thing a rename could silently break.
+test('every project master file carries WHAT + WHY', async () => {
+  const spines = await loadAllSpines()
   const broken = Object.values(PROJECTS_BY_SLUG)
-    .filter(p => p.what == null || p.why == null)
+    .filter(p => spines[p.slug]?.what == null || spines[p.slug]?.why == null)
     .map(p => p.slug)
   expect(broken).toEqual([])
 })

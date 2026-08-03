@@ -137,10 +137,19 @@ describe('the ATS CV page', () => {
     const essays = ENTRIES.filter(e => e.kind === 'thought').length
     expect(ESSAY_COUNT).toBe(essays)
 
+    // The META half (<slug>.ts) is where `links` lives. This used to scan
+    // '.tsx' back when one file held both halves; after the 2026-08-03 spine
+    // split the .tsx files are spines and carry no links, so the scan silently
+    // found zero. Excluding the folder's own .ts modules keeps it to projects.
     const mastersDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'content', 'projects')
-    const withBlog = readdirSync(mastersDir)
-      .filter(f => f.endsWith('.tsx'))
-      .filter(f => readFileSync(join(mastersDir, f), 'utf8').includes('blog.iaac.net')).length
+    const NOT_A_PROJECT = new Set(['index.ts', 'types.ts', 'spines.eager.ts'])
+    const metaFiles = readdirSync(mastersDir).filter(
+      f => f.endsWith('.ts') && !f.endsWith('.spine.ts') && !NOT_A_PROJECT.has(f),
+    )
+    expect(metaFiles.length).toBe(21)
+    const withBlog = metaFiles.filter(f =>
+      readFileSync(join(mastersDir, f), 'utf8').includes('blog.iaac.net'),
+    ).length
     expect(BLOG_COUNT).toBe(withBlog)
   })
 })

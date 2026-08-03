@@ -70,7 +70,9 @@ function ScreenRow({
         <ThoughtMark />
         <span
           className="thought-title min-w-0 flex-1 font-serif text-prose leading-snug font-medium lowercase italic tracking-[-0.005em] text-[var(--lang-ink)]"
-          style={e.note ? { viewTransitionName: vtName(e.note.route) } : undefined}
+          // Declares, does not wear: see WorkCard and lib/morphName.ts. These
+          // 18 titles were the other half of the 40 orphan groups.
+          data-morph={e.note ? vtName(e.note.route) : undefined}
         >
           {e.title}
         </span>

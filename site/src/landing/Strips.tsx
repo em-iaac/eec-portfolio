@@ -129,7 +129,11 @@ export function StripTile({
       // the browser abandon the ENTIRE transition — a hard cut, worse than no
       // morph at all. `tabbable` already marks the real run, so it doubles as
       // the flag here rather than threading a second one through.
-      style={tabbable ? { viewTransitionName: vtName(`/work/${project.id}`) } : undefined}
+      // Declares, does not wear (2026-08-03, lib/morphName.ts): the belt has a
+      // DOUBLED track, so this is also the safest place for the one-copy rule.
+      // `tabbable` still marks the real run, so only that copy can ever be
+      // promoted and the seam can never become a duplicate.
+      data-morph={tabbable ? vtName(`/work/${project.id}`) : undefined}
       // Mouse only, same reason as the /work tile (WorkCard.tsx): pointerenter
       // fires for touch, so a tap used to flash the cover on for the instant
       // before the page changed. The belt tile always renders the STILL rung,
@@ -219,8 +223,9 @@ export function ThoughtTile({
       to={route}
       viewTransition
       tabIndex={tabbable ? undefined : -1}
-      // Same morph contract as the work tile, same one-copy rule.
-      style={tabbable ? { viewTransitionName: vtName(route) } : undefined}
+      // Same morph contract as the work tile, same one-copy rule, same
+      // declares-does-not-wear change (lib/morphName.ts).
+      data-morph={tabbable ? vtName(route) : undefined}
       // h-full: EVERY LEAF IS THE SAME SIZE (Emilie, 2026-08-02: "make sure
       // that all thoughts tiles are the same size, right now the bim one is
       // bigger"). The row's <li> slots were already equal (flex stretches

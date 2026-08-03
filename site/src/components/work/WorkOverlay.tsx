@@ -32,8 +32,27 @@
 // grid. The 'cancel' listeners stay as the fallback for close requests that
 // arrive WITHOUT a keydown (Android's back gesture), with a guard so the
 // plate never closes underneath a stacked Lightbox.
-import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+//
+// THE SPINE ARRIVES SEPARATELY (2026-08-03, the phone pass). WHAT / WHY / HOW /
+// WHAT CAME OF IT, and the question dot's other questions, are no longer copied
+// onto every WorkEntry at module scope: importing anything from data/work used
+// to materialise all 21 projects' prose, so a phone on /cv or /rights was
+// downloading 61.4KB of writing it could not reach. This sheet is the ONLY
+// screen surface that reads them, so it asks for one project's spine by slug.
+//
+// TWO THINGS THE SPLIT REQUIRES, both load-bearing:
+//   - `data-spine-ready` on the dialog. scripts/prerender.mjs waits on it
+//     before snapshotting /work/:id, or the static page would ship the plate
+//     without its prose and fail the MIN_BODY_WORDS floor. THE ATTRIBUTE IS A
+//     CONTRACT, not a style: it is the same lesson as `data-route-hold`.
+//   - the spine section renders NOTHING while it loads, never a skeleton. The
+//     chunk is ~1KB and lands inside the sheet's own entrance; a placeholder
+//     would be a second thing moving.
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { loadSpine, type ProjectSpine } from '../../content/projects'
+import useSheetSwipe from './useSheetSwipe'
+import useSwipeFlip from './useSwipeFlip'
 import Img from '../Img'
 import SheetVideo from '../sheet/SheetVideo'
 import Lightbox from './Lightbox'
@@ -225,26 +244,52 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
 
   const close = () => onClose()
 
-  const spineBeats = (
+  const grabRef = useRef<HTMLDivElement>(null)
+  useSheetSwipe(ref, grabRef, close)
+
+  const stageRef = useRef<HTMLDivElement>(null)
+  useSwipeFlip(stageRef, prevPage, nextPage, many)
+
+  // One project's prose, fetched by slug when the sheet opens. `loadSpine`
+  // caches, so re-opening the same project never refetches, and the guard
+  // against a late resolve landing on a different project is `entry.slug`.
+  const [spine, setSpine] = useState<ProjectSpine | null>(null)
+  useEffect(() => {
+    let live = true
+    setSpine(null)
+    loadSpine(entry.slug).then(
+      (s) => {
+        if (live) setSpine(s)
+      },
+      // A spine that fails to arrive must not take the plate down with it: the
+      // asset, the claim, the credits and the links out are all still here.
+      () => {},
+    )
+    return () => {
+      live = false
+    }
+  }, [entry.slug])
+
+  const spineBeats = spine && (
     <>
       <SpineBeat label="WHAT" beat="what">
-        <p className={`mt-1.5 ${PROSE}`}>{entry.what}</p>
+        <p className={`mt-1.5 ${PROSE}`}>{spine.what}</p>
       </SpineBeat>
       <SpineBeat label="WHY" beat="why">
-        <p className={`mt-1.5 ${PROSE}`}>{entry.why}</p>
+        <p className={`mt-1.5 ${PROSE}`}>{spine.why}</p>
       </SpineBeat>
-      {entry.how && entry.how.length > 0 && (
+      {spine.how && spine.how.length > 0 && (
         <SpineBeat label="HOW" beat="how">
           <ol className={`mt-1.5 ${PROSE} list-decimal space-y-1 pl-5`}>
-            {entry.how.map((step, i) => (
+            {spine.how.map((step, i) => (
               <li key={i}>{step}</li>
             ))}
           </ol>
         </SpineBeat>
       )}
-      {entry.outcome && (
+      {spine.outcome && (
         <SpineBeat label="WHAT CAME OF IT" beat="outcome">
-          <p className={`mt-1.5 ${PROSE}`}>{entry.outcome}</p>
+          <p className={`mt-1.5 ${PROSE}`}>{spine.outcome}</p>
         </SpineBeat>
       )}
     </>
@@ -256,6 +301,9 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
     <dialog
       ref={ref}
       aria-labelledby={titleId}
+      // The prerender contract: the snapshot must not be taken until the prose
+      // is in the DOM (scripts/prerender.mjs, the /work/:id branch).
+      data-spine-ready={spine ? '' : undefined}
       className="work-dialog lang-glass-2"
       style={{ viewTransitionName: vtName(`/work/${entry.id}`) }}
       onClick={(e) => {
@@ -274,7 +322,18 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
       }}
     >
       {/* The plate has no top bar (the title lives beside the asset, like the
-          printed page); the close control floats the sheet's corner. */}
+          printed page); the close control floats the sheet's corner.
+
+          THE GRAB BAND (2026-08-03, her ruling). On a phone the sheet is docked
+          to the bottom and this strip is its handle: drag it down, or flick it,
+          and the sheet goes. The short rule is the only thing the site draws
+          that says "pull me", and it is drawn ONLY on the phone, because from
+          `sm` up the plate is centred and there is nothing to pull it off.
+          `touch-action: none` is load-bearing: without it the browser claims
+          the vertical gesture for the page before the handler sees it. */}
+      <div ref={grabRef} className="work-dialog__grab" aria-hidden="true">
+        <span className="work-dialog__grip" />
+      </div>
       <button
         type="button"
         onClick={close}
@@ -284,7 +343,22 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
         ✕
       </button>
 
-      <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-7 sm:py-5">
+      {/* `overscroll-contain`: reaching the end of the sheet's own scroll must
+          not hand the gesture to the page underneath it. Without it a flick
+          through the story carries on into the grid behind the dialog, which is
+          a page moving while you read something on top of it. */}
+      {/* `grow`, NOT `flex-1` (2026-08-03, the strip bug, second attempt).
+          `flex-1` is `flex: 1 1 0%`. In a column flex container with NO height
+          of its own — and this dialog has none, only a max-height — the
+          container's intrinsic height is computed from its items' contributions,
+          and with a 0% basis plus `min-height: 0` the engines disagree about
+          what this item contributes. Chromium uses its content height, which is
+          why the sheet has always looked right here and in every desktop check.
+          `grow` is `flex-grow: 1` with `flex-basis: auto`, so the item's
+          contribution is unambiguously its content, and the container sizes to
+          it in every engine. `min-h-0` stays: it is what lets this scroll once
+          max-height caps the sheet. */}
+      <div className="no-scrollbar min-h-0 grow overflow-y-auto overscroll-contain px-5 py-4 sm:px-7 sm:py-5">
         {/* THE TOP ROW: asset side + title/info side (the printed plate's
             head-beside-figure). Phones stack info first (T1: title › claim ›
             proof); desktop puts the asset left (sm:order-first). */}
@@ -322,10 +396,10 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
             {entry.question && (
               <p className="mt-3.5 max-w-[48ch] font-serif text-prose leading-snug italic text-[var(--lang-ink)]">
                 {entry.question}
-                {entry.alsoAnswers && entry.alsoAnswers.length > 0 && (
+                {spine?.alsoAnswers && spine.alsoAnswers.length > 0 && (
                   <>
                     {' '}
-                    <QuestionsDot also={entry.alsoAnswers} dialogRef={ref} />
+                    <QuestionsDot also={spine.alsoAnswers} dialogRef={ref} />
                   </>
                 )}
               </p>
@@ -375,7 +449,15 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
               (a content surface, not chrome; same family as the print pin). */}
           {current && (
             <div className="sm:order-first">
-              <div className="relative aspect-video max-h-[46vh] w-full overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] bg-white">
+              {/* `touch-action: pan-y` where the gallery can flip: this box owns
+                  the horizontal gesture, the page keeps the vertical one, so a
+                  sideways swipe and a scroll down are never the same act. It is
+                  the belts' own rule, one surface over. */}
+              <div
+                ref={stageRef}
+                style={many ? { touchAction: 'pan-y' } : undefined}
+                className="relative aspect-video max-h-[46vh] w-full overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] bg-white"
+              >
                 <StageContent page={current} onZoom={(i) => setLightbox(i)} />
                 {many && (
                   <>

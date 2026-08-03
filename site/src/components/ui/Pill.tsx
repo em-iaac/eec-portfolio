@@ -68,8 +68,18 @@ export function FilterPill({
       className={`inline-flex min-h-11 min-w-11 items-center justify-center no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] ${className}`}
       {...rest}
     >
+      {/* DENSE DROPS THE TRACKING (the phone pass, 2026-08-03). The row was
+          still 395px against 390 after the short labels and the dense padding,
+          so EXPLORATIONS was clipped by 5px and had to be scrolled to be read
+          in full. 0.06em at 10px is 0.6px per character across 31 rendered
+          characters = 18.6px, which is the whole overflow and more, and at this
+          size the letterspacing is doing no optical work: it was inherited from
+          the roomier default pill, not designed for a 10px chip. Measured
+          after: 377px, so the row FITS at 390 with 13px to spare, and the fade
+          mask is now telling the truth when it says there is nothing more.
+          Scoped to `dense`, so the normal pill and /lab are untouched. */}
       <span
-        className={`${BASE} ${dense ? 'px-2' : 'px-3.5'} py-2 font-mono text-label tracking-[0.06em] transition-colors ${skin}`}
+        className={`${BASE} ${dense ? 'px-2 tracking-normal' : 'px-3.5 tracking-[0.06em]'} py-2 font-mono text-label transition-colors ${skin}`}
       >
         {leading}
         {children}

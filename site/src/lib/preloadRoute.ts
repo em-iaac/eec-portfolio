@@ -22,6 +22,22 @@
 //
 // Failures are swallowed on purpose: a warm that does not arrive must never
 // break the navigation that follows it, which loads the same chunk anyway.
+//
+// NOT DURING THE PRERENDER (2026-08-03, measured in dist/). Vite's
+// __vite__mapDeps helper injects a <link rel="modulepreload"> into the LIVE DOM
+// for every chunk an import() pulls, and scripts/prerender.mjs snapshots
+// document.documentElement.outerHTML. So a warm that happens on idle, in a
+// browser, after `load` was being FROZEN into the static HTML as a
+// render-blocking-priority download at first paint: the exact opposite of the
+// guarantee this file's own comment (below) makes. Measured before the gate:
+// index / work / cv / contact / rights / 404 / the pillar each carried 10
+// injected preloads = 100.7KB raw of JavaScript the visitor may never need, of
+// which 60KB was work-*.js, all 21 project spines, on /cv and /rights too.
+// Every /thoughts note carried 144.3KB.
+//
+// The routes' OWN chunks still preload, because those imports happen inside the
+// render the snapshot is of, and preloading the page you are on is correct.
+import { PRERENDERING } from './prerender'
 import { PILLAR_PATH } from './pillar'
 
 type Loader = () => Promise<unknown>
@@ -56,6 +72,7 @@ const started = new Set<Loader>()
 
 /** Warm the chunk a path will need. Safe to call on every hover: once only. */
 export function preloadPath(path: string): void {
+  if (PRERENDERING) return
   const load = loaderFor(path)
   if (!load || started.has(load)) return
   started.add(load)
@@ -67,6 +84,7 @@ export function preloadPath(path: string): void {
 
 /** After first paint, warm the four doors: the common path off the landing. */
 export function warmDoors(): void {
+  if (PRERENDERING) return
   const run = () => {
     ;[WORK, THOUGHTS, CONTACT, CV].forEach((load) => {
       if (started.has(load)) return

@@ -32,6 +32,23 @@ function activeDoor(pathname: string): number {
   return NAV.findIndex(n => pathname === n.to || pathname.startsWith(n.to + '/'))
 }
 
+// WHERE THE LENS WAS, ACROSS A ROUTE CHANGE (2026-08-03, her report: "the
+// magnifier is not sliding").
+//
+// It used to slide because `chrome-lens` was a named view-transition element and
+// the browser morphed the old snapshot into the new one. Phones stopped using
+// view transitions today (lib/pageMotion.ts, and see the ladder in
+// language.css), and the header REMOUNTS on every navigation — measured, the
+// pill and the lens are different elements before and after — so the new lens
+// simply appeared at the new door with nothing to animate from.
+//
+// So the geometry outlives the component. On the first frame after a remount the
+// lens renders at the position it had in the LAST room, then a frame later it is
+// given its real position, and `.nav-lens`'s own CSS transition does the sliding.
+// One module-level value, no timers, and it degrades to "just appear" on a cold
+// load where there is no previous position to come from.
+let lastLensRect: { left: number; width: number } | null = null
+
 // The magnifier tracks the HOME MARK (index 0) + the four doors (1..4), so
 // hovering the logo magnifies it too (Emilie's bonus ask, 2026-07-19). The
 // lens rests on the active room and slides to whatever the pointer is over.
@@ -44,17 +61,36 @@ export function HeaderNav({ collapsed = false }: { collapsed?: boolean }) {
   const [rects, setRects] = useState<{ left: number; width: number }[]>([])
   const [hover, setHover] = useState<number | null>(null)
 
+  // THE MAGNIFIER HESITATES BETWEEN ROOMS (her report 2026-08-03, and it still
+  // happened with `?vt=off`, so it is this measurement and not the transition).
+  //
+  // The lens only renders while `lens.width > 0`. A measurement taken at the
+  // wrong moment of a route change returns zeros — the nav itself is laid out
+  // but an item ref is momentarily null, or the whole header has just been
+  // swapped (the landing has its OWN header component, so travelling to or from
+  // it remounts every ref). The lens then UNMOUNTS and remounts at the new door
+  // instead of sliding to it, and an unmounted element cannot run its 300ms CSS
+  // transition. That is the hesitation: it disappears, then reappears.
+  //
+  // So a degenerate reading is DISCARDED rather than stored. The lens keeps the
+  // last good geometry, stays mounted, and slides. Nothing is lost: the real
+  // measurement lands on the next pass (the layout effect, the ResizeObserver,
+  // or fonts.ready), and until then the previous rects are the correct answer,
+  // because the pill's own geometry does not change between rooms.
   const measure = useCallback(() => {
     const nav = navRef.current
     if (!nav) return
     const n = nav.getBoundingClientRect()
-    setRects(
-      itemRefs.current.map(el => {
-        if (!el) return { left: 0, width: 0 }
-        const r = el.getBoundingClientRect()
-        return { left: r.left - n.left, width: r.width }
-      }),
-    )
+    if (n.width === 0) return
+    const next = itemRefs.current.map(el => {
+      if (!el) return null
+      const r = el.getBoundingClientRect()
+      return { left: r.left - n.left, width: r.width }
+    })
+    // Every tracked item has to have real geometry, or this is a transient
+    // frame and the reading is worthless.
+    if (next.some(r => r === null || r.width === 0)) return
+    setRects(next as { left: number; width: number }[])
   }, [])
 
   useLayoutEffect(() => {
@@ -79,14 +115,44 @@ export function HeaderNav({ collapsed = false }: { collapsed?: boolean }) {
   // stray 0px sliver. The mark keeps its own.
   const lens = target != null && (!collapsed || target === 0) ? rects[target] : null
 
+  // THE SLIDE ACROSS A REMOUNT (see lastLensRect above). One frame at the old
+  // room's position, then the real one, so the CSS transition has two values to
+  // move between instead of appearing at the destination.
+  const [arriving, setArriving] = useState(() => lastLensRect !== null)
+  useLayoutEffect(() => {
+    if (!arriving) return
+    const id = requestAnimationFrame(() => setArriving(false))
+    return () => cancelAnimationFrame(id)
+  }, [arriving])
+  useEffect(() => {
+    if (lens && lens.width > 0) lastLensRect = lens
+  })
+  const shownLens = arriving && lastLensRect ? lastLensRect : lens
+
   return (
     <nav
       ref={navRef}
       aria-label="Primary"
-      onPointerLeave={() => setHover(null)}
+      // MOUSE ONLY (her report 2026-08-03: "the magnifier hesitates", and it
+      // still did with `?vt=off`, so it was never the transition).
+      //
+      // THE SEQUENCE ON A TAP, before this: `pointerenter` fires for TOUCH too,
+      // so touching a door set `hover` and the lens began sliding toward it.
+      // Then the finger lifted, `pointerleave` fired on this nav, `hover` went
+      // back to null, and the target reverted to the door still marked active —
+      // the one you were LEAVING — so the lens slid BACK. Only when the
+      // navigation landed did it set off again.
+      // Move, snap back, move. That is the hesitation, exactly.
+      //
+      // The rest of the site already knows this rule: WorkCard, the belt tiles
+      // and useBeltDrift all gate their hover reveals on `pointerType ===
+      // 'mouse'` for the same reason. The lens was the one that missed it.
+      onPointerLeave={(e) => {
+        if (e.pointerType === 'mouse') setHover(null)
+      }}
       className="nav-mag relative flex min-w-0 items-center font-mono text-label tracking-[0.08em]"
     >
-      {lens && lens.width > 0 && (
+      {shownLens && shownLens.width > 0 && (
         <span
           aria-hidden="true"
           className="nav-lens pointer-events-none absolute"
@@ -94,7 +160,7 @@ export function HeaderNav({ collapsed = false }: { collapsed?: boolean }) {
           // rooms: named, it SLIDES from the old door to the new one across
           // the navigation instead of cross-dissolving in place. This is her
           // own magnifier grammar (DL amendment 17) carried across the seam.
-          style={{ left: lens.left, width: lens.width, viewTransitionName: 'chrome-lens' }}
+          style={{ left: shownLens.left, width: shownLens.width, viewTransitionName: 'chrome-lens' }}
         />
       )}
       <Link
@@ -104,7 +170,9 @@ export function HeaderNav({ collapsed = false }: { collapsed?: boolean }) {
         ref={el => {
           itemRefs.current[0] = el
         }}
-        onPointerEnter={() => setHover(0)}
+        onPointerEnter={(e) => {
+          if (e.pointerType === 'mouse') setHover(0)
+        }}
         className="relative z-[1] flex size-11 shrink-0 items-center justify-center no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
       >
         <span data-mag={target === 0 ? '' : undefined} className="nav-label flex items-center justify-center">
@@ -128,7 +196,9 @@ export function HeaderNav({ collapsed = false }: { collapsed?: boolean }) {
           ref={el => {
             itemRefs.current[i + 1] = el
           }}
-          onPointerEnter={() => setHover(i + 1)}
+          onPointerEnter={(e) => {
+            if (e.pointerType === 'mouse') setHover(i + 1)
+          }}
           className={`relative z-[1] flex h-11 items-center justify-center overflow-hidden no-underline transition-[max-width,opacity] duration-300 ease-[var(--ease-soft)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] motion-reduce:transition-none ${
             collapsed
               ? 'max-w-0 px-0 opacity-0'

@@ -92,6 +92,7 @@ function Field({
   placeholder,
   type = 'text',
   multiline = false,
+  autoComplete,
 }: {
   id: string
   label: string
@@ -100,11 +101,22 @@ function Field({
   placeholder: string
   type?: string
   multiline?: boolean
+  /** What the phone should offer to fill this with. */
+  autoComplete?: string
 }) {
   // The rule IS the field: border-b at rest, the interaction colour on focus,
   // no ring. The colour change is the affordance.
+  //
+  // `min-h-11` ADDED at the phone pass (2026-08-03). Measured at 390x844, the
+  // two single-line inputs were 38.5px: 17px type at the inherited 1.5
+  // line-height is 25.5, plus py-1.5's 12, plus the 1px rule = 38.5, and
+  // nothing in the class list set a floor. 5.5px under the 44px target, on the
+  // only page that asks a visitor to do anything. The rule is untouched: the
+  // extra height is padding inside the same underline, so the drawing is what
+  // it was and only the hit box grew. (The textarea was already 89.5px and is
+  // unaffected; the floor simply never binds there.)
   const shared =
-    'mt-1 w-full border-0 border-b border-[var(--lang-hairline)] bg-transparent px-0 py-1.5 font-serif text-[17px] text-[var(--lang-ink)] outline-none placeholder:italic placeholder:text-[var(--lang-ink-muted)] focus:border-[var(--lang-interaction)]'
+    'mt-1 min-h-11 w-full border-0 border-b border-[var(--lang-hairline)] bg-transparent px-0 py-1.5 font-serif text-[17px] text-[var(--lang-ink)] outline-none placeholder:italic placeholder:text-[var(--lang-ink-muted)] focus:border-[var(--lang-interaction)]'
   return (
     <div className="mt-5 first:mt-0">
       <label
@@ -129,6 +141,11 @@ function Field({
           value={value}
           placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}
+          // The phone offers to fill it (2026-08-03). Without this the email
+          // field is just a text box: no keychain suggestion, no autofill bar,
+          // so someone writing from a train types their own address by hand on
+          // the one page where the whole point is that they get a reply.
+          autoComplete={autoComplete}
           className={shared}
         />
       )}
@@ -329,6 +346,7 @@ export default function Contact() {
                 value={email}
                 onChange={setEmail}
                 placeholder="so I can write back"
+                autoComplete="email"
               />
               <Field
                 id="contact-subject"

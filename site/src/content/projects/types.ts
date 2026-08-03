@@ -17,10 +17,31 @@
 // score / estimate / model, never measure; Lungs "designed to filter";
 // lEgoarCh's instructive fail is narrated without its percentage; Emilie's
 // voice, NO em dashes; new prose ships showcaseDraft: true until she signs it.
+//
+// ONE PROJECT, TWO HALVES (2026-08-03, the phone pass). The master is still one
+// idea, but it now lives in two files because the two halves have completely
+// different audiences:
+//
+//   ProjectMeta   <slug>.ts        JSX-free. The grid face, the CV line, the OG
+//                                  card, headData and the sitemap all need it,
+//                                  synchronously, on every route. Statically
+//                                  barrelled by index.ts.
+//   ProjectSpine  <slug>.spine.tsx The four ReactNode beats. Exactly ONE surface
+//                                  reads them (the opened showcase), so they are
+//                                  lazy: index.ts reaches them through
+//                                  import.meta.glob.
+//
+// Measured before the split: data/work.ts materialised all 21 spines at module
+// scope, so `work-*.js` was 61.4KB and any import from it — including
+// WORK_LENSES, three strings — pulled every project's prose. It was preloaded on
+// /cv and /rights too.
+//
+// ProjectMaster (the intersection) still exists for the surfaces that genuinely
+// need both halves at once: the printed book and the guard tests.
 import type { ReactNode } from 'react'
 import type { Lens } from '../../components/Lens'
 
-export interface ProjectMaster {
+export interface ProjectMeta {
   slug: string
   title: string
   lens: Lens
@@ -29,8 +50,6 @@ export interface ProjectMaster {
   // The card face's corner-pill short wording (DL-2); the full award line
   // still renders verbatim in the showcase.
   awardShort?: string
-  // The record/index short text (locked copy where noted in the file).
-  blurb: ReactNode
   tech: string
   links: { label: string; href: string }[]
   // `position` = CSS object-position for the uniform 4:3 crop (escape hatch
@@ -54,16 +73,32 @@ export interface ProjectMaster {
   // JSON-LD description (lib/headData.ts prefers it over the dek); S4 also
   // makes it the on-screen claim. Until then the signed dek serves.
   question?: string
+  // The listening member's hero line (the podcast leads with a pull-quote).
+  pullQuote?: { text: string; source: string }
+
+  // The spine prose is unsigned until Emilie signs it (Section 14). The FLAG
+  // stays on the meta half even though the prose it describes moved: the card
+  // face and the guard tests read it without opening the spine.
+  showcaseDraft: boolean
+
+  // ---- Future renditions (declared now so the shape is complete) ----------
+  cvLine?: string
+  spreadAssets?: { slug: string; name: string }[]
+}
+
+// ---- The showcase spine (G1) ----------------------------------------------
+// Lives in <slug>.spine.tsx, loaded only when a project is opened.
+export interface ProjectSpine {
   // THE QUESTION DOT (Emilie, 2026-07-14): the OTHER questions this project
   // answers, revealed by the dot beside the lead question on the plate, "all
   // the questions at a glance". Optional `beat` names the spine section that
   // answers it; pressing the question highlights that section. Wordings ship
   // DRAFT until she signs them, like the lead.
+  //
+  // It rides with the SPINE, not the meta (2026-08-03): the showcase is its one
+  // reader, its `beat` values name spine sections, and four questions per
+  // project was the largest single field every route was paying for.
   alsoAnswers?: { q: string; beat?: 'what' | 'why' | 'how' | 'outcome' }[]
-  // The listening member's hero line (the podcast leads with a pull-quote).
-  pullQuote?: { text: string; source: string }
-
-  // ---- The showcase spine (G1) --------------------------------------------
   // WHAT: the story under the claim, 2-4 sentences, credits woven in.
   what: ReactNode
   // WHY: one short beat, why it matters or why she did it.
@@ -73,10 +108,7 @@ export interface ProjectMaster {
   // WHAT CAME OF IT: only where real (a finding, an instructive fail, what
   // it changed). Never invented to fill the slot.
   outcome?: ReactNode
-  // The new spine prose is unsigned until Emilie signs it (Section 14).
-  showcaseDraft: boolean
-
-  // ---- Future renditions (declared now so the shape is complete) ----------
-  cvLine?: string
-  spreadAssets?: { slug: string; name: string }[]
 }
+
+/** Both halves at once: the printed book and the guard tests, nothing else. */
+export type ProjectMaster = ProjectMeta & ProjectSpine

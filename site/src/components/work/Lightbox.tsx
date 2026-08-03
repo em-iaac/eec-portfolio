@@ -8,6 +8,7 @@
 // doubles as the quiet caption.
 import { useLayoutEffect, useRef } from 'react'
 import Img from '../Img'
+import useSwipeFlip from './useSwipeFlip'
 import type { WorkPicture } from '../../data/work'
 
 const NAV_BTN =
@@ -51,6 +52,9 @@ export default function Lightbox({
   const prev = () => onNavigate((index - 1 + pictures.length) % pictures.length)
   const next = () => onNavigate((index + 1) % pictures.length)
 
+  const stageRef = useRef<HTMLDivElement>(null)
+  useSwipeFlip(stageRef, prev, next, many)
+
   return (
     <dialog
       ref={ref}
@@ -75,7 +79,17 @@ export default function Lightbox({
         if (e.key === 'ArrowRight') next()
       }}
     >
-      <div className="flex max-h-dvh w-screen flex-col items-center justify-center gap-2 p-4 sm:p-8">
+      {/* THE SAME SWIPE AS THE PLATE (2026-08-03). The enlarged view is the one
+          surface on the site that is nothing but a photograph, so it is the one
+          where a sideways swipe is most expected and where its absence was most
+          obviously a gap. Same hook, same 4px slop, same flick threshold, so
+          learning it once on the plate carries here. The arrows stay: they are
+          the keyboard's and the cursor's way in. */}
+      <div
+        ref={stageRef}
+        style={many ? { touchAction: 'pan-y' } : undefined}
+        className="flex max-h-dvh w-screen flex-col items-center justify-center gap-2 p-4 sm:p-8"
+      >
         {/* THE WHITE MAT (S6-A, Emilie 2026-07-24): the enlarged view keeps
             the plate stage's white backing (WorkOverlay's 16:9 mat) instead of
             floating on the dark backdrop. A transparent asset (a line sketch,

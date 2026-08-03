@@ -255,7 +255,12 @@ export default function Rights() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Web3Forms privacy policy (opens in new tab)"
-                  className={RED_LINK}
+                  // RED_LINK_TAP, not RED_LINK (2026-08-03). These two sit in
+                  // running prose but they are the only two links in their
+                  // paragraphs, so the -m-2/p-2 pad has no neighbouring hit box
+                  // to overlap: the reason the /cv bullets and the MadeRows go
+                  // unpadded does not apply here. Measured 20px, now 44.
+                  className={RED_LINK_TAP}
                 >
                   Web3Forms
                 </a>{' '}
@@ -269,7 +274,12 @@ export default function Rights() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GoatCounter privacy policy (opens in new tab)"
-                  className={RED_LINK}
+                  // RED_LINK_TAP, not RED_LINK (2026-08-03). These two sit in
+                  // running prose but they are the only two links in their
+                  // paragraphs, so the -m-2/p-2 pad has no neighbouring hit box
+                  // to overlap: the reason the /cv bullets and the MadeRows go
+                  // unpadded does not apply here. Measured 20px, now 44.
+                  className={RED_LINK_TAP}
                 >
                   GoatCounter
                 </a>

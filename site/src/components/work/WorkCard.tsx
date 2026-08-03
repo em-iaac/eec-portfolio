@@ -114,7 +114,18 @@ export default function WorkCard({
       data-work-card={entry.id}
       // The shared-element source: the card face morphs into the preview
       // sheet (page-work-<id>, lib/viewTransition.ts).
-      style={{ viewTransitionName: morphSource ? vtName(`/work/${entry.id}`) : undefined }}
+      //
+      // IT DECLARES, IT DOES NOT WEAR (2026-08-03). This used to set the real
+      // `view-transition-name` on every card, all the time. A name lifts the
+      // element onto its own compositor layer and gives it its own transition
+      // group, so 21 cards meant 21 extra groups on EVERY navigation out of
+      // /work, of which at most one could ever pair. Measured leaving /work:
+      // 44 groups, 3 paired, 40 old-only. They stopped fading with the page and
+      // painted on top of the incoming one instead, which is what her
+      // screenshots show. `data-morph` is an ordinary attribute and costs
+      // nothing; lib/morphName.ts promotes exactly one to a real name at the
+      // instant that card is the one travelling.
+      data-morph={morphSource ? vtName(`/work/${entry.id}`) : undefined}
       // THE TAP LAG (Emilie, 2026-08-02, phone pass; her report: "there is a
       // lag when I press on a project"). pointerenter fires for TOUCH too, so
       // a tap flipped `hovered`, which flipped `still` off, which swapped the

@@ -1016,7 +1016,12 @@ export default function NeuralWorld() {
                   onClick={dismiss}
                   className="relative -mt-0.5 shrink-0 text-body leading-none text-[var(--lang-ink-muted)] transition-colors after:absolute after:top-1/2 after:left-1/2 after:size-11 after:-translate-x-1/2 after:-translate-y-1/2 after:content-[''] hover:text-[var(--lang-ink)]"
                 >
-                  <span aria-hidden="true">×</span>
+                  {/* ✕ (U+2715), not × (U+00D7). This was the odd one out: the
+                      showcase sheet and the lightbox have both always used
+                      ✕, and the multiplication sign is a lighter, shorter mark
+                      that reads as a different control at the same size. One
+                      close glyph across all three overlays (2026-08-03). */}
+                  <span aria-hidden="true">✕</span>
                 </button>
               )}
             </div>

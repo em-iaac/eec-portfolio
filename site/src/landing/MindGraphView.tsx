@@ -74,18 +74,6 @@ export default function MindGraph() {
   const svgRef = useRef<SVGSVGElement>(null)
   const [active, setActive] = useState<Active>(null)
   const [armedId, setArmedId] = useState<string | null>(null)
-  // THE "START HERE" STATE (REDESIGN-SPEC §3.4, promised and never built).
-  // One mark arrives with its NAME showing, so the field says "these dots are
-  // things, touch one" before any input. It is NOT the full bloom: setting
-  // `active` would switch the stage to is-focus and dim every other thread to
-  // 0.08, which is the opposite of the spec's "never a dead grey field". It
-  // clears the moment the visitor touches anything.
-  // GATED ON THE SAME QUERY AS THE CSS (max-width: 639px), NOT on pointer
-  // type. The rest labels disappear because of SCALE, which is a function of
-  // viewport width; gating the invitation on `pointer: coarse` instead left a
-  // narrow desktop window with no rest labels AND no invitation, i.e. a field
-  // of anonymous dots. The two must agree or the phone rules half-apply.
-  const [startId, setStartId] = useState<string | null>(null)
   // THE DRAW-IN: an ARRIVAL, not a page load. Once per visit (lib/develop),
   // on its own clock — threads sweep in one by one, the marks land on them,
   // the labels settle, ~3.4s. The landing mounts this component only when the
@@ -116,20 +104,21 @@ export default function MindGraph() {
     return () => window.clearTimeout(t)
   }, [prm])
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    if (!window.matchMedia('(max-width: 639px)').matches) return
-    const first = MIND.nodes.find((n) => n.award) ?? MIND.nodes[0]
-    if (!first) return
-    // after the draw-in, so the invitation is the last thing to arrive
-    const t = window.setTimeout(() => setStartId(first.id), prm ? 0 : INTRO_MS + 200)
-    return () => window.clearTimeout(t)
-  }, [prm])
-
-  // the invitation retires the instant the visitor takes it up
-  useEffect(() => {
-    if (active) setStartId(null)
-  }, [active])
+  // THE "START HERE" INVITATION IS RETIRED (2026-08-03, the phone pass).
+  //
+  // It fired at `(max-width: 639px)` — phones, exactly. Then her ruling of
+  // 2026-08-02, "the mind graph should not be clickable anymore in the
+  // background", turned the hit layers off below lg (index.css: .mg-hit and
+  // .mg-edge-hit take pointer-events: none, and LandingCover's wrapper is
+  // pointer-events-none until lg). The two were never reconciled, so since that
+  // day the landing has been lighting one node and naming it on precisely the
+  // screens where pressing it does nothing.
+  //
+  // It is DELETED rather than moved up to lg, where the graph really is
+  // pressable: on a desktop the labels already come up under the cursor, so an
+  // invitation there would be a new behaviour she never asked for, invented to
+  // save a mechanism. Below lg the field is a drawing now, and a drawing does
+  // not ask to be touched.
 
   // Which camera. Kept in sync, not read once, so a rotation or a resized
   // window swaps the frame instead of stranding the wrong one.
@@ -359,9 +348,7 @@ export default function MindGraph() {
           return (
             <g
               key={n.id}
-              className={`mg-node${n.rest ? ' rest' : ''}${extra ? ' ' + extra : ''}${
-                n.id === startId ? ' start' : ''
-              }`}
+              className={`mg-node${n.rest ? ' rest' : ''}${extra ? ' ' + extra : ''}`}
               tabIndex={0}
               role="link"
               aria-label={nodeAria(n)}

@@ -2,6 +2,8 @@ import { type ReactNode } from 'react'
 import TitleBlock from './TitleBlock'
 import Footer from './Footer'
 import Footline from './Footline'
+import ReachControls from './reach/ReachControls'
+import type { ReachSet } from './reach/verbs'
 
 // THE FROZEN FRAME (rebuilt at the design audit, Emilie's ruling round 2,
 // 2026-07-19: "header with all info, the footer full bleed, the content in
@@ -23,6 +25,7 @@ export default function SheetPage({
   footerInFlow = false,
   fill = false,
   fadeTop = false,
+  reach,
 }: {
   children: ReactNode
   /** /work + /cv run full-width (cap 1920); other pages keep the column. */
@@ -61,6 +64,13 @@ export default function SheetPage({
       it and blurs rather than being sliced at a hard edge. Opt-in per page,
       because it costs a compositing layer and only long documents need it. */
   fadeTop?: boolean
+  /** THE ROOM'S OWN VERBS, in the thumb arc (the phone pass, 2026-08-03;
+      components/reach/). A tab on the right edge that opens a vertical list of
+      the things you are in this room to do. Her pick from four built and tried
+      on her own phone. A room with nothing to do passes nothing and shows
+      nothing: that is what stops it becoming a tab bar. The DOORS are not in
+      here and never will be; they stay in the pill. */
+  reach?: ReachSet
 }) {
   return (
     // `relative` FIXES A REAL SCROLL BUG (her report, 2026-07-30: "sometimes i
@@ -135,7 +145,12 @@ export default function SheetPage({
       >
         {fadeTop ? <div aria-hidden="true" className="scroll-scrim" /> : null}
         <div
-          className={`mx-auto w-full ${wide ? 'max-w-[1920px]' : 'max-w-5xl'} ${
+          // `page-rise` carries the phone's 8px entrance lift (language.css).
+          // It lives HERE and not on <main> because a transform makes an element
+          // the containing block for fixed descendants, and /thoughts keeps its
+          // whole world (.nw-stage) fixed inside main — which collapsed the map
+          // to zero height. Nothing inside this wrapper is fixed, so it is safe.
+          className={`page-rise mx-auto w-full ${wide ? 'max-w-[1920px]' : 'max-w-5xl'} ${
             fill ? 'flex min-h-0 flex-1 flex-col' : center ? 'my-auto' : ''
           }`}
         >
@@ -163,6 +178,7 @@ export default function SheetPage({
           is one, the credit rides inside it below sm (Footer.tsx). /contact
           drops the pill, so there it stays a band at every width. */}
       {!(footer && footerInFlow) && <Footline hideOnPhone={footer} />}
+      <ReachControls set={reach} />
     </div>
   )
 }

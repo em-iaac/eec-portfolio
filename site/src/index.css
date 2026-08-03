@@ -118,6 +118,27 @@ body {
   font-family: var(--font-display);
 }
 
+/* THE TAP FLASH (the phone pass, 2026-08-03). Every tap on this site was
+   painting the browser's default highlight: a grey-blue rectangle around the
+   element's box, drawn in a colour this palette does not contain and a shape
+   the pill geometry does not use. On a 44px target wrapping a 27px pill it
+   flashed the whole 44px, which reads as a hit-box leak.
+   Turning it off is only half the job: press feedback has to come from
+   somewhere or a tap feels dead on a slow connection, so `:active` dips the
+   element instead, in the site's own ink, on the site's own shapes. Restricted
+   to coarse pointers, because a mouse already has :hover. */
+@media (pointer: coarse) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  a:active,
+  button:active,
+  summary:active,
+  [role='button']:active {
+    opacity: 0.62;
+  }
+}
+
 ::selection {
   background: color-mix(in srgb, var(--lang-interaction) 18%, transparent);
 }
@@ -266,8 +287,7 @@ section[id] {
 .mg-node.rest .mg-lbl,
 .mg-node.active .mg-lbl,
 .mg-node.member .mg-lbl,
-.mg-node.lit .mg-lbl,
-.mg-node.start .mg-lbl {
+.mg-node.lit .mg-lbl {
   opacity: 1;
 }
 .mg-stage.is-focus .mg-node:not(.active):not(.member):not(.lit) .mg-core {
@@ -375,8 +395,7 @@ h3 {
   .mg-node.lit .mg-lbl {
     opacity: 0;
   }
-  .mg-node.active .mg-lbl,
-  .mg-node.start .mg-lbl {
+  .mg-node.active .mg-lbl {
     opacity: 1;
   }
   /* Calibrated to the PHONE CAMERA's scale (0.70), not the old full-canvas
@@ -614,6 +633,32 @@ h3 {
   height: max(100%, 40rem);
   width: auto;
   display: block;
+}
+
+/* THE MAP PANS SIDEWAYS ONLY (her report 2026-08-03: "we can only scroll
+   horizontally in this page, currently we can actually go as well slightly
+   vertically").
+   THE ARITHMETIC. `.nw-stage` is inset top 128 / bottom 92, so at 390x844 the
+   band is 624px, and the rule above floors the drawing at 40rem = 640px. The
+   world is therefore 16px taller than its own band and the stage scrolls
+   vertically by exactly that. It is worse on the shorter phones: a 812-tall
+   screen gives a 592px band, so 48px of stray travel. On a map whose whole
+   grammar is "drag sideways", a second axis that moves a few pixels and stops
+   reads as the page being loose, not as a feature.
+   The floor exists to stop the world being crushed on a SHORT viewport, which
+   in practice means a phone on its side. So it is kept there and dropped in
+   portrait, where 624px is ample. Then `overflow-y: hidden` and
+   `touch-action: pan-x` make the axis impossible rather than merely unused:
+   the browser now knows the vertical gesture is not this element's, so a
+   diagonal drag scrolls the page instead of fighting it. */
+@media (max-width: 639px) and (orientation: portrait) {
+  .nw-stage {
+    overflow-y: hidden;
+    touch-action: pan-x;
+  }
+  .nw-stage svg {
+    height: 100%;
+  }
 }
 
 /* the ruler: the record is drawn with a ruler, the thinking by a nerve */
@@ -881,12 +926,65 @@ h3 {
   background: rgba(11, 14, 19, 0.55);
 }
 
+/* THE GRAB BAND (2026-08-03, her ruling: "grab handle + swipe down"). It exists
+   only where the sheet is docked to the bottom, because only a docked sheet can
+   be pulled off its dock; from `sm` up the plate is centred and this is
+   display:none, so the desktop is byte-for-byte what it was.
+   `touch-action: none` is the load-bearing line: without it the browser claims
+   the vertical gesture for the page scroll before the pointer handler ever runs
+   (the same lesson as `.hbelt`'s `pan-y`, one axis over).
+   `user-select: none` because a slow pull would otherwise start selecting the
+   title underneath it. */
+.work-dialog__grab {
+  display: none;
+}
+@media (max-width: 40rem) {
+  .work-dialog__grab {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    /* 22px of band, and the pointer target is the whole strip plus the sheet's
+       own top padding: comfortably past 44px without drawing 44px of nothing. */
+    height: 22px;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+  }
+  .work-dialog__grab:active {
+    cursor: grabbing;
+  }
+  .work-dialog__grip {
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--lang-ink-muted);
+    opacity: 0.4;
+  }
+}
+
 /* Phones: dock to the bottom as a sheet, full width, rounded top only. */
 @media (max-width: 40rem) {
   .work-dialog {
     max-width: none;
-    /* dvh for the same reason as the rule above: this is the bottom-docked
-       phone sheet, so it is the one that was showing as a strip. */
+    /* THE STRIP, ATTEMPT TWO (her video, 2026-08-03). The `vh -> dvh` change
+       below was made from the symptom on 2026-08-02 and it was NOT the cause:
+       the deployed stylesheet already carries `max-height: 90dvh` and her
+       recording still shows the sheet opening as a ~50px band above the Safari
+       toolbar, holding there for seconds. So the height was never being clamped
+       by the viewport unit; it was collapsing on its own.
+       `max-height` alone cannot prevent that, because a max is only a ceiling.
+       `min-height` is the floor, and with it a strip is structurally impossible
+       whatever the intrinsic sizing does. 50dvh is deliberately conservative:
+       a genuinely short project (two beats, no gallery) still gets a sheet
+       shorter than the screen, so the content-sized shape she signed off
+       survives. The matching cause-side fix is `grow` instead of `flex-1` on
+       the sheet's scroller, in WorkOverlay.
+       dvh, not vh, stays right regardless: vh on iOS is the LARGE viewport,
+       measured as though the browser chrome were hidden, and the chrome is
+       showing at exactly the moment someone taps a tile. */
+    min-height: 50dvh;
     max-height: 90dvh;
     margin: auto auto 0;
     border-inline-width: 0;

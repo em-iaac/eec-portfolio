@@ -235,6 +235,30 @@ textarea,
 .cv-top {
   padding-top: 4rem;
 }
+/* THE PHONE STEP (the phone pass, 2026-08-03). This page had NO responsive
+   rule of any kind: the whole ladder above, tuned on a 912px measure, was
+   landing unchanged in a 350px column.
+   Two things it cost, both measured at 390x844:
+   - the name set 36px against 350px, so "Emilie El Chidiac | Design Technology
+     Architect" broke over four lines at leading 1.1, which reads as a stack of
+     fragments rather than a name and a role;
+   - .cv-top's 64px sat directly under a ~76px sticky header band, so 140px, a
+     sixth of the screen, was spent before the record began.
+   Nothing below the name moves: --cv-body stays 16px, because the record is
+   the thing you came to read and 16 is the reading norm. Only the display
+   sizes and the top air step down, which is the same treatment the landing's
+   role line got on 2026-08-02. */
+@media (max-width: 639px) {
+  .cv-col,
+  .cv-measure {
+    --cv-name: 1.75rem; /* 28px: two lines at 350px, not four */
+    --cv-lead: 1.0625rem; /* 17px, the site's reading measure */
+    --cv-gap-section: 2rem;
+  }
+  .cv-top {
+    padding-top: 2rem;
+  }
+}
 /* 7rem here was the whole "I can scroll past the footer" bug (her report,
    2026-07-28). It existed to stop the record ending flush against the viewport
    foot back when /cv had NO footer. The in-flow footer now occupies that space,
@@ -1116,6 +1140,18 @@ li[data-glow] > button {
   overflow: hidden;
   touch-action: pan-y;
 }
+/* A DRAG IS NOT A SELECTION (the phone pass, 2026-08-03). All three drag
+   surfaces carry real text — tile titles, node labels — and a slow pull on any
+   of them started a text selection instead of moving the belt, which then left
+   a blue block behind and, on a phone, raised the copy/paste bar over the thing
+   being dragged. Nothing on these surfaces is meant to be selected: the same
+   words are selectable in the page they open. */
+.lstrip,
+.hbelt,
+.nw-stage {
+  user-select: none;
+  -webkit-user-select: none;
+}
 /* The grab cue: these are draggable, and nothing else on the page says so. */
 @media (hover: hover) and (pointer: fine) {
   .lstrip,
@@ -1145,3 +1181,246 @@ li[data-glow] > button {
    motion all still hold the belt still, and the hook adds two more stops the
    CSS could not express (a finger or a cursor on the belt, and the belt being
    off screen or the tab hidden, which the keyframe ran straight through). */
+
+/* ============================================================
+   THE REACH DRAWER (Emilie's ruling 2026-08-03, after trying four shapes on
+   her own phone: "let's go for the drawer, for both, the work and the cv").
+
+   The room's TOOLS, in the thumb arc: a tab on the right edge that opens a
+   vertical list. The three shapes it beat — the tools frozen into the header
+   band, a bar across the foot, and a horizontal side pill — are deleted, along
+   with the switcher that compared them.
+
+   `lg:hidden` in the JSX: a desktop has no thumb problem, and /work's docked
+   filter row in the header is still the desktop control.
+   ============================================================ */
+.reach-drawer {
+  position: fixed;
+  z-index: 30;
+  right: 0;
+  bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.reach-drawer__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  min-height: 88px;
+  border-radius: 12px 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.12em;
+  color: var(--lang-ink);
+}
+/* The TAB's word is rotated, and only the tab's: one short label that never
+   changes, so it costs 24px of width and reads fine. The list behind it stays
+   horizontal, which is the whole difference from the side pill this beat —
+   there, EXPLORATIONS rotated was a 90px row and four filters made a 360px
+   column, 43% of the screen, covering the grid it was meant to filter. */
+.reach-drawer__word {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+.reach-drawer__tab:focus-visible {
+  outline: 2px solid var(--lang-interaction);
+  outline-offset: 2px;
+}
+.reach-drawer__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 14px 0 0 14px;
+  opacity: 0;
+  pointer-events: none;
+}
+.reach-drawer.is-open .reach-drawer__panel {
+  width: min(58vw, 190px);
+  padding: 5px;
+  opacity: 1;
+  pointer-events: auto;
+}
+.reach-drawer__row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 11px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--lang-ink-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.reach-drawer__row.is-on {
+  background: var(--lang-ink);
+  color: var(--lang-ground);
+}
+.reach-drawer__row:focus-visible {
+  outline: 2px solid var(--lang-interaction);
+  outline-offset: -2px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .reach-drawer__panel {
+    transition: width 180ms var(--ease-soft), opacity 140ms ease, padding 180ms var(--ease-soft);
+  }
+}
+
+/* THE "THERE IS MORE" MASK, shared (the phone pass, 2026-08-03). The belts have
+   drawn this since July and the /thoughts world since the last pass; /work's
+   filter row was the third horizontal surface and the only one without it, so
+   at 390px the row simply ended at the frame edge with no sign that
+   EXPLORATIONS continued past it. One class now, so the three cannot drift. */
+.edge-fade {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+}
+
+/* ============================================================
+   THE PHONE'S CROSSFADE HAS A HOLE IN IT (her report 2026-08-03: the door
+   animation is "a bit weird and not as smooth", with a screen recording).
+
+   HER OWN MEASUREMENTS, from the stopwatch on her device, say the machinery is
+   healthy: 43-108ms of wait and 326-432ms of animation across four different
+   transitions. So this is not lag, and my first reading of the video — "1.4
+   seconds of nothing" — was wrong: I assumed the tap happened at the first
+   frame I extracted and had no evidence of it.
+
+   The real fault is the SHAPE of the dissolve. The signed pair is
+     old: 140ms fade out
+     new: 300ms fade in, starting at 80ms
+   so at 140ms the outgoing page is at zero while the incoming one is only
+   (140-80)/300 = 20% in. For roughly 150ms the screen is mostly bare ground.
+
+   ON DESKTOP THAT IS INVISIBLE, and that is why it was signed off: the frozen
+   frame's named chrome (chrome-pill, page-tools, page-foot, chrome-lens) holds
+   full opacity right through the gap, so the frame stays and only the content
+   band swaps. On a phone since 2026-08-02 there is less of that: the frame
+   unfroze, so more of the page is ordinary content, and `.foot-pill` drops its
+   view-transition-name below lg (it is in flow at an arbitrary scroll offset, so
+   a shared name would fly it across the viewport). Nothing holds the screen
+   together while the gap is open.
+
+   So the gap is CLOSED, phone only. The asymmetry she signed is kept — out is
+   still faster than in, they are still not two equal opposing fades — but the
+   in no longer waits for the out to finish:
+     old: 180ms   new: 300ms at 0ms
+   Combined coverage now bottoms out around 78% instead of 20%.
+   Desktop is untouched and keeps exactly the signed pair.
+   ============================================================ */
+/* ============================================================
+   THE TRANSITION GETS ITS OWN GROUND (her recording 2026-08-03: pressing a door
+   gives a "hesitation" and "the screen gets a bit darker and then settles").
+
+   MEASURED FROM HER OWN VIDEO, average brightness of the page area, four door
+   presses: 250 -> 174 -> 250, each time. The drop happens in ONE frame, holds
+   FLAT for ~300ms, then snaps back. A crossfade would be a curve; a flat
+   plateau is a fixed surface showing through.
+
+   THE ARITHMETIC, and it closes the case. Two fading layers never add up to a
+   solid screen: with old at 180ms and new at 300ms, coverage bottoms out around
+   65%. For the observed dip, the surface behind must sit at luma ~14, which is
+   #0b0e13 — the DARK ground. Her recording needs 67.8% coverage against it; the
+   CSS produces 65-73% in exactly that window.
+
+   WHY THE DARK GROUND IS BEHIND A LIGHT PAGE: `html` has no background of its
+   own (only `body` does, and that background is what the root snapshot
+   captures), and index.html's `theme-color` metas are keyed on
+   `prefers-color-scheme`, i.e. the OS — not on the toggle. Her phone's OS is
+   dark, so Safari paints its canvas #0b0e13 even with the site pinned to light,
+   and the crossfade lets it through.
+
+   THE FIX: give the transition tree an opaque ground of its own. `::view-transition`
+   is the root of that tree and covers the viewport, so a background here sits
+   behind every snapshot and the gap composites against the right colour instead
+   of the canvas. Measured effect: a 76-level drop becomes about 1 level, which
+   is invisible. It is NOT phone-only, because the same hole opens on any desktop
+   whose OS is dark while the site is pinned light.
+   The 300ms dark hold is also, almost certainly, the "hesitation": her own
+   stopwatch says the machinery waits only 51-72ms.
+   ============================================================ */
+::view-transition {
+  background: var(--lang-ground);
+}
+
+/* ============================================================
+   THE PHONE'S PAGE CHANGE, REBUILT SIMPLY (her call 2026-08-03: "can't we just
+   delete it and write it again more simply. and go line by line and check if
+   the issue will appear in a specific line?").
+
+   That is exactly what we did, and the ladder gave a clean answer:
+
+       ?vt=off    no transition at all ......................... CLEAN
+       ?probe=1   the transition stripped to nothing: the
+                  browser's own animation, NOTHING named but the
+                  page, and none of our CSS ................... STILL DARK
+
+   Rung 1 is the floor. A bare view transition darkens on that engine with this
+   layout, so there was never a rule left to write, and five earlier fixes were
+   aimed at a layer that was never the cause. The whole phone view-transition
+   block that stood here (vt-hold, the `stay` pair, the object-fit pinning, the
+   group override) is DELETED rather than kept "just in case": none of it was
+   load-bearing and all of it was written against a wrong diagnosis.
+
+   WHAT REPLACES IT is what she said the good version looked like, "the
+   transition is just the pages content changing and coming up", as ONE CSS
+   animation. `main` remounts on every navigation (measured), so this fires by
+   itself: nothing to orchestrate, nothing to capture, and nothing that can
+   composite against black. lib/pageMotion.ts stops the API being called below lg.
+
+   Desktop keeps its view transitions untouched. It has never shown this, and the
+   frozen frame with its named chrome is what the motion vocabulary stands on
+   (DL amendment 23).
+   ============================================================ */
+/* NEVER PUT A TRANSFORM ON #main (her report, minutes later: "the thoughts map
+   are not loading its almost a black page").
+   A transform other than `none` makes an element the containing block for every
+   `position: fixed` DESCENDANT. `.nw-stage`, the whole /thoughts world, is fixed
+   and lives inside #main — so the moment #main carried a transform the stage
+   resolved against it instead of the viewport, and #main is a flex column whose
+   only child is that fixed element, so its height is 0. Measured: stage
+   offsetParent MAIN#main, rect height 0. The map did not fail to load; it was
+   laid out into nothing. `animation-fill-mode: both` then HELD that transform
+   after the animation, so it never recovered.
+   So #main gets OPACITY ONLY, which cannot create a containing block, and the
+   8px lift moves to SheetPage's own content wrapper (.page-rise) where there is
+   nothing fixed to break. /thoughts and the landing simply fade. */
+/* `backwards`, NOT `both`. `both` includes `forwards`, which HOLDS the final
+   frame — and a held transform, even an identity one, still makes the element a
+   containing block for fixed descendants. That is precisely the trap that
+   collapsed the /thoughts map when this lived on #main, so it is not left lying
+   around on .page-rise either. `backwards` applies the start values before the
+   animation and then lets the element return to its own styles: transform back
+   to `none`, opacity back to 1, no jump in either case because those are
+   already where the animation ends. */
+@media (max-width: 1023px) {
+  #main {
+    animation: page-fade 240ms var(--ease-soft) backwards;
+  }
+  .page-rise {
+    animation: page-rise 260ms var(--ease-soft) backwards;
+  }
+}
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes page-rise {
+  from {
+    transform: translate3d(0, 8px, 0);
+  }
+}
+/* The floor: reduced motion gets the final state and no movement at all. */
+@media (prefers-reduced-motion: reduce) {
+  #main,
+  .page-rise {
+    animation: none;
+  }
+}

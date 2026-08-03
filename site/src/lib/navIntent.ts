@@ -32,6 +32,8 @@
 // captures the old snapshot the instant startViewTransition runs and anything
 // set after that point is too late.
 
+import { armMorph } from './morphName'
+
 /** The room a path belongs to, so an in-room change can be told from a move. */
 function roomOf(path: string): string {
   const p = path.replace(/[?#].*$/, '').replace(/\/+$/, '') || '/'
@@ -77,5 +79,9 @@ export function travelTo(to: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '')
   const here = window.location.pathname
   setNavIntent(to, (base && here.startsWith(base) ? here.slice(base.length) : here) || '/')
+  // The programmatic half of the just-in-time morph naming (lib/morphName.ts).
+  // The belts navigate this way; the two SVG fields also come through here but
+  // carry no `data-morph`, because they already name only their active node.
+  armMorph(to)
   return to
 }

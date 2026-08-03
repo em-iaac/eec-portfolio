@@ -12,6 +12,8 @@ import SheetRoute from './pages/SheetRoute'
 import { useRouteHead } from './lib/routeHead'
 import { preloadPath, warmDoors } from './lib/preloadRoute'
 import { setNavIntent } from './lib/navIntent'
+import { armMorph, installMorphNaming } from './lib/morphName'
+import { installPhonePageMotion } from './lib/pageMotion'
 
 // Split out of the landing chunk so the perf-budgeted cover stays lean: the
 // gallery (with its overlay + video code) and the note prose only load when
@@ -153,6 +155,9 @@ function NotebookRedirect() {
 function RouteWarming() {
   useEffect(() => {
     warmDoors()
+    // FIRST, so it wraps outermost and the phone never reaches the API at all.
+    installPhonePageMotion()
+    installMorphNaming()
     const base = import.meta.env.BASE_URL.replace(/\/$/, '')
     const onIntent = (e: Event) => {
       const el = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null
@@ -174,6 +179,11 @@ function RouteWarming() {
       if (!href.startsWith('/') || href.startsWith('//')) return
       const to = base && href.startsWith(base + '/') ? href.slice(base.length) : href
       setNavIntent(to, window.location.pathname.slice(base.length) || '/')
+      // ...and name the ONE source that is about to travel (lib/morphName.ts).
+      // Same capture-phase timing, for the same reason: the old snapshot is
+      // taken the instant startViewTransition runs, so this is the last moment
+      // that counts.
+      armMorph(to)
     }
     document.addEventListener('pointerover', onIntent, { passive: true })
     document.addEventListener('focusin', onIntent, { passive: true })

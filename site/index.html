@@ -9,16 +9,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- DL v2 mode system: re-apply a persisted toggle choice BEFORE first
          paint so a forced mode never flashes the other ground. The default
-         (no stored choice) follows the OS via color-scheme in language.css. -->
+         (no stored choice) follows the OS via color-scheme in language.css.
+
+         THE METAS FOLLOW THE TOGGLE, NOT THE OS (2026-08-03). These two are
+         keyed on `prefers-color-scheme`, which is the DEVICE, so a visitor who
+         pins the site to light on a phone whose OS is dark gets a #0b0e13
+         browser canvas around a light page. That was not only a mismatched URL
+         bar: it was the surface showing through the page crossfade, and it is
+         what gave her the dark flash on every door press (the measurement is
+         written up at ::view-transition in language.css).
+         The default pair STAYS, because it is right for everyone who has made
+         no choice and it needs no JavaScript. When a choice IS stored, the
+         script below replaces them with one explicit meta. It runs after them,
+         in the head, so the correction lands before first paint. -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f6f7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0e13" />
     <script>
       try {
         var eecTheme = localStorage.getItem('eec-theme')
-        if (eecTheme === 'light' || eecTheme === 'dark')
+        if (eecTheme === 'light' || eecTheme === 'dark') {
           document.documentElement.dataset.theme = eecTheme
+          var olds = document.querySelectorAll('meta[name="theme-color"]')
+          for (var i = 0; i < olds.length; i++) olds[i].remove()
+          var m = document.createElement('meta')
+          m.name = 'theme-color'
+          m.content = eecTheme === 'dark' ? '#0b0e13' : '#f5f6f7'
+          document.head.appendChild(m)
+        }
       } catch (e) {}
     </script>
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f6f7" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0e13" />
     <link
       rel="preload"
       as="font"
