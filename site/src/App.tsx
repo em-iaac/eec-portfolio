@@ -11,7 +11,8 @@ import NotFound from './pages/NotFound'
 import SheetRoute from './pages/SheetRoute'
 import { useRouteHead } from './lib/routeHead'
 import { preloadPath, warmDoors } from './lib/preloadRoute'
-import { setNavIntent } from './lib/navIntent'
+import RouteHold from './components/RouteHold'
+import { getOpenedFrom, setNavIntent } from './lib/navIntent'
 import { armMorph, installMorphNaming } from './lib/morphName'
 import { installPhonePageMotion } from './lib/pageMotion'
 
@@ -56,22 +57,22 @@ const PrintCvRoute = lazy(() => import('./print/CvRoute'))
 // thought / the pillar. Same print rules: unlinked, noindexed, lazy.
 const PrintOgRoute = lazy(() => import('./print/OgRoute'))
 
-// Ground-coloured hold while a lazy chunk resolves. It rides --lang-ground
-// like every other surface: it used to be `bg-mylar`, a DIFFERENT white
-// (#f7f7f4 against the site's #f5f6f7), so the hold flashed a slightly wrong
-// paper. Route warming (lib/preloadRoute.ts) means this is rarely seen at all
-// now, but "rarely seen" is not "allowed to be wrong".
+// The hold while a lazy chunk resolves. It used to be one empty ground-coloured
+// div — which is exactly the "white screen for about a second" Emilie reported
+// from the deployed site on 2026-08-04. It now keeps the chrome and draws the
+// shape of the room it is standing in for; components/RouteHold.tsx carries the
+// design and the timing, and lib/preloadRoute.ts fixes the wait itself.
+//
 // THE HOLD MUST BE IDENTIFIABLE BY SOMETHING THAT IS NOT ITS PAINT (the phone
-// pass, 2026-08-02). scripts/prerender.mjs waits for this element to leave
-// before it snapshots a route. It used to look for `.bg-mylar`, and when the
-// class changed to --lang-ground above, the selector silently matched nothing:
-// the wait resolved on the first tick and SIX routes shipped their loading
-// state to crawlers (/work, /cv, /thoughts, /contact, /rights, the pillar; 29
-// words each against the landing's 2454). data-route-hold is a CONTRACT, not a
-// style. Renaming the class is free; this attribute is not.
-function GroundHold() {
-  return <div data-route-hold className="min-h-dvh bg-[var(--lang-ground)]" aria-hidden="true" />
-}
+// pass, 2026-08-02). scripts/prerender.mjs waits for `[data-route-hold]` to
+// leave before it snapshots a route. It used to look for `.bg-mylar`, and when
+// the class changed the selector silently matched nothing: the wait resolved on
+// the first tick and SIX routes shipped their loading state to crawlers
+// (/work, /cv, /thoughts, /contact, /rights, the pillar; 29 words each against
+// the landing's 2454). The attribute lives on RouteHold's root and is a
+// CONTRACT, not a style.
+const GridHold = <RouteHold shape="grid" />
+const LinesHold = <RouteHold shape="lines" />
 
 // On PUSH navigation: scroll to top (or hash target) and move focus to the
 // main region so keyboard/screen-reader users land on the new page. POP
@@ -96,6 +97,23 @@ function ScrollToTop() {
     // resets as normal).
     const inWork = (p: string) => p === '/work' || p.startsWith('/work/')
     if (inWork(prev) && inWork(pathname)) return
+    // ...AND THE SAME IS TRUE FROM EVERY OTHER ROOM (2026-08-04, found while
+    // building the modal scroll lock). Since the showcase started opening in
+    // place (pages/ShowcaseRoute.tsx, 2026-08-02) the page behind a project can
+    // be the landing, /cv or the pillar, not just the gallery — but this guard
+    // still only knew about /work. So opening Sensi from halfway down the CV
+    // scrolled the CV to the top underneath the sheet, and closing returned to
+    // a page that was no longer where she left it, which is the one thing
+    // opening in place exists to promise. Measured: /cv at scrollY 900, open,
+    // close, back at 0.
+    //
+    // `getOpenedFrom()` is the same record ShowcaseRoute reads to decide what to
+    // render behind, so the two can never disagree about whether this is a
+    // modal-over-a-page or a real arrival. Null means a cold load, a shared link
+    // or the prerenderer, where /work/:id IS the gallery and resetting is right.
+    // Focus is skipped with it: the sheet moves focus to the project title
+    // itself (components/work/WorkOverlay.tsx).
+    if (/^\/work\/[^/]+$/.test(pathname) && getOpenedFrom()) return
     // Same-path search-param navigations (e.g. the retired ?view=words URLs
     // stripping their param on /thoughts) must never reset scroll or steal
     // focus; the effect re-runs on navType flips (PUSH<->REPLACE) even when
@@ -258,7 +276,7 @@ export const routes: RouteObject[] = [
       {
         path: '/work',
         element: (
-          <Suspense fallback={<GroundHold />}>
+          <Suspense fallback={GridHold}>
             <Work />
           </Suspense>
         ),
@@ -270,7 +288,7 @@ export const routes: RouteObject[] = [
         // gallery for a cold arrival, a shared link or the prerenderer.
         path: '/work/:id',
         element: (
-          <Suspense fallback={<GroundHold />}>
+          <Suspense fallback={GridHold}>
             <ShowcaseRoute />
           </Suspense>
         ),
@@ -280,7 +298,7 @@ export const routes: RouteObject[] = [
       {
         path: '/thoughts',
         element: (
-          <Suspense fallback={<GroundHold />}>
+          <Suspense fallback={GridHold}>
             <Thoughts />
           </Suspense>
         ),
@@ -293,7 +311,7 @@ export const routes: RouteObject[] = [
         // shared and it is in the sitemap Google already crawled.
         path: '/contact',
         element: (
-          <Suspense fallback={<GroundHold />}>
+          <Suspense fallback={LinesHold}>
             <Contact />
           </Suspense>
         ),
@@ -302,7 +320,7 @@ export const routes: RouteObject[] = [
       {
         path: '/cv',
         element: (
-          <Suspense fallback={<GroundHold />}>
+          <Suspense fallback={LinesHold}>
             <CV />
           </Suspense>
         ),
@@ -313,7 +331,7 @@ export const routes: RouteObject[] = [
         // which is correct: the footline is its only way in.
         path: '/rights',
         element: (
-          <Suspense fallback={<GroundHold />}>
+          <Suspense fallback={LinesHold}>
             <Rights />
           </Suspense>
         ),
@@ -322,7 +340,7 @@ export const routes: RouteObject[] = [
         // THE PILLAR (S3): the exact phrase IS the slug (D6).
         path: '/behavior-information-modeling',
         element: (
-          <Suspense fallback={<GroundHold />}>
+          <Suspense fallback={LinesHold}>
             <Pillar />
           </Suspense>
         ),
@@ -331,7 +349,7 @@ export const routes: RouteObject[] = [
       {
         path: '/thoughts/:id',
         element: (
-          <Suspense fallback={<GroundHold />}>
+          <Suspense fallback={LinesHold}>
             <ThoughtRoute />
           </Suspense>
         ),
@@ -341,7 +359,7 @@ export const routes: RouteObject[] = [
             {
               path: '/lab',
               element: (
-                <Suspense fallback={<GroundHold />}>
+                <Suspense fallback={LinesHold}>
                   <Lab />
                 </Suspense>
               ),

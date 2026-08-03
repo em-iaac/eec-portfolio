@@ -1,4 +1,6 @@
 import { type ReactNode } from 'react'
+import useHeaderCollapse from '../hooks/useHeaderCollapse'
+import useIsDesktop from '../hooks/useIsDesktop'
 import TitleBlock from './TitleBlock'
 import Footer from './Footer'
 import Footline from './Footline'
@@ -72,6 +74,11 @@ export default function SheetPage({
       here and never will be; they stay in the pill. */
   reach?: ReachSet
 }) {
+  // Phone only: from lg up this frame is `h-dvh` + `overflow-hidden` and `#main`
+  // does the scrolling, so `window.scrollY` never moves and the hook would be
+  // reading a scroller that is not the one in use.
+  const isDesktop = useIsDesktop()
+  const [collapsed, openHeader] = useHeaderCollapse(!isDesktop)
   return (
     // `relative` FIXES A REAL SCROLL BUG (her report, 2026-07-30: "sometimes i
     // can scroll past the footer and footline"). Reproduced on /rights with the
@@ -120,9 +127,19 @@ export default function SheetPage({
           landing (LandingCover), including `pointer-events-none`: the band is
           full width and content scrolls under it, so without that it would eat
           every tap in the ~70px it covers. The pill re-enables its own events.
-          From lg up it is `static`, which is exactly what it was before. */}
-      <div className="frame-head pointer-events-none sticky top-0 z-40 lg:static lg:z-auto">
-        <TitleBlock tools={pillTools} toolsKey={toolsKey} />
+          From lg up it is `static`, which is exactly what it was before.
+
+          THE PILL READS THE SCROLL HERE TOO (Emilie's ruling 2026-08-04): down
+          collapses it to the mark, up opens it again, exactly as the landing has
+          done since 2026-07-27. hooks/useHeaderCollapse.ts carries the why, the
+          reduced-motion floor and why it is phone-only. `onFocusCapture` opens
+          the pill whenever focus lands inside it, because a keyboard cannot
+          scroll up to get its nav back. */}
+      <div
+        className="frame-head pointer-events-none sticky top-0 z-40 lg:static lg:z-auto"
+        onFocusCapture={openHeader}
+      >
+        <TitleBlock tools={pillTools} toolsKey={toolsKey} collapsed={collapsed} />
       </div>
       {/* `relative` HERE IS THE ACTUAL FIX for "sometimes i can scroll past the
           footer" (2026-07-30, round 2 of the report). Putting it only on the

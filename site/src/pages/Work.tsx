@@ -17,21 +17,19 @@
 // 2026-07-10; dekSigned in the content files); the page's intro line retired
 // at G2 (no page intros, sitewide). New copy on this surface ships draftCopy
 // until she signs it, as always (Section 14).
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 // G1 (2026-07-10): the opened card IS the showcase now (WorkOverlay grew the
 // signed spine; the Pen Table sheet tier retired, /sheets/* redirects here).
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
-import type { ReachSet } from '../components/reach/verbs'
-import { LensMark } from '../components/ui/Pill'
 import ThoughtIndexRows from '../components/ThoughtIndexRows'
 import WorkCard from '../components/work/WorkCard'
-import WorkGroundTools, { BookDownloadLink } from '../components/work/WorkPillTools'
+import WorkGroundTools, { BookDownloadLink, WorkFilterRow } from '../components/work/WorkPillTools'
 import WorkOverlay from '../components/work/WorkOverlay'
 import { LENSES, type Lens } from '../components/Lens'
 import { travelTo } from '../lib/navIntent'
 import { CORRELATIONS, thoughtIndexEntries } from '../data/registry'
-import { WORK_ENTRIES, WORK_LENSES, workEntryById } from '../data/work'
+import { WORK_ENTRIES, workEntryById } from '../data/work'
 
 // THE CROSS-GLOW (LOOK & ORDER, Emilie's gate 2026-07-18): hovering a thought
 // row softly rings the work tiles it is correlated to, the mind-graph's braid
@@ -72,35 +70,12 @@ export default function Work() {
 
   const selected = id ? workEntryById(id) : undefined
 
-  // WHAT YOU ARE IN THIS ROOM TO DO (the reach prototype, 2026-08-03): choose a
-  // lens, and get back to the top of a 2260px grid. Those are the two things a
-  // visitor does here repeatedly, and both currently live at y=88 or above, in
-  // the stretch zone. The wording is the SHORT lens form components/Lens.tsx has
-  // carried since July, with the long name as the accessible name: no new copy.
-  const reachSet: ReachSet = useMemo(
-    () => ({
-      label: 'Filter by lens',
-      handle: 'lens',
-      verbs: [
-        { id: 'all', label: 'All work', short: 'ALL', to: '/work', active: activeLens === null },
-        ...WORK_LENSES.map((l) => ({
-          id: l,
-          label: LENSES[l].label,
-          short: LENSES[l].short,
-          to: `/work#${l}`,
-          active: activeLens === l,
-          mark: <LensMark lens={l} active={activeLens === l} />,
-        })),
-        // NO "BACK TO TOP" (2026-08-03). It was here for a bar at the foot of a
-        // 2260px grid, and it is the only reason the row runs past the frame:
-        // with it 426px against 390, without it 365px, so the row simply fits.
-        // Once the filters are frozen in the header the case for it is thin
-        // anyway, and both phone browsers already have scroll-to-top built into
-        // the status bar, which is a gesture a visitor brought with them.
-      ],
-    }),
-    [activeLens],
-  )
+  // NO DRAWER IN THIS ROOM (Emilie's ruling 2026-08-04). /work's one verb is
+  // the lens, and the lens row is back in the page above the grid, where it
+  // also tells a first-time visitor that three kinds of work exist here. The
+  // drawer stays where it saves real work: /cv's five sections in a 4.1-screen
+  // document, the map's seven years, and a note's three ways onward. A room
+  // whose verbs are already visible does not need a tab to hide them behind.
 
   // #thoughts is a section anchor, not a lens facet (the facet parse above
   // ignores it): a note page's "ALL THOUGHTS" corridor lands on the list.
@@ -220,7 +195,6 @@ export default function Work() {
          every page, with or without a tool. So the reason for the split is
          gone, and with it the split. */
       footerTools={<BookDownloadLink />}
-      reach={reachSet}
     >
       {/* THE h1 IS sr-only AT EVERY SIZE NOW (Emilie's ruling 2026-08-02,
           board option C). It was already sr-only on lg for the exact reason it
@@ -240,18 +214,29 @@ export default function Work() {
           keeps that gutter as its own first inset, exactly like HorizontalBelt.
           THE BOOK IS GONE FROM HERE: it lives in the footer at every width now
           (see footerTools above), so this row is filters and nothing else. */}
-      {/* THE PHONE'S FILTER ROW IS GONE FROM THE PAGE (her ruling 2026-08-03,
-          after trying four reach shapes on her own phone: "let's go for the
-          drawer, for both, the work and the cv"). The lenses now live in the
-          LENS drawer on the right edge, which is what she judged, since the
-          prototype hid this row whenever a shell was live.
-          It buys back the whole block above the first tile and puts the control
-          in the thumb arc instead of the stretch zone. From `lg` up nothing
-          changes: the docked WorkGroundTools row in the header is still the
-          desktop filter and the drawer is `lg:hidden`.
-          ONE THING TO WATCH, and it is the honest cost of the choice: a filter
-          behind a tab is a filter a first-time visitor has to find. The tab is
-          labelled LENS rather than a bare glyph for exactly that reason. */}
+      {/* THE FILTER ROW COMES BACK INTO THE PAGE (Emilie's ruling 2026-08-04).
+          It moved into the LENS drawer on 2026-08-03 and the honest cost was
+          written down at the time: "a filter behind a tab is a filter a
+          first-time visitor has to find". Shown the measurement — /work is only
+          2.6 screens deep, so filtering here saves under two flicks, against
+          /cv's 4.1 screens and five sections — she ruled the drawer earns its
+          place in the rooms where it saves real work and not in this one.
+
+          The second reason, and the better one: the row is not only a control.
+          Four words sitting under the header SAY there are three kinds of work
+          in this room. A tab labelled LENS cannot say that to someone who has
+          never pressed it.
+
+          It costs back the ~72px above the first tile that the drawer bought,
+          which is a real give-back and is why she was shown the number first.
+          Everything about the row itself is unchanged from 2026-08-02: one
+          scrolling line, short lens names with the long ones as accessible
+          names, `-mx-5` bleeding it full width, the shared edge-fade mask. */}
+      <div className="-mx-5 mb-3 sm:-mx-8 lg:hidden">
+        <div className="edge-fade no-scrollbar overflow-x-auto px-5 sm:px-8">
+          <WorkFilterRow active={activeLens} nowrap />
+        </div>
+      </div>
       {/* An invisible announcer keeps the filter change audible for screen
           readers, in main so it lives in an always-rendered region. */}
       <p className="sr-only" aria-live="polite">

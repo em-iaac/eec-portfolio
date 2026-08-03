@@ -49,6 +49,7 @@
 //     chunk is ~1KB and lands inside the sheet's own entrance; a placeholder
 //     would be a second thing moving.
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import useScrollLock from '../../hooks/useScrollLock'
 import { Link } from 'react-router-dom'
 import { loadSpine, type ProjectSpine } from '../../content/projects'
 import useSheetSwipe from './useSheetSwipe'
@@ -198,7 +199,12 @@ function SpineBeat({ label, beat, children }: { label: string; beat: string; chi
 
 export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
   const titleId = `work-title-${entry.id}`
+  // The page behind this sheet does not scroll while it is open
+  // (hooks/useScrollLock.ts carries the why, and why containment was not
+  // enough). Counted, so the Lightbox stacking over this holds its own.
+  useScrollLock()
   const [lightbox, setLightbox] = useState<number | null>(null)
   // The cancel listener is bound once (layout effect below) and must read the
   // CURRENT lightbox state, not its mount-time closure: a ref carries it.
@@ -223,6 +229,22 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
     const dlg = ref.current
     if (!dlg) return
     if (!dlg.open) dlg.showModal()
+    // A MODAL FOCUSES ITS SUBJECT, NOT ITS CLOSE CONTROL (Emilie's ruling
+    // 2026-08-04; her report: "the close button shows a red outline on tap").
+    //
+    // `showModal()` focuses the first focusable element in the dialog, and that
+    // is the ✕ — measured, `document.activeElement` was the close button the
+    // instant a project opened. WebKit's :focus-visible heuristic rings an
+    // element the dialog focused, and the ring is `--lang-interaction`, the
+    // site's red. Chromium does not paint it, which is why this only ever
+    // showed on her phone.
+    //
+    // The fix is not to suppress the ring. Removing a focus ring for touch
+    // removes it for the keyboard too, and that is a floor. Focus goes to the
+    // TITLE instead: no control is focused so no control ring can appear, and a
+    // screen reader now opens on the project's name rather than on the word
+    // "Close". Tab still reaches ✕ and it still rings, exactly as before.
+    titleRef.current?.focus({ preventScroll: true })
     // The keydown-less fallback (Android back gesture): close the plate,
     // UNLESS the Lightbox is stacked on top — that close request is the
     // Lightbox's to consume, and the plate must stay open underneath.
@@ -364,7 +386,14 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
             proof); desktop puts the asset left (sm:order-first). */}
         <div className={current ? 'grid grid-cols-1 gap-x-7 gap-y-4 sm:grid-cols-[1.05fr_1fr]' : ''}>
           <div className="pr-9 sm:pr-8">
-            <h2 id={titleId} className="text-lead leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)]">
+            {/* tabIndex -1 so the sheet can land focus here on open (see the
+                layout effect): programmatically focusable, never a tab stop. */}
+            <h2
+              ref={titleRef}
+              tabIndex={-1}
+              id={titleId}
+              className="text-lead leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)] outline-none"
+            >
               {entry.title}
             </h2>
             <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1">

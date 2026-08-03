@@ -14,9 +14,13 @@
 //
 // The fix is not to change the transition, it is to make sure the chunk is
 // already there when the transition starts, so the new snapshot is the real
-// page. Two passes, both after first paint so neither can touch LCP:
-//   - warmDoors(): on idle, the four doors every visitor uses.
+// page. Two passes, both after the landing has painted so neither can touch LCP:
+//   - warmDoors(): the four doors every visitor uses, the moment the fonts have
+//     settled or `load` fires, whichever comes first (see the gate note below —
+//     the wait, not the weight, was the cold-blank bug).
 //   - the delegated pointer/focus listener in App: anything else, on intent.
+//     `pointerover` fires on TOUCH too, so a finger already warms on the way
+//     down; that is worth ~100ms, which is why the pass above still matters.
 // Marks in the two SVG fields are not <a> elements, so they call preloadPath
 // from their own activate handlers.
 //
@@ -92,24 +96,49 @@ export function warmDoors(): void {
       load().catch(() => started.delete(load))
     })
   }
-  // AFTER `load`, never on a bare timer. The landing's LCP is the handwritten
-  // hero line and it measures ~4.8s deployed; four chunk downloads fired on a
-  // fixed 2.5s timer would compete with it for bandwidth and could push the
-  // one number the landing is judged on. Waiting for `load` means every
-  // critical resource has already landed, so this can only ever use idle
-  // capacity. The landing is recruiter-critical: warming is a convenience and
-  // must never be allowed to cost it anything.
+  // AFTER THE LANDING HAS PAINTED, never on a bare timer. The landing's LCP is
+  // the handwritten hero line and it measures ~4.8s deployed; four chunk
+  // downloads fired on a fixed timer would compete with it for bandwidth and
+  // could push the one number the landing is judged on. The landing is
+  // recruiter-critical: warming is a convenience and must never be allowed to
+  // cost it anything.
+  //
+  // THE GATE CHAIN WAS THE COLD-BLANK BUG (Emilie's report 2026-08-04, from the
+  // deployed site: "landing to any door shows a white screen for about a
+  // second, the first time"). This used to wait for `load` and then for
+  // requestIdleCallback with a 2000ms fallback timer. iOS Safari HAS NO
+  // requestIdleCallback, so `ric?.()` fell through and the real gate was always
+  // `load` + a full 2000ms. Tap inside that window — which is most first visits
+  // — and every door is cold, which is why she saw it even on /contact, whose
+  // whole chunk is 2.8KB gzipped. Weight was never the problem; the wait was.
+  //
+  // Two changes, and neither one moves the warm before the paint:
+  //
+  //   · The fallback is 150ms, not 2000ms. It still only ever starts AFTER the
+  //     signal below, so the guarantee above is unchanged; it just stops adding
+  //     two idle seconds on top of it.
+  //   · `document.fonts.ready` races the `load` event. `load` waits for every
+  //     subresource — stylesheets, preloaded fonts, the analytics script — long
+  //     after the page is usable. The LCP element here is a FONT-BLOCKED text
+  //     line, so fonts settling is the moment LCP can paint: strictly after the
+  //     number we are protecting, and strictly before `load`. It is also the
+  //     one paint signal Safari gives us (no LCP PerformanceObserver, no
+  //     `rel=prefetch`), and it settles on font FAILURE too, so it cannot hang.
+  //
+  // The 3s ceiling is the backstop for the pathological case where neither
+  // signal arrives: a warm that never happens is the bug we are fixing.
   const schedule = () => {
-    // BOTH schedulers, not one or the other: requestIdleCallback is the polite
-    // path, but it is tied to the rendering loop and never fires in a
-    // backgrounded tab, which is exactly where a visitor who opened the site
-    // in a second tab lives. `run` is idempotent, so whichever wins, the work
+    // requestIdleCallback stays as the polite path where it exists, but nothing
+    // depends on it any more. `run` is idempotent, so whichever wins, the work
     // happens once.
     const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void })
       .requestIdleCallback
-    ric?.(run, { timeout: 2000 })
-    window.setTimeout(run, 2000)
+    ric?.(run, { timeout: 150 })
+    window.setTimeout(run, 150)
   }
+  const fonts = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts
+  fonts?.ready.then(schedule, schedule)
   if (document.readyState === 'complete') schedule()
   else window.addEventListener('load', schedule, { once: true })
+  window.setTimeout(schedule, 3000)
 }

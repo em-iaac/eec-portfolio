@@ -8,9 +8,11 @@
 // leaf (Emilie 2026-07-19: "only all thoughts, next and in time"); the
 // pillar still links out to its cluster. No panel under the prose (glass is
 // for UI, not words); the SKETCH DOT is the one sanctioned figure (S5).
-import { type ReactNode } from 'react'
+import { useMemo, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
+import useIsDesktop from '../hooks/useIsDesktop'
+import type { ReachSet } from '../components/reach/verbs'
 import { LensPill } from '../components/ui/Pill'
 import { type Lens } from '../components/Lens'
 import { vtName } from '../lib/viewTransition'
@@ -53,8 +55,25 @@ export default function ThoughtLeaf(props: {
   // mind-graph node) that opened it travels into it (src/lib/viewTransition.ts).
   const { id } = useParams()
 
-  // THE HEADER INFO + CONTROLS (Emilie's ruling round 2): the thought's meta
-  // and the way to leaf through the record both ride the header line.
+  // THE HEADER EMPTIES ON A PHONE (Emilie's ruling 2026-08-04, from the
+  // consistency sweep). Measured at 390px, a note's header band was 131px
+  // against every other room's 76: the pill already fills the line at 366px, so
+  // these tools had nowhere to go but a second row, and they wrapped into a
+  // third. 55px of chrome, on the one page whose entire job is to be read.
+  //
+  // The two halves go different ways, because they are different things:
+  //   · THE META is information about this note, so it goes back into the
+  //     article, above the title, where it costs the same pixels once and then
+  //     scrolls away. (It rode the header from her ruling of 2026-07-19, which
+  //     was a desktop-era decision about a frozen frame; below lg there is no
+  //     frozen frame any more.)
+  //   · THE THREE CONTROLS are verbs — ways on to another note — so they go
+  //     into the room's drawer, in the thumb arc, where every other room's verbs
+  //     now live. They also gain 8px each: 36px was under the floor.
+  // From lg up NOTHING changes: the header line has room there, and that is the
+  // composition she signed.
+  const isDesktop = useIsDesktop()
+
   const headerInfo = (
     <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1">
       <div className="flex flex-wrap items-center gap-x-3 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
@@ -82,11 +101,45 @@ export default function ThoughtLeaf(props: {
     </div>
   )
 
+  // THE ROOM'S VERBS (Emilie's ruling 2026-08-04: the drawer becomes a real
+  // per-room system). A note's verbs are its three ways onward, which is
+  // exactly what was crowding the header. `leaf` is not new wording: it is the
+  // word this file has used for these controls since it was written ("the way
+  // to leaf through the record", above).
+  const reachSet: ReachSet = useMemo(
+    () => ({
+      label: 'Leaf through the record',
+      handle: 'leaf',
+      verbs: [
+        { id: 'all', label: 'All thoughts', to: '/work#thoughts' },
+        { id: 'time', label: 'In time', to: `/thoughts#${id ?? ''}` },
+        ...(next ? [{ id: 'next', label: 'Next', to: next.route }] : []),
+      ],
+    }),
+    [id, next],
+  )
+
   return (
-    <SheetPage center={false} pillTools={headerInfo} toolsKey="leaf">
+    <SheetPage
+      center={false}
+      pillTools={isDesktop ? headerInfo : undefined}
+      toolsKey="leaf"
+      reach={isDesktop ? undefined : reachSet}
+    >
       <article className="mx-auto w-full max-w-[680px] pt-8 pb-12">
-        {/* Only the title in the content now (Emilie's ruling round 2): the
-            meta moved to the header line. */}
+        {/* THE META, ON A PHONE ONLY (2026-08-04). Same three facts the header
+            carries from lg up, in the same order and the same words; here they
+            simply belong to the article, which is why they may scroll away.
+            Rendered from the identical values, so the two can never disagree. */}
+        {!isDesktop && (
+          <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
+            <span>~ THOUGHT · {date}</span>
+            <LensPill lens={lens} />
+            {number && <span>{number}</span>}
+          </div>
+        )}
+        {/* Only the title in the content on desktop (Emilie's ruling round 2):
+            the meta moved to the header line there. */}
         <h1
           className="mb-6 max-w-[22ch] font-serif text-display leading-[1.22] font-medium lowercase italic tracking-[-0.01em] text-[var(--lang-ink)]"
           style={{ viewTransitionName: id ? vtName(`/thoughts/${id}`) : undefined }}

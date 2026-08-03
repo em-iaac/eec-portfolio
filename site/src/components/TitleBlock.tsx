@@ -229,10 +229,17 @@ export default function TitleBlock({
   collapsed = false,
 }: {
   tools?: React.ReactNode
-  /** THE LANDING ONLY (2026-07-27). Scrolling DOWN squeezes the pill to the
-   *  mark alone and the tools to their compact form; scrolling UP opens it
-   *  again. Every interior page is a frozen frame that never scrolls, so it
-   *  never passes this and its header is untouched. */
+  /** Scrolling DOWN squeezes the pill to the mark alone and the tools to their
+   *  compact form; scrolling UP opens it again.
+   *
+   *  EVERY PAGE, NOT JUST THE LANDING (Emilie's ruling 2026-08-04). This used to
+   *  say interior pages are frozen frames that never scroll, so they never pass
+   *  it — true when it was written, and stale since the phone pass unfroze the
+   *  frame below lg on 2026-08-02 to give the URL bar back its collapse. On a
+   *  phone every room is now an ordinary tall document, so every room reads the
+   *  scroll; SheetPage wires it (hooks/useHeaderCollapse.ts). From lg up the
+   *  frame IS still frozen and this stays false, so the desktop header is
+   *  byte-for-byte what it was. */
   collapsed?: boolean
   /** The IDENTITY of this tool set, not its route. Two surfaces share a key
    *  only when their tools are literally the same thing (/work and /work/:id

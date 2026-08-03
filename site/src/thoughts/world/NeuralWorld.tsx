@@ -30,6 +30,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TitleBlock from '../../components/TitleBlock'
+import ReachControls from '../../components/reach/ReachControls'
+import type { ReachSet } from '../../components/reach/verbs'
 import { LENSES, type Lens } from '../../components/Lens'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import { NOW } from '../../data/now'
@@ -161,6 +163,9 @@ export default function NeuralWorld() {
     let wakeTimer = 0
     const raf = requestAnimationFrame(() => {
       const scale = svg.getBoundingClientRect().height / WORLD.h || 1
+      // The arrival position is chosen, so the year snap must not adjust it.
+      stage.classList.add('is-free')
+      window.setTimeout(() => stage.classList.remove('is-free'), 700)
       if (target) {
         stage.scrollLeft = target.x * scale - stage.clientWidth / 2
         target.forceT = 1
@@ -429,11 +434,57 @@ export default function NeuralWorld() {
   // both directions. Reduced motion jumps instead of gliding, and a mark that
   // is already near enough to the middle is left alone: re-centring by 12px is
   // a twitch, not a movement.
+  // WHERE THE SNAP POINTS GO, IN CSS PIXELS (2026-08-04). The year rules are
+  // SVG inside one <svg>, and an SVG element cannot carry `scroll-snap-align`,
+  // so the browser needs seven ordinary elements to snap to. They are absolutely
+  // positioned inside the stage, which scrolls them with the content, and that
+  // means their offsets have to be REAL PIXELS: a percentage would resolve
+  // against the stage's 390px padding box, not against the 5355px of world
+  // inside it. The scale comes from the SVG's own rendered width, so a rotation,
+  // a resize or a browser zoom simply re-measures — the same reading
+  // scrollToWorldX takes, one axis over.
+  const [snapAt, setSnapAt] = useState<number[]>([])
+  useEffect(() => {
+    const svg = svgRef.current
+    if (!svg) return
+    const measure = () => {
+      const w = svg.getBoundingClientRect().width
+      if (!w) return
+      // WORLD.skeleton, not the `sk` alias: that const is declared further down
+      // this component, so reading it from a memo or an effect body that runs
+      // during the same render is a temporal dead zone error. It cost one blank
+      // page to find, and tsc does not catch it.
+      setSnapAt(WORLD.skeleton.years.map((y) => (y.x / WORLD.w) * w))
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(svg)
+    return () => ro.disconnect()
+  }, [])
+
   const HORIZON_PX = 90
+  // SNAPPING STANDS ASIDE FOR A DELIBERATE MOVE (2026-08-04, with the year
+  // snap). Every call below has already chosen an exact position for a reason —
+  // a deep link centres its node, TODAY lands on the live tip, and `centreOn`
+  // even declines to move a mark that is close enough. Proximity snapping would
+  // pull each of those to the nearest year rule a moment later and quietly undo
+  // the judgement. The class is cleared on a timer rather than `scrollend`,
+  // which Safari did not have until recently and which never fires at all when
+  // the requested position is where we already are.
+  const freeTimer = useRef(0)
+  function freeSnap() {
+    const stage = stageRef.current
+    if (!stage) return
+    stage.classList.add('is-free')
+    window.clearTimeout(freeTimer.current)
+    freeTimer.current = window.setTimeout(() => stage.classList.remove('is-free'), 700)
+  }
+
   function scrollToWorldX(worldX: number, smooth = true) {
     const stage = stageRef.current
     const svg = svgRef.current
     if (!stage || !svg) return
+    freeSnap()
     const scale = svg.getBoundingClientRect().height / WORLD.h || 1
     const target = worldX * scale - stage.clientWidth / 2
     const max = stage.scrollWidth - stage.clientWidth
@@ -449,6 +500,25 @@ export default function NeuralWorld() {
     const glide = smooth && !prm && distance < stage.clientWidth * 2
     stage.scrollTo({ left, behavior: glide ? 'smooth' : 'auto' })
   }
+  // The years, as the room's verbs. Derived from the same `sk.years` the map
+  // draws, so a year can never appear in the drawer that is not on the map.
+  const yearsSet: ReachSet = useMemo(
+    () => ({
+      label: 'Jump to a year',
+      handle: 'years',
+      // WORLD.skeleton for the same temporal-dead-zone reason as the snap
+      // markers above: this memo body runs during the render that declares `sk`.
+      verbs: WORLD.skeleton.years.map((y) => ({
+        id: y.label,
+        label: y.label,
+        onPress: () => scrollToWorldX(y.x),
+      })),
+    }),
+    // sk is derived once from the registry; scrollToWorldX reads live refs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
+
   function centreOn(id: string) {
     const stage = stageRef.current
     const h = nodesRef.current.get(id)
@@ -685,6 +755,19 @@ export default function NeuralWorld() {
             the header and footer lines now (.nw-stage, index.css), so no
             node ever runs under the chrome and nothing needs fading. */}
 
+        {/* THE MAP'S OWN DRAWER (Emilie's ruling 2026-08-04: the drawer becomes
+            a real per-room system, "the thoughts page when you open them and
+            such things"). This room's verbs are its YEARS — the same seven the
+            map already draws, 2020 to 2026 — so the drawer is the deliberate way
+            to a year and the snap is the casual one. They use the same
+            `scrollToWorldX` the tap-to-centre has always used, so a jump from
+            the drawer and a jump from a node behave identically.
+            WATCH IT GROW and TODAY STAY AT THE FOOT (her ruling, same message).
+            They are not ways of getting somewhere, they are things you do to the
+            map, and the foot row is what makes this the one room that already
+            reads one-handed. Two systems, two jobs. */}
+        <ReachControls set={yearsSet} />
+
         {/* the stage: full-bleed, drag/wheel/keyboard panning */}
         <section
           ref={stageRef}
@@ -692,6 +775,13 @@ export default function NeuralWorld() {
           className="nw-stage z-0 bg-[var(--lang-ground)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
           aria-label="The whole mind as one neural world: every project, thought, milestone and award in time. It wakes near your pointer; drag sideways to explore."
         >
+          {/* The seven things a flick can settle on (index.css, .nw-snap).
+              Zero-width, 1px tall, pointer-events: none — they exist only so the
+              browser's own snapping has somewhere to land, and they sit at the
+              same fractions of the world's width as the drawn year rules. */}
+          {snapAt.map((x, i) => (
+            <div key={i} className="nw-snap" style={{ left: `${x}px` }} aria-hidden="true" />
+          ))}
           <svg ref={svgRef} viewBox={`0 0 ${WORLD.w} ${WORLD.h}`} preserveAspectRatio="xMidYMid meet">
             {PRERENDERING ? null : <>
             {/* year columns */}

@@ -36,6 +36,7 @@ import LogoMark from '../components/LogoMark'
 import TitleBlock from '../components/TitleBlock'
 import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 import useIsDesktop from '../hooks/useIsDesktop'
+import useHeaderCollapse from '../hooks/useHeaderCollapse'
 import MindGraphSrNav from './MindGraphSrNav'
 import { PRERENDERING } from '../lib/prerender'
 import Strips, { HorizontalBelt, PauseToggle, STRIP_PROJECTS, StripTile, ThoughtTile } from './Strips'
@@ -467,41 +468,14 @@ function PhoneProof({ paused }: { paused: boolean }) {
   )
 }
 
-// THE HEADER THAT READS THE SCROLL (Emilie, 2026-07-27). Down collapses it to
-// the mark and the "/", up opens it again. Two things keep it honest:
-//   · REDUCED MOTION NEVER COLLAPSES. The pill simply stays open. A header
-//     that resizes itself as you read is motion, and the floor is that reduced
-//     motion rests calm.
-//   · It is always open near the top, so the first screen is never met by a
-//     stub, and always open on focus (see onFocusCapture below), because
-//     "scroll up" is not a gesture a keyboard has.
-// A 6px dead band stops a trackpad's jitter from flickering it open and shut.
-function useHeaderCollapse(): [boolean, (v: boolean) => void] {
-  const prm = usePrefersReducedMotion()
-  const [collapsed, setCollapsed] = useState(false)
-  useEffect(() => {
-    if (prm) {
-      setCollapsed(false)
-      return
-    }
-    let last = window.scrollY
-    const onScroll = () => {
-      const y = window.scrollY
-      if (y < 140) setCollapsed(false)
-      else if (y > last + 6) setCollapsed(true)
-      else if (y < last - 6) setCollapsed(false)
-      last = y
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [prm])
-  return [collapsed, setCollapsed]
-}
+// The header that reads the scroll now lives in hooks/useHeaderCollapse.ts:
+// Emilie extended it to every page on 2026-08-04, so the landing shares the
+// hook rather than owning a private copy that could drift from the rooms'.
 
 export default function LandingCover() {
   // (THE OVERTURE RETIRED at Emilie's cut, 2026-07-27: see index.css. The
   // column's tiers now simply arrive.)
-  const [collapsed, setCollapsed] = useHeaderCollapse()
+  const [collapsed, openHeader] = useHeaderCollapse()
   const [beltsPaused, setBeltsPaused] = useState(false)
   // ONE BELT SYSTEM IN THE DOM AT A TIME (the phone pass, 2026-08-02). Both
   // used to be built and one hidden with `display: none`; on a phone that was
@@ -575,11 +549,11 @@ export default function LandingCover() {
           a keyboard user cannot "scroll up" to get their nav back. */}
       <div
         className="pointer-events-none sticky top-0 z-40"
-        onFocusCapture={() => setCollapsed(false)}
+        onFocusCapture={openHeader}
       >
         <TitleBlock
           collapsed={collapsed}
-          tools={<LandingSearch collapsed={collapsed} onExpand={() => setCollapsed(false)} />}
+          tools={<LandingSearch collapsed={collapsed} onExpand={openHeader} />}
           toolsKey="landing"
         />
       </div>

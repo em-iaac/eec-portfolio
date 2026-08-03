@@ -661,6 +661,47 @@ h3 {
   }
 }
 
+/* A FLICK SETTLES ON A YEAR (Emilie's ruling 2026-08-04; parked since
+   2026-08-02 as "a real feature rather than a tweak").
+   THE MEASUREMENT that decided its shape: the stage is 5355px against a 390px
+   screen — 13.7 screens — with 7 year rules, 2020 to 2026, averaging 585px
+   apart. She was shown the alternative, a true zoom-out-to-fit, and it is scale
+   0.073: the whole map on one screen with every label unreadable. Snapping is
+   the honest version of zooming out. Seven stops, six flicks end to end, and
+   nothing ever shrinks.
+   IT NEEDED NO NEW ENGINE. The stage has always been `overflow-x: auto`, so the
+   browser's own snapping does it, momentum and all. The only thing missing was
+   something to snap TO: the year rules are SVG inside one <svg>, and an SVG
+   element cannot carry `scroll-snap-align`. Hence the marker layer in
+   NeuralWorld.tsx — seven zero-width divs at the same fractions of the world's
+   width, so they land exactly on the drawn rules and cost nothing to paint.
+   `proximity`, NOT `mandatory`: the map is a thing to wander, and mandatory
+   would forbid resting between two years, which is where most of the record
+   actually is. It only tidies the end of a flick.
+   PHONES ONLY. A mouse drags this stage by writing scrollLeft directly, and a
+   trackpad has no flick to settle; snapping there would only fight the hand. */
+@media (max-width: 1023px) {
+  .nw-stage {
+    scroll-snap-type: x proximity;
+  }
+}
+/* Suspended around every PROGRAMMATIC scroll (a #id deep link, TODAY, a tap
+   that centres a mark). Those already choose an exact position for a reason,
+   and `centreOn` even declines to move a mark that is close enough — snapping
+   would drag it to the nearest year straight afterwards and undo the judgement.
+   NeuralWorld adds and removes the class around the call. */
+.nw-stage.is-free {
+  scroll-snap-type: none;
+}
+.nw-snap {
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 1px;
+  scroll-snap-align: start;
+  pointer-events: none;
+}
+
 /* the ruler: the record is drawn with a ruler, the thinking by a nerve */
 .nw-lane {
   fill: none;

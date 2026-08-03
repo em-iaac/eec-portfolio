@@ -693,6 +693,19 @@ textarea,
   overflow: hidden;
   padding: 9px 12px 10px;
   text-align: left;
+  /* PRESS AND HOLD REVEALS THE COVER (Emilie's ruling 2026-08-04;
+     components/work/useLongPressReveal.ts). A long press is also how a phone
+     asks for the text-selection callout, and the two land on the same tile.
+     `-webkit-touch-callout` is the iOS-specific half — it is what stops Safari
+     throwing its own sheet over the cover just as it appears — and
+     `user-select` is what stops the title and the award line highlighting blue
+     under a finger that is only holding still. The context menu itself is
+     cancelled in the hook, where the gesture is known.
+     Both are harmless on a mouse: neither the callout nor a stray selection
+     happens when a cursor rests on a tile. */
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 /* (The round-2 xl padding tighten retired at round 4: option B's full-width
    grid gives the plates 163-186px of width, room enough for the full frame.) */
@@ -1207,7 +1220,13 @@ li[data-glow] > button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
+  /* 44px, NOT 24 (the sweep, 2026-08-04). It measured 24 x 88: tall enough and
+     6px too narrow, and being flush to the screen edge does not excuse it —
+     that argument works for a thumb coming from the side and not for one coming
+     down the glass. It is also the ONLY way into this room's tools on a phone,
+     which is the worst place on the site to be under the floor. The word inside
+     is unchanged; this is 20px of pad. */
+  width: 44px;
   min-height: 88px;
   border-radius: 12px 0 0 12px;
   font-family: var(--font-mono);
@@ -1249,7 +1268,12 @@ li[data-glow] > button {
   display: flex;
   align-items: center;
   gap: 7px;
-  min-height: 38px;
+  /* 44, not 38 (the sweep, 2026-08-04). Six pixels under the floor, in the
+     control that is now the only way to filter /work or jump the CV on a phone.
+     Four rows at 44 with 2px gaps and 5px of panel padding is 194px against the
+     old 170 — 24px more of a 844px screen, for a list that is only on screen
+     while it is being used. */
+  min-height: 44px;
   padding: 0 11px;
   border-radius: var(--r-pill);
   font-family: var(--font-mono);
@@ -1422,5 +1446,62 @@ li[data-glow] > button {
   #main,
   .page-rise {
     animation: none;
+  }
+}
+
+/* ============================================================
+   THE ROUTE HOLD SKELETON (Emilie's ruling 2026-08-04, the phone pass part
+   three). components/RouteHold.tsx carries the full account; this owns the
+   paint and the two animations.
+
+   NOTHING FOR 300ms. The delay is the whole design: a loading state seen for
+   less than about a third of a second reads as a glitch, not a wait, and most
+   navigations now beat it entirely (the doors warm as soon as the fonts settle,
+   lib/preloadRoute.ts). The 220ms fade that follows is what makes a minimum
+   display time unnecessary — a page landing mid-fade leaves with the skeleton
+   only part visible, so it cannot flash.
+
+   THE PULSE, NOT A SWEEP. The familiar shimmer is a gradient travelling across
+   the block, and this site owns no gradients anywhere; one moving here would be
+   the first, and it would be the loudest thing on the page. A slow breath on
+   one property is quieter, cheaper, and still says "working". Staggered by row
+   so the grid breathes instead of blinking as a single block.
+
+   9% ink is the same wash .lang-glass rests on, so the blocks read as the
+   site's own material rather than a grey borrowed from somewhere else.
+   ============================================================ */
+.route-hold__skin {
+  background: color-mix(in srgb, var(--lang-ink) 9%, transparent);
+  border-radius: var(--r-card);
+  opacity: 0;
+  /* `both` on the fade so its end state HOLDS until the pulse takes over at the
+     same instant; the pulse then owns opacity from 520ms on. Two animations on
+     one property is legal and deliberate: the later one wins while it runs, and
+     it does not run until its delay is up. */
+  animation:
+    hold-in 220ms var(--ease-soft) 300ms both,
+    hold-pulse 1600ms ease-in-out calc(520ms + var(--hold-stagger, 0ms)) infinite;
+}
+@keyframes hold-in {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes hold-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+/* The floor: reduced motion still gets the SKELETON — it is information, not
+   decoration, and removing it would leave a blank screen, which is the bug this
+   was built for. What goes is the breathing. It arrives on the same 300ms delay
+   so a fast navigation is still met by nothing at all. */
+@media (prefers-reduced-motion: reduce) {
+  .route-hold__skin {
+    animation: hold-in 1ms linear 300ms both;
   }
 }

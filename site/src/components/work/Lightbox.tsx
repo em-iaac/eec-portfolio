@@ -8,6 +8,7 @@
 // doubles as the quiet caption.
 import { useLayoutEffect, useRef } from 'react'
 import Img from '../Img'
+import useScrollLock from '../../hooks/useScrollLock'
 import useSwipeFlip from './useSwipeFlip'
 import type { WorkPicture } from '../../data/work'
 
@@ -26,8 +27,19 @@ export default function Lightbox({
   onClose: () => void
 }) {
   const ref = useRef<HTMLDialogElement>(null)
+  const captionRef = useRef<HTMLParagraphElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
   const pic = pictures[index]
   const many = pictures.length > 1
+
+  // The page behind stays frozen while this is up. It counts its own lock, so
+  // opening a picture over an open sheet holds two and closing it back to the
+  // sheet releases only one — the page must not start scrolling again just
+  // because the top layer went away (hooks/useScrollLock.ts).
+  useScrollLock()
+
+  const prev = () => onNavigate((index - 1 + pictures.length) % pictures.length)
+  const next = () => onNavigate((index + 1) % pictures.length)
 
   // Modal on mount, over the already-open showcase dialog. Escape is handled
   // directly on keydown (below; this Chromium never fires the native 'cancel'
@@ -38,6 +50,13 @@ export default function Lightbox({
     const dlg = ref.current
     if (!dlg) return
     if (!dlg.open) dlg.showModal()
+    // A MODAL FOCUSES ITS SUBJECT, NOT ITS CLOSE CONTROL (the same rule the
+    // sheet follows; WorkOverlay carries the full account). Here the first
+    // focusable element is ‹ or ✕, and WebKit rings whatever showModal()
+    // focused in the site's red. The caption IS the subject's name, so landing
+    // there announces the picture and its place in the set instead of "Close
+    // enlarged view", and no control is focused for a ring to appear on.
+    captionRef.current?.focus({ preventScroll: true })
     const onCancel = () => onClose()
     dlg.addEventListener('cancel', onCancel)
     return () => {
@@ -47,13 +66,12 @@ export default function Lightbox({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (!pic) return null
-
-  const prev = () => onNavigate((index - 1 + pictures.length) % pictures.length)
-  const next = () => onNavigate((index + 1) % pictures.length)
-
-  const stageRef = useRef<HTMLDivElement>(null)
+  // EVERY HOOK ABOVE THIS LINE. It used to sit higher, with `useRef` and
+  // `useSwipeFlip` below it, so an empty set would have changed the hook count
+  // between renders. Nothing reached it in practice; it is still the kind of
+  // thing that fails once and inexplicably.
   useSwipeFlip(stageRef, prev, next, many)
+  if (!pic) return null
 
   return (
     <dialog
@@ -105,7 +123,13 @@ export default function Lightbox({
           sizes="92vw"
           className="max-h-[80dvh] max-w-full rounded-[var(--r-image)] bg-white object-contain"
         />
-        <p className="max-w-[62ch] text-center font-mono text-label tracking-[0.08em] text-white/85">
+        {/* tabIndex -1: focus lands here when the lightbox opens (see above),
+            never as a tab stop. */}
+        <p
+          ref={captionRef}
+          tabIndex={-1}
+          className="max-w-[62ch] text-center font-mono text-label tracking-[0.08em] text-white/85 outline-none"
+        >
           {pic.alt}
           {many && (
             <span className="text-white/60">
