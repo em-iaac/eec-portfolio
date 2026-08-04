@@ -289,6 +289,12 @@ export default function CV() {
     () => ({
       label: 'Jump to a section of the record',
       handle: 'jump',
+      // A PLACE DRAWER (components/reach/verbs.ts): the rows are the five
+      // sections of one document and you are always inside one of them, so the
+      // closed tab reads that section rather than the word JUMP. `here` is the
+      // same scroll-spy value the rows already light from, so the tab and the
+      // list can never disagree — one source, two surfaces.
+      at: CV_SECTIONS.find((s) => s.id === here)?.label,
       verbs: CV_SECTIONS.map((s) => ({
         id: s.id,
         label: s.label,

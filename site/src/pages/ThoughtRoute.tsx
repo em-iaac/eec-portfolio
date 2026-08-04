@@ -23,7 +23,15 @@ export default function ThoughtRoute() {
     return <Navigate to="/thoughts" replace />
   }
 
-  const after = drafted[drafted.indexOf(entry) + 1]
+  // The shelf runs newest-first, so `after` is the OLDER note (keep reading) and
+  // `before` is the NEWER one. PREVIOUS joined NEXT at her ruling 2026-08-04
+  // ("maybe we should have next and previous not only next"): now that both live
+  // in the drawer rather than on the header line, a second way to walk costs no
+  // chrome at all, and a shelf you can only walk one way is half a shelf.
+  // Neither wraps: a shelf has a first book and a last one.
+  const idx = drafted.indexOf(entry)
+  const after = drafted[idx + 1]
+  const before = idx > 0 ? drafted[idx - 1] : undefined
 
   return (
     <ThoughtLeaf
@@ -31,6 +39,7 @@ export default function ThoughtRoute() {
       title={entry.title}
       date={entry.date}
       lens={entry.lens}
+      prev={before ? { title: before.title, route: before.note!.route } : undefined}
       next={after ? { title: after.title, route: after.note!.route } : undefined}
       pillarDoor={isPillarRelated(entry.tags)}
     >

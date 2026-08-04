@@ -13,10 +13,9 @@
 // Card's `face` override so the glass skin, the morph plumbing and the button
 // semantics stay in the primitive. Print and OG never render plates
 // (screen-only by intent; the book keeps true covers).
-import { useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { useState, type PointerEvent as ReactPointerEvent } from 'react'
 import Card from '../ui/Card'
 import useHasHover from '../../hooks/useHasHover'
-import useLongPressReveal from './useLongPressReveal'
 import Img, { findImage } from '../Img'
 import { LENSES } from '../Lens'
 import { LensMark } from '../ui/Pill'
@@ -46,24 +45,17 @@ export default function WorkCard({
     ? Boolean(findImage(entry.cover.slug, entry.cover.name)?.animated)
     : false
 
-  // PRESS AND HOLD WHERE THERE IS NO HOVER (Emilie's ruling 2026-08-04).
-  // useLongPressReveal carries the gesture, the two-stage load and why the
-  // asset must not exist until it is asked for. Enabled exactly where the
-  // hover reveal is not: one way in per input, never two.
-  const plateRef = useRef<HTMLDivElement>(null)
-  const [pressed] = useLongPressReveal(plateRef, !hasHover && Boolean(entry.cover))
-
-  // One state, two ways in. A mouse resting on the tile and a finger holding it
-  // mean the same thing, so everything below reads this rather than either.
-  const revealed = hovered || pressed !== 'off'
-  // The animated rung is 146-737KB; it is pulled ONLY once the still has been
-  // asked for and the hold has resolved. A hover gets it immediately as it
-  // always has, because a mouse has already paid for the page.
-  const playing = hasHover ? hovered : pressed === 'animated'
+  // NO PRESS-AND-HOLD REVEAL (Emilie's ruling 2026-08-04, after trying it on the
+  // deployed site: "just drop the whole hold idea, it's not worth it"). It was
+  // built, it worked, and she judged that a hidden gesture is not worth teaching
+  // for a photograph that is one tap away inside the sheet. The tile keeps doing
+  // the one thing a tile should: a tap opens the project.
+  // What that preserves is the saving her 2026-08-02 ruling won — a touch device
+  // still downloads NO cover images at all, because the <img> below is only ever
+  // built where something can hover.
 
   const plate = (
     <div
-      ref={plateRef}
       className="work-plate aspect-video w-full"
       style={{ '--plate-accent': LENSES[entry.lens].pen } as CSSProperties}
     >
@@ -98,25 +90,23 @@ export default function WorkCard({
           </span>
         )}
       </span>
-      {/* NOT RENDERED UNTIL SOMETHING ASKS FOR IT (Emilie's ruling 2026-08-02,
-          extended 2026-08-04). This <img> only ever becomes visible under a
-          resting pointer, so on a touch screen it was 21 images downloaded,
-          decoded and laid out to stay at opacity 0 forever: ~250KB on /work as
-          the grid scrolls, and more on the landing belts.
-          hooks/useHasHover.ts has why the test is hover and not width.
-
-          A PHONE NOW HAS A WAY IN, and the condition is what keeps the saving
-          honest: `pressed` is 'off' until a finger has held this tile for 450ms,
-          so the element does not exist and nothing is fetched before then. One
-          tile's cover, asked for, instead of twenty-one nobody can see. */}
-      {entry.cover && (hasHover || pressed !== 'off') && (
-        <span className={`work-plate__cover ${revealed ? 'is-on' : ''}`} aria-hidden={!revealed}>
+      {/* NOT RENDERED WHERE NOTHING CAN HOVER (Emilie's ruling 2026-08-02).
+          This <img> only ever becomes visible under a resting pointer, so on a
+          touch screen it was 21 images downloaded, decoded and laid out to stay
+          at opacity 0 forever: ~250KB on /work as the grid scrolls, and more on
+          the landing belts. The photographs are not lost, they lead the sheet
+          one tap away, which on a phone is where they can actually be looked
+          at. hooks/useHasHover.ts has why the test is hover and not width.
+          A long-press reveal was built on 2026-08-04 to give a phone a way in,
+          and she dropped it the same day: not worth a hidden gesture. */}
+      {entry.cover && hasHover && (
+        <span className={`work-plate__cover ${hovered ? 'is-on' : ''}`} aria-hidden={!hovered}>
           <Img
             slug={entry.cover.slug}
             name={entry.cover.name}
             alt={entry.cover.alt}
             priority={priority}
-            still={!playing || !animatedCover}
+            still={!hovered || !animatedCover}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
             className="block h-full w-full object-cover"
           />

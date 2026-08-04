@@ -462,6 +462,48 @@ export default function NeuralWorld() {
     return () => ro.disconnect()
   }, [])
 
+  // WHICH YEAR AM I IN (Emilie's ruling 2026-08-04: a place drawer reads out its
+  // position, live, "whether you got there by flick, drag or drawer").
+  //
+  // The map has no sections to observe, so there is nothing for an
+  // IntersectionObserver to watch the way /cv's headings can be watched. But the
+  // snap markers ARE the year positions in the same coordinate space the stage
+  // scrolls in, already measured, so the reading is one comparison: the year you
+  // are in is the last rule at or before the left edge of the screen — exactly
+  // where the snap puts it, so the readout and the snapping agree by
+  // construction rather than by two separate guesses.
+  // Everything past the last rule keeps reading 2026, which is true: that
+  // stretch IS 2026 and after.
+  const [atYear, setAtYear] = useState<string | null>(null)
+  useEffect(() => {
+    const stage = stageRef.current
+    if (!stage || snapAt.length === 0) return
+    const pick = () => {
+      // +8px so a year sitting exactly on the edge reads as arrived, not as the
+      // one before it.
+      const x = stage.scrollLeft + 8
+      let cur = WORLD.skeleton.years[0]?.label ?? null
+      for (let i = 0; i < snapAt.length; i++) {
+        if (snapAt[i]! <= x) cur = WORLD.skeleton.years[i]?.label ?? cur
+      }
+      setAtYear(cur)
+    }
+    pick()
+    // Coalesced to one read per frame: this fires on every pixel of a drag on a
+    // 5355px track, and the answer cannot change faster than the screen redraws.
+    let queued = false
+    const onScroll = () => {
+      if (queued) return
+      queued = true
+      requestAnimationFrame(() => {
+        queued = false
+        pick()
+      })
+    }
+    stage.addEventListener('scroll', onScroll, { passive: true })
+    return () => stage.removeEventListener('scroll', onScroll)
+  }, [snapAt])
+
   const HORIZON_PX = 90
   // SNAPPING STANDS ASIDE FOR A DELIBERATE MOVE (2026-08-04, with the year
   // snap). Every call below has already chosen an exact position for a reason —
@@ -480,7 +522,23 @@ export default function NeuralWorld() {
     freeTimer.current = window.setTimeout(() => stage.classList.remove('is-free'), 700)
   }
 
-  function scrollToWorldX(worldX: number, smooth = true) {
+  /**
+   * `smooth` accepts `'always'` for a move the visitor ASKED for by name
+   * (Emilie's ruling 2026-08-04, from the deployed site: "if i stand at 2023 and
+   * press 2026 it jumps there instead of sliding through, like from 2023 to
+   * 2024, idk why there is this inconsistency").
+   *
+   * She had found a real seam. The two-screen cut below was written for TAPPING
+   * A NODE, where you can already see the thing you tapped and a long ride is
+   * just a wait. A drawer press is the opposite gesture: you named a year you
+   * cannot see, and the ride between is the only thing that tells you how far
+   * apart the years actually are. Measured, that is what made it inconsistent:
+   * 2023 → 2024 is 472px and glided, 2023 → 2026 is 1792px and cut, with the
+   * threshold at two screens (780px) sitting invisibly between them.
+   *
+   * Uncapped, at her ruling. The longest possible ride, 2020 → 2026, is 2547px.
+   */
+  function scrollToWorldX(worldX: number, smooth: boolean | 'always' = true) {
     const stage = stageRef.current
     const svg = svgRef.current
     if (!stage || !svg) return
@@ -497,7 +555,7 @@ export default function NeuralWorld() {
     // wait. Under two screens the movement shows you the relationship between
     // where you were and where you are; beyond that it only shows you a blur,
     // so it cuts.
-    const glide = smooth && !prm && distance < stage.clientWidth * 2
+    const glide = smooth === 'always' ? !prm : smooth && !prm && distance < stage.clientWidth * 2
     stage.scrollTo({ left, behavior: glide ? 'smooth' : 'auto' })
   }
   // The years, as the room's verbs. Derived from the same `sk.years` the map
@@ -506,17 +564,28 @@ export default function NeuralWorld() {
     () => ({
       label: 'Jump to a year',
       handle: 'years',
+      // A PLACE DRAWER: the tab reads the year you are standing in, so on a map
+      // 13.7 screens wide you can always tell where you are without opening
+      // anything. That is the readout doing the most work it does anywhere on
+      // the site — the CV at least has its headings on screen.
+      at: atYear ?? undefined,
       // WORLD.skeleton for the same temporal-dead-zone reason as the snap
       // markers above: this memo body runs during the render that declares `sk`.
       verbs: WORLD.skeleton.years.map((y) => ({
         id: y.label,
         label: y.label,
-        onPress: () => scrollToWorldX(y.x),
+        // The open list lights the same year the closed tab reads, from the one
+        // value, so the two can never disagree.
+        active: y.label === atYear,
+        // 'always': a year named in the drawer always SLIDES, however far, so
+        // the drawer behaves one way. See scrollToWorldX for why a tap on a node
+        // keeps the two-screen cut and this does not.
+        onPress: () => scrollToWorldX(y.x, 'always'),
       })),
     }),
-    // sk is derived once from the registry; scrollToWorldX reads live refs.
+    // scrollToWorldX reads live refs; only the readout changes per render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [atYear],
   )
 
   function centreOn(id: string) {
@@ -732,20 +801,21 @@ export default function NeuralWorld() {
                 <span aria-hidden="true">→</span> TODAY
               </button>
             </span>
+            {/* THE HINT IS DESKTOP-ONLY NOW (Emilie's ruling 2026-08-04). The
+                second clause already waited for sm, because "IT WAKES WHERE YOU
+                LOOK" describes a POINTER, which is the one thing a phone does
+                not have. What is left below sm is "DRAG TO EXPLORE" — and on a
+                map, dragging is the only thing there is to do. It was telling a
+                visitor the one thing they were already doing, in 9px, at the
+                very bottom edge of the screen, next to a drawer that now names
+                seven years. Gone below sm; unchanged from sm up, where the full
+                sentence is true and the room to say it exists. */}
             <p
               aria-hidden="true"
-              className="font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)]"
+              className="hidden font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)] sm:block"
             >
-              {/* The second clause waits for sm. At 390 the button and the full
-                  sentence are 340px against 342 of row, so it wrapped and the
-                  control band doubled to 76px. "IT WAKES WHERE YOU LOOK"
-                  describes a POINTER anyway, which is the one thing the phone
-                  reading this does not have. */}
-              <b className="font-normal text-[var(--lang-ink)]">DRAG</b> TO EXPLORE
-              <span className="hidden sm:inline">
-                {' '}
-                · <b className="font-normal text-[var(--lang-ink)]">IT WAKES WHERE YOU LOOK</b>
-              </span>
+              <b className="font-normal text-[var(--lang-ink)]">DRAG</b> TO EXPLORE ·{' '}
+              <b className="font-normal text-[var(--lang-ink)]">IT WAKES WHERE YOU LOOK</b>
             </p>
           </div>
         </div>

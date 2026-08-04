@@ -33,10 +33,38 @@ export interface ReachVerb {
   mark?: ReactNode
 }
 
+// TWO KINDS OF DRAWER, and the distinction is the whole system (Emilie's ruling
+// 2026-08-04, from her own ask: "we need to find a system for the drawer to
+// always say what filter we are at, so if we pressed a year it should say the
+// year we jumped at, or in the cv it should say the title we went to").
+//
+// THE RULE: the drawer is the room's INDEX. It tells you where you are, and
+// takes you anywhere else in the room.
+//
+//   A PLACE DRAWER  the rows are positions inside this room and you are at one
+//                   of them — /cv's five sections, the map's seven years. It
+//                   sets `at`, so the collapsed tab READS OUT the current
+//                   position and you never have to open it to know where you
+//                   are. The matching row also carries `active`.
+//
+//   AN EXIT DRAWER  the rows are ways OUT of the room — a thought note's
+//                   previous / next / in time / all thoughts. There is no
+//                   position to report, because you are on the note itself. It
+//                   leaves `at` undefined and the tab keeps its handle.
+//
+// The distinction matters because the alternative was to give every drawer a
+// readout, which on an exit drawer means inventing a state that does not exist.
+// A control that reports a fiction is worse than one that reports nothing.
 export interface ReachSet {
   /** The group's accessible name, e.g. "Filter by lens". */
   label: string
-  /** What the collapsed side pill shows: the room's verb in one word. */
+  /** What the collapsed side pill shows when there is no position to report:
+   *  the room's verb in one word. */
   handle: string
+  /** THE READOUT. The label of the row you are currently at, on a PLACE drawer
+   *  only. When present the tab shows this instead of `handle`, live, however
+   *  you got there — pressing a row, scrolling, or flicking. Leave undefined on
+   *  an exit drawer. */
+  at?: string
   verbs: ReachVerb[]
 }

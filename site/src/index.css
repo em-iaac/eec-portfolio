@@ -143,9 +143,26 @@ body {
   background: color-mix(in srgb, var(--lang-interaction) 18%, transparent);
 }
 
-/* Anchored lens sections scroll below the sticky-free header comfortably */
+/* WHERE AN ANCHORED SECTION COMES TO REST.
+   THE HEADER IS NOT "STICKY-FREE" ANY MORE, and this rule still said it was
+   (Emilie's report 2026-08-04: "in the cv when i press on experience it does
+   take me to experience but it cuts the title experience which makes me lost").
+   1.5rem was correct when the frame was frozen at every width and nothing
+   overlapped the top of the scroller. Since the phone pass unfroze the frame on
+   2026-08-02 the header STICKS below lg, and 24px of margin against a 75px band
+   buries the thing you asked for: measured on /cv at 390px, pressing EXPERIENCE
+   landed the heading at y=24 with all 45px of it under the header.
+   5.5rem = 88px: the 75px band plus a 13px breath, so the heading you pressed
+   arrives just under the pill with its content below it — which is what `block:
+   'start'` was always trying to say. From lg up the frame is frozen again and
+   `#main` is the scroller with nothing over it, so 1.5rem stays exactly. */
 section[id] {
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: 5.5rem;
+}
+@media (min-width: 1024px) {
+  section[id] {
+    scroll-margin-top: 1.5rem;
+  }
 }
 
 /* Header draw-in ceremony retired at DL-0 (2026-07-10): the drawing-set

@@ -44,13 +44,16 @@ export default function ThoughtLeaf(props: {
   title: string
   date: string
   lens: Lens
+  /** The NEWER note. Added 2026-08-04 with the drawer: on the header line there
+   *  was never room for a fourth control, in the drawer there is. */
+  prev?: { title: string; route: string }
   next?: { title: string; route: string }
   /** Accepted for call-site compatibility; the pillar door retired from the
    *  leaf at the audit (Emilie 2026-07-19). */
   pillarDoor?: boolean
   children: ReactNode
 }) {
-  const { number, title, date, lens, next, children } = props
+  const { number, title, date, lens, prev, next, children } = props
   // The morph target: /thoughts/:id names its title so the index row (or the
   // mind-graph node) that opened it travels into it (src/lib/viewTransition.ts).
   const { id } = useParams()
@@ -91,6 +94,18 @@ export default function ThoughtLeaf(props: {
           <CtrlIcon name="clock" />
           IN TIME
         </Link>
+        {/* PREVIOUS joins NEXT here too (2026-08-04), so the header line and the
+            drawer offer the same four things and neither is the fuller version
+            of the site. Same arrow, mirrored, same accent: it is the same
+            movement one way and the other. */}
+        {prev && (
+          <Link to={prev.route} viewTransition className={CTRL} style={{ color: 'light-dark(#0f766e, #5eead4)' }}>
+            <span className="inline-flex -scale-x-100">
+              <CtrlIcon name="arrow" />
+            </span>
+            PREVIOUS
+          </Link>
+        )}
         {next && (
           <Link to={next.route} viewTransition className={CTRL} style={{ color: 'light-dark(#0f766e, #5eead4)' }}>
             <CtrlIcon name="arrow" />
@@ -110,13 +125,18 @@ export default function ThoughtLeaf(props: {
     () => ({
       label: 'Leaf through the record',
       handle: 'leaf',
+      // Order is the reading order, not the alphabet: the two ways ALONG the
+      // shelf first, then the two ways off it. PREVIOUS is the newer note and
+      // NEXT the older one, because the shelf runs newest-first (ThoughtRoute).
+      // Either can be absent at the ends of the shelf; neither wraps.
       verbs: [
-        { id: 'all', label: 'All thoughts', to: '/work#thoughts' },
-        { id: 'time', label: 'In time', to: `/thoughts#${id ?? ''}` },
+        ...(prev ? [{ id: 'prev', label: 'Previous', to: prev.route }] : []),
         ...(next ? [{ id: 'next', label: 'Next', to: next.route }] : []),
+        { id: 'time', label: 'In time', to: `/thoughts#${id ?? ''}` },
+        { id: 'all', label: 'All thoughts', to: '/work#thoughts' },
       ],
     }),
-    [id, next],
+    [id, prev, next],
   )
 
   return (

@@ -34,7 +34,6 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import useBeltDrift from './useBeltDrift'
 import useHasHover from '../hooks/useHasHover'
-import useLongPressReveal from '../components/work/useLongPressReveal'
 import Img from '../components/Img'
 import { LensMark } from '../components/ui/Pill'
 import { WORK_ARTIFACTS } from '../components/work/artifacts'
@@ -116,16 +115,6 @@ export function StripTile({
 }) {
   const [hovered, setHovered] = useState(false)
   const hasHover = useHasHover()
-  // PRESS AND HOLD, the same gesture as the /work tile (Emilie's ruling
-  // 2026-08-04). Same hook, same 450ms, same 4px slop, so a visitor learns it
-  // once. THE RULE IS THAT A PRESS GIVES YOU WHAT A HOVER WOULD GIVE YOU HERE,
-  // and on the belt that has always been the STILL rung — see `still` below,
-  // which is hardcoded and predates this. So the press reveals the photograph
-  // and never pulls an animated file, which is also why this surface stays the
-  // cheap one. The two-stage load in the hook simply resolves at stage one.
-  const plateRef = useRef<HTMLDivElement>(null)
-  const [pressed] = useLongPressReveal(plateRef, !hasHover && Boolean(project.image))
-  const revealed = hovered || pressed !== 'off'
   return (
     <Link
       to={`/work/${project.id}`}
@@ -161,7 +150,6 @@ export function StripTile({
       className="lang-glass-1 lang-lift block h-full w-full overflow-hidden rounded-[var(--r-card)] no-underline transition-colors hover:border-[var(--lang-ink-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
     >
       <div
-        ref={plateRef}
         className="work-plate aspect-video w-full"
         style={{ '--plate-accent': LENSES[project.lens].pen } as CSSProperties}
       >
@@ -196,8 +184,8 @@ export function StripTile({
         {/* Same rule as the /work tile: a cover that only appears under a
             resting pointer is dead weight on a device that has none — so it is
             not built at all until a hover or a hold asks for it. */}
-        {project.image && (hasHover || pressed !== 'off') && (
-          <span className={`work-plate__cover ${revealed ? 'is-on' : ''}`} aria-hidden={!revealed}>
+        {project.image && hasHover && (
+          <span className={`work-plate__cover ${hovered ? 'is-on' : ''}`} aria-hidden={!hovered}>
             <Img
               slug={project.image.slug}
               name={project.image.name}

@@ -693,19 +693,6 @@ textarea,
   overflow: hidden;
   padding: 9px 12px 10px;
   text-align: left;
-  /* PRESS AND HOLD REVEALS THE COVER (Emilie's ruling 2026-08-04;
-     components/work/useLongPressReveal.ts). A long press is also how a phone
-     asks for the text-selection callout, and the two land on the same tile.
-     `-webkit-touch-callout` is the iOS-specific half — it is what stops Safari
-     throwing its own sheet over the cover just as it appears — and
-     `user-select` is what stops the title and the award line highlighting blue
-     under a finger that is only holding still. The context menu itself is
-     cancelled in the hook, where the gesture is known.
-     Both are harmless on a mouse: neither the callout nor a stray selection
-     happens when a cursor rests on a tile. */
-  -webkit-touch-callout: none;
-  user-select: none;
-  -webkit-user-select: none;
 }
 /* (The round-2 xl padding tighten retired at round 4: option B's full-width
    grid gives the plates 163-186px of width, room enough for the full frame.) */
@@ -1207,14 +1194,31 @@ li[data-glow] > button {
    `lg:hidden` in the JSX: a desktop has no thumb problem, and /work's docked
    filter row in the header is still the desktop control.
    ============================================================ */
+/* THE `lg:hidden` IN THE JSX WAS NOT WORKING (found 2026-08-04 while checking
+   desktop was untouched: measured at 1280px, the drawer was on screen).
+   THE EXACT TRAP THIS FILE ALREADY DOCUMENTS for `.reach-switch` on 2026-08-03,
+   and the same one the node-cursor block records: `display: flex` here is
+   UNLAYERED, Tailwind's `lg:hidden` lives in a LAYER, and unlayered declarations
+   beat layered ones no matter what the specificity or the source order says.
+   So the class was doing nothing and the drawer had been showing on every
+   desktop since it shipped, over a page that already carries its filter row in
+   the header and has no thumb problem to solve.
+   `display` belongs inside the media query, which is what the lesson said.
+   The class stays in the JSX: it is honest about the intent and it is what
+   anyone reading the component will look for. */
 .reach-drawer {
   position: fixed;
   z-index: 30;
   right: 0;
   bottom: calc(88px + env(safe-area-inset-bottom, 0px));
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: flex-end;
+}
+@media (max-width: 1023px) {
+  .reach-drawer {
+    display: flex;
+  }
 }
 .reach-drawer__tab {
   display: inline-flex;
@@ -1470,17 +1474,35 @@ li[data-glow] > button {
    9% ink is the same wash .lang-glass rests on, so the blocks read as the
    site's own material rather than a grey borrowed from somewhere else.
    ============================================================ */
+/* THE PAINT WAS TOO TIMID, HER REPORT 2026-08-04 FROM THE DEPLOYED SITE: "the
+   pulse tiles are not visible, it's a blank page with the header".
+   MEASURED: the first version filled at 9% ink, copied from .lang-glass-1. That
+   is **1.20:1 against the ground** — a two per cent luminance step, which is
+   nothing on a phone. The copy was the mistake: glass carries a 14% BORDER as
+   well as its fill, and it sits over photographs and drawings where 9% reads.
+   A bare block on the bare ground has nothing helping it.
+   So the ghost now wears the card's whole recipe, fill AND hairline, which also
+   makes it say the right thing: a tile-shaped outline reads as "a card is
+   coming here", where a soft rectangle read as a smudge. 14% is 1.33:1, and the
+   border carries the shape. */
 .route-hold__skin {
-  background: color-mix(in srgb, var(--lang-ink) 9%, transparent);
+  background: color-mix(in srgb, var(--lang-ink) 14%, transparent);
+  border: 0.5px solid color-mix(in srgb, var(--lang-ink) 24%, transparent);
   border-radius: var(--r-card);
   opacity: 0;
-  /* `both` on the fade so its end state HOLDS until the pulse takes over at the
-     same instant; the pulse then owns opacity from 520ms on. Two animations on
+  /* 200ms, NOT 300 (same report). 300ms was chosen when a cold navigation was
+     the normal case; now that the doors warm on `document.fonts.ready` the wait
+     is usually shorter than the delay, so the skeleton was being designed out of
+     existence — it waited for a wait that no longer happens. 200ms still shows
+     nothing on a navigation that lands immediately, which is the point of having
+     a delay at all, and the 140ms fade keeps a near-miss from flashing.
+     `both` on the fade so its end state HOLDS until the pulse takes over at the
+     same instant; the pulse then owns opacity from 340ms on. Two animations on
      one property is legal and deliberate: the later one wins while it runs, and
      it does not run until its delay is up. */
   animation:
-    hold-in 220ms var(--ease-soft) 300ms both,
-    hold-pulse 1600ms ease-in-out calc(520ms + var(--hold-stagger, 0ms)) infinite;
+    hold-in 140ms var(--ease-soft) 200ms both,
+    hold-pulse 1600ms ease-in-out calc(340ms + var(--hold-stagger, 0ms)) infinite;
 }
 @keyframes hold-in {
   to {
@@ -1502,6 +1524,6 @@ li[data-glow] > button {
    so a fast navigation is still met by nothing at all. */
 @media (prefers-reduced-motion: reduce) {
   .route-hold__skin {
-    animation: hold-in 1ms linear 300ms both;
+    animation: hold-in 1ms linear 200ms both;
   }
 }

@@ -94,13 +94,24 @@ export default function ReachDrawer({ set }: { set: ReachSet }) {
         aria-controls={panelId}
         onClick={() => setOpen((o) => !o)}
       >
-        {/* The tab's WORD is rotated, and only the tab's: it is one short label
-            that never changes, so it costs 22px of width and reads fine. The
-            list behind it stays horizontal. */}
+        {/* The tab's WORD is rotated, and only the tab's: one short label, so it
+            costs 24px of width and reads fine. The list behind it stays
+            horizontal.
+
+            IT IS A READOUT ON A PLACE DRAWER (verbs.ts carries the rule). `at`
+            is the section or year you are currently at, so the closed tab
+            answers "where am I" without being opened at all — which is what she
+            asked for, and it turns the tab from a label into the one piece of
+            state this room always wants to show. An exit drawer has no `at` and
+            falls back to its handle, unchanged. */}
         <span className="reach-drawer__word" aria-hidden="true">
-          {open ? 'CLOSE' : set.handle.toUpperCase()}
+          {open ? 'CLOSE' : (set.at ?? set.handle).toUpperCase()}
         </span>
-        <span className="sr-only">{open ? `Close ${set.label}` : set.label}</span>
+        {/* The accessible name carries the readout too, or a screen reader would
+            hear only "Jump to a section" while the tab says EXPERIENCE. */}
+        <span className="sr-only">
+          {open ? `Close ${set.label}` : set.at ? `${set.label}, currently at ${set.at}` : set.label}
+        </span>
       </button>
     </div>
   )
