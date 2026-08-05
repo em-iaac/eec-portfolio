@@ -2,7 +2,7 @@
 // `npm run build`: a broken registry join fails the build before it ships a
 // blank card, a dead sheet route, a missing figure, or a shifted EXPLORE
 // layout. Checks are structural only; copy stays Emilie's problem.
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
@@ -167,6 +167,51 @@ test('every correlation is a valid idea-lineage pair', () => {
     seen.add(key)
   }
   expect(broken).toEqual([])
+})
+
+// IF A NOTE NAMES IT, A THREAD CARRIES IT (Emilie, 2026-08-04, at the walk).
+// A <Ref> inside a note's prose makes that project or note a door, so the
+// reader is already told the two belong together. When no correlation backs it
+// the map draws no fibre and /work glows no tile, and the page quietly
+// contradicts itself. This missed FOUR real relations before it was written:
+// `evolutionary search` naming Cappelletti, `heritage meets new tech` naming
+// the Bab al-Luq market, `physics solvers` having no Kangaroo project at all,
+// and `behavior information modeling` naming Sensi. Parsed from the source
+// text rather than rendered, so it holds whatever the components do next.
+test('every project or note a thought names in its prose also carries a thread', () => {
+  const notesFile = join(dirname(fileURLToPath(import.meta.url)), '..', 'thoughts', 'notes.tsx')
+  const src = readFileSync(notesFile, 'utf8').split(/\r?\n/)
+  const pairs = new Set(CORRELATIONS.map(([a, b]) => [a, b].sort().join('|')))
+  const missing: string[] = []
+  let current: string | null = null
+  for (const line of src) {
+    const key = /^ {2}([a-z-]+): \(/.exec(line)
+    if (key) current = key[1] ?? null
+    if (!current) continue
+    for (const ref of line.matchAll(/<Ref id="([a-z-]+)"/g)) {
+      const target = ref[1]
+      if (target === current) continue
+      if (!pairs.has([current, target].sort().join('|'))) {
+        missing.push(`${current} names ${target} in its prose, with no thread`)
+      }
+    }
+  }
+  expect([...new Set(missing)]).toEqual([])
+})
+
+// EARLIER FIRST (Emilie, 2026-08-04, "all forward"). The tuple order is the
+// direction the thread FIRES on the map: worldGraph builds `pulseD` from a to
+// b and nw-travel sweeps a dash along it. Written the other way round, a
+// thread travels against the clock, and the map stops reading as a mind
+// changing over time. Same-month pairs are legal (the record has no day).
+test('every correlation is written earlier-first, so every thread fires forward', () => {
+  const dateOf = new Map(ENTRIES.map(e => [e.id, e.date]))
+  const backwards = CORRELATIONS.filter(([a, b]) => {
+    const da = dateOf.get(a)
+    const db = dateOf.get(b)
+    return !!da && !!db && da > db
+  }).map(([a, b]) => `${a} (${dateOf.get(a)}) -> ${b} (${dateOf.get(b)})`)
+  expect(backwards).toEqual([])
 })
 
 // The world must COVER the record: every entry of a world kind renders as a

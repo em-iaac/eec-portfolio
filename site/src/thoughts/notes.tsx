@@ -78,13 +78,24 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
   ),
 
   // T-102
+  //
+  // draftCopy: THE THIRD ITEM IN THE TRIPLE REPLACED AT THE WALK (2026-08-04),
+  // UNSIGNED. It read "the way a long sightline changes your breathing", inside
+  // a sentence that explicitly claims the field has evidence. The first two
+  // items are well supported (contour preference: Vartanian et al., PNAS 2013,
+  // plus 2019 and 2021). RESPIRATION IS NOT A MEASURE THIS LITERATURE REPORTS:
+  // it reports cortisol, heart rate, skin conductance and EEG, with enclosed
+  // rooms raising cortisol and heart rate against open ones (Frontiers 2023,
+  // systematic review of architectural form and physiological stress). So the
+  // claim was swapped for one the same research actually makes. The opening
+  // sentence in openings.ts is untouched: the edit is in the second sentence.
   neuroaes: (
     <>
       <p>
         Neuroaesthetics is the unglamorous name for a question everyone already feels: why does one
         room settle you and another keep you on edge? The field has spent years building actual
         evidence for it, complexity and coherence in a facade, the pull of a curve over a hard
-        corner, the way a long sightline changes your breathing.
+        corner, the way a closed room puts cortisol in your blood.
       </p>
       {NeuroaesFigure}
       <p>
@@ -180,7 +191,7 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
       <p>
         None of this measures a body. It scores a design against what the research suggests and hands
         you a reading you're free to overrule. That distinction is the whole ethic of the thing, and
-        the rest of that argument is its own note now:{' '}
+        the rest of that argument has a note of its own:{' '}
         <Ref id="scoring">when the tool scores people</Ref>.
       </p>
     </>
@@ -232,6 +243,11 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
   ),
 
   // T-109
+  //
+  // draftCopy: ONE WORD CHANGED AT THE WALK (2026-08-04), UNSIGNED. "steel"
+  // became "iron". Bab al-Louq opened 1 May 1912 on the Les Halles model and
+  // the sources on it (Cluster Cairo, Daily News Egypt) all describe an iron
+  // truss roof. Emilie ruled iron over dropping the material entirely.
   heritage: (
     <>
       <p>
@@ -242,7 +258,7 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
       <p>
         On <Ref id="ballooning">the Bab al-Luq market</Ref> I tried to make new technology behave
         like a respectful guest. The
-        historic steel frame stays exactly as it is; a roof of pressure-packed balloons settles into
+        historic iron frame stays exactly as it is; a roof of pressure-packed balloons settles into
         it, borrowing the structure without drilling a single new hole.
         <NBDot note="the frame is the client. the balloons are the tenants." />
       </p>
@@ -470,6 +486,15 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
 
   // T-116 · the word she is asked about most, explained by someone who builds
   // with them daily and is not impressed by them.
+  //
+  // draftCopy: ONE SENTENCE ADDED AT THE WALK (2026-08-04), UNSIGNED. It closes
+  // the emergence paragraph with the argument that the jump may be an artifact
+  // of the marking scheme (Schaeffer et al., NeurIPS 2023: score pass/fail and
+  // you get a cliff, score partial credit and the same models climb smoothly).
+  // The rest of the note stays signed from the walk of 2026-07-29. A second
+  // sentence was drafted and CUT by her: it claimed she wanted the jump to be
+  // real, which is an interior state she never reported. If a self-correction
+  // has to be explained, it is not hers.
   llm: (
     <>
       <p>
@@ -495,6 +520,8 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
         stop at three: it is not just autocomplete either. Guessing the next word, at that scale,
         produced things nobody put in on purpose. It writes working code. It holds an argument
         across paragraphs. Not one of the people who built it can tell you why that showed up.
+        Though people argue about whether it was ever a jump: mark the answers right or wrong
+        and you get a cliff, mark how close they got and the same models climb smoothly.
       </p>
       <p>
         So I work with it the way you would work with a very fast, very well read colleague who
@@ -579,6 +606,13 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
     </>
   ),
 
+  // draftCopy: FOUR WORDS CHANGED AT THE WALK (2026-08-04), UNSIGNED. "where I
+  // first met it" became "where it kept finding me". The date ruling put this
+  // note at 2025-10 and `evolutionary search` at 2025-11, so "first" made the
+  // note claim a sequence its own dates contradict. The new phrasing makes no
+  // temporal claim at all and inverts the agency the way her solver and model
+  // lines already do ("it read the manual I wrote").
+  //
   // T-119 · the word she asked for by name (2026-07-29), and the one genuinely
   // missing from her original shortlist once `llm`, `latent` and the safety
   // note were written. Its turn is the lEgoarCh incident: the anti-claim ruling
@@ -605,7 +639,7 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
       </p>
       <p>
         The catch is the one every optimiser teaches you eventually, and{' '}
-        <Ref id="evosearch">evolutionary search</Ref> is where I first met it. On{' '}
+        <Ref id="evosearch">evolutionary search</Ref> is where it kept finding me. On{' '}
         <Ref id="legoarch">lEgoarCh</Ref> a brick model came back satisfying every constraint it
         had been given: connected, supported, made of parts that exist. It had also stopped reading
         as architecture. The machine had not failed. It had done exactly what we asked, and we had

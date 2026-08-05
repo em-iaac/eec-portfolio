@@ -225,7 +225,7 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'ballooning',
     kind: 'project',
-    date: '2026-04',
+    date: '2025-12', // CORRECTED by Emilie 2026-08-04 (was 2026-04)
     title: 'A Ballooning Market',
     lens: 'computation',
     tags: ['simulation', 'geometry', 'heritage', 'play'],
@@ -502,8 +502,20 @@ export const ENTRIES: RegistryEntry[] = [
     explore: { label: 'A PLAYSCAPE', nodeKind: 'project', order: 29 },
   },
 
-  // ---- Thoughts (explore order 11-20; labels verbatim from data.js;
-  //      dates are Emilie-pending drafts) ----------------------------------
+  // ---- Thoughts (explore order 11-20; labels verbatim from data.js) -------
+  //
+  // THE DATES ARE CONFIRMED. Emilie ruled on all eighteen, 2026-08-04, off a
+  // drawn timeline of the whole record. This block used to read "dates are
+  // Emilie-pending drafts", which was true for a year and was never surfaced:
+  // `dateDraft` has no consumers, so ten unconfirmed dates rendered exactly
+  // like confirmed ones. The standing rule now is that a NEW thought never
+  // ships with a date I chose, because a thought's date is a judgement about
+  // when the thinking started and only she can make it.
+  //
+  // A THOUGHT IS DATED TO WHEN THE THINKING STARTED, NOT WHEN THE NOTE WAS
+  // TYPED. Eight moved on that rule, six of them backwards by months or
+  // years. Every move is a DIRECTION change too, because the CORRELATIONS
+  // tuple order is the direction the thread fires (see the block below).
   {
     id: 'bim',
     kind: 'thought',
@@ -527,7 +539,7 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'solvers',
     kind: 'thought',
-    date: '2026-04',
+    date: '2025-11', // CONFIRMED by Emilie 2026-08-04 (was an unconfirmed 2026-04)
     title: 'physics solvers',
     lens: 'explorations',
     tags: ['simulation', 'geometry'],
@@ -537,7 +549,7 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'genai',
     kind: 'thought',
-    date: '2024-06',
+    date: '2023-12', // CONFIRMED by Emilie 2026-08-04 (was an unconfirmed 2024-06)
     title: 'generative ai',
     lens: 'computation',
     tags: ['ai', 'play', 'future'],
@@ -587,7 +599,7 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'heritage',
     kind: 'thought',
-    date: '2026-04',
+    date: '2025-12', // CONFIRMED by Emilie 2026-08-04 (was an unconfirmed 2026-04)
     title: 'heritage meets new tech',
     lens: 'practice',
     tags: ['heritage', 'practice'],
@@ -613,8 +625,9 @@ export const ENTRIES: RegistryEntry[] = [
     // sketches reveal via SketchDot (her mechanism, signed same day).
     id: 'charcoal',
     kind: 'thought',
-    date: '2020-06',
-    dateDraft: true, // year hers (2020); the month is a placeholder
+    date: '2020-06', // FULLY CONFIRMED by Emilie 2026-08-04, month included
+    // (the `dateDraft` flag retired here: the month was a placeholder from
+    // S5 until she ruled on it at the walk)
     title: 'connecting the dots',
     lens: 'explorations',
     tags: ['play', 'practice'],
@@ -689,18 +702,23 @@ export const ENTRIES: RegistryEntry[] = [
   // (106), DATA 0.78 (89). So nothing crowds anything, and the shipped
   // composition does not move.
   //
-  // All four are dated 2026-07, which ties NOW rather than beating it: NOW is
-  // prepended and Array.sort is stable, so it stays the newest thing on the
-  // record.
+  // These four were written in 2026-07 and originally DATED to that month too.
+  // Emilie re-dated them to when the thinking started at the 2026-08-04 date
+  // pass: learning 2026-05, llm 2025-09, latent 2026-04, scoring 2026-04. So
+  // they no longer sit together and no longer tie NOW.
   //
   // ALL FOUR SIGNED by Emilie 2026-07-29 ("the 4 new thoughts are signed i
-  // liked them"), so the draftCopy flags are retired. T-114 `adjacency` is
-  // NOT signed and keeps its flag: it belongs to the walk through the older
-  // notes, which has not happened yet.
+  // liked them"), so the draftCopy flags are retired.
+  //
+  // STALE LINE REMOVED 2026-08-04: this block used to end "T-114 `adjacency` is
+  // NOT signed and keeps its flag". It was written on 2026-07-28 and Emilie
+  // signed adjacency the NEXT DAY at the walk (see its own entry above). The
+  // contradiction sat here for a week and cost a wrong claim at the 2026-08-04
+  // walk. A sign-off note belongs on the entry it signs, never in a neighbour.
   {
     id: 'learning',
     kind: 'thought',
-    date: '2026-07',
+    date: '2026-05', // CONFIRMED by Emilie 2026-08-04 (was the week it was written)
     title: 'experiences are data',
     lens: 'computation',
     tags: ['data', 'neuro', 'research'],
@@ -710,7 +728,7 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'llm',
     kind: 'thought',
-    date: '2026-07',
+    date: '2025-09', // CONFIRMED by Emilie 2026-08-04 (was the week it was written)
     title: 'what an llm actually is',
     lens: 'computation',
     tags: ['ai', 'research'],
@@ -726,7 +744,7 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'latent',
     kind: 'thought',
-    date: '2026-07',
+    date: '2026-04', // CONFIRMED by Emilie 2026-08-04 (was the week it was written)
     title: 'latent space',
     lens: 'computation',
     tags: ['ai', 'geometry'],
@@ -736,7 +754,7 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'scoring',
     kind: 'thought',
-    date: '2026-07',
+    date: '2026-04', // CONFIRMED by Emilie 2026-08-04 (was the week it was written)
     title: 'when the tool scores people',
     lens: 'computation',
     tags: ['neuro', 'comfort', 'research'],
@@ -756,7 +774,7 @@ export const ENTRIES: RegistryEntry[] = [
     // title/id mismatches by design: bim, charcoal, learning.
     id: 'rules',
     kind: 'thought',
-    date: '2026-07',
+    date: '2025-10', // CONFIRMED by Emilie 2026-08-04 (was the week it was written)
     title: 'computation',
     lens: 'computation',
     tags: ['geometry', 'ai', 'research'],
@@ -1032,16 +1050,36 @@ export function awardHrefFor(projectId: string): string | undefined {
 // the world's override map (thoughts/world/skeletonIds.ts). Validator-guarded:
 // ids resolve, ends are thoughts/projects, no self-links, no duplicate pairs.
 // Strengths are Emilie's to tune: edit the number, the braid follows.
+//
+// EARLIER FIRST IS ENFORCED (Emilie, 2026-08-04, "all forward"). The order
+// inside the tuple is not bookkeeping. The world builds `pulseD` from a to b
+// and `nw-travel` sweeps one dash along it, so THE TUPLE ORDER IS THE
+// DIRECTION THE THREAD FIRES on the map. Seventeen rows had been written
+// [later, earlier], so 17 threads travelled against the clock and 28 with it,
+// with no rule deciding which. They were flipped IN PLACE: every row keeps its
+// append position and its comment, only the pair reversed, so the record still
+// reads as the history of when each thread was found. The validator now
+// refuses a backwards row. Nothing else was affected: the link's colour is
+// computed from the dates (worldGraph L389) and the /work cross-glow is
+// direction-blind, so both were already correct.
 export type Correlation = readonly [string, string, 1 | 2 | 3]
 
 export const CORRELATIONS: readonly Correlation[] = [
-  ['xreal', 'xr', 2], // the XR thought grew out of the lab work
+  ['xr', 'xreal', 2], // the XR thought grew out of the lab work
   ['genai', 'drawiface', 1],
   ['genai', 'evosearch', 1],
   ['genai', 'legoarch', 2], // the diffusion half of lEgoarCh
-  ['genai', 'heritage', 1],
-  ['genai', 'neurospace', 1],
-  ['evosearch', 'mars', 1],
+  // (['genai','heritage',1] and ['genai','neurospace',1] CUT at the walk,
+  // 2026-08-04. Neither project text supports a generative thread: NeuroSpace
+  // is Grasshopper / Rhino.Compute / Vue / Three.js with no generative step
+  // anywhere in its spine, and the heritage note is entirely the Ballooning
+  // Market, whose computation is Kangaroo pneumatics. Threads have to be
+  // readable in the work, not just plausible about it.)
+  //
+  // (['mars','evosearch',1] RE-ROUTED to ['mars','genai',2] below: Rings of
+  // Mars lists AI WORKFLOWS in its tech line and says "generative" three times
+  // in its spine, and contains no genetic algorithm at all.)
+  ['mars', 'genai', 2], // the early bet, two months before the note about it
   ['evosearch', 'solvers', 2],
   ['neuroaes', 'sensi', 2],
   ['neuroaes', 'podcast', 2],
@@ -1050,20 +1088,34 @@ export const CORRELATIONS: readonly Correlation[] = [
   ['bim', 'neurospace', 3], // NeuroSpace = the first crack at BIM
   ['bim', 'comfort', 2],
   ['comfort', 'sensi', 3], // Sensi = comfort-as-data made real
-  ['comfort', 'ballooning', 1],
+  // (['ballooning','comfort',1] CUT at the walk, 2026-08-04. The market's whole
+  // spine contains ONE comfort-adjacent word, "daylight", once: nothing
+  // thermal, acoustic, olfactory or about a person, against a note whose
+  // subject is six senses calibrated to an individual. It read as a thread
+  // added to stop a node being lonely, and that node now carries three
+  // honest ones: solvers, heritage and computation.
+  //
+  // Also ruled here: NO DIRECT neuroaes -> comfort thread. The path already
+  // exists as neuroaes -> bim -> comfort, and that is the true three-step
+  // argument (the research led to the reframing, the reframing led to the
+  // scoring). A shortcut would flatten it.
   ['comfort', 'respond', 2],
-  ['solvers', 'cappelletti', 2],
-  ['heritage', 'huddle', 1],
+  ['cappelletti', 'solvers', 2],
+  ['huddle', 'heritage', 1],
   // S4b appends (2026-07-14, the set Emilie confirmed at the constellation
   // gate; urban-risk stands alone, no honest thread found):
+  // (['huddle','heritage',1] CUT at the walk, 2026-08-04. The Huddle is WASP /
+  // Kangaroo / Alpaca4D, its question is about building with the wind, and its
+  // spine contains no heritage, historic, existing or preservation language at
+  // all. Nothing in either text supported the thread.)
   ['heritage', 'narkomfin', 2], // a 1930 monument read with new tools
   ['evosearch', 'tsukiji', 1], // Galapagos drove the form hunt
   ['bim', 'data-geometry', 1], // building data made legible inside the model
   // S2 appends (2026-07-16, honest-lineage only; jemma + astroidal stand
   // alone like urban-risk, no honest thread found):
-  ['heritage', 'homage', 2], // the thesis IS the heritage question, asked first
-  ['solvers', 'playscape', 2], // Kangaroo pressure + net goals, solver play
-  ['solvers', 'chair-sim', 2], // the same solver curiosity, aimed at a body
+  ['homage', 'heritage', 2], // the thesis IS the heritage question, asked first
+  ['playscape', 'solvers', 2], // Kangaroo pressure + net goals, solver play
+  ['chair-sim', 'solvers', 2], // the same solver curiosity, aimed at a body
   // S5 appends (2026-07-18, Emilie confirmed the set at the batch gate):
   ['charcoal', 'drawiface', 2], // the drawing lesson grew into drawing-as-interface
   ['charcoal', 'solvers', 1], // the pull: tension drawn, then simulated
@@ -1080,19 +1132,172 @@ export const CORRELATIONS: readonly Correlation[] = [
   ['genai', 'llm', 1],
   ['genai', 'latent', 2], // diffusion runs on it
   ['latent', 'legoarch', 1],
-  ['comfort', 'scoring', 3], // the ethics thread, now owned by the scoring note
-  ['scoring', 'neurospace', 2], // the weights are public so you can disagree
+  ['scoring', 'comfort', 3], // the ethics thread. SEE THE NOTE: `comfort` says
+  // the argument is "its own note now", which reads as a later split, and the
+  // dates Emilie confirmed put scoring FIRST. Flagged to her at the walk.
+  ['neurospace', 'scoring', 2], // the weights are public so you can disagree
   // COMPUTATION GETS THE WIDER SET (her instruction: "computation gets much
   // more connections in terms of projects"). It is the one note that names a
   // method rather than a subject, so it is upstream of everything built by
   // describing a rule instead of drawing a result. Kept to projects where the
   // RULE is genuinely the artifact, not merely projects that used software.
+  //
+  // ALL EIGHT NOW RUN OUTWARD, and that is the date ruling, not a rewrite.
+  // `rules` was dated to the week it was typed (2026-07), which made it the
+  // sink every project drained into. Emilie dated the THINKING to 2025-10, the
+  // month MaCAD begins, and the whole set inverted: computation stops being
+  // where the work arrives and becomes the thing she learned first and then
+  // spent a year applying. The comment above was already claiming "upstream of
+  // everything built"; the data now actually says it.
   ['rules', 'legoarch', 2], // the incident the note turns on
-  ['evosearch', 'rules', 2],
-  ['solvers', 'rules', 2],
+  ['rules', 'evosearch', 2],
+  ['rules', 'solvers', 2],
   ['rules', 'huddle', 2], // WASP aggregation: the growth rule is the building
   ['rules', 'cappelletti', 2], // the lattice came out of the loop, not the pen
   ['rules', 'ballooning', 1], // Kangaroo gave the balloons their physics
-  ['rules', 'playscape', 1],
-  ['drawiface', 'rules', 1], // the drawing as the place the thinking happens
+  ['rules', 'playscape', 1], // a same-month tie, written outward with its set
+  ['rules', 'drawiface', 1], // the drawing as the place the thinking happens
+  // THE WALK appends (2026-08-04). Every note read end to end in date order,
+  // one at a time, Emilie ruling each thread from a drawn board.
+  ['charcoal', 'explain', 1], // "nobody takes a room in detail by detail; you
+  // catch the big picture and your mind fills in the rest" is a theory of
+  // explanation, written about charcoal six years before the note on explaining
+  //
+  // T-105 `extended reality` had ONE thread, inbound from its own project. It
+  // is the earliest note that reads as a method rather than a memory, and
+  // everything it prefigures sits four years downstream:
+  ['xreal', 'comfort', 2], // the body reports fast, and reports the worst thing
+  ['xreal', 'learning', 2], // standing in the room IS the instrument
+  ['xreal', 'explain', 2], // "impossible to explain and trivial to experience"
+  //
+  // T-116 `what an llm actually is` moved to 2025-09 at the date ruling, which
+  // put it BEFORE MaCAD and before everything it explains. It stops being a
+  // reflection and becomes a root, so it now hands three things forward:
+  ['llm', 'latent', 2], // "which words tend to follow load bearing" IS the space
+  ['llm', 'rules', 2], // one month apart: the machine does what you said, not
+  // what you meant. The colleague who never says I do not know, and the brick
+  // model that satisfied every constraint and stopped reading as architecture.
+  ['llm', 'learning', 1], // the machine the premise is about
+  //
+  // T-119 `computation`: the purest case of its own thesis was an orphan.
+  // (The Kangaroo overlap with `physics solvers` was raised at the walk and
+  // Emilie ruled LEAVE BOTH: computation is upstream of all of it, so a project
+  // sitting on both notes is honest rather than duplicated.)
+  ['rules', 'astroidal', 2], // "can a math equation become a building?"
+  //
+  // T-108 `evolutionary search` NAMES Cappelletti in its own prose ("it handed
+  // us two lattice topologies we'd never have drawn by hand") and had no thread
+  // to it. Same class of miss as heritage/ballooning: the note's own worked
+  // example, unthreaded. Strength 3 = the project IS the thing (GALAPAGOS sits
+  // in its tech line and its spine says evolutionary twice).
+  ['evosearch', 'cappelletti', 3],
+  // And the note's real argument, escalated: "good has to become a number
+  // before the search will believe it, so every quality you cannot count
+  // quietly drops out of the competition. Lighter is easy. Legible is not."
+  ['evosearch', 'scoring', 2], // the fitness function, aimed at a person
+  ['evosearch', 'comfort', 2], // a single number is the wrong shape for a value
+  //
+  // T-103 `physics solvers` was a PURE SINK: six threads in, none out, on a
+  // note that ends "it read the manual I wrote", which is the same idea
+  // computation and evolutionary search both turn on. Both of these are
+  // Kangaroo work, and `heritage` is the honest replacement for the
+  // ['genai','heritage'] thread cut earlier the same day: the market's
+  // computation is pneumatics, never diffusion.
+  ['solvers', 'ballooning', 2], // "until Kangaroo gave them awareness"
+  ['solvers', 'heritage', 2], // "only there to let something light touch
+  // something old, very gently"
+  //
+  // T-102 `neuroaesthetics` was a pure source: four threads out, none in.
+  ['neuroaes', 'learning', 2], // "other bodies have been in rooms like this
+  // one, here is what happened to them" IS neuroaesthetics described as a
+  // dataset, and the research note underneath it was not attached
+  ['charcoal', 'neuroaes', 1], // the 2020 perception claim feeding the science
+  // of perception in rooms. Its only inbound thread.
+  //
+  // T-109 `heritage meets new tech` spends its middle paragraph on the Bab
+  // al-Luq market and already <Ref>s it in the prose, with no thread to it.
+  // Third instance of this exact miss today, after evosearch/cappelletti and
+  // the ballooning/solvers gap: A NOTE THAT NAMES A PROJECT IN ITS TEXT SHOULD
+  // ALWAYS CARRY THE THREAD. Worth checking the remaining notes for it.
+  ['heritage', 'ballooning', 3],
+  //
+  // T-101 `behavior information modeling`. The Sensi thread is the fourth and
+  // last instance the new prose-Ref guard caught: the note says "NeuroSpace was
+  // the first crack at it and Sensi was the second", NeuroSpace carried
+  // strength 3 and Sensi carried nothing. Same strength, because the note gives
+  // them the same standing.
+  ['bim', 'sensi', 3],
+  ['bim', 'scoring', 2], // "a score you can argue with beats a number you have
+  // to trust" (this note) and "the weights are public so you can disagree with
+  // them" (that one). The tightest lineage on the site, three months apart.
+  ['bim', 'respond', 2], // the same rigor pointed at the body, then a room that
+  // acts on it. This note is that note's parent and had no thread to it.
+  //
+  // T-107 `drawing as interface` was another pure sink, three in and none out.
+  // The prose-Ref guard could not catch its biggest miss because the note
+  // DESCRIBES the project instead of naming it: "when moving a slider redraws
+  // the room and the score answers back" against NeuroSpace's own dek, "move a
+  // slider and watch a browser score it live". Inbound, because NeuroSpace is
+  // a month earlier: she built the live drawing, then wrote down what it meant.
+  ['neurospace', 'drawiface', 2],
+  ['drawiface', 'sensi', 2], // the score that answers back, three months on
+  ['drawiface', 'explain', 1], // the artifact does the work, never reports it
+  //
+  // T-117 `latent space`. Fact-checked at the walk and it HOLDS: "the thin
+  // parts are exactly where a model will invent something with total
+  // confidence" matches the literature on sparse latent regions producing
+  // confident output shaped by neighbouring dense ones. No edit.
+  ['latent', 'adjacency', 2], // the embeddings the police-station graphs ran on
+  ['xreal', 'latent', 1], // the exact negative, four years apart: "you don't
+  // read the space, you stand in it" against "you cannot stand in it and it
+  // does not care about your body". A contrast, not a descent, hence strength 1.
+  //
+  // T-118 `when the tool scores people`. The date ruling put it a month BEFORE
+  // `comfort as data`, which inverted ['comfort','scoring'] into
+  // ['scoring','comfort']. The comfort note's own "its own note now" implied a
+  // later split and contradicted that, so those four words were changed at the
+  // walk (see notes.tsx). The map shows when she thought it; the prose no
+  // longer claims when she wrote it.
+  ['scoring', 'urban-risk', 2], // street shape predicting crime IS the worry,
+  // built. The most serious pairing on the site, and it closes an orphan.
+  ['scoring', 'respond', 2], // "the dumb version of this is surveillance"
+  ['scoring', 'sensi', 1], // where "the weights are public" costs something
+  //
+  // T-115 `experiences are data` had four threads in and one out.
+  ['learning', 'respond', 2], // "would you like to know before you pour the
+  // concrete?" is the question; respond is the building that answers it
+  ['scoring', 'learning', 1], // "nobody curated your training set" against
+  // "nobody forwards the methodology": what gets thrown away uncredited
+  //
+  // T-114 `adjacency is not access` was THE ORPHAN: no fibre on the map, no
+  // glow on /work, on a site whose whole argument is connection. Six threads
+  // now. Narkomfin is the same MaCAD module, the same month and the same
+  // method, which made it the most obvious missing thread on the site.
+  ['adjacency', 'narkomfin', 3],
+  ['adjacency', 'urban-risk', 2], // "the interesting result was a gap, not a
+  // number" against "saying precisely where the certainty ends was the most
+  // honest thing the pipeline produced"
+  ['bim', 'adjacency', 2], // every duct to the millimetre and nothing about the
+  // person, aimed at a plan instead of a model
+  ['rules', 'adjacency', 1], // the leftover after the subtraction IS the rule
+  ['scoring', 'adjacency', 1], // "a confident picture of a building that is not
+  // there" against "a score is small, portable and confident"
+  //
+  // T-110 `buildings that respond` had five threads in, none out and NO project
+  // at all. Terminal is correct and Emilie confirmed it: the note describes the
+  // future she is working toward, so nothing has come after it yet.
+  ['lungs', 'respond', 2], // "a live app running a hyperbuilding designed to
+  // filter a city's air": a building whose behaviour is the design, running
+  // live. Proposal tense on both sides, so the Lungs ceiling holds.
+  //
+  // (Verve City Walk -> bim was PROPOSED and DECLINED at the walk: delivering a
+  // BIM set does not make the tower part of the argument against BIM. Verve
+  // stays an orphan with The Encounter and Falcon Square, all three by ruling.)
+  //
+  // T-113 `explaining things`, the last note of the walk. Terminal because it
+  // is the newest thing on the record, which is arithmetic and not a gap.
+  ['scoring', 'explain', 1], // the note names "standards, data layers, scoring
+  // models" as the boring subjects that decide how buildings treat people
+  ['bim', 'explain', 1], // "keep the letters, change the noun" is explanation
+  // design: this note's thesis, applied to her own coinage
 ]
