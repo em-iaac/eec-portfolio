@@ -36,7 +36,8 @@
 // they stand; nothing here depends on hover, script or colour to be readable
 // (the accent is reinforced by the caption every time, per the colour-never-
 // means-alone rule).
-import { type ReactNode } from 'react'
+import { createContext, useContext, type ReactNode } from 'react'
+import { thoughtIndexEntries } from '../data/registry'
 
 const VB = {
   viewBox: '0 0 300 170',
@@ -45,26 +46,91 @@ const VB = {
 } as const
 
 /**
+ * THE FIGURE NUMBER (Emilie, 2026-08-05). Her instruction: "imagine them all
+ * piled up in one document as a book of essays, so the figures have to be
+ * numbered in that way."
+ *
+ * So numbering is a RUNNING COUNT over the whole set in reading order, oldest
+ * note first: Fig. 1 is the plate in the earliest thought that has one, and the
+ * count carries straight through to Fig. 17. It is not per-note. A first pass
+ * numbered them `Fig. T-101.1`, which tied each plate to its own note and was
+ * the wrong shape: that is a catalogue, and she asked for a book.
+ *
+ * NOTHING IS TYPED. The order is `thoughtIndexEntries()` reversed, so it is the
+ * same single source the /work list and the book index run on, just ascending:
+ * date first, T-number as the tie-break for the five months that hold two notes.
+ * A figure therefore cannot disagree with the record, and re-dating a thought
+ * renumbers every plate after it automatically.
+ *
+ * THE COST, worth stating: a figure number is a POSITION, not an identity.
+ * Insert a thought early and everything downstream shifts, which is exactly how
+ * a book behaves and exactly unlike the permanent T-numbers. Cite a plate by
+ * its note, never by its number.
+ */
+const PLATES_PER_THOUGHT: Record<string, number> = {
+  // `charcoal` is the deliberate exception: it carries three of her actual
+  // charcoals on sketch dots instead, so it takes no number in the run.
+  charcoal: 0,
+}
+
+const FIG_NUMBER: Record<string, number> = (() => {
+  const ascending = [...thoughtIndexEntries()].reverse()
+  const out: Record<string, number> = {}
+  let n = 0
+  for (const e of ascending) {
+    const count = PLATES_PER_THOUGHT[e.id] ?? 1
+    if (count > 0) {
+      out[e.id] = n + 1
+      n += count
+    }
+  }
+  return out
+})()
+
+/** The id of the thought being read, so a plate can find its place in the run. */
+export const FigNumberContext = createContext<string | null>(null)
+
+/**
  * One plate. `alt` is the drawing's accessible description and is NOT the
- * caption: the caption says what the drawing means to the argument, the alt
- * says what is actually drawn, because a screen-reader user needs the second
- * and a sighted reader already has it.
+ * caption: the alt says what is drawn, the caption says what it shows.
+ *
+ * ALL 17 CAPTIONS REWRITTEN AND SIGNED (Emilie, 2026-08-05). They used to be
+ * aphorisms with a turn in them ("Nobody chose this line in the research.
+ * Somebody chose it in a spreadsheet."), set in 9px uppercase, which made good
+ * writing unreadable and read as a label rather than a caption. Her ruling was
+ * to go the other way entirely: descriptive, neutral, scientific, numbered.
+ * So a caption now states what is plotted and what the plot shows, and carries
+ * no argument: the argument is the note's job, and the n.b. dots keep the wit.
  */
 export function Fig({
   alt,
   caption,
+  i = 1,
   children,
 }: {
   alt: string
   caption: string
+  /** Index within its own note. Defaults to 1: today every note has one plate,
+   *  and a second one is `<Fig i={2}>` without touching anything else. */
+  i?: number
   children: ReactNode
 }) {
+  const thoughtId = useContext(FigNumberContext)
+  const base = thoughtId ? FIG_NUMBER[thoughtId] : undefined
+  const label = base ? `Fig. ${base + i - 1}` : null
   return (
     <figure className="thought-fig">
       <svg {...VB} aria-label={alt}>
         {children}
       </svg>
-      <figcaption>{caption}</figcaption>
+      {/* The separator is REAL TEXT, not a CSS ::after. A pseudo-element is
+          absent from the text layer, so the accessible name and the prerendered
+          HTML both ran the number into the sentence: "Fig. T-101.1Modelled
+          building variables...". Caught by reading the built page, not the JSX. */}
+      <figcaption>
+        {label && <span className="thought-fig__n">{label} · </span>}
+        {caption}
+      </figcaption>
     </figure>
   )
 }
@@ -98,7 +164,7 @@ export function Fig({
 export const BimFigure = (
   <Fig
     alt="A scatter plot. Along the horizontal axis, densely packed points sitting exactly on the baseline. The vertical axis is completely empty except one hollow red point floating alone above the others."
-    caption="Everything we model sits on one axis. The other has never had data in it."
+    caption="Modelled building variables against occupant response. The horizontal axis is densely sampled; the vertical holds no data, and the single hollow point is hypothetical."
   >
     <path className="ax" d="M40 140h230M40 140V26" />
     <g className="dt" opacity="0.55">
@@ -137,7 +203,7 @@ export const BimFigure = (
 export const NeuroaesFigure = (
   <Fig
     alt="Two wall profiles with eye-tracking traces over them. On the hard right-angled corner the trace knots and doubles back on itself at the join. On the curved corner the trace, drawn in red, runs smoothly through without stopping."
-    caption="Where the eye goes, and where it gets stuck. The corner costs you something."
+    caption="Eye-tracking traces over two wall profiles. The trace knots at the right-angled join and runs unbroken through the curve."
   >
     <path className="ln" d="M42 34v66h74" />
     <path
@@ -158,7 +224,7 @@ export const NeuroaesFigure = (
     <path className="acs" d="M188 44c-4 26 12 44 34 50c22 5 40 6 54 6" />
     <circle className="ac" cx="276" cy="100" r="5" />
     <text className="lbl" x="182" y="128">
-      IT RUNS THROUGH
+      UNBROKEN
     </text>
   </Fig>
 )
@@ -172,7 +238,7 @@ export const NeuroaesFigure = (
 export const SolversFigure = (
   <Fig
     alt="A convergence plot. Residual falls steeply from the top left, then flattens into a nearly horizontal tail along the bottom, with a red dot marking where it settles."
-    caption="It stops when it stops arguing. Everything before that is the argument."
+    caption="Solver convergence. Residual falls steeply, then flattens; the marked point is where the geometry stops changing."
   >
     <path className="ax" d="M40 142h228M40 142V24" />
     <path
@@ -202,7 +268,7 @@ export const SolversFigure = (
 export const GenaiFigure = (
   <Fig
     alt="A grid of forty small empty rectangles representing generated images, all faint, with a single one outlined in red."
-    caption="The generating was never the work. Choosing the one was."
+    caption="Forty generated candidates from one prompt, with the single retained result outlined."
   >
     {Array.from({ length: 40 }, (_, i) => {
       const x = 26 + (i % 10) * 25
@@ -229,7 +295,7 @@ export const GenaiFigure = (
 export const XrealFigure = (
   <Fig
     alt="A room plan with a partition wall. From a single marked standing point, the region visible from there is outlined in red; the area hidden behind the partition is left empty, showing what the plan cannot tell you."
-    caption="Same plan, one standing point. The blank corner is what the drawing never mentions."
+    caption="Isovist from one standing point in a partitioned plan. The outlined region is visible from that point; the remainder is not."
   >
     <path className="ln" d="M40 34h224v108H40z" />
     <path className="ln" d="M176 34v58" />
@@ -240,7 +306,7 @@ export const XrealFigure = (
       UNSEEN
     </text>
     <text className="lbl" x="46" y="158">
-      WHAT ONE BODY, IN ONE SPOT, ACTUALLY GETS
+      VISIBLE FROM THE POINT
     </text>
   </Fig>
 )
@@ -251,7 +317,7 @@ export const XrealFigure = (
 export const ComfortFigure = (
   <Fig
     alt="Six vertical bars of differing heights, one much shorter than the rest and drawn in red, with a dashed horizontal line showing a comfortable-looking average that the short bar sits far below."
-    caption="The average is fine. The draft on your neck is not."
+    caption="Six sensory scores for one room against their mean. The mean sits within range while one score falls far below it."
   >
     <path className="ax" d="M32 140h236" />
     <rect className="th" x="44" y="52" width="22" height="88" />
@@ -265,7 +331,7 @@ export const ComfortFigure = (
       THE AVERAGE
     </text>
     <text className="lbl" x="112" y="158">
-      THE ONE YOU NOTICE
+      LOWEST SCORE
     </text>
   </Fig>
 )
@@ -282,7 +348,7 @@ export const ComfortFigure = (
 export const DrawifaceFigure = (
   <Fig
     alt="Two timelines. On the upper one, a mark for deciding and a mark for drawing sit far apart with the interval between them shaded. On the lower one, both land on a single red mark with no interval at all."
-    caption="The lag is the whole problem. Close it and there is nowhere for the mistake to live."
+    caption="Interval between deciding and drawing, in two workflows. Above, the two events are separated; below, they coincide."
   >
     <path className="ax" d="M34 56h234" />
     <circle className="dt" cx="70" cy="56" r="5" />
@@ -304,10 +370,10 @@ export const DrawifaceFigure = (
     <circle className="ac" cx="140" cy="122" r="6.5" />
     <path className="th" d="M140 110V98" />
     <text className="lbl" x="104" y="92">
-      BOTH, AT ONCE
+      DECIDE AND DRAW
     </text>
     <text className="lbl" x="34" y="146">
-      WHEN THE DRAWING IS LIVE
+      LIVE DRAWING
     </text>
   </Fig>
 )
@@ -325,7 +391,7 @@ export const DrawifaceFigure = (
 export const EvosearchFigure = (
   <Fig
     alt="A bar chart of the qualities a fitness function scores. Three bars, for weight, span and cost, are drawn and filled. A fourth slot labelled legible has no bar at all, only an empty dashed outline in red."
-    caption="Three of these the search can weigh. The fourth quietly leaves the competition."
+    caption="Four design qualities against a fitness function. Three carry a measure and are scored; the fourth has none and leaves the search."
   >
     <path className="ax" d="M36 138h232" />
     <rect className="th" x="52" y="52" width="34" height="86" />
@@ -352,7 +418,7 @@ export const EvosearchFigure = (
       LEGIBLE
     </text>
     <text className="lbl" x="36" y="30">
-      WHAT THE FITNESS FUNCTION COUNTS
+      THE FITNESS FUNCTION
     </text>
   </Fig>
 )
@@ -369,7 +435,7 @@ export const EvosearchFigure = (
 export const HeritageFigure = (
   <Fig
     alt="A structural load diagram. A row of small downward arrows presses evenly along an existing beam, and two red upward reaction arrows return the load through the two original columns. No new support is added anywhere."
-    caption="The new load comes down through supports that were already standing."
+    caption="Load path of an added roof on an existing frame. Reactions return through the two original columns; no new support is introduced."
   >
     <path className="th" d="M46 46c56-22 152-22 208 0" />
     {Array.from({ length: 9 }, (_, i) => {
@@ -387,7 +453,7 @@ export const HeritageFigure = (
     <path className="acs" d="M56 146v-22M50 130l6-6 6 6" />
     <path className="acs" d="M244 146v-22M238 130l6-6 6 6" />
     <text className="lbl" x="40" y="164">
-      EXISTING SUPPORTS, UNCHANGED
+      EXISTING SUPPORTS
     </text>
   </Fig>
 )
@@ -403,7 +469,7 @@ export const HeritageFigure = (
 export const RespondFigure = (
   <Fig
     alt="A bell curve of occupants. A dashed vertical line marks the design decision, sitting exactly on the mean, and a single red point sits far out in the right tail where no choice was made for them."
-    caption="Designed for the middle of a curve nobody standing in the room has seen."
+    caption="Occupant distribution against a single design decision. The decision sits at the mean; the marked occupant sits in the tail."
   >
     <path className="ax" d="M32 140h240" />
     <path
@@ -418,10 +484,10 @@ export const RespondFigure = (
     <circle className="ac" cx="230" cy="140" r="5.5" />
     <path className="th" d="M230 134v-22" />
     <text className="lbl" x="208" y="106">
-      YOU
+      OUTLIER
     </text>
     <text className="lbl" x="34" y="158">
-      EVERYONE WHO WILL EVER USE THE ROOM
+      OCCUPANTS
     </text>
   </Fig>
 )
@@ -432,7 +498,7 @@ export const RespondFigure = (
 export const ExplainFigure = (
   <Fig
     alt="On the left a dense tangle of boxes and arrows labelled the diagram; on the right the same idea as three stacked toy bricks in red, labelled the toy."
-    caption="Same idea, twice. Only one of them gets read to the end."
+    caption="One idea in two representations: a process diagram, and the same process as three stacked bricks."
   >
     <rect className="th" x="26" y="40" width="30" height="18" />
     <rect className="th" x="76" y="40" width="30" height="18" />
@@ -463,7 +529,7 @@ export const ExplainFigure = (
 export const AdjacencyFigure = (
   <Fig
     alt="Five rooms drawn as dots joined by lines. Four solid lines connect rooms you can walk between. One red dashed line joins two rooms that share a wall but have no door between them."
-    caption="Solid: a door. Red and broken: a wall two rooms share and a door they do not."
+    caption="Five rooms as a graph. Solid edges are doors; the broken edge is a shared wall with no door in it."
   >
     <path className="ln" d="M74 46h96M170 46l64 60M74 46L58 138M58 138h112" />
     <path className="acs dash" d="M170 46L58 138" />
@@ -500,7 +566,7 @@ export const AdjacencyFigure = (
 export const ExperienceFigure = (
   <Fig
     alt="A learning curve plot. Two curves rise steeply and then flatten, one drawn in ink and one in red, following each other so closely they are almost indistinguishable. The horizontal axis is labelled experience on one side and data on the other."
-    caption="Two curves. One is a person, one is a model, and nothing in the shape tells you which."
+    caption="Learning curves for a person and for a model, on a shared axis of experience and data. The two are near-indistinguishable in shape."
   >
     <path className="ax" d="M40 140h230M40 140V26" />
     <path
@@ -537,11 +603,11 @@ export const ExperienceFigure = (
 // ---------------------------------------------------------------------------
 export const LlmFigure = (
   <Fig
-    alt="Three labels, a database, a mind, and magic, each struck through in red. Beside them, a chain of filled dots ending in one hollow dot with a question mark: the words so far, and the next one."
-    caption="Three things it is not, and the small thing it does instead."
+    alt="Three common descriptions of a language model, a database, a mind, and magic, each struck through in red. Beside them, a chain of filled dots for the preceding words, ending in one hollow dot with a question mark for the predicted word."
+    caption="Three common descriptions of a language model, struck through, beside the operation it performs: predicting the next word."
   >
     <text className="lbl" x="24" y="34">
-      IT IS NOT
+      COMMON DESCRIPTIONS
     </text>
     <text className="lbl" x="30" y="66" fontSize="11">
       A DATABASE
@@ -557,7 +623,7 @@ export const LlmFigure = (
     <path className="acs" d="M26 130h50" />
     <path className="th" d="M150 30v112" />
     <text className="lbl" x="172" y="60">
-      THE WORDS SO FAR
+      PRIOR WORDS
     </text>
     <path className="th" d="M180 88h72" />
     <circle className="dt" cx="180" cy="88" r="4" />
@@ -566,7 +632,7 @@ export const LlmFigure = (
     <circle className="dt" cx="234" cy="88" r="4" />
     <circle cx="256" cy="88" r="6" fill="none" stroke="currentColor" strokeWidth={1.4} />
     <text className="lbl" x="172" y="122">
-      AND THE NEXT ONE
+      NEXT WORD
     </text>
   </Fig>
 )
@@ -579,7 +645,7 @@ export const LlmFigure = (
 export const LatentFigure = (
   <Fig
     alt="A scatter of dots on two unlabelled axes. The dots gather into two loose clumps with empty space between them, and one dot in that empty space is marked in red."
-    caption="The axes mean nothing. The distances mean everything. Nobody lives in the gap."
+    caption="Points embedded on two unnamed axes. Clusters form by similarity; the marked point lies in the sparse region between them."
   >
     <path className="ax" d="M40 142h224M40 142V26" />
     <g className="dt" opacity="0.5">
@@ -621,7 +687,7 @@ export const LatentFigure = (
 export const ScoreFigure = (
   <Fig
     alt="A histogram of rooms by score. A red vertical threshold line cuts the distribution, and every bar to the left of it is drawn faint and struck through, showing rooms filtered out by a cutoff that appears nowhere in the method."
-    caption="Nobody chose this line in the research. Somebody chose it in a spreadsheet."
+    caption="Rooms by score, with an allocation threshold applied. The threshold appears nowhere in the source research."
   >
     <path className="ax" d="M34 140h236" />
     {(
@@ -669,7 +735,7 @@ export const ScoreFigure = (
 export const ComputationFigure = (
   <Fig
     alt="On the left, a single drawn vertical line above a label reading one line. On the right, six lines of differing heights produced by a rule, one of them red and noticeably shorter than the rest."
-    caption="A drawing is one answer. A rule is every answer, including the one you did not want."
+    caption="One drawn line beside six produced by a rule. The rule generates every case, including the marked outlier."
   >
     <path className="ln" d="M46 42v86" />
     <path className="th" d="M28 128h36" />
@@ -682,7 +748,7 @@ export const ComputationFigure = (
     <path className="acs" d="M242 74v54" />
     <path className="th" d="M126 128h152" />
     <text className="lbl" x="130" y="146">
-      EVERY LINE THE RULE MAKES
+      RULE OUTPUT
     </text>
   </Fig>
 )

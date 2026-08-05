@@ -11,6 +11,12 @@
 import { useMemo, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
+// ONE DATE GRAMMAR (Emilie, 2026-08-05). A note page printed the raw registry
+// string, "~ THOUGHT · 2026-01", while /work and the book both rendered
+// "JAN 2026" through this formatter. Same fact, two grammars, and the machine
+// one was on the page whose whole job is to be read.
+import { fmtMonthYear } from '../components/ThoughtIndexRows'
+import { FigNumberContext } from './figures'
 import useIsDesktop from '../hooks/useIsDesktop'
 import type { ReachSet } from '../components/reach/verbs'
 import { LensPill } from '../components/ui/Pill'
@@ -80,7 +86,7 @@ export default function ThoughtLeaf(props: {
   const headerInfo = (
     <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1">
       <div className="flex flex-wrap items-center gap-x-3 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
-        <span>~ THOUGHT · {date}</span>
+        <span>~ THOUGHT · {fmtMonthYear(date)}</span>
         <LensPill lens={lens} />
         {number && <span>{number}</span>}
       </div>
@@ -153,7 +159,7 @@ export default function ThoughtLeaf(props: {
             Rendered from the identical values, so the two can never disagree. */}
         {!isDesktop && (
           <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
-            <span>~ THOUGHT · {date}</span>
+            <span>~ THOUGHT · {fmtMonthYear(date)}</span>
             <LensPill lens={lens} />
             {number && <span>{number}</span>}
           </div>
@@ -171,7 +177,11 @@ export default function ThoughtLeaf(props: {
             plain <p> + NB dots. [&_p]:relative anchors the sketch-dot's
             floating drawing to the paragraph's margin (S5). */}
         <div className="prose-rag max-w-[62ch] font-serif text-prose leading-[1.75] text-[var(--lang-ink)] [&_p]:relative [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
-          {children}
+          {/* Every plate inside this note finds its place in the running figure
+              count from here. The value is the THOUGHT ID, not the T-number:
+              numbering is a book-wide sequence in date order, so the plate has
+              to look itself up in that run rather than read a local label. */}
+          <FigNumberContext.Provider value={id ?? null}>{children}</FigNumberContext.Provider>
         </div>
       </article>
     </SheetPage>

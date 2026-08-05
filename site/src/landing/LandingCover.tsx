@@ -1038,6 +1038,12 @@ function MindSection() {
             {para}
           </p>
         ))}
+        {/* TRIED IN CAVEAT AND REVERTED (Emilie, 2026-08-05). Her idea, rendered
+            at 17/19px and judged live: it read well and kept its contrast, but
+            the wink sits 100px below it in the same face at 16px, so the page
+            ended with two handwritten asides separated by a mono legend and
+            neither one owned the moment. Handwriting stays the voice line and
+            the margin note. Her call: "revert to mono". */}
         <p className="mt-6 font-mono text-micro tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">
           This is what&apos;s on my mind ·{' '}
           <Link to="/contact" viewTransition className={`pointer-events-auto ${RED_LINK}`}>

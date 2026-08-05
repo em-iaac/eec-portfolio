@@ -29,8 +29,19 @@
       (150-900ms); every animation must render final state under
       prefers-reduced-motion; never animate root-level filters.
    8. The n.b. marker: a redline dot or "n.b." prefix marks Emilie's
-      live annotations on sheets. Handwriting (--font-hand) sets margin
-      notes ONLY: never UI, never above 19px, five notes per sheet max.
+      live annotations on sheets. Handwriting (--font-hand) does TWO
+      jobs and no others (restated 2026-08-05, because the old rule said
+      "margin notes ONLY: never above 19px" while the landing's voice
+      line had been set in it at 33px since 2026-07-09, with her
+      approval. A rule the code contradicts protects nothing):
+        a. THE VOICE LINE, once per site, at the top of the landing.
+           It is the one sanctioned display use and it is hers.
+        b. MARGIN NOTES, at or below 19px, five per sheet max, never UI.
+      Everything else stays mono or serif. Tested and rejected
+      2026-08-05: the landing's closing line in handwriting. It read
+      well and held contrast, but the wink sits 100px below it in the
+      same face, so the page ended with two handwritten asides and
+      neither owned the moment. Her call: "revert to mono".
    9. The timeline NOW marker: redline as liveness at the live edge of
       the record, the same liveness sanction as the ISSUED FOR stamp.
    ============================================================ */

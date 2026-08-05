@@ -17,6 +17,7 @@ import {
   splitProjectLink,
 } from '../data/cv'
 import type { CvEntry } from '../data/cv'
+import { QUIET_LINK } from '../lib/linkStyles'
 
 const BASE = import.meta.env.BASE_URL
 
@@ -124,8 +125,12 @@ function SecTitle({ name, id, children }: { name: CvSection; id: string; childre
 // the whole frozen frame 921px of blank scroll underneath it. This is exactly
 // why every anchor in ContactLinks is `relative`; measured after the fix, the
 // window's scroll range is 0.
-const RECORD_LINK =
-  'relative text-[var(--lang-ink)] underline decoration-dashed decoration-1 decoration-[var(--lang-ink-muted)] underline-offset-4 transition-colors hover:text-[var(--lang-interaction)] hover:decoration-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]'
+// PROMOTED TO lib/linkStyles.ts AS `QUIET_LINK` (Emilie, 2026-08-05). This
+// recipe was defined here and used only here, and she ruled it the better of
+// the site's two link designs, so it now belongs to the whole site rather than
+// to this page. The alias keeps this file reading as it always has; the CV's
+// own bullets stay UNPADDED (see QUIET_LINK_TAP's comment for why).
+const RECORD_LINK = QUIET_LINK
 
 function Entry({ dates, title, org, notes, projects }: CvEntry) {
   return (

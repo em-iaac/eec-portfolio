@@ -16,7 +16,17 @@ import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import { ENTRIES } from '../data/registry'
 import { isPillarRelated } from '../lib/pillar'
-import { RED_LINK_TAP } from '../lib/linkStyles'
+// Three recipes on this page, on purpose (Emilie, 2026-08-05):
+//   QUIET_LINK_TAP  the three names inside the prose. Ink, dashed, red on hover.
+//   RED_LINK_ROW    the door rows and the way back. Calls to action, and
+//                   standalone, so they carry the real 44px floor.
+//
+// ⚠ THEY USED RED_LINK_TAP AND WERE SHORT. Measured at 390px: the nine door
+// rows came out 34px and the back link 30px, because `_TAP` adds a FIXED 16px
+// to a font-sized inline box and these are 12px and 9px mono. `_TAP` is for a
+// name inside a sentence, where WCAG 2.2 exempts the target size; a standalone
+// row has no exemption and wants `_ROW`, which is what `_ROW` was written for.
+import { QUIET_LINK_TAP, RED_LINK_ROW } from '../lib/linkStyles'
 
 
 // The cluster, derived, never listed by hand: tag a new project 'neuro' in
@@ -29,7 +39,7 @@ const NEURO_THOUGHTS = ENTRIES.filter(
 function DoorRow({ to, title, hint }: { to: string; title: string; hint: string }) {
   return (
     <li className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t-[0.5px] border-[var(--lang-hairline)] py-2.5 first:border-t-0">
-      <Link to={to} viewTransition className={`font-mono text-nav tracking-[0.08em] ${RED_LINK_TAP}`}>
+      <Link to={to} viewTransition className={`font-mono text-nav tracking-[0.08em] ${RED_LINK_ROW}`}>
         {title} ›
       </Link>
       <span className="font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
@@ -69,7 +79,7 @@ export default function Pillar() {
           </p>
           <p>
             The name happened on air. An hour into{' '}
-            <Link to="/work/podcast" viewTransition className={RED_LINK_TAP}>
+            <Link to="/work/podcast" viewTransition className={QUIET_LINK_TAP}>
               our podcast conversation
             </Link>{' '}
             with Dr. Cleo Valentine, the researcher building the field of architectural
@@ -85,7 +95,7 @@ export default function Pillar() {
               href="https://hi-em.github.io/neurospace"
               target="_blank"
               rel="noreferrer"
-              className={RED_LINK_TAP}
+              className={QUIET_LINK_TAP}
             >
               NeuroSpace
               <span className="sr-only"> (opens in new tab)</span>
@@ -93,7 +103,7 @@ export default function Pillar() {
             runs the bet live in your browser, scoring plans against published neuroarchitecture
             research; Sensi turns it into a copilot that treats comfort as six coupled senses;
             both show their work and leave you room to argue back. The long version lives in{' '}
-            <Link to="/thoughts/bim" viewTransition className={RED_LINK_TAP}>
+            <Link to="/thoughts/bim" viewTransition className={QUIET_LINK_TAP}>
               the note that carries it
             </Link>
             ; every door below is the bet being tested.
@@ -130,7 +140,7 @@ export default function Pillar() {
         </section>
 
         <div className="mt-9 flex flex-wrap items-baseline gap-x-6 gap-y-2 border-t-[0.5px] border-[var(--lang-hairline)] pt-3.5 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
-          <Link to="/" viewTransition className={RED_LINK_TAP}>
+          <Link to="/" viewTransition className={RED_LINK_ROW}>
             ‹ BACK TO THE MIND
           </Link>
           <span className="ml-auto">THE SPINE</span>

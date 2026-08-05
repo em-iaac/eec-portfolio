@@ -11,13 +11,19 @@ export const VOICE = 'I work with design, technology and minds.'
 export const WINK = 'this whole mess is my head. touch a piece of it.'
 
 // THE ROLE (THE SCROLL, 2026-07-27). "Design Technology Architect" is the one
-// standard term a screener searches, and it lived only in the <title> tag and
-// the /work footer, which is to say nowhere a human reading the site could see
-// it. It shipped as its own tier above the adjective row for one build and
-// Emilie CUT IT: the four adjectives are the claim on the landing. Her call at
-// the same gate was that the title belongs in the BIO, so that is where it is,
-// in the second paragraph, said the way a person says it rather than the way a
-// job board does. Nothing else consumes this constant, so it is not exported.
+// standard term a screener searches. It shipped as its own tier above the
+// adjective row for one build and Emilie CUT IT: the four adjectives are the
+// claim on the landing.
+//
+// ⚠ THIS COMMENT USED TO SAY the title therefore lived "in the BIO, in the
+// second paragraph". IT DOES NOT, and has not since the round-5 "cut the fluff"
+// pass took that beat out. Checked on the rendered page 2026-08-05:
+// `Design Technology Architect` appears in the <title>, the landing's
+// aria-label, the /work footer, the CV and the book, and NOWHERE a reader of
+// the landing can see it. Emilie was shown three ways to put it back (a kicker
+// reading "About · Design Technology Architect", a byline, or nothing) and
+// chose NOTHING, 2026-08-05: the four adjectives remain the whole claim and the
+// title stays machine-facing. That is a decision now, not an accident.
 
 // THE BIO (THE SCROLL, 2026-07-27; REWRITTEN A TO Z at THE WORDS, 2026-07-28).
 // The site had no bio anywhere: /contact is a contact sheet ("Say hi"), not a
@@ -83,9 +89,28 @@ export const WINK = 'this whole mess is my head. touch a piece of it.'
 //
 // SIGNED by Emilie 2026-07-29 ("sign everything"), which is why the export is
 // BIO and no longer BIO_DRAFT. Five rounds and one interview to get here.
+// ROUND 6 · REORDERED, NOT REWRITTEN (Emilie, 2026-08-05). Her comment was
+// structural rather than verbal: "it's about me and my work, maybe it should
+// start with something more about me? or organize it better."
+//
+// THE HONEST LIMIT MOVES FIRST. Three orders were rendered in full at the real
+// measure and she picked this one. Opening on what she cannot do is disarming,
+// it is unmistakably hers, and it answers "start with something about me"
+// without spending the first paragraph on a claim. The argument lands harder
+// arriving second, because a limit has already been admitted.
+//
+// TWO EARLIER RULINGS SURVIVE, and both were checked before this moved:
+//   · "close without a question, on the character line" (round 3). An order
+//     that opens on the character line would have ended the bio on "Dystopian
+//     or utopian?", reversing it. She was shown that version and did not take it.
+//   · "So I build the instruments" still follows the argument it depends on.
+//     Any order that separates them breaks the "So" and needs a rewrite, which
+//     is why only three of the possible orders were ever offered.
+//
+// NOT ONE WORD CHANGED. Every paragraph is still the signed 2026-07-29 text.
 export const BIO: readonly string[] = [
+  'I will not pretend I can fill a blank notebook from nothing. What I am good at is judging what the machine hands back and steering it. Someday that might be for a cursor instead of a person. Dystopian or utopian?',
   "We build for the eye sometimes, which helps. Mostly we build for function, which is counterintuitive isn't it? We should be building for us to function at our best, not the building.",
   'So I build the instruments: Sensi scores a floor plan across six senses, NeuroSpace estimates how a room reads to the brain and shows its weights so you can disagree with them.',
-  'I will not pretend I can fill a blank notebook from nothing. What I am good at is judging what the machine hands back and steering it. Someday that might be for a cursor instead of a person. Dystopian or utopian?',
   'I would rather be the most interested person in the room than the most interesting one.',
 ]

@@ -61,7 +61,10 @@
 // owned and what is collected, and never once that anyone is available.
 import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
-import { RED_LINK, RED_LINK_TAP } from '../lib/linkStyles'
+// Two recipes here on purpose (Emilie, 2026-08-05): RED_LINK for MadeRow, which
+// is a structured mono row like a door, and QUIET_LINK_TAP for the four names
+// inside the drawers' prose.
+import { QUIET_LINK_TAP, RED_LINK } from '../lib/linkStyles'
 
 // The prose step, matching /contact: 17px on a short laptop, 19px when the
 // room breathes. Class strings stay LITERAL (Tailwind v4 scans this file).
@@ -203,7 +206,7 @@ export default function Rights() {
                 The majority of work published on this site was produced collaboratively.
                 Collaborators are named on each project, together with the size of the team and the
                 author&apos;s role in it. Those credits are the record and can be{' '}
-                <Link to="/work" viewTransition className={RED_LINK_TAP}>
+                <Link to="/work" viewTransition className={QUIET_LINK_TAP}>
                   read on the work itself
                 </Link>
                 .
@@ -237,7 +240,7 @@ export default function Rights() {
               </Clause>
               <Clause n="2.3">
                 Requests for any other use may be made{' '}
-                <Link to="/contact" viewTransition className={RED_LINK_TAP}>
+                <Link to="/contact" viewTransition className={QUIET_LINK_TAP}>
                   through the contact page
                 </Link>
                 .
@@ -255,12 +258,12 @@ export default function Rights() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Web3Forms privacy policy (opens in new tab)"
-                  // RED_LINK_TAP, not RED_LINK (2026-08-03). These two sit in
+                  // QUIET_LINK_TAP, not the bare paint (2026-08-03, restyled 2026-08-05). These two sit in
                   // running prose but they are the only two links in their
                   // paragraphs, so the -m-2/p-2 pad has no neighbouring hit box
                   // to overlap: the reason the /cv bullets and the MadeRows go
                   // unpadded does not apply here. Measured 20px, now 44.
-                  className={RED_LINK_TAP}
+                  className={QUIET_LINK_TAP}
                 >
                   Web3Forms
                 </a>{' '}
@@ -274,12 +277,12 @@ export default function Rights() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GoatCounter privacy policy (opens in new tab)"
-                  // RED_LINK_TAP, not RED_LINK (2026-08-03). These two sit in
+                  // QUIET_LINK_TAP, not the bare paint (2026-08-03, restyled 2026-08-05). These two sit in
                   // running prose but they are the only two links in their
                   // paragraphs, so the -m-2/p-2 pad has no neighbouring hit box
                   // to overlap: the reason the /cv bullets and the MadeRows go
                   // unpadded does not apply here. Measured 20px, now 44.
-                  className={RED_LINK_TAP}
+                  className={QUIET_LINK_TAP}
                 >
                   GoatCounter
                 </a>

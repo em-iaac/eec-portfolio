@@ -28,3 +28,33 @@ export const RED_LINK_TAP = `-m-2 p-2 ${RED_LINK}`
 // the focus ring is one grammar sitewide.
 export const INK_LINK =
   'text-[var(--lang-ink)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
+
+// THE QUIET LINK, for a NAME INSIDE A SENTENCE (Emilie, 2026-08-05). It was
+// `RECORD_LINK`, defined privately in pages/CV.tsx and used only there, and she
+// ruled it the better of the two: "project links do not match the CV's link
+// design and I prefer the CV's, more subtle."
+//
+// THE RULE THAT SPLITS THE TWO, and it is the CV's own logic:
+//   RED_LINK*  is a CALL TO ACTION. It asks to be pressed and it should look
+//              like it: "What's in yours?", a door row, the 404's way home.
+//   QUIET_LINK is a NAME that happens to be a door. Ink at rest, so the
+//              sentence keeps its rhythm, with a thin dashed muted underline
+//              saying there is somewhere to go. It turns red on hover and focus,
+//              so the interaction colour is still one grammar sitewide.
+//
+// Running prose is the whole reason: a note that names four projects in red is
+// four things pulling the eye off the argument, on the one page whose job is to
+// be read.
+//
+// `relative` is load-bearing and inherited from the CV: without it an absolute
+// focus artifact escapes its scroller and stretches the document (CV.tsx
+// carries the full account, it cost 921px of blank scroll once).
+export const QUIET_LINK =
+  'relative text-[var(--lang-ink)] underline decoration-dashed decoration-1 decoration-[var(--lang-ink-muted)] underline-offset-4 transition-colors hover:text-[var(--lang-interaction)] hover:decoration-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]'
+
+// The quiet paint plus the same -m-2/p-2 pad RED_LINK_TAP uses. The CV's own
+// bullets deliberately go UNPADDED (they are dense enough that pads would
+// overlap the neighbouring line), but a link in a note's paragraph needs the
+// 44px floor, and that floor is a FLOORS rule rather than a preference. Swapping
+// the paint may never quietly drop the target.
+export const QUIET_LINK_TAP = `-m-2 p-2 ${QUIET_LINK}`

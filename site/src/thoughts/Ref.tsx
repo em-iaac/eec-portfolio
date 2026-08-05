@@ -27,7 +27,13 @@
 import { type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ENTRIES } from '../data/registry'
-import { RED_LINK } from '../lib/linkStyles'
+// QUIET_LINK_TAP, not RED_LINK (Emilie, 2026-08-05). A note that names four
+// projects in red is four things pulling the eye off the argument, on the one
+// page whose job is to be read. This is the CV's recipe, which is what the
+// header comment above already said this component followed "in spirit": now it
+// follows it in paint too. The _TAP variant keeps the 44px touch floor that
+// RED_LINK alone never had here.
+import { QUIET_LINK_TAP } from '../lib/linkStyles'
 
 /**
  * Resolve a registry id to the route that shows it: a thought's leaf, or a
@@ -47,7 +53,7 @@ export default function Ref({ id, children }: { id: string; children: ReactNode 
   // link does not. Better a flat sentence than a 404 inside an essay.
   if (!to) return <>{children}</>
   return (
-    <Link to={to} viewTransition className={RED_LINK}>
+    <Link to={to} viewTransition className={QUIET_LINK_TAP}>
       {children}
     </Link>
   )

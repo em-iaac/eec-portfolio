@@ -973,9 +973,23 @@ export function timelineEntries(): RegistryEntry[] {
 // behind both index renditions, the /work THE THOUGHTS section and the
 // printed book's index page (components/ThoughtIndexRows). Book order =
 // T-number ascending, the order Emilie signed on the printed index.
+// ORDERED BY DATE, NEWEST FIRST (Emilie, 2026-08-05). It used to sort by
+// T-number, which is the order the notes were CATALOGUED, not the order she
+// thought them. That was invisible until the 2026-08-04 date pass moved eight
+// dates: /work shows a date on every row, so the list started reading JAN 2026,
+// DEC 2025, NOV 2025, DEC 2023, SEP 2022 down its first column.
+//
+// It also makes an existing claim true. ThoughtRoute's comment says NEXT walks
+// "the same order as the index", and until now it did not: prev/next ran on
+// `byDateDesc` while the index ran on T-number. One order now, everywhere.
+//
+// TIE-BREAK BY T-NUMBER, DESCENDING, so the run stays deterministic: five pairs
+// share a month (JUN 2026, MAY 2026, APR 2026, DEC 2025, NOV 2025) and the
+// prerender, the frozen book and the snapshots all need one stable answer.
 export function thoughtIndexEntries(): RegistryEntry[] {
-  return ENTRIES.filter((e) => e.kind === 'thought').sort((a, b) =>
-    (a.note?.number ?? '').localeCompare(b.note?.number ?? ''),
+  return ENTRIES.filter((e) => e.kind === 'thought').sort(
+    (a, b) =>
+      byDateDesc(a, b) || (b.note?.number ?? '').localeCompare(a.note?.number ?? ''),
   )
 }
 
@@ -1134,7 +1148,9 @@ export const CORRELATIONS: readonly Correlation[] = [
   ['latent', 'legoarch', 1],
   ['scoring', 'comfort', 3], // the ethics thread. SEE THE NOTE: `comfort` says
   // the argument is "its own note now", which reads as a later split, and the
-  // dates Emilie confirmed put scoring FIRST. Flagged to her at the walk.
+  // dates Emilie confirmed put scoring FIRST. Resolved at the walk: the comfort
+  // note now reads "has a note of its own", so the prose makes no claim about
+  // which came first and no longer contradicts the map. SIGNED 2026-08-04.
   ['neurospace', 'scoring', 2], // the weights are public so you can disagree
   // COMPUTATION GETS THE WIDER SET (her instruction: "computation gets much
   // more connections in terms of projects"). It is the one note that names a

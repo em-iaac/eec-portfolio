@@ -3,7 +3,8 @@
 // carried, now ALSO the /work index's THE THOUGHTS section. The reading-room
 // list retired in the same gate (/thoughts is the world only), so these rows
 // are the site's one thoughts list. ONE component, two skins, one data source
-// (registry.thoughtIndexEntries, book order = T-number ascending), so the
+// (registry.thoughtIndexEntries, ordered BY DATE newest-first since Emilie's
+// ruling of 2026-08-05; it was T-number ascending until then), so the
 // screen index and the print index cannot drift (REDESIGN-SPEC §4: one data
 // object, two renditions; since the 2026-07-18 LOOK & ORDER gate the shared
 // contract is the DATA + row grammar, while /work presents them as a RAIL).

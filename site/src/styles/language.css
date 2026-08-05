@@ -1068,14 +1068,32 @@ li[data-glow] > button {
   font-style: italic;
   fill: currentColor;
 }
+/* A CAPTION HERE IS A SENTENCE, NOT A SERIAL NUMBER (Emilie, 2026-08-05).
+   These 17 captions are written prose with a turn in the middle, and they were
+   set as machine labels: 9px, uppercase, 0.12em tracking. Uppercase removes
+   word shapes, which is exactly what a reader needs to catch a turn, and 9px
+   sat against 17px body on the same page. Contrast was never the problem
+   (measured 6.32:1, comfortably past AA); the register was.
+
+   12px is --text-nav, not a new value: the scale has no 11px and its own rule
+   is that inventing a size is a design decision, not a CSS one. Still mono,
+   still muted, still under a ruled plate. */
 .thought-fig figcaption {
   margin-top: 10px;
   font-family: var(--font-mono);
-  font-size: var(--text-micro);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  line-height: 1.5;
+  font-size: var(--text-nav);
+  letter-spacing: 0.04em;
+  line-height: 1.6;
   color: var(--lang-ink-muted);
+}
+/* The plate's number sits inside the caption rather than above it: one line, so
+   the plate does not grow a second row of chrome. Ink, against the muted
+   caption, because it is the label you scan for and the caption is what you
+   read after. The middot separator is real text in the JSX, never a ::after:
+   a pseudo-element never reaches the text layer or a screen reader. */
+.thought-fig__n {
+  color: var(--lang-ink);
+  white-space: nowrap;
 }
 
 /* ============================================================

@@ -199,6 +199,68 @@ test('every project or note a thought names in its prose also carries a thread',
   expect([...new Set(missing)]).toEqual([])
 })
 
+// THE FIGURE RUN IS A BOOK, NOT A CATALOGUE (Emilie, 2026-08-05: "imagine them
+// all piled up in one document as a book of essays"). Plates are numbered 1..N
+// across the whole set in reading order, oldest note first, and the run is
+// derived from `thoughtIndexEntries()` reversed. That only stays true while the
+// declared exceptions match reality: today `charcoal` is the one note with no
+// plate, because it carries her actual charcoals on sketch dots instead. If a
+// note gains or loses a figure and nobody updates PLATES_PER_THOUGHT, every
+// number after it goes quietly wrong, which is the worst kind of wrong.
+test('every thought renders exactly the number of plates the figure run expects', () => {
+  const notesFile = join(dirname(fileURLToPath(import.meta.url)), '..', 'thoughts', 'notes.tsx')
+  const src = readFileSync(notesFile, 'utf8').split(/\r?\n/)
+  const rendered: Record<string, number> = {}
+  let current: string | null = null
+  for (const line of src) {
+    const key = /^ {2}([a-z-]+): \(/.exec(line)
+    if (key) current = key[1] ?? null
+    if (!current) continue
+    // A plate reaches a note as `{XxxFigure}`; SketchDot and Ref are not plates.
+    for (const _ of line.matchAll(/\{[A-Z]\w*Figure\}/g)) rendered[current] = (rendered[current] ?? 0) + 1
+  }
+  const thoughts = ENTRIES.filter(e => e.kind === 'thought' && e.note?.status === 'drafted')
+  const mismatched = thoughts
+    .map(e => ({ id: e.id, actual: rendered[e.id] ?? 0, expected: e.id === 'charcoal' ? 0 : 1 }))
+    .filter(r => r.actual !== r.expected)
+    .map(r => `${r.id}: renders ${r.actual} plate(s), the run expects ${r.expected}`)
+  expect(mismatched).toEqual([])
+})
+
+// A PLATE LABEL HAS TO FIT ITS PLATE. Every figure is a 300x170 viewBox, and
+// `.thought-fig svg` sets `overflow: visible`, so a label that runs past the
+// right edge does not clip: it renders outside the frame, scaled up by however
+// wide the plate is drawn (460px on desktop). EIGHT labels were doing this and
+// had been since the plates shipped, the worst reaching x=418 in a 300 box,
+// which is 39% past the edge. Nothing failed, nothing looked broken in the
+// source, and it was only found by measuring the built SVG in a browser.
+//
+// This guard is a conservative ESTIMATE, not a render: `text.lbl` is Martian
+// Mono at 8px with 0.1em tracking, which measures ~10.7px per character, so
+// 11 is used as the per-character budget. It cannot catch a label that is
+// marginally over, and it does catch every gross case, which is the class of
+// bug that actually happened. Measure in the browser when a figure is redrawn.
+test('no figure label runs past the right edge of its 300 unit plate', () => {
+  const figFile = join(dirname(fileURLToPath(import.meta.url)), '..', 'thoughts', 'figures.tsx')
+  const src = readFileSync(figFile, 'utf8')
+  const PER_CHAR = 11
+  const VIEWBOX_W = 300
+  const overflowing: string[] = []
+  // x is a QUOTED attribute in this file (x="208"), not a JSX expression. A
+  // first version of this pattern expected a bare digit, matched nothing, and
+  // passed green while eight labels were overflowing. A guard that matches
+  // zero elements proves zero, so the match count is asserted below.
+  const labels = [...src.matchAll(/<text className="lbl"[^>]*?\sx=["{](\d+)["}][^>]*>\s*([^<]+?)\s*<\/text>/g)]
+  expect(labels.length).toBe((src.match(/<text className="lbl"/g) ?? []).length)
+  for (const m of labels) {
+    const x = Number(m[1])
+    const text = (m[2] ?? '').replace(/\s+/g, ' ').trim()
+    const right = x + text.length * PER_CHAR
+    if (right > VIEWBOX_W) overflowing.push(`"${text}" at x=${x} reaches ~${right} of ${VIEWBOX_W}`)
+  }
+  expect(overflowing).toEqual([])
+})
+
 // EARLIER FIRST (Emilie, 2026-08-04, "all forward"). The tuple order is the
 // direction the thread FIRES on the map: worldGraph builds `pulseD` from a to
 // b and nw-travel sweeps a dash along it. Written the other way round, a

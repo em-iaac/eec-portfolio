@@ -80,7 +80,7 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
   // T-102
   //
   // draftCopy: THE THIRD ITEM IN THE TRIPLE REPLACED AT THE WALK (2026-08-04),
-  // UNSIGNED. It read "the way a long sightline changes your breathing", inside
+  // SIGNED by Emilie 2026-08-04. It read "the way a long sightline changes your breathing", inside
   // a sentence that explicitly claims the field has evidence. The first two
   // items are well supported (contour preference: Vartanian et al., PNAS 2013,
   // plus 2019 and 2021). RESPIRATION IS NOT A MEASURE THIS LITERATURE REPORTS:
@@ -244,7 +244,7 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
 
   // T-109
   //
-  // draftCopy: ONE WORD CHANGED AT THE WALK (2026-08-04), UNSIGNED. "steel"
+  // ONE WORD CHANGED AT THE WALK, SIGNED by Emilie 2026-08-04. "steel"
   // became "iron". Bab al-Louq opened 1 May 1912 on the Les Halles model and
   // the sources on it (Cluster Cairo, Daily News Egypt) all describe an iron
   // truss roof. Emilie ruled iron over dropping the material entirely.
@@ -487,7 +487,7 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
   // T-116 · the word she is asked about most, explained by someone who builds
   // with them daily and is not impressed by them.
   //
-  // draftCopy: ONE SENTENCE ADDED AT THE WALK (2026-08-04), UNSIGNED. It closes
+  // ONE SENTENCE ADDED AT THE WALK, SIGNED by Emilie 2026-08-04. It closes
   // the emergence paragraph with the argument that the jump may be an artifact
   // of the marking scheme (Schaeffer et al., NeurIPS 2023: score pass/fail and
   // you get a cliff, score partial credit and the same models climb smoothly).
@@ -606,7 +606,7 @@ export const THOUGHT_NOTES: Record<string, ReactNode> = {
     </>
   ),
 
-  // draftCopy: FOUR WORDS CHANGED AT THE WALK (2026-08-04), UNSIGNED. "where I
+  // FOUR WORDS CHANGED AT THE WALK, SIGNED by Emilie 2026-08-04. "where I
   // first met it" became "where it kept finding me". The date ruling put this
   // note at 2025-10 and `evolutionary search` at 2025-11, so "first" made the
   // note claim a sequence its own dates contradict. The new phrasing makes no
