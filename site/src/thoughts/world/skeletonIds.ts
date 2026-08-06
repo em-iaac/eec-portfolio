@@ -38,6 +38,12 @@ export const MILESTONE_LANE: Record<string, WorldLane> = {
   'macad-start': 'macad',
   'macad-y1': 'macad',
   'site-live': 'self',
+  // The two CV lines that joined the map on 2026-08-06. Both ride 'main'
+  // rather than the lane of whatever job was running at the time, because
+  // neither belongs to an employer: a licence and a summer school are hers,
+  // and the main line is the spine the forks hang off.
+  licence: 'main',
+  gss: 'main',
 }
 
 // The soma lane merges back into the main line at this milestone's column.

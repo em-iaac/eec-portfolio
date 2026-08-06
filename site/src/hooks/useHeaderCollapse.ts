@@ -20,19 +20,36 @@
 //     `open()` — because "scroll up" is not a gesture a keyboard has.
 // A 6px dead band stops a trackpad's jitter from flickering it open and shut.
 //
-// BELOW lg ONLY on interior pages, and that is not a style choice. From lg up
-// the frame is `h-dvh` + `overflow-hidden` with `#main` doing the scrolling, so
-// `window.scrollY` never moves there and this would simply never fire; worse,
-// it would be reading the wrong scroller if the frame ever changed. The landing
-// is a scrolling document at every width and passes `enabled` true always.
+// IT READS WHICHEVER ELEMENT ACTUALLY SCROLLS (Emilie's ruling 2026-08-06, the
+// last pass: "the header with the pill and the jump bar should behave the same
+// on scroll down and up like the landing page on all pages").
+//
+// This used to be phone-only on interior pages, and the reason was real rather
+// than stylistic: from lg up the frame is `h-dvh` + `overflow-hidden` with
+// `#main` doing the scrolling, so `window.scrollY` never moves and a window
+// listener would never fire. The fix is therefore not "turn it on everywhere",
+// which would have shipped a dead listener — it is to READ THE RIGHT SCROLLER.
+// The caller names it: the landing is a scrolling document at every width and
+// says `window`; SheetPage says `main` from lg up and `window` below it, which
+// is exactly where its frame freezes and unfreezes.
+//
+// /thoughts is deliberately not wired. Its stage pans SIDEWAYS and the page has
+// no vertical scroll at all, so there is no gesture for a collapse to answer.
 //
 // Nothing is lost when it collapses: a page's own tools live OUTSIDE the pill
-// (TitleBlock's `tools` slot, .pill-tools), so /work's and a thought note's
-// controls stay put while the doors squeeze away.
+// (TitleBlock's `tools` slot, .pill-tools), so /work's filter row and a thought
+// note's controls stay put while the doors squeeze away. The site search DOES
+// collapse with it, to the "/" stub, because it rides inside that slot's right
+// edge and shrinking to its own keyboard shortcut is its designed compact form.
 import { useEffect, useState } from 'react'
 import usePrefersReducedMotion from './usePrefersReducedMotion'
 
-export default function useHeaderCollapse(enabled = true): [boolean, () => void] {
+export default function useHeaderCollapse(
+  enabled = true,
+  /** Which element's scroll position drives it. 'main' is the frozen frame's
+   *  middle band (`#main`), which is the only thing that moves from lg up. */
+  scroller: 'window' | 'main' = 'window',
+): [boolean, () => void] {
   const prm = usePrefersReducedMotion()
   const [collapsed, setCollapsed] = useState(false)
   useEffect(() => {
@@ -40,16 +57,26 @@ export default function useHeaderCollapse(enabled = true): [boolean, () => void]
       setCollapsed(false)
       return
     }
-    let last = window.scrollY
+    // Resolved inside the effect, not during render: on the first pass #main is
+    // a sibling being rendered by the very component that calls this hook, so it
+    // does not exist yet. By the time effects run it does.
+    const el: HTMLElement | Window =
+      scroller === 'main' ? (document.getElementById('main') ?? window) : window
+    const readY = () => (el === window ? window.scrollY : (el as HTMLElement).scrollTop)
+
+    // Switching scrollers mid-life (a resize across lg) must not leave the pill
+    // stuck collapsed against a scroller that is now at 0.
+    setCollapsed(false)
+    let last = readY()
     const onScroll = () => {
-      const y = window.scrollY
+      const y = readY()
       if (y < 140) setCollapsed(false)
       else if (y > last + 6) setCollapsed(true)
       else if (y < last - 6) setCollapsed(false)
       last = y
     }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [prm, enabled])
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [prm, enabled, scroller])
   return [collapsed, () => setCollapsed(false)]
 }

@@ -45,7 +45,14 @@ export const SITE_NAME = 'Emilie El Chidiac'
 export const LANDING_TITLE = 'Emilie El Chidiac | Design Technology Architect'
 export const LANDING_DESCRIPTION =
   "Computational tools that model how architecture affects the people inside it, and change the design before it's built."
-const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og.png`
+// THE FALLBACK CARD IS GENERATED NOW (Emilie, 2026-08-06: "and the main website
+// og cards as well"). It pointed at `public/og.png`, a file hand-made on
+// 2026-07-12 that no build touches: it could not follow a re-signed line, a
+// rename or a palette change, and nothing failed when it drifted. `/og/home.png`
+// comes off the same /print/og/:cardKey route as the other forty, so the whole
+// family is one rendition of one source. (public/og.png stays on disk for any
+// link already shared against that URL.)
+const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og/home.png`
 const DEFAULT_OG_ALT =
   'Emilie El Chidiac, Design Technology Architect: the EEC constellation cube mark, a graph cube with one red node'
 

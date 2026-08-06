@@ -340,19 +340,26 @@ export function HorizontalBelt({
               visitor can see at rest is the aria-hidden copy, which is exactly
               backwards. Ordering by direction keeps what is visible and what is
               announced as the same thing. */}
+          {/* THE SEAM CARRIES ITS OWN aria-hidden, ONE TILE AT A TIME, and that
+              is a validity fix (2026-08-06). This used to wrap the seam run in
+              `<li aria-hidden className="contents">` purely to give the second
+              copy its own key scope — but the run's items ARE `<li>`s, so the
+              markup was a list item inside a list item. React said so on every
+              landing render: "In HTML, <li> cannot be a descendant of <li>.
+              This will cause a hydration error."
+              The wrapper is gone and the callback now keys and hides each tile
+              itself (see PhoneProof in LandingCover), so the <ul> holds nothing
+              but <li>. `display: contents` generated no box, so the belt
+              measures and loops exactly as before. */}
           {reverse ? (
             <>
-              <li aria-hidden="true" className="contents">
-                {items(false)}
-              </li>
+              {items(false)}
               {items(true)}
             </>
           ) : (
             <>
               {items(true)}
-              <li aria-hidden="true" className="contents">
-                {items(false)}
-              </li>
+              {items(false)}
             </>
           )}
         </ul>

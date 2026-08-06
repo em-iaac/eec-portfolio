@@ -66,5 +66,24 @@ export interface ReachSet {
    *  you got there — pressing a row, scrolling, or flicking. Leave undefined on
    *  an exit drawer. */
   at?: string
+  /** THE DRAWER FOLLOWS THE ROOM ONTO THE DESKTOP (Emilie, 2026-08-06: "we
+   *  should check how we could add the feature of the drawer of snapping to
+   *  years but to the desktop version for ease of movement").
+   *
+   *  Opt-in per room, and it has to be, because the drawer was made phone-only
+   *  for a reason that is still true in the other two rooms: /cv's five section
+   *  headings are all on screen at once on a desktop, and a note's four verbs
+   *  ride the header line from lg up, so in both a drawer would duplicate
+   *  something already visible. /thoughts is different. Its seven years are
+   *  spread across a 5,355px stage that no screen shows at once, so the drawer
+   *  is the only place they are ALL reachable, at any width. */
+  wide?: boolean
+  /** WHERE ON THE EDGE IT SITS (Emilie, 2026-08-06, for a thought note: "the
+   *  leaf location in the thought page maybe should be more middle or higher
+   *  up"). Default 'thumb' parks it low, which is the whole point on a phone.
+   *  'middle' centres it vertically FROM lg UP only, where there is no thumb to
+   *  serve and a reading page wants its way onward beside the text rather than
+   *  down in a corner. Below lg a 'middle' drawer stays in the thumb arc. */
+  place?: 'thumb' | 'middle'
   verbs: ReachVerb[]
 }

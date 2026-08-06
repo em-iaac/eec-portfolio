@@ -1238,6 +1238,33 @@ li[data-glow] > button {
     display: flex;
   }
 }
+/* A ROOM CAN OPT IN AT EVERY WIDTH (Emilie 2026-08-06, for the map's years).
+   `set.wide` in components/reach/verbs.ts carries the intent; this is where it
+   has to land, because the `display` above is unlayered and a Tailwind class
+   cannot beat it. /thoughts is the only room that takes it: its seven years sit
+   across a 5,355px stage that no screen shows at once, so the drawer is the one
+   place they are all reachable. /cv and a thought note stay phone-only, where
+   their own contents are already on screen at desktop widths. */
+.reach-drawer--wide {
+  display: flex;
+}
+/* From lg the map's foot band is a single 44px row at `bottom: 8px`, so the
+   drawer needs less lift than the phone's stacked bands ask for. */
+@media (min-width: 1024px) {
+  .reach-drawer--wide {
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+  /* CENTRED, FROM lg UP ONLY (Emilie 2026-08-06, for a thought note). The thumb
+     arc is a phone argument and there is no thumb here; on a page you are
+     READING, the way onward belongs beside the text at eye height rather than
+     parked in a bottom corner. Below lg this class does nothing and the drawer
+     stays low, which is where a thumb can reach it. */
+  .reach-drawer--mid {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+  }
+}
 .reach-drawer__tab {
   display: inline-flex;
   align-items: center;
@@ -1307,6 +1334,29 @@ li[data-glow] > button {
 .reach-drawer__row.is-on {
   background: var(--lang-ink);
   color: var(--lang-ground);
+}
+/* A ROW SAYS IT IS UNDER THE CURSOR (Emilie, 2026-08-06: "when we are hovering
+   on the year or the in time, or whatever there should be signal like the red
+   cursor or a highlight that we are on that to click it").
+   It had NONE: the only states were `is-on` (where you are) and `:focus-visible`
+   (keyboard). With the drawer now opening on hover, a pointer could travel the
+   whole list with nothing following it, so there was no way to tell which row a
+   click would take. It answers in the site's one interaction colour, so it reads
+   as pressable rather than as a second kind of "active".
+   Gated on a real pointer: on a touch device `:hover` sticks after a tap and
+   would leave a row looking permanently armed. */
+@media (hover: hover) and (pointer: fine) {
+  .reach-drawer__row:hover {
+    color: var(--lang-interaction);
+    background: color-mix(in srgb, var(--lang-interaction) 12%, transparent);
+  }
+  /* The row you are already at keeps its solid ink; hovering it only warms the
+     edge, so the two states never compete for the same reading. */
+  .reach-drawer__row.is-on:hover {
+    color: var(--lang-ground);
+    background: var(--lang-ink);
+    box-shadow: inset 0 0 0 2px var(--lang-interaction);
+  }
 }
 .reach-drawer__row:focus-visible {
   outline: 2px solid var(--lang-interaction);

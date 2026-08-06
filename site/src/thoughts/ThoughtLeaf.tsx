@@ -9,7 +9,7 @@
 // pillar still links out to its cluster. No panel under the prose (glass is
 // for UI, not words); the SKETCH DOT is the one sanctioned figure (S5).
 import { useMemo, type ReactNode } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 // ONE DATE GRAMMAR (Emilie, 2026-08-05). A note page printed the raw registry
 // string, "~ THOUGHT · 2026-01", while /work and the book both rendered
@@ -42,8 +42,8 @@ function CtrlIcon({ name }: { name: 'list' | 'clock' | 'arrow' }) {
   )
 }
 
-const CTRL =
-  '-m-1 inline-flex min-h-9 items-center gap-1.5 p-1 font-mono text-label tracking-[0.08em] no-underline hover:underline hover:decoration-2 hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
+// (CTRL retired 2026-08-06 with the header-line nav it styled. The drawer's own
+// `.reach-drawer__row` is the one rendition of these controls now.)
 
 export default function ThoughtLeaf(props: {
   number?: string
@@ -90,35 +90,15 @@ export default function ThoughtLeaf(props: {
         <LensPill lens={lens} />
         {number && <span>{number}</span>}
       </div>
-      <span aria-hidden="true" className="h-4 w-px bg-[var(--lang-hairline)]" />
-      <nav aria-label="Thought navigation" className="flex flex-wrap items-center gap-x-4 gap-y-1">
-        <Link to="/work#thoughts" viewTransition className={CTRL} style={{ color: 'light-dark(#4338ca, #a5b4fc)' }}>
-          <CtrlIcon name="list" />
-          ALL THOUGHTS
-        </Link>
-        <Link to={`/thoughts#${id ?? ''}`} className={CTRL} style={{ color: 'light-dark(#a16207, #fbbf24)' }}>
-          <CtrlIcon name="clock" />
-          IN TIME
-        </Link>
-        {/* PREVIOUS joins NEXT here too (2026-08-04), so the header line and the
-            drawer offer the same four things and neither is the fuller version
-            of the site. Same arrow, mirrored, same accent: it is the same
-            movement one way and the other. */}
-        {prev && (
-          <Link to={prev.route} viewTransition className={CTRL} style={{ color: 'light-dark(#0f766e, #5eead4)' }}>
-            <span className="inline-flex -scale-x-100">
-              <CtrlIcon name="arrow" />
-            </span>
-            PREVIOUS
-          </Link>
-        )}
-        {next && (
-          <Link to={next.route} viewTransition className={CTRL} style={{ color: 'light-dark(#0f766e, #5eead4)' }}>
-            <CtrlIcon name="arrow" />
-            NEXT
-          </Link>
-        )}
-      </nav>
+      {/* THE FOUR VERBS LEFT THIS LINE (Emilie, 2026-08-06): "since in the
+          mobile we use a drawer, to unify let's have the drawer in the web, and
+          use the same color and glyph in the desktop and the mobile version."
+          They lived here from lg up and in the drawer below it, which meant two
+          renditions of one control set that had to be kept in step by hand. Now
+          there is ONE set, the drawer's, at every width — so "the same colour
+          and glyph" is true by construction rather than by maintenance.
+          What stays here is only the META, which is information about the note
+          and not a verb. */}
     </div>
   )
 
@@ -131,15 +111,74 @@ export default function ThoughtLeaf(props: {
     () => ({
       label: 'Leaf through the record',
       handle: 'leaf',
+      // AT EVERY WIDTH NOW (her ruling 2026-08-06). The note is the one room
+      // whose verbs were rendered twice, once on the header line and once in the
+      // drawer; this is the single set, so the desktop and the phone cannot
+      // drift apart.
+      wide: true,
+      // Centred on the edge from lg up (her ruling, same message): a note is a
+      // page you read, so its way onward sits beside the text, not in a corner.
+      place: 'middle',
       // Order is the reading order, not the alphabet: the two ways ALONG the
-      // shelf first, then the two ways off it. PREVIOUS is the newer note and
-      // NEXT the older one, because the shelf runs newest-first (ThoughtRoute).
+      // shelf first, then the two ways off it. PREVIOUS goes BACK in time and
+      // NEXT goes FORWARD (she corrected the direction on 2026-08-06; the shelf
+      // array runs newest-first, which is the opposite of the labels, and
+      // ThoughtRoute carries the note about it).
       // Either can be absent at the ends of the shelf; neither wraps.
+      //
+      // THE GLYPHS AND THEIR ACCENTS COME WITH THEM, which is the other half of
+      // "the same colour and glyph": the marks that used to ride the header line
+      // now ride the drawer rows, same icon, same light-dark pair. The arrow is
+      // mirrored for PREVIOUS, because it is the same movement the other way.
       verbs: [
-        ...(prev ? [{ id: 'prev', label: 'Previous', to: prev.route }] : []),
-        ...(next ? [{ id: 'next', label: 'Next', to: next.route }] : []),
-        { id: 'time', label: 'In time', to: `/thoughts#${id ?? ''}` },
-        { id: 'all', label: 'All thoughts', to: '/work#thoughts' },
+        ...(prev
+          ? [
+              {
+                id: 'prev',
+                label: 'Previous',
+                to: prev.route,
+                mark: (
+                  <span className="inline-flex -scale-x-100" style={{ color: 'light-dark(#0f766e, #5eead4)' }}>
+                    <CtrlIcon name="arrow" />
+                  </span>
+                ),
+              },
+            ]
+          : []),
+        ...(next
+          ? [
+              {
+                id: 'next',
+                label: 'Next',
+                to: next.route,
+                mark: (
+                  <span className="inline-flex" style={{ color: 'light-dark(#0f766e, #5eead4)' }}>
+                    <CtrlIcon name="arrow" />
+                  </span>
+                ),
+              },
+            ]
+          : []),
+        {
+          id: 'time',
+          label: 'In time',
+          to: `/thoughts#${id ?? ''}`,
+          mark: (
+            <span className="inline-flex" style={{ color: 'light-dark(#a16207, #fbbf24)' }}>
+              <CtrlIcon name="clock" />
+            </span>
+          ),
+        },
+        {
+          id: 'all',
+          label: 'All thoughts',
+          to: '/work#thoughts',
+          mark: (
+            <span className="inline-flex" style={{ color: 'light-dark(#4338ca, #a5b4fc)' }}>
+              <CtrlIcon name="list" />
+            </span>
+          ),
+        },
       ],
     }),
     [id, prev, next],
@@ -150,7 +189,7 @@ export default function ThoughtLeaf(props: {
       center={false}
       pillTools={isDesktop ? headerInfo : undefined}
       toolsKey="leaf"
-      reach={isDesktop ? undefined : reachSet}
+      reach={reachSet}
     >
       <article className="mx-auto w-full max-w-[680px] pt-8 pb-12">
         {/* THE META, ON A PHONE ONLY (2026-08-04). Same three facts the header

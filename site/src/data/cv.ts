@@ -315,7 +315,11 @@ export const AWARDS = [
   },
   {
     year: '2023',
-    text: 'Tamayouz Excellence Award: Top 100 graduation projects of 2023, from 422 teams (The Homage)',
+    // "entries", not "teams" (Emilie, 2026-08-06). The Homage's spine has always
+    // said "422 entries from 141 universities in 36 countries" and this line
+    // said "teams"; the cross-surface pass caught the two disagreeing and she
+    // ruled for entries. The claim ceiling is untouched: Top 100, never won.
+    text: 'Tamayouz Excellence Award: Top 100 graduation projects of 2023, from 422 entries (The Homage)',
   },
   {
     year: '2022',

@@ -129,6 +129,33 @@ body {
   font-family: var(--font-display);
 }
 
+/* THE DOCUMENT SCROLLS WITHOUT A BAR (Emilie's ruling A, 2026-08-06, the last
+   pass). This is not a new decision, it is an old one finished: `.no-scrollbar`
+   has hidden the bar on the frame's middle band since G1.1 ("the scrolling
+   control should be invisible"), so nine rooms already showed none. The
+   landing was the only page left, because it is the only page that scrolls the
+   DOCUMENT at desktop width, and the document was never covered.
+
+   IT WAS NOT ONLY A GREY STRIPE. Measured at 1440: the landing's viewport is
+   1425px wide against 1440 everywhere else, so the page's centre sat at 713 on
+   the landing and 720 in every other room and the whole composition slid 7px
+   sideways on each navigation in and out. Hiding the bar removes the reserved
+   gutter, so the two agree and the jump goes.
+
+   Nothing about scrolling changes: wheel, trackpad, touch, arrows, page up and
+   down, space, Home and End all behave exactly as before. What is given up is
+   the drag handle and the read-out of how far down the page you are, and she
+   was shown both costs written out before ruling (a progress hairline was
+   offered as option C and declined: it adds furniture to a page this pass is
+   lightening). */
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
 /* THE TAP FLASH (the phone pass, 2026-08-03). Every tap on this site was
    painting the browser's default highlight: a grey-blue rectangle around the
    element's box, drawn in a colour this palette does not contain and a shape
@@ -638,10 +665,15 @@ h3 {
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
   mask-image: linear-gradient(to right, transparent 0, #000 34px, #000 calc(100% - 34px), transparent 100%);
 }
-/* From lg both bands are single rows, so the world gets its height back. */
+/* From lg the key MOVED INTO the foot band (Emilie 2026-08-06), so there is no
+   longer a band under the header to clear: the world starts just below the
+   header line itself. 110 -> 84 gives the map 26px of height back, and the
+   bottom stays 68 because the key rides the empty middle of a band that was
+   already that tall. Below lg the two bands are still split and the phone
+   numbers above are untouched. */
 @media (min-width: 1024px) {
   .nw-stage {
-    top: 110px;
+    top: 84px;
     /* 68, not 44: the control band grew when TODAY joined WATCH IT GROW, and
        measured at 1440 it runs 834 to 892, so a 44px inset let the world slide
        under it. */
@@ -948,19 +980,25 @@ h3 {
   border-radius: var(--r-sheet);
   color: var(--lang-ink);
   overflow: hidden;
+  /* SOLID, NOT GLASS (Emilie, 2026-08-06): "I don't want them to have any type
+     of glass or blur transparency because I want things to be easily readable
+     ... especially the dark."
+     It wore `lang-glass-2`: a 9% white wash over a blur in dark mode, so every
+     line of the spine was reading against whatever tile happened to sit behind
+     the sheet. Contrast changed per project and per scroll position, which is
+     exactly the "messy" she is describing. These two are the tier-2 SOLID
+     tokens the design language already defines for the no-backdrop-filter
+     fallback, so this is the same surface, just never transparent. */
+  background: var(--lang-glass-2-solid);
+  border: 0.5px solid var(--lang-glass-2-border);
 }
 
-/* Scroll without the bar (Emilie's G1.1 ruling: "invisible even [if] we
-   should scroll"): the sheet's vertical scroller and the media filmstrip
-   keep native scrolling (wheel, touch, keys) but render no scrollbar. The
-   collapsed story keeps most sheets from scrolling at all; the filmstrip's
-   half-visible last frame is its own affordance. */
-.no-scrollbar {
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+/* (`.no-scrollbar` WAS DEFINED HERE TOO, and identically, until 2026-08-06.
+   Two copies of one utility in two stylesheets is exactly the drift this pass
+   is for: the rule now lives once, in styles/language.css beside the rest of
+   the design language, and this file's three consumers pick it up unchanged.
+   Emilie's G1.1 ruling behind it is quoted there: "the scrolling control
+   should be invisible".) */
 
 /* THE LIGHTBOX (G1.1): tap any frame and it opens full size in a second
    <dialog> stacked over the sheet (the top layer stacks; Escape closes the
@@ -991,8 +1029,19 @@ h3 {
   display: flex;
   flex-direction: column;
 }
+/* THE PAGE BEHIND THE SHEET IS BLURRED (Emilie, 2026-08-06: "the background
+   behind the card, so let's say we open it from the landing, should be blurred
+   so the focus is on the card of the project").
+   Note this is the OPPOSITE END of the same ruling that made the sheet solid an
+   hour earlier, and the pair is the point: the blur belongs to the thing you are
+   NOT reading. Glass on the card put the noise inside the text; glass on the
+   backdrop puts it behind, where it does the job it was always meant to do.
+   The scrim stays and does the contrast work on its own, so a browser without
+   backdrop-filter loses only the softening, never the legibility. */
 .work-dialog::backdrop {
   background: rgba(11, 14, 19, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* THE GRAB BAND (2026-08-03, her ruling: "grab handle + swipe down"). It exists

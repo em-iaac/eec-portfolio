@@ -32,15 +32,38 @@ export default function QuestionsDot({
   const flashTimer = useRef<number | undefined>(undefined)
   const open = hover || pinned
 
-  // Viewport clamp, measured from the anchor (the NB ruling: measuring the
-  // tip is a trap, an overflowing tip widens the mobile viewport first).
+  // Clamp to the nearest CLIPPING BOX, measured from the anchor (the NB ruling:
+  // measuring the tip is a trap, an overflowing tip widens the mobile viewport
+  // first). ⚠ This clamped to the viewport until 2026-08-06 and this dot is the
+  // one that showed the bug: it lives inside `.work-dialog`, which is
+  // `overflow: hidden`, so the ALSO ANSWERS panel was sliced at the sheet's
+  // right edge while sitting comfortably inside the window. Same fix as NB.tsx,
+  // and the reasoning is written out there.
+  const clipRect = () => {
+    let el = anchorRef.current?.parentElement as HTMLElement | null
+    while (el) {
+      const cs = getComputedStyle(el)
+      const clips =
+        el.tagName === 'DIALOG' ||
+        cs.overflow !== 'visible' ||
+        cs.overflowX !== 'visible' ||
+        cs.overflowY !== 'visible'
+      if (clips) {
+        const r = el.getBoundingClientRect()
+        if (r.width > 0) return { left: r.left, right: r.right }
+      }
+      el = el.parentElement
+    }
+    return { left: 0, right: document.documentElement.clientWidth }
+  }
+
   const prepare = () => {
     const a = anchorRef.current?.getBoundingClientRect()
     if (!a) return
-    const vw = document.documentElement.clientWidth
+    const box = clipRect()
     const left = a.left + TIP_LEFT
-    if (left + TIP_W > vw - GUTTER) setShift(vw - GUTTER - (left + TIP_W))
-    else if (left < GUTTER) setShift(GUTTER - left)
+    if (left + TIP_W > box.right - GUTTER) setShift(box.right - GUTTER - (left + TIP_W))
+    else if (left < box.left + GUTTER) setShift(box.left + GUTTER - left)
     else setShift(0)
   }
 

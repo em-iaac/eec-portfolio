@@ -8,7 +8,21 @@
 // appeared nowhere a human could see. Four words stays the ceiling; no `AI` prefix.
 export const ADJECTIVES = 'architect · computational designer · researcher · creative technologist'
 export const VOICE = 'I work with design, technology and minds.'
-export const WINK = 'this whole mess is my head. touch a piece of it.'
+
+// WINK REMOVED (Emilie, 2026-08-06, the last pass before print): "let's remove
+// it." It read 'this whole mess is my head. touch a piece of it.', signed at G4
+// 2026-07-12, and closed the landing beside the mind graph.
+//
+// It was raised because it had quietly become untrue on phones. Below lg the
+// graph is `pointer-events: none` and MindGraphView already says why in its own
+// comment: "a drawing does not ask to be touched", written when a node-level
+// invitation was deleted there for the same reason. The wink was the last thing
+// still asking. Offered three repairs, she cut it instead.
+//
+// Do not restore it, and do not write a replacement handwritten line at the foot
+// of the landing without asking: the page now ends on the mark legend by her
+// decision, not by an oversight. Handwriting on the landing is the VOICE line
+// above, which is display type and sanctioned (see DL rule 8).
 
 // THE ROLE (THE SCROLL, 2026-07-27). "Design Technology Architect" is the one
 // standard term a screener searches. It shipped as its own tier above the
@@ -107,10 +121,62 @@ export const WINK = 'this whole mess is my head. touch a piece of it.'
 //     Any order that separates them breaks the "So" and needs a rewrite, which
 //     is why only three of the possible orders were ever offered.
 //
-// NOT ONE WORD CHANGED. Every paragraph is still the signed 2026-07-29 text.
+// ROUND 6 CHANGED NO WORDS. ROUND 7 CHANGES THE LAST PARAGRAPH ONLY.
+//
+// THE CLOSING LINE, REWRITTEN (Emilie, 2026-08-06, the last pass before print).
+// "I would rather be the most interested person in the room than the most
+// interesting one" was one of the THREE LINES SHE FROZE from rewriting on
+// 2026-07-29. She unfroze it herself: "the last line feels too quotable, I like
+// it but maybe it should be a fuller idea, a better ending, not too statement
+// like."
+//
+// The diagnosis that mattered: the line was not too quotable in itself, it read
+// as a motto because it was a one-sentence paragraph standing alone at the foot
+// of the page. Four shorter candidates went out; she took the shape of one and
+// then REWROTE IT HERSELF, and her version is what ships:
+//   · "It was never about" instead of "Not the", which is looser and spoken.
+//   · A verbless second clause after "But", a fragment kept on purpose.
+//   · AND THE ENDING IS A VARIABLE. Her instruction, and I had misread it as a
+//     placeholder and filled it in: "I actually meant to keep the what is x
+//     doing to y, it is intentional wording."
+//
+// WHY THE VARIABLE IS RIGHT, so nobody resolves it into an example later: it is
+// the general form of every question the instruments ask, and it lands one
+// paragraph after "scores a floor plan" and "estimates how a room reads". A
+// formula also cannot be lifted as a saying, which was the original complaint.
+//
+// IT ENDS ON A QUESTION, AND THAT REVERSES HER ROUND 3 RULING ("close without a
+// question, on the character line"), which had survived a re-check as recently
+// as 2026-08-05. She was shown the reversal, and shown that the mono line 24px
+// below already ends in a question mark so the page now asks twice. She kept it.
+// The rule is therefore narrower than it was written: a question may close the
+// bio WHEN THE QUESTION IS THE WORK.
+//
+// THE TWO VARIABLES SET IN ITALIC (her pick, from roman vs italic rendered at
+// the real measure). Italic is the convention for a variable, so it reads as
+// deliberate; roman left it looking like a placeholder nobody filled in.
+// LandingCover does that rendering, keyed off BIO_VARIABLES below, and
+// landing/bio.test.ts asserts there are exactly two of them.
+//
+// "room" appears twice in the closing line ON PURPOSE: the room of the idiom
+// turns into a literal room being interrogated, in the same breath.
+//
+// SIGNED by Emilie 2026-08-06 ("the about ending is good"). The whole BIO is
+// hers and signed now: paragraphs one to three from 2026-07-29, reordered at
+// round 6, and this closing paragraph written by her at round 7.
 export const BIO: readonly string[] = [
   'I will not pretend I can fill a blank notebook from nothing. What I am good at is judging what the machine hands back and steering it. Someday that might be for a cursor instead of a person. Dystopian or utopian?',
   "We build for the eye sometimes, which helps. Mostly we build for function, which is counterintuitive isn't it? We should be building for us to function at our best, not the building.",
   'So I build the instruments: Sensi scores a floor plan across six senses, NeuroSpace estimates how a room reads to the brain and shows its weights so you can disagree with them.',
-  'I would rather be the most interested person in the room than the most interesting one.',
+  'It was never about being the most interesting person in the room. But the most interested one: what is x doing to y?',
 ]
+
+/** The variables in the closing line, set in italic where the BIO renders.
+ *
+ *  A LIST, NOT A HEURISTIC, and that is the whole point. "Italicise any
+ *  standalone single letter" would have caught every "I" in paragraph one, so
+ *  the tokens are named here and nowhere else. `landing/bio.test.ts` asserts
+ *  that the BIO contains exactly one standalone occurrence of each, which is
+ *  what stops a future edit from silently italicising a stray letter or
+ *  leaving a new variable roman. */
+export const BIO_VARIABLES = ['x', 'y'] as const

@@ -49,6 +49,46 @@ import { PRERENDERING } from '../../lib/prerender'
 // pair, never a var().
 const lensColor = (lens: Lens | undefined) => (lens ? LENSES[lens].accent : 'var(--lang-ink)')
 
+// THE KEY, ONE DEFINITION, TWO PLACEMENTS (2026-08-06). It reads at the top on
+// phones and rides the foot band from lg up (Emilie's ruling; the reasoning is
+// beside each call site). The marks are drawn 1:1 with the field's own, never
+// as glyphs, so the key and the map cannot drift apart.
+function KeyMarks() {
+  return (
+    <div
+      aria-hidden="true"
+      className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)] sm:gap-x-4 sm:text-micro sm:tracking-[0.1em]"
+    >
+      <span className="inline-flex items-center gap-1.5">
+        <svg width="16" height="16" viewBox="0 0 16 16" className="overflow-visible">
+          <circle cx="8" cy="8" r="6" fill="var(--lang-ink)" />
+          <circle cx="8" cy="8" r="2.4" fill={LENSES.computation.accent} />
+        </svg>
+        PROJECT
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 14 14" className="overflow-visible">
+          <circle cx="7" cy="7" r="4.6" fill="none" stroke="var(--lang-ink)" strokeWidth="1.6" />
+        </svg>
+        THOUGHT
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 14 14" className="overflow-visible">
+          <path d={starPath(7, 7, 5.5)} fill="var(--lang-ink)" />
+        </svg>
+        AWARD
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <svg width="12" height="12" viewBox="0 0 12 12" className="overflow-visible">
+          <circle cx="6" cy="6" r="2.4" fill="var(--lang-ink-muted)" />
+        </svg>
+        MILESTONE
+      </span>
+      <span className="text-[var(--lang-interaction)]">RED = LIVE</span>
+    </div>
+  )
+}
+
 const KIND_LABEL = {
   project: 'PROJECT',
   thought: 'THOUGHT',
@@ -564,6 +604,12 @@ export default function NeuralWorld() {
     () => ({
       label: 'Jump to a year',
       handle: 'years',
+      // THE ONE ROOM THAT TAKES THE DRAWER TO THE DESKTOP (Emilie, 2026-08-06:
+      // "add the feature of the drawer of snapping to years to the desktop
+      // version for ease of movement"). The map is 5,355px of stage and no
+      // width shows more than a fraction of it, so the seven years are the only
+      // complete index of this room and a pointer needs them as much as a thumb.
+      wide: true,
       // A PLACE DRAWER: the tab reads the year you are standing in, so on a map
       // 13.7 screens wide you can always tell where you are without opening
       // anything. That is the readout doing the most work it does anywhere on
@@ -734,39 +780,18 @@ export default function NeuralWorld() {
             is not chrome, it is a caption; bare on the ground is what a caption
             looks like. The control band at the foot keeps its pill, because
             that one IS chrome and the world does run under it. */}
-        <div className="pointer-events-none fixed inset-x-0 top-[5.5rem] z-[3] px-5 sm:px-8">
+        {/* THE KEY IS PHONE-ONLY UP HERE NOW (Emilie, 2026-08-06: "the legend
+            has to go back to the footing", for the desktop version only).
+            Her 2026-08-02 ruling that split the one foot band in two stands
+            exactly where its argument was true: on a phone the key is reference
+            and the controls are what a thumb reaches, so they belong at opposite
+            ends. On a desktop there is no thumb and no reach problem, the foot
+            band has a whole empty middle, and the key riding up here costs the
+            world 26px of height for nothing. So the split is now what it always
+            should have been: a phone rule, not a site rule. */}
+        <div className="pointer-events-none fixed inset-x-0 top-[5.5rem] z-[3] px-5 sm:px-8 lg:hidden">
           <div className="mx-auto flex max-w-[1856px] flex-wrap items-center justify-center gap-x-6 gap-y-1 px-1">
-            <div
-              aria-hidden="true"
-              className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)] sm:gap-x-4 sm:text-micro sm:tracking-[0.1em]"
-            >
-              <span className="inline-flex items-center gap-1.5">
-                <svg width="16" height="16" viewBox="0 0 16 16" className="overflow-visible">
-                  <circle cx="8" cy="8" r="6" fill="var(--lang-ink)" />
-                  <circle cx="8" cy="8" r="2.4" fill={LENSES.computation.accent} />
-                </svg>
-                PROJECT
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <svg width="14" height="14" viewBox="0 0 14 14" className="overflow-visible">
-                  <circle cx="7" cy="7" r="4.6" fill="none" stroke="var(--lang-ink)" strokeWidth="1.6" />
-                </svg>
-                THOUGHT
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <svg width="14" height="14" viewBox="0 0 14 14" className="overflow-visible">
-                  <path d={starPath(7, 7, 5.5)} fill="var(--lang-ink)" />
-                </svg>
-                AWARD
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <svg width="12" height="12" viewBox="0 0 12 12" className="overflow-visible">
-                  <circle cx="6" cy="6" r="2.4" fill="var(--lang-ink-muted)" />
-                </svg>
-                MILESTONE
-              </span>
-              <span className="text-[var(--lang-interaction)]">RED = LIVE</span>
-            </div>
+            <KeyMarks />
           </div>
         </div>
 
@@ -810,6 +835,15 @@ export default function NeuralWorld() {
                 very bottom edge of the screen, next to a drawer that now names
                 seven years. Gone below sm; unchanged from sm up, where the full
                 sentence is true and the room to say it exists. */}
+            {/* THE KEY RIDES THE MIDDLE OF THIS BAND FROM lg UP (Emilie,
+                2026-08-06). The band already had a left end and a right end and
+                nothing between them; the key is exactly the width of that gap.
+                It is a caption rather than a control, so it stays aria-hidden
+                and takes no pointer events, and the band's `justify-between`
+                does the placing with no new geometry. */}
+            <div className="hidden lg:block">
+              <KeyMarks />
+            </div>
             <p
               aria-hidden="true"
               className="hidden font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)] sm:block"

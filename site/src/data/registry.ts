@@ -15,11 +15,19 @@
 // 3. Explore lens letters in data.js map c/p/e ->
 //    computation/practice/explorations.
 //
-// `dateDraft: true` marks months Emilie has not confirmed; `draftCopy: true`
-// marks copy pending her sign-off. Both render normally but are greppable.
-// (G4, 2026-07-12: every month then in the record was CONFIRMED and every
-// thought note SIGNED, so those flags retired; new entries still ship
-// flagged until she signs them.)
+// `draftCopy: true` marks copy pending her sign-off. It renders normally but is
+// greppable.
+//
+// `dateDraft` IS GONE (2026-08-06, the last pass before print). It marked months
+// Emilie had not confirmed, and on 2026-08-06 she confirmed the last six: "all
+// unconfirmed project dates are correct". The flag is DELETED rather than set
+// false on every entry, because it was never a mechanism, only a note to self:
+// it had ZERO consumers, so an unconfirmed month rendered pixel for pixel like a
+// confirmed one on the map, in /work, in the head and in the book. A flag that
+// changes nothing is a false comfort, and this pass is for removing those.
+//
+// If an unconfirmed date ever needs marking again, make it visible or make it
+// fail a test. Do not reintroduce a silent boolean.
 import type { Lens } from '../components/Lens'
 import { NOW } from './now'
 
@@ -68,7 +76,6 @@ export interface RegistryEntry {
   id: string // project/thought ids MUST match explore/data.js RAW ids
   kind: EntryKind
   date: string // 'YYYY-MM'
-  dateDraft?: boolean
   title: string
   lens?: Lens
   tags: string[]
@@ -313,7 +320,9 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'narkomfin',
     kind: 'project',
-    date: '2026-06',
+    // CORRECTED by Emilie 2026-08-06 (was 2026-06): "narkomfin as a graph also
+    // 2026 05".
+    date: '2026-05',
     title: 'Narkomfin as a Graph',
     lens: 'computation',
     tags: ['data', 'ai', 'heritage', 'research'],
@@ -329,7 +338,10 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'urban-risk',
     kind: 'project',
-    date: '2026-06',
+    // CORRECTED by Emilie 2026-08-06 (was 2026-06): "encoding urban risk is
+    // 2026-04 so it should move back". Part of clearing the June cluster so
+    // Sensi is genuinely the newest project rather than one of three tied.
+    date: '2026-04',
     title: 'Encoding Urban Risk',
     lens: 'computation',
     tags: ['data', 'ai', 'research'],
@@ -391,13 +403,14 @@ export const ENTRIES: RegistryEntry[] = [
   // homage = the LAU graduation year (boards dated 2023), jemma = the CV's
   // internship window (Jan-Aug 2022; the cemetery award entry already sat at
   // 2022-06), minis = the bootcamp file dates (Oct-Nov 2025). Dates + copy
-  // Copy SIGNED by Emilie (S2 sign-off, 2026-07-17); the six months stay
-  // dateDraft pending her one-line confirm.
+  // Copy SIGNED by Emilie (S2 sign-off, 2026-07-17).
+  // ALL SIX MONTHS CONFIRMED by Emilie 2026-08-06, the last pass before print:
+  // "all unconfirmed project dates are correct". `dateDraft` retired with them,
+  // and see the type above for why the flag went rather than being set false.
   {
     id: 'homage',
     kind: 'project',
     date: '2023-06',
-    dateDraft: true,
     title: 'The Homage',
     lens: 'explorations',
     tags: ['heritage', 'geometry', 'practice'],
@@ -420,7 +433,6 @@ export const ENTRIES: RegistryEntry[] = [
     id: 'encounter',
     kind: 'project',
     date: '2022-06',
-    dateDraft: true,
     title: 'The Encounter',
     lens: 'practice',
     tags: ['practice', 'heritage', 'geometry'],
@@ -437,7 +449,6 @@ export const ENTRIES: RegistryEntry[] = [
     id: 'falcon',
     kind: 'project',
     date: '2022-04',
-    dateDraft: true,
     title: 'Falcon Square',
     lens: 'practice',
     tags: ['practice', 'geometry'],
@@ -454,7 +465,6 @@ export const ENTRIES: RegistryEntry[] = [
     id: 'astroidal',
     kind: 'project',
     date: '2025-10',
-    dateDraft: true,
     title: 'Astroidal Ellipsoid',
     lens: 'explorations',
     tags: ['geometry', 'play'],
@@ -471,7 +481,6 @@ export const ENTRIES: RegistryEntry[] = [
     id: 'chair-sim',
     kind: 'project',
     date: '2025-11',
-    dateDraft: true,
     title: 'Chair Simulation',
     lens: 'explorations',
     tags: ['simulation', 'geometry', 'play'],
@@ -488,7 +497,6 @@ export const ENTRIES: RegistryEntry[] = [
     id: 'playscape',
     kind: 'project',
     date: '2025-10',
-    dateDraft: true,
     title: 'A Playscape',
     lens: 'explorations',
     tags: ['simulation', 'geometry', 'play'],
@@ -818,7 +826,14 @@ export const ENTRIES: RegistryEntry[] = [
     id: 'dynamic-start',
     kind: 'milestone',
     date: '2024-08',
-    title: 'Project Architect · Dynamic Solution · Kuwait',
+    // THE TITLE MATCHES THE CV NOW (Emilie, 2026-08-06: "for my job title the
+    // cv is correct"). This said "Project Architect" and had done since the
+    // milestone shipped, while data/cv.ts has said "Design Technology Architect"
+    // since her review on 2026-07-27, with a comment recording that ruling. So
+    // the same job carried two titles on two surfaces for six weeks: the map
+    // said one and the CV, the book and the <title> said the other. Found by the
+    // cross-surface pass, which exists for exactly this.
+    title: 'Design Technology Architect · Dynamic Solution · Kuwait',
     tags: ['practice'],
   },
   {
@@ -827,6 +842,32 @@ export const ENTRIES: RegistryEntry[] = [
     date: '2025-10',
     title: 'MaCAD begins · IAAC · Beirut > Barcelona',
     tags: ['research'],
+  },
+  // ---- TWO CV LINES THE MAP HAD NEVER HEARD OF (Emilie, 2026-08-06) --------
+  // The cross-surface audit found both of these living on the CV and nowhere
+  // else, so the record said one thing on a page and another on the map. Her
+  // ruling: "add the new cv line to the map, make sure it's all reflected
+  // always". The guard that keeps it that way from now on is data/reflect.test.ts.
+  {
+    id: 'licence',
+    kind: 'milestone',
+    // data/cv.ts, EDUCATION: "Licensed architect, Order of Engineers and
+    // Architects of Beirut, issued Mar 2024". The month is on the CV already,
+    // so nothing is invented here.
+    date: '2024-03',
+    title: 'Licensed architect · Order of Engineers and Architects · Beirut',
+    tags: ['practice'],
+  },
+  {
+    id: 'gss',
+    kind: 'milestone',
+    // data/cv.ts carries the YEAR only ("2025 · IAAC Global Summer School,
+    // Circular Construction: Shifting Value, Barcelona") and the registry needs
+    // YYYY-MM. July was proposed as the month and flagged to her as a guess;
+    // CONFIRMED by Emilie 2026-08-06 ("summer school month is correct").
+    date: '2025-07',
+    title: 'IAAC Global Summer School · Circular Construction · Barcelona',
+    tags: ['research', 'practice'],
   },
   {
     id: 'macad-y1',
@@ -873,7 +914,12 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'legoarch-jury',
     kind: 'award',
-    date: '2026-05',
+    // ALL FOUR MaCAD AWARDS ARE JUN 2026 (Emilie, 2026-08-06): "all the awards
+    // that were macad related were given jun 2026 for the first year of macad
+    // 2025-2026 for the yearly exhibition". They were dated to the courses they
+    // came out of; they were HANDED OUT together at the annual exhibition, which
+    // is the event the record should carry. Was 2026-05.
+    date: '2026-06',
     title: 'Jury award · AIA Generative AI (lEgoarCh)',
     lens: 'computation',
     tags: ['ai'],
@@ -882,7 +928,8 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'lungs-award',
     kind: 'award',
-    date: '2026-03',
+    // Jun 2026, the annual exhibition (see legoarch-jury). Was 2026-03.
+    date: '2026-06',
     title: 'Studio award · BIMSC (The Lungs)',
     lens: 'computation',
     tags: ['data'],
@@ -891,19 +938,35 @@ export const ENTRIES: RegistryEntry[] = [
   {
     id: 'huddle-award',
     kind: 'award',
-    date: '2025-12',
+    // Jun 2026, the annual exhibition (see legoarch-jury). Was 2025-12, which
+    // was the PROJECT's date: the cross-surface audit caught the CV filing this
+    // award under 2026 while the map filed it under 2025. Her ruling settles
+    // both: "the huddle award year is 2026 even if the project was done in 2025".
+    date: '2026-06',
     title: 'Studio award · ACESD (The Huddle)',
     lens: 'computation',
     tags: ['simulation'],
     refId: 'huddle',
   },
-  {
-    id: 'biennale',
-    kind: 'press',
-    date: '2024-04',
-    title: 'Design project featured · Biennale Arte 2024 · Venice',
-    tags: ['practice'],
-  },
+    // (BIENNALE ARTE 2024 REMOVED, Emilie 2026-08-06: "remove the biennale
+    // arte". It was `kind: 'press'`, dated 2024-04, and read "Design project
+    // featured · Biennale Arte 2024 · Venice". It had already been cut from the
+    // CV at her call during the CV pass.
+    //
+    // ⚠ IT RENDERED NOWHERE, and I told her the opposite before checking. The
+    // audit board said it was "still a node on the map"; it was not.
+    // `WORLD_KINDS` (thoughts/world/worldGraph.ts) has only ever contained
+    // project, thought, milestone and award, so a 'press' entry is filtered out
+    // of the world census; it carried no `explore` field so the landing's mind
+    // graph never had it either; and lib/routes.ts only builds routes for
+    // projects and drafted thoughts. It was DEAD DATA sitting in the single
+    // source of truth, visible to nobody.
+    //
+    // That is the more useful finding, and it is the case the reflection guard
+    // in data/reflect.test.ts now covers: the registry can hold a fact that no
+    // surface shows, and nothing used to say so. It was the ONLY 'press' entry,
+    // so that kind now has no instances; the union member stays in EntryKind for
+    // the next one rather than being removed and re-added.)
   {
     id: 'mars-top50',
     kind: 'award',
@@ -1287,12 +1350,21 @@ export const CORRELATIONS: readonly Correlation[] = [
   //
   // T-114 `adjacency is not access` was THE ORPHAN: no fibre on the map, no
   // glow on /work, on a site whose whole argument is connection. Six threads
-  // now. Narkomfin is the same MaCAD module, the same month and the same
-  // method, which made it the most obvious missing thread on the site.
-  ['adjacency', 'narkomfin', 3],
-  ['adjacency', 'urban-risk', 2], // "the interesting result was a gap, not a
-  // number" against "saying precisely where the certainty ends was the most
-  // honest thing the pipeline produced"
+  // now. Narkomfin is the same MaCAD module and the same method, which made it
+  // the most obvious missing thread on the site.
+  //
+  // BOTH FLIPPED 2026-08-06, and the guard is what found it. They were written
+  // adjacency -> project back when all three sat in 2026-06 and the tuple order
+  // was a coin toss. Emilie then moved the two projects back (urban-risk to
+  // 2026-04, narkomfin to 2026-05), which left the note firing BACKWARDS into
+  // its own sources. Reversed, the lineage is also simply true: she built the
+  // graphs first and the note came out of them. (The old comment claimed
+  // Narkomfin was "the same month" as the note; that stopped being true with
+  // the move, so it is gone rather than left to rot.)
+  ['narkomfin', 'adjacency', 3],
+  ['urban-risk', 'adjacency', 2], // "saying precisely where the certainty ends
+  // was the most honest thing the pipeline produced" against "the interesting
+  // result was a gap, not a number"
   ['bim', 'adjacency', 2], // every duct to the millimetre and nothing about the
   // person, aimed at a plan instead of a model
   ['rules', 'adjacency', 1], // the leftover after the subtraction IS the rule

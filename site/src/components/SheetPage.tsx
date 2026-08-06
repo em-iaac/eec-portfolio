@@ -74,11 +74,14 @@ export default function SheetPage({
       here and never will be; they stay in the pill. */
   reach?: ReachSet
 }) {
-  // Phone only: from lg up this frame is `h-dvh` + `overflow-hidden` and `#main`
-  // does the scrolling, so `window.scrollY` never moves and the hook would be
-  // reading a scroller that is not the one in use.
+  // EVERY WIDTH NOW, reading whichever element actually scrolls (Emilie's
+  // ruling 2026-08-06: the pill and the search should behave on every page the
+  // way they do on the landing). Below lg the frame is an ordinary tall
+  // document and the window moves; from lg up it is `h-dvh` + `overflow-hidden`
+  // and `#main` moves instead. It used to be phone-only because a window
+  // listener simply never fires against the frozen frame.
   const isDesktop = useIsDesktop()
-  const [collapsed, openHeader] = useHeaderCollapse(!isDesktop)
+  const [collapsed, openHeader] = useHeaderCollapse(true, isDesktop ? 'main' : 'window')
   return (
     // `relative` FIXES A REAL SCROLL BUG (her report, 2026-07-30: "sometimes i
     // can scroll past the footer and footline"). Reproduced on /rights with the
@@ -139,7 +142,7 @@ export default function SheetPage({
         className="frame-head pointer-events-none sticky top-0 z-40 lg:static lg:z-auto"
         onFocusCapture={openHeader}
       >
-        <TitleBlock tools={pillTools} toolsKey={toolsKey} collapsed={collapsed} />
+        <TitleBlock tools={pillTools} toolsKey={toolsKey} collapsed={collapsed} onExpand={openHeader} />
       </div>
       {/* `relative` HERE IS THE ACTUAL FIX for "sometimes i can scroll past the
           footer" (2026-07-30, round 2 of the report). Putting it only on the

@@ -13,6 +13,7 @@
 // RENDITION, nothing is authored here (THE ECONOMY).
 // Print-surface rules (G5): unlinked, noindexed (usePrintDoc belt +
 // robots.txt /print/ braces), lazy, outside the Chrome wrapper.
+import { type ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
 import LogoMark from '../components/LogoMark'
 import usePrintDoc from './usePrintDoc'
@@ -20,7 +21,69 @@ import { ENTRIES } from '../data/registry'
 import { workEntryById } from '../data/work'
 import { THOUGHT_OPENINGS } from '../thoughts/openings'
 import { PILLAR_PATH, PILLAR_PHRASE } from '../lib/pillar'
+import { VOICE } from '../landing/identity'
 import { MIND, THREADS, spline, starPath } from '../landing/mindGraph'
+import { printImageSrc } from './printImage'
+import { WORK_ARTIFACTS } from '../components/work/artifacts'
+import {
+  AdjacencyFigure,
+  BimFigure,
+  ComfortFigure,
+  ComputationFigure,
+  DrawifaceFigure,
+  EvosearchFigure,
+  ExperienceFigure,
+  ExplainFigure,
+  GenaiFigure,
+  HeritageFigure,
+  LatentFigure,
+  LlmFigure,
+  NeuroaesFigure,
+  RespondFigure,
+  ScoreFigure,
+  SolversFigure,
+  XrealFigure,
+} from '../thoughts/figures'
+
+// EACH CARD NOW SHOWS THE THING IT IS ABOUT (Emilie, 2026-08-06: "revise the og
+// cards of all possible links design to actually use the svg design of the
+// thoughts and the cover of the projects, and the main website og cards").
+//
+// Before this every card, project and thought alike, carried a slice of the
+// same mind graph. It was a real idea and it had one flaw she is naming: at
+// thumbnail size in a feed, 40 cards of the same grey constellation are 40
+// identical cards. A share card's whole job is to be recognisable before it is
+// read, and the site already owns two things that do that instantly.
+//
+//   A THOUGHT gets its own PLATE, the ink figure that already opens the note.
+//   A PROJECT gets its COVER, the same image the tile reveals and the book
+//   prints, at the print rung.
+//
+// The mind-graph slice survives for the pillar and the landing, which are about
+// the whole record rather than one piece of it, so there the constellation IS
+// the subject.
+const THOUGHT_PLATE: Record<string, ReactNode> = {
+  bim: BimFigure,
+  neuroaes: NeuroaesFigure,
+  solvers: SolversFigure,
+  genai: GenaiFigure,
+  xreal: XrealFigure,
+  comfort: ComfortFigure,
+  drawiface: DrawifaceFigure,
+  evosearch: EvosearchFigure,
+  heritage: HeritageFigure,
+  respond: RespondFigure,
+  explain: ExplainFigure,
+  adjacency: AdjacencyFigure,
+  learning: ExperienceFigure,
+  llm: LlmFigure,
+  latent: LatentFigure,
+  scoring: ScoreFigure,
+  rules: ComputationFigure,
+  // `charcoal` is deliberately absent: it is the one note whose figures are her
+  // actual charcoal drawings rather than a drawn plate, so it keeps the graph
+  // slice. A missing key falls back, it never renders blank.
+}
 
 // THE CARD'S PICTURE (2026-07-26). Every one of the 36 share cards used to
 // carry the same EEC mark, so a Sensi link and a thought link looked identical
@@ -91,6 +154,16 @@ interface CardData {
   path: string
   /** the registry id whose corner of the drawing this card frames */
   nodeId?: string
+  /** a thought's own ink plate, when it has one */
+  plate?: ReactNode
+  /** a project's cover, at the print rung */
+  cover?: { src: string; alt: string }
+}
+
+function coverOf(entry: { cover?: { slug: string; name: string; alt?: string }; title: string }) {
+  if (!entry.cover) return undefined
+  const src = printImageSrc(entry.cover.slug, entry.cover.name)
+  return src ? { src, alt: entry.cover.alt ?? entry.title } : undefined
 }
 
 function cardFor(cardKey: string): CardData | null {
@@ -106,6 +179,17 @@ function cardFor(cardKey: string): CardData | null {
       recognition: entry.recognition,
       path: `emiliechidiac.com/work/${entry.id}`,
       nodeId: entry.id,
+      // THE INK PLATE, NOT THE PHOTOGRAPH. Both were built and rendered as real
+      // cards before choosing. The plate wins on three counts: it is line art on
+      // the same ground so it composes with the type instead of needing a mask
+      // to keep the words legible; it matches the thought plates, so all 41
+      // cards read as ONE family rather than projects looking like a different
+      // site; and it is the mark /work itself rests on, where the photograph is
+      // the hover reveal, not the identity. It is also a fifth of the weight
+      // (76KB against 362KB for Sensi).
+      plate: WORK_ARTIFACTS[entry.id],
+      // The photograph stays reachable for anything that wants it later.
+      cover: coverOf(entry),
     }
   }
   const thought = cardKey.match(/^thought-(.+)$/)
@@ -122,6 +206,7 @@ function cardFor(cardKey: string): CardData | null {
       line: opening,
       path: `emiliechidiac.com/thoughts/${entry.id}`,
       nodeId: entry.id,
+      plate: THOUGHT_PLATE[entry.id],
     }
   }
   if (cardKey === 'pillar') {
@@ -131,6 +216,21 @@ function cardFor(cardKey: string): CardData | null {
       serifTitle: true,
       line: 'How a space will make someone feel, treated as design data: scored, modeled, argued with before anything is built.',
       path: `emiliechidiac.com${PILLAR_PATH}`,
+    }
+  }
+  // THE MAIN SITE CARD (her third item, 2026-08-06). Every address without a
+  // card of its own has been falling back to `public/og.png`, a hand-made file
+  // from 2026-07-12 that no build regenerates: it cannot follow a rename, a
+  // re-signed line or a palette change, and nothing fails when it drifts. It is
+  // a generated card now, like the other forty, and it keeps the constellation
+  // because the landing IS the whole record rather than one piece of it.
+  if (cardKey === 'home') {
+    return {
+      kicker: 'DESIGN TECHNOLOGY ARCHITECT',
+      title: 'Emilie El Chidiac',
+      serifTitle: false,
+      line: VOICE,
+      path: 'emiliechidiac.com',
     }
   }
   return null
@@ -157,18 +257,71 @@ export default function OgRoute() {
           is read at thumbnail size in a feed, so the picture has to register as
           texture before anything else resolves. Low opacity keeps the title at
           full contrast (the AA floor applies here too). */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          top: -40,
-          right: -60,
-          opacity: 0.5,
-          pointerEvents: 'none',
-        }}
-      >
-        <GraphSlice nodeId={card.nodeId ?? ''} />
-      </div>
+      {/* THE PICTURE. A project shows its cover, a thought shows its plate, and
+          anything about the whole record keeps the constellation. Each sits in
+          the same corner at the same weight, so the family still reads as one
+          set at thumbnail size. */}
+      {card.plate ? (
+        // The plate is line art on the same ground, so it needs no fade and no
+        // mask: it is drawn at 300x170 and blown up to fill the right half,
+        // which is what a vector is for.
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: 92,
+            right: -34,
+            width: 660,
+            opacity: 0.9,
+            pointerEvents: 'none',
+          }}
+          className="og-plate"
+        >
+          {card.plate}
+        </div>
+      ) : card.cover ? (
+        // A PHOTOGRAPH is masked to a soft edge rather than faded flat: at 0.5
+        // opacity a photo turns to grey mud and stops being recognisable, which
+        // would defeat the point of showing it. Full strength, dissolving into
+        // the ground on the two sides the words come from. Only reached by a
+        // project with no ink plate of its own.
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: 640,
+            height: 630,
+            pointerEvents: 'none',
+            WebkitMaskImage:
+              'linear-gradient(to right, transparent 0, #000 190px), linear-gradient(to top, transparent 0, #000 150px)',
+            maskImage:
+              'linear-gradient(to right, transparent 0, #000 190px), linear-gradient(to top, transparent 0, #000 150px)',
+            WebkitMaskComposite: 'source-in',
+            maskComposite: 'intersect',
+          }}
+        >
+          <img
+            src={card.cover.src}
+            alt=""
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        </div>
+      ) : (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: -40,
+            right: -60,
+            opacity: 0.5,
+            pointerEvents: 'none',
+          }}
+        >
+          <GraphSlice nodeId={card.nodeId ?? ''} />
+        </div>
+      )}
 
       <div className="relative flex items-center justify-between">
         <LogoMark size={64} />

@@ -58,7 +58,10 @@ test('every route names its share card and the convention matches ogCardKey', ()
   const broken: string[] = []
   for (const { route, head } of heads) {
     const key = ogCardKey(route)
-    const expected = key ? `${SITE_ORIGIN}/og/${key}.png` : `${SITE_ORIGIN}/og.png`
+    // The fallback is `og/home.png` since 2026-08-06, not the hand-made
+    // `og.png`: every card in the family is generated from /print/og/:cardKey
+    // now, including the one every address without its own card falls back to.
+    const expected = key ? `${SITE_ORIGIN}/og/${key}.png` : `${SITE_ORIGIN}/og/home.png`
     if (head.ogImage !== expected) broken.push(`${route}: ${head.ogImage} != ${expected}`)
     if (!head.ogImageAlt) broken.push(`${route}: no og:image alt`)
   }

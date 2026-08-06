@@ -326,7 +326,12 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
       // The prerender contract: the snapshot must not be taken until the prose
       // is in the DOM (scripts/prerender.mjs, the /work/:id branch).
       data-spine-ready={spine ? '' : undefined}
-      className="work-dialog lang-glass-2"
+      // NO GLASS ON THE SHEET (Emilie, 2026-08-06): "I don't want them to have
+      // any type of glass or blur transparency because I want things to be
+      // easily readable, right now sometimes it's not readable, it's too messy
+      // especially the dark." `lang-glass-2` is gone; .work-dialog paints a
+      // solid surface in both modes (index.css).
+      className="work-dialog"
       style={{ viewTransitionName: vtName(`/work/${entry.id}`) }}
       onClick={(e) => {
         if (e.target === ref.current) close()

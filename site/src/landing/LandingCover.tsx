@@ -24,11 +24,12 @@
 // browse room's job is browsing, and the 21-tile grid is already good at it.
 // Merging them made the top of the page stop feeling like an answer.
 //
-// Copy: ADJECTIVES / VOICE / WINK were SIGNED at G4 (2026-07-12). ROLE is the
+// Copy: ADJECTIVES / VOICE were SIGNED at G4 (2026-07-12); the WINK was signed
+// with them and CUT on 2026-08-06 (identity.ts carries why). ROLE is the
 // title the site already declared to search engines, said out loud. BIO
 // is NEW and UNSIGNED (see identity.ts).
-import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import ExploreErrorBoundary from '../components/ExploreErrorBoundary'
 import Footer from '../components/Footer'
 import Footline from '../components/Footline'
@@ -40,11 +41,9 @@ import useHeaderCollapse from '../hooks/useHeaderCollapse'
 import MindGraphSrNav from './MindGraphSrNav'
 import { PRERENDERING } from '../lib/prerender'
 import Strips, { HorizontalBelt, PauseToggle, STRIP_PROJECTS, StripTile, ThoughtTile } from './Strips'
-import { MIND, nodeRoute, starPath } from './mindGraph'
+import { starPath } from './mindGraph'
 import { assertPaletteMatchesTheme } from './palette'
 import { RED_LINK } from '../lib/linkStyles'
-import { LensMark } from '../components/ui/Pill'
-import type { Lens } from '../components/Lens'
 import { ENTRIES, thoughtIndexEntries } from '../data/registry'
 
 // The artwork is split out of the entry chunk (LCP, 2026-07-12): the honest
@@ -54,17 +53,37 @@ import { ENTRIES, thoughtIndexEntries } from '../data/registry'
 const MindGraph = lazy(() => import('./MindGraphView'))
 
 // SIGNED (G4, 2026-07-12) + the 2026-07-27 additions. See identity.ts.
-import { ADJECTIVES, BIO, VOICE, WINK } from './identity'
+import { ADJECTIVES, BIO, BIO_VARIABLES, VOICE } from './identity'
 
-// Top-page doors. WORK and THOUGHTS still open their rooms; ABOUT is the
-// contact sheet ("Say hi"), which is a different thing from the bio that now
-// closes this page, so both survive and neither repeats the other.
-const DOORS: { label: string; to: string }[] = [
-  { label: 'WORK', to: '/work' },
-  { label: 'THOUGHTS', to: '/thoughts' },
-  { label: 'CV', to: '/cv' },
-  { label: 'CONTACT', to: '/contact' },
-]
+// THE BIO'S VARIABLES, IN ITALIC (Emilie, 2026-08-06). The closing line ends on
+// the general form of the question the instruments ask, "what is x doing to y?",
+// and the two letters are variables rather than words. Italic is the convention
+// that says so; rendered in roman beside it, she read the roman version as a
+// placeholder nobody had filled in, and picked this one.
+//
+// It splits on the NAMED tokens from identity.ts, never on a heuristic: any rule
+// like "a standalone single letter" would have italicised every "I" in the first
+// paragraph. `\b` around an alternation of the exact tokens, so the capture
+// groups land on odd indices and everything else passes through as plain text.
+// landing/bio.test.ts holds the count to exactly one of each.
+const BIO_VAR_RE = new RegExp(`\\b(${BIO_VARIABLES.join('|')})\\b`, 'g')
+
+function withVariables(para: string): ReactNode {
+  const parts = para.split(BIO_VAR_RE)
+  if (parts.length === 1) return para
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <em key={i} className="italic">
+        {part}
+      </em>
+    ) : (
+      part
+    ),
+  )
+}
+
+// (The door list moved with the search to components/SiteSearch.tsx, which was
+// its only consumer: the header pill has always carried its own NAV.)
 
 // THE PROOF (2026-07-27). Sensi: the award-winning project, and the only one
 // whose award the landing names. Everything here is READ FROM THE RECORD, not
@@ -132,264 +151,6 @@ function LegendMarks() {
   )
 }
 
-// The jump index: every project/thought (deep nodes the nav can't list) plus the
-// top pages. R9 extends this to the full site content index; R1 ships a real,
-// lean typeahead so the affordance is never a dead mock.
-// THE JUMP BAR'S INDEX. It used to be labels only, so "comfort" found nothing
-// even though a project, a thought and four tags carry the word.
-//
-// tags + lens are FREE: registry.ts is already in the entry bundle (mindGraph
-// reads it). DEKS ARE NOT: they live in data/work.ts, a 129kB chunk the landing
-// must never pull, so they are lazy-loaded on first FOCUS of the bar and merged
-// in when they land. Nobody pays for search text until they reach for search.
-type JumpItem = { label: string; hint: string; to: string; lens?: Lens; tags: string[]; dek?: string }
-
-const TAGS_BY_ID = new Map(ENTRIES.map((e) => [e.id, e.tags]))
-const LENS_BY_ID = new Map(ENTRIES.map((e) => [e.id, e.lens]))
-
-const JUMP_ITEMS: JumpItem[] = [
-  ...MIND.nodes.map((n) => ({
-    label: n.label,
-    hint: n.kind,
-    to: nodeRoute(n),
-    lens: LENS_BY_ID.get(n.id),
-    tags: TAGS_BY_ID.get(n.id) ?? [],
-  })),
-  ...DOORS.map((d) => ({ label: d.label, hint: 'page', to: d.to, tags: [] })),
-]
-
-// Subsequence match: every character of the query must appear in the label IN
-// ORDER (so "pro" -> "project", "nsp" -> "NeuroSpace"). Returns null when it is
-// not a subsequence (so "test" with no match shows nothing), else a score where
-// LOWER is better: an exact substring beats a spread-out match, and a tighter,
-// earlier match beats a looser, later one.
-function fuzzyScore(q: string, label: string): number | null {
-  const s = label.toLowerCase()
-  const sub = s.indexOf(q)
-  if (sub !== -1) return sub // substring: best band (0..N), ranked by position
-  let si = 0
-  let first = -1
-  let prev = -1
-  let gaps = 0
-  for (const ch of q) {
-    const idx = s.indexOf(ch, si)
-    if (idx === -1) return null
-    if (first === -1) first = idx
-    if (prev !== -1) gaps += idx - prev - 1
-    prev = idx
-    si = idx + 1
-  }
-  // +1000 keeps every subsequence match ranked below any substring match.
-  return 1000 + gaps * 4 + first
-}
-
-function JumpBar({
-  autoFocus = false,
-  onFocused,
-}: {
-  /** set when the collapsed "/" button opened the header: the field takes the
-   *  cursor once it is actually visible, so the shortcut costs one press. */
-  autoFocus?: boolean
-  onFocused?: () => void
-} = {}) {
-  const navigate = useNavigate()
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (!autoFocus) return
-    inputRef.current?.focus()
-    onFocused?.()
-  }, [autoFocus, onFocused])
-  const [query, setQuery] = useState('')
-  const [open, setOpen] = useState(false)
-  // route -> dek, filled on first focus (see JUMP_ITEMS above)
-  const [deks, setDeks] = useState<Record<string, string>>({})
-  const warmed = useRef(false)
-  const warmDeks = () => {
-    if (warmed.current) return
-    warmed.current = true
-    import('../data/work')
-      .then((m) => {
-        const next: Record<string, string> = {}
-        m.WORK_ENTRIES.forEach((w) => {
-          next[`/work/${w.id}`] = w.dek
-        })
-        setDeks(next)
-      })
-      .catch(() => {
-        warmed.current = false
-      })
-  }
-
-  const matches = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    if (!q) return []
-    // A prefix of "project(s)" / "thought(s)" (>= 3 letters, so "pro" -> projects,
-    // "tho" -> thoughts) shows that whole KIND, not a label match. 3+ letters keeps
-    // short strings like "th" free to fuzzy-match labels (THE HUDDLE, heritage...).
-    if (q.length >= 3 && 'projects'.startsWith(q)) return JUMP_ITEMS.filter((i) => i.hint === 'project')
-    if (q.length >= 3 && 'thoughts'.startsWith(q)) return JUMP_ITEMS.filter((i) => i.hint === 'thought')
-    // A LABEL match always outranks a tag or dek match: +5000 keeps the whole
-    // secondary tier below the worst subsequence hit, so typing a name never
-    // buries the thing you named under things that merely mention it.
-    return JUMP_ITEMS.map((i) => {
-      const byLabel = fuzzyScore(q, i.label)
-      if (byLabel !== null) return { i, score: byLabel }
-      const dek = deks[i.to]
-      const hay = [...i.tags, dek ?? ''].join(' ').toLowerCase()
-      const at = hay.indexOf(q)
-      return { i, score: at === -1 ? null : 5000 + at }
-    })
-      .filter((x): x is { i: JumpItem; score: number } => x.score !== null)
-      .sort((a, b) => a.score - b.score)
-      .slice(0, 7)
-      .map((x) => x.i)
-  }, [query, deks])
-
-  // "/" focuses the bar from anywhere on the cover (unless already typing).
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const el = document.activeElement
-      const typing = el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement
-      if (e.key === '/' && !typing) {
-        e.preventDefault()
-        inputRef.current?.focus()
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [])
-
-  function go(to: string) {
-    setQuery('')
-    setOpen(false)
-    navigate(to, { viewTransition: true })
-  }
-
-  return (
-    <div
-      className="relative w-full"
-      // Close only when focus leaves the whole combobox (input + options), so
-      // ArrowDown/Tab into an option doesn't unmount the option under it.
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpen(false)
-      }}
-    >
-      <input
-        ref={inputRef}
-        type="text"
-        value={query}
-        onChange={(e) => {
-          setQuery(e.target.value)
-          setOpen(true)
-        }}
-        onFocus={() => {
-          setOpen(true)
-          warmDeks()
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') {
-            setQuery('')
-            setOpen(false)
-            inputRef.current?.blur()
-          }
-          if (e.key === 'Enter' && matches[0]) go(matches[0].to)
-          if (e.key === 'ArrowDown' && matches.length) {
-            e.preventDefault()
-            const first = document.getElementById('jump-opt-0')
-            first?.focus()
-          }
-        }}
-        placeholder="/  jump to anything"
-        aria-label="Jump to any project or thought"
-        aria-expanded={open && matches.length > 0}
-        aria-controls="jump-list"
-        role="combobox"
-        className="lang-glass-1 h-11 w-full rounded-[var(--r-pill)] px-4 font-mono text-nav tracking-[0.06em] text-[var(--lang-ink)] placeholder:text-[var(--lang-ink-muted)] focus:border-[var(--lang-interaction)] focus:outline-none"
-      />
-      {open && matches.length > 0 && (
-        <ul
-          id="jump-list"
-          role="listbox"
-          className="lang-glass-2 absolute left-0 top-12 z-20 max-h-[280px] w-full overflow-y-auto rounded-[var(--r-control)] py-1"
-        >
-          {matches.map((m, i) => (
-            <li key={m.to + m.label} role="option" aria-selected={false}>
-              <Link
-                id={`jump-opt-${i}`}
-                to={m.to}
-                onClick={() => go(m.to)}
-                className="flex items-center justify-between gap-3 px-3 py-2 font-mono text-label tracking-[0.06em] text-[var(--lang-ink)] hover:bg-[color-mix(in_srgb,var(--lang-ink)_10%,transparent)] focus:bg-[color-mix(in_srgb,var(--lang-ink)_10%,transparent)] focus:outline-none"
-              >
-                <span className="flex min-w-0 items-center gap-1.5">
-                  {m.lens && <LensMark lens={m.lens} />}
-                  <span className="truncate">{m.label}</span>
-                </span>
-                {deks[m.to] && (
-                  <span className="hidden min-w-0 flex-1 truncate font-serif text-micro normal-case tracking-normal text-[var(--lang-ink-muted)] sm:block">
-                    {deks[m.to]}
-                  </span>
-                )}
-                <span className="shrink-0 text-micro tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">{m.hint}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  )
-}
-
-// THE SEARCH, IN THE HEADER (Emilie's pick E2, 2026-07-27). It used to sit in
-// the identity column beside a mode toggle. On a page that scrolls, a site-wide
-// search belongs with the site-wide nav: it rides the pill's `tools` slot, the
-// same slot /work uses for its filter row, so no new furniture is invented.
-// It hides below sm, where 250px of search would eat the whole header line and
-// the phone's way in is the proof card and the doors, not a text field.
-//
-// COLLAPSED it becomes the "/" alone, which is the same key that focuses it
-// from anywhere on the page: the affordance shrinks to its own keyboard
-// shortcut rather than to a magnifying glass borrowed from another design
-// language. Pressing it opens the header and puts the cursor in the field, so
-// the compact state never costs a step.
-function LandingSearch({ collapsed, onExpand }: { collapsed: boolean; onExpand: () => void }) {
-  const [focusOnOpen, setFocusOnOpen] = useState(false)
-  return (
-    <div className="hidden items-center sm:flex">
-      <button
-        type="button"
-        onClick={() => {
-          setFocusOnOpen(true)
-          onExpand()
-        }}
-        inert={!collapsed}
-        className={`lang-glass-1 flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-[var(--r-pill)] font-mono text-nav text-[var(--lang-ink-muted)] transition-[max-width,opacity] duration-300 ease-[var(--ease-soft)] hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] motion-reduce:transition-none ${
-          collapsed ? 'max-w-11 opacity-100' : 'max-w-0 border-0 opacity-0'
-        }`}
-      >
-        <span className="sr-only">Search this site</span>
-        <span aria-hidden="true">/</span>
-      </button>
-      {/* OVERFLOW IS CONDITIONAL, and that is a bug fix, not a flourish
-          (2026-07-27). The max-width collapse needs the overflow clipped to
-          hide the field as it shrinks — but the results list hangs BELOW the
-          input at top-12, outside this 44px box, so a permanent overflow-hidden
-          swallowed every search result. Typing did nothing at all. Clipped
-          while collapsed, visible once open; the 300ms in between is only the
-          field itself sliding, which has nothing to spill. */}
-      <div
-        inert={collapsed}
-        className={`transition-[max-width,opacity] duration-300 ease-[var(--ease-soft)] motion-reduce:transition-none ${
-          collapsed ? 'max-w-0 overflow-hidden opacity-0' : 'max-w-[280px] overflow-visible opacity-100'
-        }`}
-      >
-        <div className="w-[240px] lg:w-[280px]">
-          <JumpBar autoFocus={focusOnOpen && !collapsed} onFocused={() => setFocusOnOpen(false)} />
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // THE PHONE'S BELTS (Emilie, 2026-07-27; rebuilt to her ruling 2026-08-02:
 // "the belts should move just like the desktop landing page but instead
@@ -419,8 +180,17 @@ function PhoneProof({ paused }: { paused: boolean }) {
         label={`The work · ${STRIP_PROJECTS.length} projects`}
         paused={paused}
         items={(tabbable) =>
+          // `tabbable` is false on the loop's SEAM copy, so it is also the flag
+          // for "this tile is a duplicate": it namespaces the key (both runs
+          // render the same ids as siblings) and hides the copy from the
+          // accessibility tree. Both jobs used to belong to a wrapper element,
+          // which made an <li> the parent of an <li> (see HorizontalBelt).
           STRIP_PROJECTS.map((p) => (
-            <li key={p.id} className="mr-2.5 w-[200px] shrink-0">
+            <li
+              key={tabbable ? p.id : `seam-${p.id}`}
+              aria-hidden={tabbable ? undefined : 'true'}
+              className="mr-2.5 w-[200px] shrink-0"
+            >
               <StripTile
                 project={p}
                 tabbable={tabbable}
@@ -452,7 +222,11 @@ function PhoneProof({ paused }: { paused: boolean }) {
         // grid would not.
         items={(tabbable) =>
           THOUGHTS.map((t) => (
-            <li key={t.id} className="mr-2.5 w-[240px] shrink-0">
+            <li
+              key={tabbable ? t.id : `seam-${t.id}`}
+              aria-hidden={tabbable ? undefined : 'true'}
+              className="mr-2.5 w-[240px] shrink-0"
+            >
               <ThoughtTile
                 id={t.id}
                 title={t.title}
@@ -551,11 +325,12 @@ export default function LandingCover() {
         className="pointer-events-none sticky top-0 z-40"
         onFocusCapture={openHeader}
       >
-        <TitleBlock
-          collapsed={collapsed}
-          tools={<LandingSearch collapsed={collapsed} onExpand={openHeader} />}
-          toolsKey="landing"
-        />
+        {/* No `tools`: the search is TitleBlock's own now (components/
+            SiteSearch.tsx), on all five main rooms rather than this one page.
+            The default toolsKey is deliberate — landing, /cv and /contact all
+            render a search-only box of identical size, so sharing one
+            view-transition name lets it sit still across those three. */}
+        <TitleBlock collapsed={collapsed} onExpand={openHeader} />
       </div>
 
       <main
@@ -828,8 +603,8 @@ export default function LandingCover() {
           is the whole argument for moving it off the first screen: as a cover
           it demanded to be decoded, as a ground it is the thing the bio is
           written on.
-          The wink comes with it: the one decorative line that is actually
-          voice, and beside the drawing it finally has something to point at. */}
+          (The wink used to close this section and was CUT on 2026-08-06. It is
+          the mark legend that ends the page now. See identity.ts.) */}
       <MindSection />
       </main>
       {/* inFlow: this footer scrolls, so it must not claim the frozen frame's
@@ -1029,13 +804,14 @@ function MindSection() {
         <h2 id="bio-heading" className={KICKER}>
           About
         </h2>
-        {/* draftCopy: NEW, UNSIGNED (identity.ts). */}
+        {/* SIGNED, all four paragraphs (Emilie 2026-08-06). One to three from
+            2026-07-29, the closing paragraph written by her at round 7. */}
         {BIO.map((para, i) => (
           <p
             key={i}
             className="prose-rag mt-4 font-serif text-[17px] leading-relaxed text-[var(--lang-ink)] tall:text-[19px]"
           >
-            {para}
+            {withVariables(para)}
           </p>
         ))}
         {/* TRIED IN CAVEAT AND REVERTED (Emilie, 2026-08-05). Her idea, rendered
@@ -1061,16 +837,21 @@ function MindSection() {
       {/* The navigable list of every node, travelling in all modes. */}
       <MindGraphSrNav />
 
-      {/* The wink leaves the centred column and corners itself on lg. In the
-          flow it was a second block for justify-center to balance, which pushed
-          the prose ~57px above the section's middle and so above the drawing's
-          middle too. Out of flow, the bio centres on its own. */}
-      <p
-        className="pointer-events-none relative mt-12 max-w-[30ch] -rotate-1 font-hand text-[16px] leading-snug sm:text-[18px] lg:absolute lg:right-20 lg:bottom-12 lg:mt-0 lg:-rotate-2 lg:text-right xl:right-24"
-        style={{ color: 'color-mix(in srgb, var(--lang-ink) 55%, var(--lang-ink-muted))' }}
-      >
-        <span className="text-[var(--lang-interaction)]">n.b.</span> {WINK}
-      </p>
+      {/* THE WINK IS GONE (Emilie, 2026-08-06, the last pass): "let's remove it."
+          It read "n.b. this whole mess is my head. touch a piece of it.", signed
+          at G4 2026-07-12, cornered bottom right on lg and in the flow below it.
+
+          WHAT IT WAS ASKED ABOUT. Below lg the graph is `pointer-events: none`,
+          and MindGraphView's own comment settled why: "Below lg the field is a
+          drawing now, and a drawing does not ask to be touched." A node
+          invitation had already been DELETED there for exactly that reason. The
+          wink was the last thing still asking, 100px under the same drawing, on
+          the only screens where the answer is nothing. She was offered three
+          repairs (show it from lg up, reword it true everywhere, or leave it as
+          figurative) and took a fourth.
+
+          Nothing replaced it: the closing section now ends on the mark legend,
+          which is the thing that actually helps you read the drawing. */}
     </section>
   )
 }

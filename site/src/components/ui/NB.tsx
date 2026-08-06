@@ -37,13 +37,41 @@ export default function NB({
   // moment it renders, and the post-mount measurement then sees nothing
   // wrong. Applied via the standalone `translate` property so the entrance
   // animation's transform is untouched.
+  // ⚠ THE BOUNDARY IS THE CLIPPING BOX, NOT THE VIEWPORT (Emilie's report with
+  // a screenshot, 2026-08-06: "make sure that they are not cut or cropped out,
+  // some are"). This clamped to `document.documentElement.clientWidth`, which is
+  // correct in running prose and WRONG inside the showcase sheet: `.work-dialog`
+  // is `overflow: hidden` (it has to be, for the rounded corners), so a tip that
+  // fits the viewport perfectly is still sliced at the sheet's edge. In her
+  // screenshot the "ALSO ANSWERS" panel is cut clean down the right side.
+  //
+  // So the clamp asks the nearest ancestor that actually clips. `<dialog>` is
+  // the case that bit, and any scroll container would clip the same way.
+  const clipRect = () => {
+    let el = anchorRef.current?.parentElement as HTMLElement | null
+    while (el) {
+      const cs = getComputedStyle(el)
+      const clips =
+        el.tagName === 'DIALOG' ||
+        cs.overflow !== 'visible' ||
+        cs.overflowX !== 'visible' ||
+        cs.overflowY !== 'visible'
+      if (clips) {
+        const r = el.getBoundingClientRect()
+        if (r.width > 0) return { left: r.left, right: r.right }
+      }
+      el = el.parentElement
+    }
+    return { left: 0, right: document.documentElement.clientWidth }
+  }
+
   const prepare = () => {
     const a = anchorRef.current?.getBoundingClientRect()
     if (!a) return
-    const vw = document.documentElement.clientWidth
+    const box = clipRect()
     const left = align === 'right' ? a.right - TIP_W : a.left + TIP_LEFT
-    if (left + TIP_W > vw - GUTTER) setShift(vw - GUTTER - (left + TIP_W))
-    else if (left < GUTTER) setShift(GUTTER - left)
+    if (left + TIP_W > box.right - GUTTER) setShift(box.right - GUTTER - (left + TIP_W))
+    else if (left < box.left + GUTTER) setShift(box.left + GUTTER - left)
     else setShift(0)
   }
 

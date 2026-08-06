@@ -303,33 +303,142 @@ function anchorIdOf(e: RegistryEntry): string | undefined {
   return e.refId ?? AWARD_ANCHOR_OVERRIDE[e.id]
 }
 
+// ---- placement by relation, not by kind (Emilie's ruling 2026-08-06) --------
+//
+// Her brief, verbatim: "there should be no rule on whether the thoughts come
+// before or after the project, it should be date based, and based on the
+// correlation to the other projects and thoughts ... this will also help read
+// things."
+//
+// WHAT THIS REPLACES. Ties inside a month used to break on kind, alphabetically
+// (award < milestone < project < thought), so thoughts always landed last in
+// their month whatever they were connected to. And y was a sine of the node's
+// RANK, which is a decorative wave: a node's height said nothing about what it
+// was threaded to, so a fibre's length and direction were accidents.
+//
+// WHAT IT IS NOW. This is a layered graph drawing, which is the standard shape
+// for a graph whose one axis is fixed:
+//   · The LAYER is the month. Time owns x and nothing here may move it.
+//   · Within a layer, and then for y, each node is pulled to the BARYCENTRE of
+//     its neighbours: the average position of the things it actually threads to.
+//     That is the classic crossing-reduction heuristic, and it is exactly her
+//     sentence: adjacency sits in relation to narkomfin and urban-risk.
+//
+// THREE PROPERTIES IT HAS TO KEEP, and all three are load-bearing here:
+//   · DETERMINISTIC. No randomness in the solve, fixed iteration count, ties
+//     broken by id. The frozen snapshot and the prerender both depend on this.
+//   · The KIND BANDS SURVIVE as a soft prior, not a rule. Thoughts still tend
+//     high and projects low, so the map still reads in rows at a glance, but a
+//     well-connected node is allowed to leave its band to be near its
+//     neighbours. The band is where a node starts, not where it must stay.
+//   · MILESTONES DO NOT MOVE. They ride the career lanes (LANE_Y) and the
+//     skeleton is drawn from them, so they are pinned and act as anchors.
+const BAND_Y: Record<string, number> = { thought: 195, project: 395, award: 520 }
+const BAND_PULL = 0.22 // how hard a node is held to its own row
+const SOLVE_PASSES = 24
+
+// THE BANDS ARE A CLAMP, NOT ONLY A PULL, and that was found by measuring.
+// With the pull alone the solve collapsed the free nodes from a 363px spread to
+// 170px: every thought is threaded to projects and every project to thoughts, so
+// both rows converged on the middle and the map became one flat stripe. The
+// legend's whole shape language depends on the rows staying apart.
+// So each kind keeps a corridor and relation decides where inside it a node
+// sits. The corridors do not touch, and the gap between them (300 to 330) is
+// what the eye reads as "these are two different things".
+const BAND_RANGE: Record<string, [number, number]> = {
+  thought: [100, 300],
+  project: [330, 500],
+}
+
+/** Neighbours of each id, from the one source of relations (CORRELATIONS). */
+function neighbourMap(ids: Set<string>): Map<string, string[]> {
+  const m = new Map<string, string[]>()
+  const add = (a: string, b: string) => {
+    if (!ids.has(a) || !ids.has(b)) return
+    const list = m.get(a)
+    if (list) list.push(b)
+    else m.set(a, [b])
+  }
+  for (const [a, b] of CORRELATIONS) {
+    add(a, b)
+    add(b, a)
+  }
+  // An award is bound to the thing it honours, which is a relation too.
+  return m
+}
+
 export function buildWorld(): World {
   // Ascending time walk over the world kinds. timelineEntries() sorts DESC by
-  // date (stable); the reverse gives ASC. Ties inside a month keep a stable,
-  // documented order: kind (award < milestone < project < thought), then id.
-  const cast = timelineEntries()
+  // date (stable); the reverse gives ASC.
+  const byDate = timelineEntries()
     .filter((e) => WORLD_KINDS.has(e.kind))
     .reverse()
-    .sort((a, b) =>
-      a.date < b.date ? -1 : a.date > b.date ? 1 : a.kind < b.kind ? -1 : a.kind > b.kind ? 1 : a.id < b.id ? -1 : 1,
-    )
+    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : a.id < b.id ? -1 : 1))
+
+  const ids = new Set(byDate.map((e) => e.id))
+  const nbr = neighbourMap(ids)
+
+  // A first ordinal, id-broken, so every node has a position to average from.
+  const seedRank = new Map<string, number>()
+  byDate.forEach((e, i) => seedRank.set(e.id, i))
+
+  // ORDER WITHIN EACH MONTH, by the barycentre of a node's neighbours' ranks.
+  // A node with no threads keeps its id order, so the result is stable and a
+  // lone node never drifts. Two passes: the second sees the first's result.
+  const months = [...new Set(byDate.map((e) => e.date))]
+  let cast = byDate
+  for (let pass = 0; pass < 2; pass++) {
+    const rank = new Map(cast.map((e, i) => [e.id, i]))
+    const next: typeof byDate = []
+    for (const month of months) {
+      const group = cast.filter((e) => e.date === month)
+      const scored = group.map((e) => {
+        const ns = nbr.get(e.id) ?? []
+        const bary = ns.length
+          ? ns.reduce((s, id) => s + (rank.get(id) ?? seedRank.get(id) ?? 0), 0) / ns.length
+          : rank.get(e.id)!
+        return { e, bary }
+      })
+      scored.sort((p, q) => (p.bary !== q.bary ? p.bary - q.bary : p.e.id < q.e.id ? -1 : 1))
+      next.push(...scored.map((s) => s.e))
+    }
+    cast = next
+  }
 
   const w = X0 + cast.length * STEP + MARGIN_R
   const byId = new Map<string, RegistryEntry & { x: number; y: number; rank: number }>()
 
-  // pass 1: rank + x + non-award y
+  // pass 1: rank + x, and a starting y from the node's own band
   const placed = cast.map((e, rank) => {
     const x = X0 + (rank + 0.5) * STEP
-    const r = rngFrom(idSeed(e.id, 17))()
     let y: number
-    if (e.kind === 'thought') y = 170 + 95 * Math.sin(rank * 1.05 + 0.4) + r * 30
-    else if (e.kind === 'project') y = 380 + 85 * Math.sin(rank * 0.9 + 2.2) + r * 26
-    else if (e.kind === 'milestone') y = LANE_Y[laneOf(e)]
-    else y = 520 // award fallback; anchored in pass 2
+    if (e.kind === 'milestone') y = LANE_Y[laneOf(e)]
+    else y = BAND_Y[e.kind] ?? 520
     const p = Object.assign({}, e, { x, y, rank })
     byId.set(e.id, p)
     return p
   })
+
+  // pass 1b: SOLVE y. Each free node relaxes toward the mean y of the things it
+  // threads to, held back toward its own band so the rows stay legible.
+  // Milestones are pinned; awards are placed in pass 2 against their anchor.
+  const free = placed.filter((p) => p.kind === 'thought' || p.kind === 'project')
+  for (let pass = 0; pass < SOLVE_PASSES; pass++) {
+    const snapshot = new Map(placed.map((p) => [p.id, p.y]))
+    for (const p of free) {
+      const ns = (nbr.get(p.id) ?? []).filter((id) => byId.has(id))
+      if (!ns.length) continue
+      const mean = ns.reduce((s, id) => s + (snapshot.get(id) ?? 0), 0) / ns.length
+      const band = BAND_Y[p.kind] ?? 395
+      const next = p.y + (mean - p.y) * (1 - BAND_PULL) * 0.5 + (band - p.y) * BAND_PULL * 0.5
+      // Clamp INSIDE the loop, not after it: a node that is allowed to drift out
+      // of its corridor mid-solve drags its neighbours with it, and the rows end
+      // up merged even if the final positions are clipped back.
+      const [lo, hi] = BAND_RANGE[p.kind] ?? [96, 500]
+      p.y = Math.max(lo, Math.min(hi, next))
+    }
+  }
+  for (const p of free) p.y = Math.round(p.y * 10) / 10
 
   // pass 2: awards snap beside the work (or milestone) they honour
   placed.forEach((p) => {

@@ -18,6 +18,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import LogoMark from './LogoMark'
 import ModeToggle from './ui/ModeToggle'
+import SiteSearch, { hasSiteSearch } from './SiteSearch'
 
 const NAV: { label: string; to: string }[] = [
   { label: 'WORK', to: '/work' },
@@ -227,6 +228,7 @@ export default function TitleBlock({
   tools,
   toolsKey = 'page',
   collapsed = false,
+  onExpand,
 }: {
   tools?: React.ReactNode
   /** Scrolling DOWN squeezes the pill to the mark alone and the tools to their
@@ -251,7 +253,15 @@ export default function TitleBlock({
    *  lag (Emilie, 2026-07-26). Distinct keys leave each set to fade in place
    *  at its own size, which is what the frame's stillness actually needs. */
   toolsKey?: string
+  /** Opens the collapsed pill. The site search's "/" stub calls it, because a
+   *  click does not reliably move focus in Safari, so the wrapper's
+   *  onFocusCapture cannot be the only way back to an open header. */
+  onExpand?: () => void
 }) {
+  const { pathname } = useLocation()
+  // The search is CHROME, not a page's tool: TitleBlock decides which rooms
+  // carry it (hasSiteSearch) so no page wires it and no page can move it.
+  const search = hasSiteSearch(pathname)
   return (
     // The frozen frame (SheetPage) keeps this header put; the pill floats
     // with a breath of air, anchored LEFT on every page (Emilie 2026-07-19:
@@ -291,12 +301,19 @@ export default function TitleBlock({
           <ModeToggle />
         </div>
       </div>
-      {tools && (
+      {/* THE SEARCH IS THE LAST CHILD, ALWAYS (Emilie's pick A, 2026-08-06).
+          .pill-tools is `margin-left:auto` + `justify-content:flex-end`, so
+          whatever is last owns the top-right corner. Putting the search there
+          gives it the SAME CORNER in every room and pushes a room's own tools
+          to its left, which is exactly the ruling: "all main pages, same
+          place". The one thing that moves is /work's filter row, 292px left. */}
+      {(tools || search) && (
         <div
           className="pill-tools pointer-events-auto"
           style={{ viewTransitionName: `page-tools-${toolsKey}` }}
         >
           {tools}
+          <SiteSearch collapsed={collapsed} onExpand={onExpand} />
         </div>
       )}
     </header>

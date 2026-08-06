@@ -80,6 +80,7 @@ const OG_KEYS = [
   ...PROJECT_IDS.map((id) => `work-${id}`),
   ...THOUGHT_IDS.map((id) => `thought-${id}`),
   'pillar',
+  'home',
 ]
 
 // Every face a card or page sets (fonts.css); loading is idempotent.

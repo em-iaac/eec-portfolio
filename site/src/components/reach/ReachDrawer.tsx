@@ -16,6 +16,7 @@
 // horizontal fan runs off the frame and has to be scrolled.
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import useHasHover from '../../hooks/useHasHover'
 import type { ReachSet, ReachVerb } from './verbs'
 
 export default function ReachDrawer({ set }: { set: ReachSet }) {
@@ -23,6 +24,12 @@ export default function ReachDrawer({ set }: { set: ReachSet }) {
   const rootRef = useRef<HTMLDivElement>(null)
   const tabRef = useRef<HTMLButtonElement>(null)
   const panelId = 'reach-drawer-panel'
+  // IT OPENS ON HOVER WHERE THERE IS A POINTER (Emilie, 2026-08-06: "on the
+  // desktop should open on hover"). Gated on `useHasHover`, never on width: the
+  // press is the right gesture for a finger and hover does not exist there, so
+  // this adds a way in for a mouse without taking one away from a thumb.
+  // The press still works with a pointer too, and still closes it.
+  const hasHover = useHasHover()
 
   // The dot grammar again: Escape, or a press outside. Nothing new to learn.
   useEffect(() => {
@@ -82,7 +89,22 @@ export default function ReachDrawer({ set }: { set: ReachSet }) {
   }
 
   return (
-    <div ref={rootRef} className={`reach-drawer ${open ? 'is-open' : ''} lg:hidden`}>
+    // `reach-drawer--wide` is what actually shows it from lg up, NOT a Tailwind
+    // class: `display` for this component lives inside a media query in
+    // language.css precisely because Tailwind's `lg:hidden` is layered and loses
+    // to the unlayered rule (the trap documented there). So a room's opt-in has
+    // to reach the same unlayered place, and a modifier class is that.
+    <div
+      ref={rootRef}
+      // The whole root is the hover target, tab and panel together, so the
+      // pointer can travel from the tab into the rows without it closing under
+      // the cursor. `pointerType` is checked because a touch fires
+      // pointerenter too, and on a phone that would open the drawer on the way
+      // past it (the same trap the header magnifier and the belt tiles hit).
+      onPointerEnter={hasHover ? (e) => { if (e.pointerType === 'mouse') setOpen(true) } : undefined}
+      onPointerLeave={hasHover ? (e) => { if (e.pointerType === 'mouse') setOpen(false) } : undefined}
+      className={`reach-drawer ${open ? 'is-open' : ''} ${set.place === 'middle' ? 'reach-drawer--mid' : ''} ${set.wide ? 'reach-drawer--wide' : 'lg:hidden'}`}
+    >
       <div className="reach-drawer__panel lang-glass-2" id={panelId} role="group" aria-label={set.label} inert={!open || undefined}>
         {set.verbs.map(row)}
       </div>
