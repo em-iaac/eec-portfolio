@@ -19,7 +19,7 @@ import { installPhonePageMotion } from './lib/pageMotion'
 // Split out of the landing chunk so the perf-budgeted cover stays lean: the
 // gallery (with its overlay + video code) and the note prose only load when
 // someone actually opens /work or /thoughts/:id. Contact + CV joined them at
-// the LCP pass (2026-07-12): they pull SheetPage/Surface and their data
+// the LCP pass (2026-07-12): they pull SheetPage and their data
 // files, none of which the landing needs. NotFound stays eager (a chunk
 // error on the error page is the worst failure mode); SheetRoute is a
 // 15-line redirect whose registry import ships in the entry anyway.

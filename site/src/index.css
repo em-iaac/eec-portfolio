@@ -206,47 +206,13 @@ section[id] {
 /* Header draw-in ceremony retired at DL-0 (2026-07-10): the drawing-set
    title block gave way to the floating glass pill (DESIGN-LANGUAGE.md). */
 
-/* Field-card entrance (Session 5 bundle; today the neural world's field card
-   rides it): the card fades and rises 8px, ~280ms, keyed per focused piece so
-   switching replays it. Reduced motion: final state, no motion. */
-.infocard-enter {
-  animation: infocard-in 280ms ease-out both;
-}
-
-@keyframes infocard-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
-/* THE CARD RETRACTS INTO ITS MARK (Emilie, 2026-08-02: "when I swipe while one
-   is open I want it to animate and go back to its button so I can just explore
-   the world and its connections"). Panning is how you follow a thread to
-   something off screen, and the card is exactly what is in the way while you do
-   it. So a drag folds the card back toward the node it came from and leaves the
-   node lit with its connections: the thing you were reading gets out of the way
-   without taking the thing you were following with it.
-   The origin is the top-left because the engine anchors the card just below and
-   right of its mark, so shrinking to 0,0 collapses it toward the dot. */
-.infocard-exit {
-  animation: infocard-out 170ms ease-in both;
-  transform-origin: 0 0;
-}
-
-@keyframes infocard-out {
-  to {
-    opacity: 0;
-    transform: scale(0.72) translateY(-6px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .infocard-enter,
-  .infocard-exit {
-    animation: none;
-  }
-}
+/* (THE FIELD CARD IS GONE, 2026-08-07, and with it its two keyframes and its
+   reduced-motion pair. It rose 8px on entry and retracted into its mark under a
+   pan — that retraction was Emilie's own ask on 2026-08-02, "so I can just
+   explore the world and its connections", and HELD is that idea arrived at
+   properly: the node stays lit and there is simply nothing laid over the map to
+   get out of the way. The card's last remaining job, the NOW tip, now says its
+   lines as map type. One interaction grammar on the page instead of two.) */
 
 /* (The meta build: the nb-fade-in keyframes retired with the CV graph view;
    the career drawing lives on as the neural world's skeleton below.) */
@@ -814,7 +780,6 @@ h3 {
 }
 
 /* the nerve: hidden at rest, grown by the engine */
-.nw-dendrite,
 .nw-reach {
   fill: none;
   stroke: var(--lang-ink);
@@ -823,6 +788,30 @@ h3 {
   opacity: 0.38;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
+}
+/* THE UNMADE SYNAPSE. An arm out of a neuron toward something it has three or
+   more threads in common with, that STOPS. Two arms face each other across a
+   gap the layout guarantees is never zero, and there is no synapse and no
+   pulse: both of those mean "this fired".
+   ⚠ IT WAS DASHED FOR ONE DAY AND SHE CUT THE DASHES, on the evidence of the
+   map itself: "you can see how the neurons of narkomfin and adjacency are
+   almost touching but not quite, this is how the potential connections should
+   be drawn, not dashed. we should not lose the science and poetics behind it."
+   A dash is a diagram's word for provisional, borrowed from a language this
+   drawing does not speak. What says it here is the GAP, and the arms are woven
+   in exactly the same anatomy as a real thread (worldGraph `reachFibres`).
+   Nothing is less honest for it — a thread that arrives has a synapse and can
+   fire; this one has neither and never will.
+   Muted and a touch thinner, so where a real thread and a reach leave the same
+   neuron the real one leads. Opacity is the engine's channel (applyFibres) and
+   rest is 0, not a dim value: an unmade synapse is an answer to a question, so
+   it exists only while something is asking. */
+.nw-reachout {
+  fill: none;
+  stroke: var(--lang-ink-muted);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
 }
 .nw-synapse {
   transform-box: fill-box;
@@ -851,6 +840,241 @@ h3 {
   100% {
     opacity: 0;
     stroke-dashoffset: 0;
+  }
+}
+
+/* THE BRING (Emilie's pick D, 2026-08-07). The chosen neuron's whole
+   neighbourhood in one frame, because a neighbour can live 3,000 units away and
+   choosing one used to show you threads leaving the screen toward things you
+   then had to hunt for. The threads are DRAWN here, not listed: that is the
+   difference between a picture of a neighbourhood and a menu.
+   The map behind it recedes AND goes inert, so the borrowed positions can never
+   be mistaken for the real ones. */
+/* HELD (the middle phase, Emilie 2026-08-07). One neuron stays awake with its
+   threads out while the pointer stops proposing others, so you can drag the
+   record and follow those threads to their far ends without losing what you
+   chose. The engine does the lighting; this ring is the only thing that says
+   which PHASE you are in, because a held neuron and a hovered one are lit
+   identically otherwise.
+   Ink, never red: red is liveness on this map and means exactly one thing. */
+/* THE EDGE MARKERS. Held, they say how many of this neuron's neighbours are off
+   the frame in each direction and name the nearest one, so a drag is aimed
+   rather than hopeful. Chrome, not drawing: pinned to the frame in CSS pixels,
+   and pointer-transparent so it can never eat a pan. */
+.nw-edge {
+  position: fixed;
+  z-index: 4;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 42vw;
+  pointer-events: none;
+  font-family: var(--font-mono);
+}
+.nw-edge-l {
+  left: 10px;
+  align-items: flex-start;
+}
+.nw-edge-r {
+  right: 10px;
+  align-items: flex-end;
+  text-align: right;
+}
+.nw-edge-n {
+  font-size: var(--text-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--lang-interaction);
+}
+.nw-edge-t {
+  font-size: var(--text-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lang-ink-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+/* The invisible fat stroke that makes a held node's own thread pressable. Only
+   rendered while that node is held, so it can never steal a pointer in browse. */
+.nw-connhit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 16;
+  pointer-events: stroke;
+  cursor: var(--cursor-live);
+}
+.nw-heldring {
+  fill: none;
+  stroke: var(--lang-ink);
+  stroke-width: 1;
+  opacity: 0.42;
+  vector-effect: non-scaling-stroke;
+}
+/* Nothing else answers a pointer once something is held — the rule that stops
+   the map talking over itself. The engine enforces the wake; this stops the
+   cursor from promising otherwise. */
+.nw-stage.is-held .nw-hit {
+  cursor: default;
+}
+.nw-stage.is-held .nw-node.is-held .nw-hit,
+.nw-stage.is-held .nw-heldring {
+  cursor: var(--cursor-live);
+}
+/* what the NOW card used to say, now drawn in the map while it is held */
+.nw-nowlines text {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: var(--lang-interaction);
+  opacity: 0.9;
+}
+
+/* THE CAMERA. One group around the whole drawing. A fold is a LENS MOVE: the
+   frozen coordinates underneath never change and releasing is this transform
+   returning to identity. */
+.nw-cam {
+  transition: transform 820ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+/* The scroller stands still while the lens is moving, or the two fight over the
+   same axis and a flick lands somewhere neither chose. */
+.nw-stage.is-folded {
+  overflow: hidden;
+  cursor: default;
+}
+/* Everything the chosen neuron does not touch sinks away — not to nothing, so
+   you can still see the record it was lifted out of. */
+.nw-stage.is-folded .nw-node.out-fold {
+  opacity: 0.05;
+}
+/* AND UNREACHABLE, not merely faint. Measured before it was fixed: every mark
+   the fold had hidden kept `pointer-events: all` and `tabIndex 0`, so the
+   isolated view sat on top of 44 invisible tab stops and 44 hoverable ghosts.
+   A thing you cannot see must not be a thing you can land on. */
+.nw-stage.is-folded .nw-node.out-fold .nw-hit {
+  pointer-events: none;
+}
+.nw-stage.is-folded .nw-reach,
+.nw-stage.is-folded .nw-synapse,
+.nw-stage.is-folded .nw-pulse,
+.nw-stage.is-folded .nw-reachout,
+.nw-stage.is-folded .nw-yearline,
+.nw-stage.is-folded .nw-yearlbl,
+/* The ruler goes quiet too. It stayed at full strength for the first fold and
+   read as a set of stray rules under a drawing it no longer belonged to: the
+   folded view is a neighbourhood, and the career lanes are not part of that
+   neighbourhood. Faint rather than gone, so the record is still underneath. */
+.nw-stage.is-folded .nw-skeleton,
+.nw-stage.is-folded .nw-plumb {
+  opacity: 0;
+}
+.nw-stage.is-folded .nw-skeleton {
+  opacity: 0.06;
+}
+.nw-node {
+  transition:
+    transform 820ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 420ms ease;
+}
+/* THE NAME WINS WHERE A THREAD STILL HAS TO PASS (2026-08-07).
+   Routing the fibres around the type took the crossings from 97 of 740 to 74,
+   and stalled there: the rest are threads crossing a dense stretch with nowhere
+   else to go. So the type carries a halo of the ground colour, drawn UNDER the
+   glyphs by paint-order — the oldest trick in cartography, and the only one
+   that guarantees legibility rather than approximating it.
+   It changes nothing about the letterforms and adds no colour: the halo is the
+   page. At 2.6 units it is invisible except exactly where it is needed. */
+.nw-lbl,
+.nw-yr {
+  paint-order: stroke fill;
+  stroke: var(--lang-ground);
+  stroke-width: 2.6;
+  stroke-linejoin: round;
+}
+.nw-lbl,
+.nw-yr {
+  transition:
+    transform 820ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    font-size 820ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 420ms ease;
+}
+/* The threads rewoven between folded positions — the SAME anatomy as a resting
+   one, because they come off the same `weave`. The first fold drew its own
+   quadratic curves and she saw it instantly: "we lose the poetics of the
+   connection and we just get plain strings." Match `.nw-reach` fully grown. */
+.nw-foldthread {
+  fill: none;
+  stroke: var(--lang-ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.4;
+  /* THE STROKE DOES NOT SHRINK WITH THE CAMERA. Without this a fibre drawn at
+     1.6 renders at 1.6 x 0.55 x 0.83 = 0.73px once the fold has pulled back,
+     which is the difference between a nerve and a hair — and the reason the
+     first fold read thin next to a hovered neuron even after it was properly
+     woven. Non-scaling-stroke keeps the line the weight it is at rest, so the
+     anatomy survives the zoom. */
+  vector-effect: non-scaling-stroke;
+}
+.nw-foldsyn {
+  fill: var(--lang-ground);
+  stroke: var(--lang-ink);
+  stroke-width: 1.5;
+  opacity: 0.9;
+}
+/* and the unmade ones: two woven arms and a gap, never a dash */
+.nw-foldarm {
+  fill: none;
+  stroke: var(--lang-ink-muted);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.55;
+  vector-effect: non-scaling-stroke;
+}
+.nw-foldsyn,
+.nw-stage.is-folded .nw-soma {
+  vector-effect: non-scaling-stroke;
+}
+.nw-foldlinks,
+.nw-foldopen {
+  animation: nw-foldin 520ms 260ms ease both;
+}
+@keyframes nw-foldin {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* the subject's door, under its own name */
+.nw-foldopen {
+  cursor: var(--cursor-live);
+}
+.nw-foldopen text {
+  fill: var(--lang-interaction);
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+}
+.nw-foldopen:focus-visible {
+  outline: 2px solid var(--lang-interaction);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* the same end state, placed rather than played */
+  .nw-cam,
+  .nw-node,
+  .nw-lbl,
+  .nw-yr {
+    transition: none;
+  }
+  .nw-foldlinks,
+  .nw-foldopen {
+    animation: none;
   }
 }
 
@@ -940,11 +1164,7 @@ h3 {
    the card beside its node; the cap is what stops that reaching the far
    gutter. */
 @media (max-width: 700px) {
-  .nw-fieldcard {
-    left: 12px !important;
-    right: auto;
-    max-width: min(280px, calc(100vw - 24px));
-  }
+  
 }
 
 /* ============================================================

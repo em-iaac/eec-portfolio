@@ -24,6 +24,12 @@ import {
   type RegistryEntry,
 } from '../../data/registry'
 import {
+  nearMissNeighbours,
+  armLength,
+  nearMissPairs,
+  type NearMiss,
+} from './nearMisses'
+import {
   AWARD_ANCHOR_OVERRIDE,
   LANE_FORKS,
   LANE_Y,
@@ -55,7 +61,7 @@ export const WORLD_KINDS: ReadonlySet<EntryKind> = new Set([
 
 // ---- seeded randomness (id-keyed, append-safe) ------------------------------
 
-function idSeed(id: string, salt: number): number {
+export function idSeed(id: string, salt: number): number {
   let h = 2166136261
   for (let i = 0; i < id.length; i++) {
     h ^= id.charCodeAt(i)
@@ -108,22 +114,28 @@ export function starPath(cx: number, cy: number, r: number): string {
 // ---- the anatomy ------------------------------------------------------------
 
 interface KindStyle {
-  count: number
-  length: number
-  wobble: number
-  branch: number
-  depth: number
+  /** the stroke width this kind's THREADS are drawn at */
   baseW: number
+  /** soma radius */
   r: number
 }
 
-// THE CONTRAST IS THE DESIGN: milestones get NO dendrites (count 0), they are
-// pure commit dots, so the ruler stays geometric while the mind stays organic.
+// THE DENDRITES ARE CUT (Emilie, 2026-08-07). Every neuron used to grow four to
+// seven wandering branches that connected to nothing — roughly 650 of the
+// ~2,250 paths on the page, and the organic half of the ruler-and-nerve
+// contract. They went for one reason, and it is not weight: the map now draws
+// what is CLOSE BUT NOT JOINED, and the only honest mark for that is an arm
+// that reaches out and stops. A neuron already covered in arms that reach out
+// and stop makes that mark unreadable. The two could not both exist, so the one
+// that means something stayed.
+// The contrast survives where it always lived: a milestone is a bare commit dot
+// at r 2.6, a project a filled soma at 7.2, so the ruler is still geometric and
+// the mind still grows things.
 export const KIND_STYLE: Record<'project' | 'thought' | 'award' | 'milestone', KindStyle> = {
-  project: { count: 7, length: 52, wobble: 0.9, branch: 0.6, depth: 2, baseW: 1.6, r: 7.2 },
-  thought: { count: 6, length: 42, wobble: 0.9, branch: 0.55, depth: 2, baseW: 1.3, r: 5.2 },
-  award: { count: 4, length: 20, wobble: 0.8, branch: 0.3, depth: 1, baseW: 0.9, r: 5.2 },
-  milestone: { count: 0, length: 0, wobble: 0, branch: 0, depth: 0, baseW: 0.8, r: 2.6 },
+  project: { baseW: 1.6, r: 7.2 },
+  thought: { baseW: 1.3, r: 5.2 },
+  award: { baseW: 0.9, r: 5.2 },
+  milestone: { baseW: 0.8, r: 2.6 },
 }
 
 function growBranch(
@@ -155,14 +167,142 @@ function growBranch(
   out.push(pts)
 }
 
-function dendritePaths(cx: number, cy: number, seed: number, o: KindStyle): string[] {
-  const out: [number, number][][] = []
-  const rng = rngFrom(seed)
-  for (let i = 0; i < o.count; i++) {
-    const ang = (i / o.count) * Math.PI * 2 + (rng() - 0.5) * 0.6
-    growBranch(cx, cy, ang, o.length, rng, o, 0, out)
+/** A rectangle a thread should not run through: a label, a date, or a soma. */
+export interface Obstacle {
+  x0: number
+  y0: number
+  x1: number
+  y1: number
+}
+
+// LABEL METRICS, MEASURED OFF THE RENDERED MAP, not estimated. The four kinds
+// are set in two different faces and the difference is nearly 2x, which is the
+// same trap that cost three attempts in the fold's lane solver:
+//   project   Martian Mono 9.5px, uppercase, 0.1em   advance 0.80  height 12
+//   thought   Source Serif 4 italic 12.5px           advance 0.455 height 17.9
+//   award     Martian Mono 9px, uppercase            advance 0.781 height 12
+//   milestone Martian Mono 9px, uppercase            advance 0.78  height 12
+//   the date  9px                                    advance 0.76  height 12
+const LABEL_METRIC: Record<WorldKind, { size: number; adv: number; h: number }> = {
+  project: { size: 9.5, adv: 0.8, h: 12 },
+  thought: { size: 12.5, adv: 0.455, h: 17.9 },
+  award: { size: 9, adv: 0.781, h: 12 },
+  milestone: { size: 9, adv: 0.78, h: 12 },
+}
+const DATE_METRIC = { size: 9, adv: 0.76, h: 12 }
+
+/** Where NeuralWorld puts a node's label baseline. */
+export function labelY(kind: WorldKind, y: number): number {
+  return kind === 'milestone' ? y + 18 : y + KIND_STYLE[kind].r + 18
+}
+
+/** The boxes a thread has to get around: every label, every date, every soma. */
+export function obstaclesFor(
+  nodes: ReadonlyArray<{ id: string; kind: WorldKind; x: number; y: number; title: string; mapLabel?: string; labelDx?: number; labelDy?: number }>,
+): Obstacle[] {
+  const out: Obstacle[] = []
+  for (const n of nodes) {
+    const m = LABEL_METRIC[n.kind]
+    const text = n.mapLabel ?? n.title
+    const cx = n.x + (n.labelDx ?? 0)
+    const ly = labelY(n.kind, n.y) + (n.labelDy ?? 0)
+    const halfW = (text.length * m.adv * m.size) / 2
+    out.push({ x0: cx - halfW, y0: ly - m.h * 0.8, x1: cx + halfW, y1: ly + m.h * 0.25 })
+    const dy = ly + 12
+    const dHalf = (7 * DATE_METRIC.adv * DATE_METRIC.size) / 2
+    out.push({ x0: cx - dHalf, y0: dy - DATE_METRIC.h * 0.8, x1: cx + dHalf, y1: dy + DATE_METRIC.h * 0.25 })
+    const r = KIND_STYLE[n.kind].r
+    out.push({ x0: n.x - r, y0: n.y - r, x1: n.x + r, y1: n.y + r })
   }
-  return out.map((pts) => spline(pts))
+  return out
+}
+
+/**
+ * PUSH THE WAYPOINTS OUT OF ANYTHING THEY LAND IN (Emilie, 2026-08-07: the
+ * threads "cannot overlap with text and other nodes, so it would kind of go
+ * around them").
+ *
+ * MEASURED FIRST: 97 of the 740 fibres (13.1%) ran through a label or a date,
+ * and 25 (3.4%) through an unrelated soma. So this is a polish pass, not a
+ * rebuild — which is why it is a local nudge of the existing waypoints rather
+ * than a routing algorithm. A visibility graph would give exact clearance and
+ * mechanical paths, and mechanical is the one thing this drawing must not be.
+ *
+ * Vertical exits are preferred over horizontal at nearly 2:1. A label is wide
+ * and short, so leaving sideways means running the whole length of the word to
+ * get out, while hopping over or under it is a small deflection — and a thread
+ * that arcs over a name reads as a thread avoiding it, which is the poetics she
+ * is protecting.
+ *
+ * The ENDPOINTS never move: a fibre has to start on its soma and end at its
+ * synapse, or it stops being a connection between those two things.
+ */
+/** Obstacles bucketed by x so a waypoint only tests its own neighbourhood.
+ *  Without it this is 740 fibres x 40 points x 3 passes x 168 boxes = 15M
+ *  checks at module load; with it, under a million. */
+const BUCKET = 220
+export type ObstacleIndex = Map<number, Obstacle[]>
+export function indexObstacles(obs: readonly Obstacle[]): ObstacleIndex {
+  const m: ObstacleIndex = new Map()
+  for (const b of obs) {
+    const lo = Math.floor((b.x0 - 8) / BUCKET)
+    const hi = Math.floor((b.x1 + 8) / BUCKET)
+    for (let k = lo; k <= hi; k++) {
+      const list = m.get(k)
+      if (list) list.push(b)
+      else m.set(k, [b])
+    }
+  }
+  return m
+}
+
+/**
+ * RESAMPLE, then push. The first version moved only the seven seeded waypoints
+ * and it barely helped: 13.1% of fibres crossing type became 10.7%, because on
+ * a 1,500-unit thread those points sit ~250 apart while a label is ~140 wide,
+ * so most crossings were happening BETWEEN the points being tested. Densifying
+ * to a fixed spacing first is what makes the test see what the eye sees.
+ */
+export function densify(pts: [number, number][], step = 34): [number, number][] {
+  if (pts.length < 2) return pts
+  const out: [number, number][] = [pts[0]!]
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1]!
+    const b = pts[i]!
+    const d = Math.hypot(b[0] - a[0], b[1] - a[1])
+    const n = Math.max(1, Math.round(d / step))
+    for (let k = 1; k <= n; k++) {
+      const t = k / n
+      out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t])
+    }
+  }
+  return out
+}
+
+export function avoid(pts: [number, number][], idx: ObstacleIndex, margin = 10): void {
+  if (!idx.size || pts.length < 3) return
+  for (let pass = 0; pass < 5; pass++) {
+    for (let i = 1; i < pts.length - 1; i++) {
+      const p = pts[i]!
+      const near = idx.get(Math.floor(p[0] / BUCKET))
+      if (!near) continue
+      for (const b of near) {
+        const x0 = b.x0 - margin
+        const x1 = b.x1 + margin
+        const y0 = b.y0 - margin
+        const y1 = b.y1 + margin
+        if (p[0] <= x0 || p[0] >= x1 || p[1] <= y0 || p[1] >= y1) continue
+        const up = p[1] - y0
+        const down = y1 - p[1]
+        const left = p[0] - x0
+        const right = x1 - p[0]
+        const vert = Math.min(up, down)
+        const horz = Math.min(left, right)
+        if (vert <= horz * 1.8) p[1] = up < down ? y0 : y1
+        else p[0] = left < right ? x0 : x1
+      }
+    }
+  }
 }
 
 // One connection fibre: a wandering path soma -> synapse rendered in the SAME
@@ -174,6 +314,7 @@ function fibrePaths(
   seed: number,
   off: number,
   baseW: number,
+  obs?: ObstacleIndex,
 ): { main: { d: string; w: number }; twigs: { d: string; w: number }[]; pts: [number, number][] } {
   const rng = rngFrom(seed)
   const dx = to[0] - from[0]
@@ -191,6 +332,10 @@ function fibrePaths(
       from[1] + dy * t - env * 10 + (rng() - 0.5) * 24 * env + py * off * env,
     ])
   }
+  // The twigs branch off the ORIGINAL seven, so the anatomy keeps its shape;
+  // only the main run is resampled and pushed.
+  const routed = obs ? densify(pts) : pts
+  if (obs) avoid(routed, obs)
   const twigs: { d: string; w: number }[] = []
   const tw = 1 + Math.floor(rng() * 2)
   for (let k = 0; k < tw; k++) {
@@ -200,7 +345,89 @@ function fibrePaths(
     growBranch(tp[0], tp[1], ang, 16 + rng() * 10, rng, { wobble: 0.9, branch: 0.3, depth: 1 }, 1, out)
     out.forEach((bp) => twigs.push({ d: spline(bp), w: baseW * 0.6 }))
   }
-  return { main: { d: spline(pts, 0.3), w: baseW }, twigs, pts }
+  // k 0.3 -> 0.16 once routed: a loose cardinal spline overshoots its own
+  // waypoints, which is how a path can dodge every point and still cut the
+  // corner of a label.
+  return { main: { d: spline(routed, obs ? 0.16 : 0.3), w: baseW }, twigs, pts }
+}
+
+/**
+ * THE ONE WEAVER. Two somas in, one braided connection out: the fibres, the
+ * synapse where they meet, and the pulse path that fires along them.
+ *
+ * ⚠ IT EXISTS BECAUSE THE FOLD DREW ITS OWN THREADS AND THEY WERE STRINGS.
+ * Emilie, seeing the first fold beside a hovered neuron: "we lose the poetics of
+ * the connection and this visual and we just get plain strings." She was right,
+ * and the cause was that the folded view had its own quadratic-curve drawing
+ * code instead of this one. A thread must be woven the same way wherever it is
+ * drawn, or the map has two dialects and one of them is thinner.
+ */
+export function weave(
+  a: readonly [number, number],
+  b: readonly [number, number],
+  strength: number,
+  seed: number,
+  wA: number,
+  wB: number,
+  /** which way the midpoint leans; the world uses the a-end's rank parity */
+  lean: number,
+  obs?: ObstacleIndex,
+): { fibres: WorldLink['fibres']; synapse: { x: number; y: number; r: number }; pulseD: string } {
+  const mx = (a[0] + b[0]) / 2 + lean
+  const my = (a[1] + b[1]) / 2 - (Math.abs(a[0] - b[0]) > 260 ? 46 : 22)
+  const fibres: WorldLink['fibres'] = []
+  let primA: [number, number][] = []
+  let primB: [number, number][] = []
+  for (let f = 0; f < strength; f++) {
+    const off = (f - (strength - 1) / 2) * 9
+    const fA = fibrePaths(a, [mx, my], seed + f * 7 + 3, off, wA, obs)
+    const fB = fibrePaths(b, [mx, my], seed + f * 7 + 19, off, wB, obs)
+    if (f === 0) {
+      primA = fA.pts
+      primB = fB.pts
+    }
+    fibres.push({ ...fA.main, side: 'a' }, ...fA.twigs.map((t) => ({ ...t, side: 'a' as const })))
+    fibres.push({ ...fB.main, side: 'b' }, ...fB.twigs.map((t) => ({ ...t, side: 'b' as const })))
+  }
+  return {
+    fibres,
+    synapse: { x: mx, y: my, r: 2.2 + strength * 0.5 },
+    pulseD: spline([...primA, ...primB.slice(0, -1).reverse()], 0.3),
+  }
+}
+
+/**
+ * AN ARM THAT REACHES AND DOES NOT ARRIVE, in the same hand as a real thread.
+ *
+ * ⚠ THIS REPLACED A DASHED LINE, at her instruction and on the evidence of the
+ * map itself: "if you check the first screenshot you can see how the neurons of
+ * narkomfin and adjacency are almost touching but not quite, this is how the
+ * potential connections should be drawn, not dashed. we should not lose the
+ * science and poetics behind it."
+ *
+ * She is right about where the honesty lives. A dash is a diagram's way of
+ * saying "provisional", borrowed from a language this drawing does not speak.
+ * What says it here is THE GAP — two arms in the same anatomy, reaching, not
+ * meeting, with no synapse between them. Nothing about that is less true than a
+ * dash, and it is the only version that still looks like a mind.
+ */
+export function reachFibres(
+  from: readonly [number, number],
+  toward: readonly [number, number],
+  len: number,
+  seed: number,
+  baseW: number,
+  obs?: ObstacleIndex,
+): { d: string; w: number }[] {
+  const dx = toward[0] - from[0]
+  const dy = toward[1] - from[1]
+  const d = Math.hypot(dx, dy) || 1
+  // Never past a third of the way: the gap is the claim, and a fixed arm would
+  // close it on a close pair.
+  const L = Math.min(len, d / 3)
+  const stop: [number, number] = [from[0] + (dx / d) * L, from[1] + (dy / d) * L]
+  const f = fibrePaths(from, stop, seed, 0, baseW, obs)
+  return [f.main, ...f.twigs]
 }
 
 // ---- the model --------------------------------------------------------------
@@ -220,7 +447,6 @@ export interface WorldNode {
   /** Where this piece opens, or undefined for card-only marks (milestones +
    *  awards whose honour has no page). */
   route?: string
-  dendrites: string[] // path d strings, hidden at rest, grown by the engine
   labelAbove: boolean
   /** The SHORT map label for awards (S6-A, Emilie 2026-07-24): the map shows
    *  "issuer + AWARD"; the full recognition (title) rides the card + a11y. */
@@ -228,8 +454,8 @@ export interface WorldNode {
   /** A project still live + growing (registry `live`): the world marks it. */
   live?: boolean
   /** A label-ONLY nudge (px) for any resting label that still overlaps a
-   *  neighbour (S6-A). Moves the title + date text only; the soma, dendrites
-   *  and frozen x/y coordinates never move, so the snapshot stays valid. */
+   *  neighbour (S6-A). Moves the title + date text only; the soma and the
+   *  frozen x/y coordinates never move, so the snapshot stays valid. */
   labelDx?: number
   labelDy?: number
   style: KindStyle
@@ -278,11 +504,33 @@ export interface WorldSkeleton {
   years: { x: number; label: string }[]
 }
 
+/** An unmade synapse: two arms that reach and stop, and the gap between them.
+ *  Deliberately NOT a WorldLink — no synapse, no pulse, no direction, and no
+ *  single path joining the ends. It never fired, so nothing here may be able to
+ *  draw it as though it had. */
+export interface WorldReach {
+  a: string
+  b: string
+  shared: number
+  /** What they have in common, for the card and the screen-reader path. */
+  sharedIds: string[]
+  /** A fixed-length arm out of each end, aimed at the other, woven in the same
+   *  anatomy as a real thread. Not dashed: the GAP is what says "not yet". */
+  armA: { d: string; w: number }[]
+  armB: { d: string; w: number }[]
+  /** How much clear space is left between the two arms, in world units. The
+   *  guard asserts this stays above zero: the day it reaches zero the drawing is
+   *  claiming a connection that does not exist. */
+  gap: number
+}
+
 export interface World {
   w: number
   h: number
   nodes: WorldNode[]
   links: WorldLink[]
+  /** Close, and not touching. */
+  reaches: WorldReach[]
   skeleton: WorldSkeleton
   mainY: number // the plumb line's landing lane
 }
@@ -334,21 +582,43 @@ function anchorIdOf(e: RegistryEntry): string | undefined {
 //   · MILESTONES DO NOT MOVE. They ride the career lanes (LANE_Y) and the
 //     skeleton is drawn from them, so they are pinned and act as anchors.
 const BAND_Y: Record<string, number> = { thought: 195, project: 395, award: 520 }
-const BAND_PULL = 0.22 // how hard a node is held to its own row
 const SOLVE_PASSES = 24
 
-// THE BANDS ARE A CLAMP, NOT ONLY A PULL, and that was found by measuring.
-// With the pull alone the solve collapsed the free nodes from a 363px spread to
-// 170px: every thought is threaded to projects and every project to thoughts, so
-// both rows converged on the middle and the map became one flat stripe. The
-// legend's whole shape language depends on the rows staying apart.
-// So each kind keeps a corridor and relation decides where inside it a node
-// sits. The corridors do not touch, and the gap between them (300 to 330) is
-// what the eye reads as "these are two different things".
-const BAND_RANGE: Record<string, [number, number]> = {
-  thought: [100, 300],
-  project: [330, 500],
+// THE CORRIDOR IS A RESCALE, NOT A CLAMP (2026-08-07, and the clamp it replaces
+// was measured before it was replaced).
+//
+// The barycentre solve is a DIFFUSION: replacing every y with a blend of its
+// neighbours' has one trivial fixed point, which is "everybody at the same
+// height". Twenty-four passes of it on a connected graph converge there, so the
+// band pull and the hard clamp existed only to fight that convergence — and a
+// clamp fights it by stacking. Counted off the frozen snapshot the map had
+// shipped for a day: 18 of the 21 projects sat at EXACTLY y=330, the corridor
+// floor, and the other three were the unthreaded ones that never moved at all.
+// Free-node spread was 145px. Height carried almost no information.
+//
+// So the corridor stops clipping and starts SCALING. After each pass the solved
+// values of a kind are mapped onto its corridor, which preserves the whole
+// ORDER the relations decided while guaranteeing the row is as tall as it is
+// allowed to be. Diffusion can no longer collapse anything, because a collapsed
+// range is stretched straight back out.
+//
+// Measured, same 86 threads, before -> after:
+//   free-node spread     145px -> 360px
+//   thread crossings     346   -> 329   (straight chords, shared endpoints excluded)
+//   distinct project ys  2     -> 19
+// The compression was pure loss: the map got flatter AND crossed more.
+const BAND_SPAN: Record<string, [number, number]> = {
+  thought: [110, 290],
+  project: [330, 470],
 }
+// The gap between the corridors (290 to 330) is what the eye reads as "these are
+// two different things", and the legend's shape language rests on it.
+//
+// A near-miss pulls too, at a quarter of a real thread's weight. Nearness on the
+// drawing is meant to agree with nearness in idea-space — that is the whole
+// point of drawing an unmade connection — but a thread you actually signed must
+// always win over one you have not.
+const NEAR_PULL = 0.25
 
 /** Neighbours of each id, from the one source of relations (CORRELATIONS). */
 function neighbourMap(ids: Set<string>): Map<string, string[]> {
@@ -377,6 +647,15 @@ export function buildWorld(): World {
 
   const ids = new Set(byDate.map((e) => e.id))
   const nbr = neighbourMap(ids)
+
+  // The unmade synapses, from the relation graph only. Computed HERE, before a
+  // single coordinate exists, because the solve below uses them: a candidate set
+  // that depended on positions would be deciding the positions that decided it.
+  // Only thoughts and projects are eligible — an award is bound to one thing by
+  // definition and a milestone is a date.
+  const freeIds = new Set(byDate.filter((e) => e.kind === 'thought' || e.kind === 'project').map((e) => e.id))
+  const nearMisses = nearMissPairs(freeIds)
+  const nearNbr = nearMissNeighbours(nearMisses)
 
   // A first ordinal, id-broken, so every node has a position to average from.
   const seedRank = new Map<string, number>()
@@ -420,35 +699,107 @@ export function buildWorld(): World {
   })
 
   // pass 1b: SOLVE y. Each free node relaxes toward the mean y of the things it
-  // threads to, held back toward its own band so the rows stay legible.
+  // threads to — and, at a quarter weight, of the things it ALMOST threads to.
   // Milestones are pinned; awards are placed in pass 2 against their anchor.
   const free = placed.filter((p) => p.kind === 'thought' || p.kind === 'project')
+  const byKind = {
+    thought: free.filter((p) => p.kind === 'thought'),
+    project: free.filter((p) => p.kind === 'project'),
+  }
   for (let pass = 0; pass < SOLVE_PASSES; pass++) {
     const snapshot = new Map(placed.map((p) => [p.id, p.y]))
     for (const p of free) {
       const ns = (nbr.get(p.id) ?? []).filter((id) => byId.has(id))
-      if (!ns.length) continue
-      const mean = ns.reduce((s, id) => s + (snapshot.get(id) ?? 0), 0) / ns.length
-      const band = BAND_Y[p.kind] ?? 395
-      const next = p.y + (mean - p.y) * (1 - BAND_PULL) * 0.5 + (band - p.y) * BAND_PULL * 0.5
-      // Clamp INSIDE the loop, not after it: a node that is allowed to drift out
-      // of its corridor mid-solve drags its neighbours with it, and the rows end
-      // up merged even if the final positions are clipped back.
-      const [lo, hi] = BAND_RANGE[p.kind] ?? [96, 500]
-      p.y = Math.max(lo, Math.min(hi, next))
+      const near = (nearNbr.get(p.id) ?? []).filter((id) => byId.has(id))
+      const weight = ns.length + near.length * NEAR_PULL
+      if (!weight) continue
+      const sum =
+        ns.reduce((s, id) => s + (snapshot.get(id) ?? 0), 0) +
+        near.reduce((s, id) => s + (snapshot.get(id) ?? 0), 0) * NEAR_PULL
+      const mean = sum / weight
+      p.y = p.y + (mean - p.y) * 0.5
+    }
+    // THE CORRIDOR IS APPLIED AS A RESCALE, EVERY PASS, and both halves of that
+    // matter. Every pass, because the diffusion has to be undone as fast as it
+    // happens — leaving it to the end lets the whole set converge on one value
+    // first, and rescaling a collapsed range is division by nothing. As a
+    // rescale, because clipping stacks nodes on the boundary (18 projects on
+    // y=330) while scaling keeps every distinct height the relations produced.
+    for (const kind of ['thought', 'project'] as const) {
+      const g = byKind[kind]
+      if (!g.length) continue
+      const [lo, hi] = BAND_SPAN[kind]!
+      let min = Infinity
+      let max = -Infinity
+      for (const p of g) {
+        if (p.y < min) min = p.y
+        if (p.y > max) max = p.y
+      }
+      if (max - min < 1e-6) {
+        // Fully collapsed (or a single node): spread them evenly rather than
+        // divide by zero. Deterministic, because `g` is in rank order.
+        g.forEach((p, i) => (p.y = g.length === 1 ? (lo + hi) / 2 : lo + ((hi - lo) * i) / (g.length - 1)))
+        continue
+      }
+      for (const p of g) p.y = lo + ((p.y - min) / (max - min)) * (hi - lo)
     }
   }
   for (const p of free) p.y = Math.round(p.y * 10) / 10
 
-  // pass 2: awards snap beside the work (or milestone) they honour
+  // pass 2: awards snap beside the work (or milestone) they honour.
+  // 58 below, not 64: the project corridor now reaches 470 instead of stacking
+  // at 330, so the lowest award sits at 528 and its label lands ~546. The first
+  // career lane is at 560. Six pixels of that clearance came from the offset.
   placed.forEach((p) => {
     if (p.kind !== 'award') return
     const anchor = anchorIdOf(p)
     const a = anchor ? byId.get(anchor) : undefined
     if (a) {
       p.x = a.x + 42
-      p.y = a.kind === 'milestone' ? a.y - 74 : a.y + 64
+      p.y = a.kind === 'milestone' ? a.y - 74 : a.y + 58
     }
+  })
+
+  // THE THINGS THREADS HAVE TO GET AROUND. Built here, after pass 2, because it
+  // needs every final position — including the awards, which only take theirs
+  // once their anchor has one.
+  const obstacles = indexObstacles(obstaclesFor(
+    placed.map((p) => ({
+      id: p.id,
+      kind: p.kind as WorldKind,
+      x: p.x,
+      y: p.y,
+      title: p.title,
+      mapLabel: p.kind === 'award' ? AWARD_SHORT[p.id] : undefined,
+      labelDx: LABEL_NUDGE[p.id]?.dx,
+      labelDy: LABEL_NUDGE[p.id]?.dy,
+    })),
+  ))
+
+  // the unmade synapses, now that both ends have a place to reach FROM.
+  // A fixed arm out of each end and whatever is left in between; the gap is
+  // recorded rather than assumed, because a guard has to be able to fail on it.
+  const reaches: WorldReach[] = nearMisses.flatMap((m: NearMiss) => {
+    const a = byId.get(m.a)
+    const b = byId.get(m.b)
+    if (!a || !b) return []
+    const seed = idSeed(`${m.a}~${m.b}`, 5)
+    const wA = KIND_STYLE[a.kind as WorldKind].baseW
+    const wB = KIND_STYLE[b.kind as WorldKind].baseW
+    const dist = Math.hypot(b.x - a.x, b.y - a.y)
+    // graded by how much the rest of the map agrees
+    const L = armLength(m.shared.length, dist)
+    return [
+      {
+        a: m.a,
+        b: m.b,
+        shared: m.shared.length,
+        sharedIds: m.shared,
+        armA: reachFibres([a.x, a.y], [b.x, b.y], L, seed, wA, obstacles),
+        armB: reachFibres([b.x, b.y], [a.x, a.y], L, seed + 31, wB, obstacles),
+        gap: Math.round((dist - L * 2) * 10) / 10,
+      },
+    ]
   })
 
   // nodes
@@ -469,7 +820,6 @@ export function buildWorld(): World {
       rank: p.rank,
       lane: p.kind === 'milestone' ? laneOf(p) : undefined,
       route,
-      dendrites: dendritePaths(p.x, p.y, idSeed(p.id, 11), style),
       // Labels always BELOW the dot (S6-A, Emilie 2026-07-24): one consistent
       // side reads calmer than the old above/below stagger.
       labelAbove: false,
@@ -496,34 +846,23 @@ export function buildWorld(): World {
       const a = byId.get(L.a)!
       const b = byId.get(L.b)!
       const later = a.date > b.date ? a : b
-      const mx = (a.x + b.x) / 2 + (a.rank % 2 ? 14 : -14)
-      const my = (a.y + b.y) / 2 - (Math.abs(a.x - b.x) > 260 ? 46 : 22)
-      const seed = idSeed(`${L.a}>${L.b}`, 0)
-      const wA = KIND_STYLE[a.kind as WorldKind].baseW
-      const wB = KIND_STYLE[b.kind as WorldKind].baseW
-      const fibres: WorldLink['fibres'] = []
-      let primA: [number, number][] = []
-      let primB: [number, number][] = []
-      for (let f = 0; f < L.strength; f++) {
-        const off = (f - (L.strength - 1) / 2) * 9
-        const fA = fibrePaths([a.x, a.y], [mx, my], seed + f * 7 + 3, off, wA)
-        const fB = fibrePaths([b.x, b.y], [mx, my], seed + f * 7 + 19, off, wB)
-        if (f === 0) {
-          primA = fA.pts
-          primB = fB.pts
-        }
-        fibres.push({ ...fA.main, side: 'a' }, ...fA.twigs.map((t) => ({ ...t, side: 'a' as const })))
-        fibres.push({ ...fB.main, side: 'b' }, ...fB.twigs.map((t) => ({ ...t, side: 'b' as const })))
-      }
+      const w = weave(
+        [a.x, a.y],
+        [b.x, b.y],
+        L.strength,
+        idSeed(`${L.a}>${L.b}`, 0),
+        KIND_STYLE[a.kind as WorldKind].baseW,
+        KIND_STYLE[b.kind as WorldKind].baseW,
+        a.rank % 2 ? 14 : -14,
+        obstacles,
+      )
       return {
         a: L.a,
         b: L.b,
         strength: L.strength,
         color: later.lens ? ('lens' as const) : ('ink' as const),
         lens: later.lens ?? a.lens ?? b.lens,
-        fibres,
-        synapse: { x: mx, y: my, r: 2.2 + L.strength * 0.5 },
-        pulseD: spline([...primA, ...primB.slice(0, -1).reverse()], 0.3),
+        ...w,
       }
     })
 
@@ -589,7 +928,7 @@ export function buildWorld(): World {
     years,
   }
 
-  return { w, h: WORLD_H, nodes, links, skeleton, mainY: Y.main }
+  return { w, h: WORLD_H, nodes, links, reaches, skeleton, mainY: Y.main }
 }
 
 // One shared instance: the layout is deterministic, build once per session.

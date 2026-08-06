@@ -54,9 +54,6 @@ export default function ThoughtLeaf(props: {
    *  was never room for a fourth control, in the drawer there is. */
   prev?: { title: string; route: string }
   next?: { title: string; route: string }
-  /** Accepted for call-site compatibility; the pillar door retired from the
-   *  leaf at the audit (Emilie 2026-07-19). */
-  pillarDoor?: boolean
   children: ReactNode
 }) {
   const { number, title, date, lens, prev, next, children } = props

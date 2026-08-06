@@ -1,10 +1,15 @@
-// STATIC-PREFERENCE SIGNAL (Session 8; the useCinematicMode hook it fed
-// retired with the sheet cinema at G1). Static when the visitor asked for
+// STATIC-PREFERENCE SIGNAL (Session 8). Static when the visitor asked for
 // less data, or the device sits in the clearly-weak Chromium tier
 // (deviceMemory <= 2, Android Go class). Deliberately NOT read:
 // hardwareConcurrency (Safari clamps it for fingerprinting resistance, and
 // Apple's low core counts encode nothing about per-core speed) and the
 // Battery API (Chromium-only, and degrading UX by battery level is hostile).
+//
+// It lived at hooks/useCinematicMode.ts until 2026-08-07, which was wrong on
+// both halves of the name: there is no hook in here (nothing calls React, and
+// a `use*` filename in a hooks folder tells every reader and every lint rule
+// otherwise), and the cinematic mode it was named after retired with the sheet
+// cinema at G1. A plain predicate belongs in lib/, under what it does.
 
 type NavigatorSignals = Navigator & {
   connection?: { saveData?: boolean }

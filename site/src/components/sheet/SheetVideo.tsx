@@ -11,7 +11,7 @@
 import { useEffect, useRef } from 'react'
 import manifest from '../../data/videos.json'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
-import { prefersStatic } from '../../hooks/useCinematicMode'
+import { prefersStatic } from '../../lib/prefersStatic'
 
 type VideoSource = { file: string; type: string; w: number; h: number; kb: number }
 type PosterVariant = { w: number; file: string; kb: number }

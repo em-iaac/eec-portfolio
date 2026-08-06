@@ -9,9 +9,13 @@
 //   RED_LINK_ROW  the paint plus a transparent >= 44px inline-flex hit box.
 //                 For STANDALONE links (a mono row, a 404's way home). The
 //                 touch floor is a FLOORS rule, not a preference.
-//   RED_LINK_TAP  the paint plus a -m-2/p-2 tap pad. For links inside prose
-//                 that still need a bigger target: inline-flex would break the
-//                 line box, so the pad grows outward and the layout is unmoved.
+//
+// (RED_LINK_TAP retired 2026-08-07, unused. It was the red paint plus a
+// -m-2/p-2 pad, and the pad was the problem: a FIXED 16px on a font-sized
+// inline box lands at 30-40px, never 44. Pillar was its last caller and moved
+// to RED_LINK_ROW on 2026-08-05 for exactly that reason — the note recording
+// it is still at the top of pages/Pillar.tsx. QUIET_LINK_TAP below keeps the
+// same pad on purpose and the reason it is allowed to is written there.)
 //
 // Tailwind v4 scans this file, so the strings stay LITERAL and must never be
 // built by concatenating fragments of class names.
@@ -19,8 +23,6 @@ export const RED_LINK =
   'text-[var(--lang-interaction)] underline underline-offset-4 hover:decoration-2 focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
 
 export const RED_LINK_ROW = `inline-flex min-h-11 min-w-11 items-center ${RED_LINK}`
-
-export const RED_LINK_TAP = `-m-2 p-2 ${RED_LINK}`
 
 // The one DELIBERATE near-variant: an ink-coloured underlined link that keeps
 // the red focus ring. It rides on a photograph's caption strip inside the work

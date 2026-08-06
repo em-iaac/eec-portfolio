@@ -34,11 +34,16 @@ export interface NodeHandle {
   x: number
   y: number
   el: SVGGElement
-  /** the dimmable body (dendrites + glow + soma); labels stay OUTSIDE it so
+  /** the dimmable body (glow + soma + reaches); labels stay OUTSIDE it so
    *  the wake dim never multiplies into the rest ink (AA floor) */
   body: SVGGElement | null
   soma: SVGGraphicsElement | null
-  fibres: SVGPathElement[]
+  /** THE ARMS TOWARD WHAT THIS ONE IS ALMOST JOINED TO. They FADE IN rather
+   *  than draw themselves, and that is the whole distinction: a thread draws
+   *  because something made it, over time; nothing made these, so nothing can
+   *  be shown making them. It is also what buys the dashes — the drawing
+   *  mechanic is stroke-dasharray, so a path cannot both grow and be dashed. */
+  reaches: SVGPathElement[]
   lbl: SVGTextElement | null
   yr: SVGTextElement | null
   glow: SVGCircleElement | null
@@ -79,9 +84,11 @@ export function useProximityEngine(opts: {
   worldH: number
   mainY: number
   ranks: ReadonlyArray<{ id: string; rank: number }>
+  /** false while a neuron is HELD: the pointer stops proposing others. */
+  ambientRef: RefObject<boolean>
   prm: boolean
 }): EngineApi {
-  const { stageRef, svgRef, nodesRef, connsRef, plumbLineRef, plumbDotRef, worldH, mainY, ranks, prm } = opts
+  const { stageRef, svgRef, nodesRef, connsRef, plumbLineRef, plumbDotRef, worldH, mainY, ranks, ambientRef, prm } = opts
 
   const api = useRef<EngineApi>({ kick: () => {}, replay: () => {} })
 
@@ -94,7 +101,7 @@ export function useProximityEngine(opts: {
 
     const applyGrown = () => {
       nodes.forEach((n) => {
-        n.fibres.forEach((p) => (p.style.strokeDashoffset = '0'))
+        n.reaches.forEach((p) => (p.style.opacity = '0.55'))
         if (n.lbl) n.lbl.style.opacity = '1'
         if (n.yr) n.yr.style.opacity = '1'
         if (n.glow) n.glow.style.opacity = '1'
@@ -154,8 +161,11 @@ export function useProximityEngine(opts: {
       const qe = q(n.E)
       if (qe === n.appliedE) return
       n.appliedE = qe
-      const off = (1 - ease(n.E)).toFixed(4)
-      for (const p of n.fibres) p.style.strokeDashoffset = off
+      // REACH_REST is 0, not a dim resting value: an unmade synapse is not part
+      // of the map at rest. It is an answer to a question, so it exists only
+      // while something is asking.
+      const reach = (ease(n.E) * 0.55).toFixed(3)
+      for (const p of n.reaches) p.style.opacity = reach
       if (n.glow) n.glow.style.opacity = ease(n.E).toFixed(3)
       // the body dim rides the same rest constant as the ink, so somas and
       // labels wake in lockstep (labels live outside the body: no multiply)
@@ -213,14 +223,41 @@ export function useProximityEngine(opts: {
       let hotE = 0
       let settled = true
 
-      nodes.forEach((n) => {
-        let t = 0
-        if (p) {
+      // ONE NEURON AT A TIME (Emilie, 2026-08-07: "it should only work on the
+      // node we are hovering over not its neighbours, for simplicity").
+      //
+      // ⚠ MEASURED FIRST: hovering EMPTY SPACE 60px from Sensi woke three
+      // neurons, two of them fully. The pointer was on nothing and the map
+      // answered as though something had been chosen — which is precisely the
+      // "I feel a bit lost". The radius was a field, and a field cannot say
+      // what you are pointing at.
+      //
+      // It is the NEAREST one that wakes, not strictly the one under the
+      // cursor: her pick of three. The soft approach is what makes the map feel
+      // alive — a neuron begins to answer as you come toward it rather than
+      // snapping on at the edge of a 7px dot — and there is no ambiguity left,
+      // because only ever one of them is answering.
+      let near: NodeHandle | null = null
+      let nearD = Infinity
+      // AND ONLY WHILE NOTHING IS HELD. Once you have chosen a neuron, the
+      // pointer stops proposing others — that is the rule that makes the phases
+      // legible, and it lives here rather than in the view because the ambient
+      // wake is the engine's own behaviour, not a handler's.
+      if (p && ambientRef.current) {
+        nodes.forEach((n) => {
           const dx = n.x - p.x
           const dy = n.y - p.y
           const d = Math.sqrt(dx * dx + dy * dy)
-          if (d <= R) t = Math.min(1, (R - d) / edge)
-        }
+          if (d < nearD) {
+            nearD = d
+            near = n
+          }
+        })
+      }
+
+      nodes.forEach((n) => {
+        let t = 0
+        if (n === near && nearD <= R) t = Math.min(1, (R - nearD) / edge)
         if (replayState) {
           const at = replayState.delay.get(n.id)
           if (at != null && now - replayState.t0 > at) t = 1

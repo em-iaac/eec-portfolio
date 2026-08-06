@@ -1389,3 +1389,22 @@ export const CORRELATIONS: readonly Correlation[] = [
   ['bim', 'explain', 1], // "keep the letters, change the noun" is explanation
   // design: this note's thesis, applied to her own coinage
 ]
+
+// THE PAIRS SHE HAS LOOKED AT AND RULED ARE NOT NEAR-MISSES (2026-08-07).
+//
+// The map now draws what is close but not yet joined: pairs with no thread
+// between them and three or more threads in common (thoughts/world/nearMisses.ts
+// derives the whole set — nothing here adds a candidate, this list only takes
+// them away). It is an instrument for the writer, so it has to be able to take
+// an answer: "I looked, and no."
+//
+// WITHOUT THIS THE INSTRUMENT IS BROKEN, not merely noisy. Every candidate is
+// recomputed from CORRELATIONS on every build, so a pair she has already
+// considered and declined would come back and ask again forever, and the list
+// would never get shorter no matter how much work she did on it. A decline is a
+// judgement she made once; the record keeps it.
+//
+// It is NOT a place to hide an inconvenient pair. Each row carries the reason,
+// the same standard as a cut thread above. Empty is the honest starting state:
+// the eighteen candidates have not been walked yet.
+export const DECLINED_NEAR: readonly (readonly [string, string])[] = []

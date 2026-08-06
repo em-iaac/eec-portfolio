@@ -35,13 +35,12 @@ import type { ReachSet } from '../../components/reach/verbs'
 import { LENSES, type Lens } from '../../components/Lens'
 import usePrefersReducedMotion from '../../hooks/usePrefersReducedMotion'
 import { NOW } from '../../data/now'
-import { THOUGHT_OPENINGS } from '../openings'
 import { WORLD, starPath, type WorldNode } from './worldGraph'
-import { vtName } from '../../lib/viewTransition'
 import { preloadPath } from '../../lib/preloadRoute'
 import { travelTo } from '../../lib/navIntent'
 import { useProximityEngine, TUNE, type ConnHandle, type NodeHandle } from './useProximityEngine'
 import WorldSrNav from './WorldSrNav'
+import { LABEL_GROW, labelBaseline, planFold, type FoldPlan } from './foldView'
 import { PRERENDERING } from '../../lib/prerender'
 
 // The lens accents come from the one source (components/Lens.tsx): these land
@@ -89,13 +88,6 @@ function KeyMarks() {
   )
 }
 
-const KIND_LABEL = {
-  project: 'PROJECT',
-  thought: 'THOUGHT',
-  award: 'RECOGNITION',
-  milestone: 'MILESTONE',
-} as const
-
 const KIND_NAME = {
   project: 'project',
   thought: 'thought',
@@ -107,25 +99,6 @@ const KIND_NAME = {
 function nodeAria(n: WorldNode): string {
   const base = `${n.title} · ${KIND_NAME[n.kind]}, ${n.date}`
   return n.route ? `${base}. Open it.` : base
-}
-
-interface CardState {
-  id: string
-  title: string
-  date: string
-  kind: string
-  blurb?: string
-  serifTitle: boolean
-  red?: boolean
-  /** A live + still-growing project: the locked card carries the red note. */
-  live?: boolean
-  /** Present on routed nodes: the locked card's OPEN button travels here. */
-  route?: string
-  /** false = the light hover chip (title + kind, no blurb, no button);
-   *  true = the clicked, persistent card (blurb + OPEN, pointer-interactive). */
-  locked: boolean
-  left: number
-  top: number
 }
 
 const HIT_R = 34 // 68 canvas units: >= 44px down to ~560px-tall viewports
@@ -146,12 +119,6 @@ export default function NeuralWorld() {
   const connsRef = useRef(new Map<string, ConnHandle>())
   const plumbLineRef = useRef<SVGLineElement>(null)
   const plumbDotRef = useRef<SVGCircleElement>(null)
-  const [card, setCard] = useState<CardState | null>(null)
-  // THE CARD FOLDING AWAY UNDER A DRAG (Emilie, 2026-08-02). `true` for the one
-  // beat between a pan starting and the card finishing its retraction; the node
-  // it belongs to STAYS locked and lit throughout, which is the whole point.
-  // State, not a ref, because it drives a class.
-  const [collapsing, setCollapsing] = useState(false)
   // The LOCKED node id lives in a ref (not state) so the mount-time drag/Escape
   // handlers close over a stable handle, never a stale render's card (S6-A,
   // Emilie 2026-07-24: hover glances, a click LOCKS the card, click again /
@@ -162,6 +129,62 @@ export default function NeuralWorld() {
   const dekMap = useRef<Map<string, string> | null>(null)
 
   const ranks = useMemo(() => WORLD.nodes.map((n) => ({ id: n.id, rank: n.rank })), [])
+
+  // THE THREE PHASES (Emilie's model, 2026-08-07). Her words: "first click locks
+  // it, and we can drag around, and if we hover while one is locked nothing else
+  // expands; then a second click would isolate."
+  //
+  //   BROWSE    nothing chosen. The pointer wakes the nearest neuron, one only.
+  //   HELD      one neuron stays awake with its threads out. The pointer stops
+  //             proposing others, so you can drag the record and follow those
+  //             threads to their far ends without losing what you chose.
+  //   ISOLATED  the fold: the empty years close and its whole neighbourhood
+  //             arrives in one frame.
+  //
+  // FORWARD is a click. BACK is Escape or a tap on nothing, and it steps back
+  // EXACTLY ONE PHASE — one rule, both directions, so the ladder can be learned
+  // by using it. Enter and Escape are the same ladder for the keyboard.
+  //
+  // ON A PHONE THIS IS SHORTER THAN WHAT IT REPLACES, not longer: there is no
+  // hover, so BROWSE has no behaviour and the first tap IS the hold. Two
+  // gestures, where before one tap jumped straight into a full fold.
+  const [heldId, setHeldId] = useState<string | null>(null)
+  const foldRef = useRef(false)
+  const ambientRef = useRef(true)
+  ambientRef.current = heldId === null
+
+  // Each end of an unmade synapse draws its OWN arm, inside its own neuron's
+  // group, so a reach grows when the neuron it belongs to wakes — rather than
+  // both arms of a pair appearing because one end was looked at. Standing at one
+  // node you see it reaching; standing between the two you see the gap.
+  // THE FOLD. State, not a ref: it renders. Holds the plan plus the two things
+  // only the live viewport can decide — the camera scale and the counter-scaled
+  // label size.
+  const camRef = useRef<SVGGElement>(null)
+  const [fold, setFold] = useState<{
+    subject: string
+    byId: Map<string, { dx: number; lane: number; order: number }>
+    links: FoldPlan['links']
+    arms: FoldPlan['arms']
+    font: number
+    open: { id: string; route: string; x: number; y: number } | null
+    openLane: number
+    hit: number
+  } | null>(null)
+
+  const armsOf = useMemo(() => {
+    const m = new Map<string, { to: string; paths: { d: string; w: number }[] }[]>()
+    const push = (id: string, to: string, paths: { d: string; w: number }[]) => {
+      const l = m.get(id)
+      if (l) l.push({ to, paths })
+      else m.set(id, [{ to, paths }])
+    }
+    for (const r of WORLD.reaches) {
+      push(r.a, r.b, r.armA)
+      push(r.b, r.a, r.armB)
+    }
+    return m
+  }, [])
   const engine = useProximityEngine({
     stageRef,
     svgRef,
@@ -172,6 +195,7 @@ export default function NeuralWorld() {
     worldH: WORLD.h,
     mainY: WORLD.mainY,
     ranks,
+    ambientRef,
     prm,
   })
 
@@ -248,7 +272,7 @@ export default function NeuralWorld() {
     // 2026-08-02: "when I press I see the connections form but some are out of
     // the screen, and when I swipe to go there it retracts").
     //
-    // `dismiss()` used to run on POINTERDOWN, before the gesture had told
+    // `stepBack()` used to run on POINTERDOWN, before the gesture had told
     // anyone what it was. With a mouse that is invisible: you click empty space
     // to dismiss, and panning is a separate deliberate act. On a phone, panning
     // IS a press on empty field, so the very gesture for going to look at a
@@ -279,16 +303,16 @@ export default function NeuralWorld() {
       const dx = e.clientX - drag.x
       const wasStill = moved <= 4
       moved = Math.max(moved, Math.abs(dx))
-      // The moment a press becomes a pan, the card folds back into its mark
-      // (her ask, same day). The LOCK is untouched, so the node stays awake and
-      // its threads stay drawn while you travel along them. Fired once, on the
-      // crossing, not on every move event.
-      if (wasStill && moved > 4) collapseCard()
+      // (The card used to fold away here the moment a press became a pan, so it
+      // stopped covering the thread you were about to follow. There is no card
+      // to fold now — HELD is exactly that idea with nothing laid over the map,
+      // and dragging while held is the whole point of the phase.)
+      void wasStill
       if (scrolls) stage.scrollLeft = drag.s - dx
     }
     const up = () => {
       // 4px, the same slop the belts use to tell a tap from a drag.
-      if (drag && moved <= 4) dismiss()
+      if (drag && moved <= 4) stepBack()
       drag = null
       stage.classList.remove('dragging')
     }
@@ -306,7 +330,7 @@ export default function NeuralWorld() {
       }, 160)
     }
     const key = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') dismiss()
+      if (e.key === 'Escape') stepBack()
     }
     stage.addEventListener('pointerdown', down)
     window.addEventListener('pointermove', move)
@@ -345,7 +369,11 @@ export default function NeuralWorld() {
       el,
       body: el.querySelector('.nw-body'),
       soma: el.querySelector('.nw-soma'),
-      fibres: Array.from(el.querySelectorAll<SVGPathElement>('.nw-dendrite')),
+      // These used to be the neuron's dendrites, which connected to nothing.
+      // They are now its arms toward what it has friends in common with and is
+      // not joined to — and they fade in rather than draw, because nothing made
+      // them (see NodeHandle.reaches).
+      reaches: Array.from(el.querySelectorAll<SVGPathElement>('.nw-reachout')),
       lbl: el.querySelector('.nw-lbl'),
       yr: el.querySelector('.nw-yr'),
       glow: el.querySelector('.nw-glow'),
@@ -392,80 +420,14 @@ export default function NeuralWorld() {
   /* eslint-enable react-hooks/exhaustive-deps */
 
   // ---- the field card ----
-  function blurbOf(n: WorldNode): string | undefined {
-    if (n.kind === 'project') return dekMap.current?.get(n.id)
-    if (n.kind === 'thought') return THOUGHT_OPENINGS[n.id]
-    return undefined
-  }
+  // (blurbOf retired 2026-08-07 with the fold. ⚠ THIS IS A REAL LOSS AND IT IS
+  // DELIBERATE: the clicked card used to carry the project's dek or the note's
+  // opening line, and the folded map carries no prose at all. The fold answers
+  // "what does this connect to"; what the thing itself SAYS is on its own page,
+  // one press away on the OPEN under its name. Putting the sentence back means
+  // putting a panel back, which is the thing the fold replaced.)
 
-  function cardPos(b: DOMRect, locked: boolean) {
-    const left = Math.max(12, Math.min(b.left + b.width / 2 - 150, window.innerWidth - 312))
-    // The locked card is taller (blurb + button), so it lifts higher when it
-    // must open upward; the light chip sits closer to its node.
-    const top = b.top < window.innerHeight * 0.5 ? b.bottom + 14 : b.top - (locked ? 178 : 92)
-    return { left, top: Math.max(80, top) }
-  }
 
-  // locked=false is the light hover/focus CHIP (title + kind + date, no blurb,
-  // no button, non-interactive); locked=true is the clicked, persistent card
-  // (blurb + OPEN, pointer-interactive).
-  function showCard(n: WorldNode, locked: boolean) {
-    const soma = nodesRef.current.get(n.id)?.soma
-    if (!soma) return
-    const { left, top } = cardPos(soma.getBoundingClientRect(), locked)
-    setCard({
-      id: n.id,
-      title: n.title,
-      date: n.date,
-      kind: KIND_LABEL[n.kind],
-      blurb: locked ? blurbOf(n) : undefined,
-      serifTitle: n.kind === 'thought',
-      live: n.live,
-      route: n.route,
-      locked,
-      left,
-      top,
-    })
-  }
-
-  function showNowCard(el: SVGGraphicsElement, locked: boolean) {
-    const b = el.getBoundingClientRect()
-    setCard({
-      id: 'now',
-      title: 'still growing',
-      date: NOW.date,
-      kind: 'NOW',
-      red: true,
-      serifTitle: true,
-      blurb: locked ? `building ${NOW.building} · reading ${NOW.reading} · thinking about ${NOW.thinking}` : undefined,
-      locked,
-      left: Math.max(12, Math.min(b.left - 150, window.innerWidth - 312)),
-      top: Math.max(80, b.top - (locked ? 190 : 104)),
-    })
-  }
-
-  const hideCard = () => setCard(null)
-
-  // FOLD THE CARD AWAY, KEEP THE NODE (Emilie, 2026-08-02). Distinct from
-  // dismiss() below, and the distinction is the feature: dismiss RELEASES the
-  // locked node, this only puts its card away. A pan calls this, so the thread
-  // you are following stays lit while the panel stops covering it.
-  // Idempotent: a second call mid-retraction is ignored, so a long drag folds
-  // the card once rather than restarting the animation every frame.
-  const collapseTimer = useRef(0)
-  function collapseCard() {
-    if (!lockedId.current || collapsing) return
-    setCollapsing(true)
-    window.clearTimeout(collapseTimer.current)
-    // Matches .infocard-exit in index.css. A timer rather than animationend
-    // because the element is aria-hidden decoration and a missed event would
-    // strand it half-folded.
-    collapseTimer.current = window.setTimeout(() => {
-      setCard(null)
-      setCollapsing(false)
-    }, 170)
-  }
-  useEffect(() => () => window.clearTimeout(collapseTimer.current), [])
 
   // THE WORLD BRINGS WHAT YOU TAPPED INTO VIEW (Emilie's pick 2026-08-02).
   // A mark near a side edge had most of its threads off screen, and following
@@ -544,12 +506,11 @@ export default function NeuralWorld() {
     return () => stage.removeEventListener('scroll', onScroll)
   }, [snapAt])
 
-  const HORIZON_PX = 90
   // SNAPPING STANDS ASIDE FOR A DELIBERATE MOVE (2026-08-04, with the year
   // snap). Every call below has already chosen an exact position for a reason —
-  // a deep link centres its node, TODAY lands on the live tip, and `centreOn`
-  // even declines to move a mark that is close enough. Proximity snapping would
-  // pull each of those to the nearest year rule a moment later and quietly undo
+  // a deep link centres its node and TODAY lands on the live tip. Proximity
+  // snapping would pull each of those to the nearest year rule a moment later
+  // and quietly undo
   // the judgement. The class is cleared on a timer rather than `scrollend`,
   // which Safari did not have until recently and which never fires at all when
   // the requested position is where we already are.
@@ -634,15 +595,11 @@ export default function NeuralWorld() {
     [atYear],
   )
 
-  function centreOn(id: string) {
-    const stage = stageRef.current
-    const h = nodesRef.current.get(id)
-    if (!stage || !h) return
-    const x = h.soma?.getBoundingClientRect().left ?? 0
-    // Already comfortably inside the frame: leave it where it is.
-    if (x > HORIZON_PX && x < stage.clientWidth - HORIZON_PX) return
-    scrollToWorldX(h.x)
-  }
+  // (centreOn retired 2026-08-07: choosing used to slide the tapped mark to the
+  // middle so its threads were reachable both ways. The fold makes that job
+  // obsolete — the camera frames the whole neighbourhood, and the scroll is
+  // deliberately left ALONE while folded so the lens and the scroller cannot
+  // fight over the same axis.)
 
   function setForce(id: string, t: number) {
     const h = nodesRef.current.get(id)
@@ -651,54 +608,282 @@ export default function NeuralWorld() {
     engine.kick()
   }
 
-  // Escape / empty-field press: close the card, release the locked wake
-  // (1.4.13). Ref-based (lockedId) so the mount-time handlers never read a
-  // stale render's card.
-  function dismiss() {
+  // CHOOSING a node locks its card (releasing any previously chosen node's
+  // wake); choosing it again closes it. Travel is the card's OPEN button, so a
+  // stray click never jumps the page — and since 2026-08-07 the Enter key does
+  // exactly this too rather than travelling, so the mark has ONE contract.
+  // Screen readers travel via WorldSrNav's links.
+  // CHOOSING FOLDS THE MAP (Emilie's pick, 2026-08-07). The empty years between
+  // a node and the things it touches close up, the rest of the record sinks
+  // away, and the camera gives up just enough scale to fit what is left.
+  //
+  // THE SCALE IS SOLVED TWICE ON PURPOSE. How wide a label is in world units
+  // depends on the counter-scale, the counter-scale depends on the camera, and
+  // the camera depends on the box the labels make — so the first pass fits with
+  // a provisional scale and the second re-lanes against the real one. Two
+  // passes converge; measured, the third would move nothing.
+  function applyFold(id: string) {
+    const stage = stageRef.current
+    const svg = svgRef.current
+    if (!stage || !svg) return
+    const s0 = svg.getBoundingClientRect().height / WORLD.h // world -> css px at rest
+    const vw = stage.clientWidth
+    const vh = stage.clientHeight
+    const PAD = 0.86 // a little air at the edges
+
+    // ITERATE TO CONVERGENCE, not a fixed two passes. A label's width in WORLD
+    // units is 1/k, so the box grows as the camera pulls back and the two chase
+    // each other. It settles (a name is narrower than the frame, so each round
+    // adds less than the last), but two passes was not enough at 390px: it left
+    // three overlapping names and pushed one clean off the frame. Capped at 8
+    // and on a 0.5% delta, which in practice lands in three or four.
+    // MEASURE THE LABELS, DO NOT ESTIMATE THEM. The map draws its four kinds in
+    // different faces, so a per-character advance ranges from 0.395 (a serif
+    // thought name) to about 0.8 (a mono uppercase one) — a 2x spread no single
+    // constant survives. Each label is already in the DOM at its resting size,
+    // so its true width scales linearly with the font it will be given.
+    const measure = (nodeId: string, font: number): number | undefined => {
+      const el = nodesRef.current.get(nodeId)?.lbl
+      if (!el) return undefined
+      const restFont = parseFloat(getComputedStyle(el).fontSize) || 9.5
+      try {
+        return (el.getBBox().width / restFont) * font
+      } catch {
+        return undefined
+      }
+    }
+
+    let plan = planFold(id, 0.4, measure)
+    if (!plan) return
+    let k = 0.4
+    for (let pass = 0; pass < 8; pass++) {
+      const bw = plan!.box.x1 - plan!.box.x0
+      const bh = plan!.box.y1 - plan!.box.y0
+      // k is the camera's own factor; the rendered scale is k * s0.
+      const next = Math.min((vw * PAD) / (bw * s0), (vh * PAD) / (bh * s0), 1.6)
+      const settled = Math.abs(next - k) / k < 0.005
+      k = next
+      plan = planFold(id, k, measure)!
+      if (settled) break
+    }
+    const box = plan.box
+    const cx = (box.x0 + box.x1) / 2
+    const cy = (box.y0 + box.y1) / 2
+    // Put the folded box's centre in the middle of what is on screen. scrollLeft
+    // is read, not changed: the stage stops scrolling while folded, so the
+    // camera and the scroller cannot fight.
+    const tx = (stage.scrollLeft + vw / 2) / s0 - cx * k
+    const ty = vh / 2 / s0 - cy * k
+    camAt.current = { tx, ty, k }
+    writeCam(true)
+
+    foldRef.current = true
+    const byId = new Map(plan.members.map((m, i) => [m.node.id, { dx: m.dx, lane: m.lane, order: i }]))
+    const self = plan.members.find((m) => m.rel === 'self')!
+    setFold({
+      subject: id,
+      byId,
+      links: plan.links,
+      arms: plan.arms,
+      font: (9.5 * LABEL_GROW) / k,
+      // The door's hit area is sized in WORLD units to land at 44 CSS px: the
+      // whole point of a counter-scaled view is that world units and screen
+      // pixels have stopped agreeing, and a target measured in the wrong one is
+      // how it rendered 10px tall the first time.
+      hit: 44 / (k * s0),
+      // THE DOOR STAYS IN THE MAP. With the panel gone there was nowhere left to
+      // travel from, and the answer is not to bring a panel back: the subject
+      // grows its own OPEN under its name. One affordance, in the drawing, on
+      // the thing you chose.
+      open: self.node.route
+        ? {
+            id: self.node.id,
+            route: self.node.route,
+            x: self.node.x + self.dx,
+            // the label's baseline, not the node's centre: the two differ by
+            // the soma radius plus 18, which is exactly what put OPEN on the date
+            y: labelBaseline(self.node),
+          }
+        : null,
+      openLane: self.lane,
+    })
+  }
+
+  // THE FOLD IS EXPLORABLE, NOT A SLIDE (her note: "we should be able to explore
+  // it", "maybe isolate it so we can drag around"). The stage's own scroller is
+  // off while folded — it and the camera would fight over the same axis — so
+  // dragging moves the CAMERA instead, in both directions, and a wheel zooms it.
+  // The nodes never move: this is the lens, so nothing it does can lie.
+  const camAt = useRef({ tx: 0, ty: 0, k: 1 })
+  function writeCam(animate: boolean) {
+    const cam = camRef.current
+    if (!cam) return
+    const c = camAt.current
+    cam.style.transition = animate ? '' : 'none'
+    cam.style.transform = `translate(${c.tx.toFixed(1)}px, ${c.ty.toFixed(1)}px) scale(${c.k.toFixed(4)})`
+  }
+
+  useEffect(() => {
+    const stage = stageRef.current
+    if (!stage || !fold) return
+    let drag: { x: number; y: number; tx: number; ty: number } | null = null
+    let moved = 0
+    const down = (e: PointerEvent) => {
+      if ((e.target as Element).closest('.nw-foldopen, a, button')) return
+      moved = 0
+      drag = { x: e.clientX, y: e.clientY, tx: camAt.current.tx, ty: camAt.current.ty }
+      stage.classList.add('dragging')
+    }
+    const move = (e: PointerEvent) => {
+      if (!drag) return
+      const svg = svgRef.current
+      if (!svg) return
+      const s0 = svg.getBoundingClientRect().height / WORLD.h
+      const dx = e.clientX - drag.x
+      const dy = e.clientY - drag.y
+      moved = Math.max(moved, Math.abs(dx), Math.abs(dy))
+      // the pointer moves in CSS px; the camera translate is in world units
+      camAt.current.tx = drag.tx + dx / s0
+      camAt.current.ty = drag.ty + dy / s0
+      writeCam(false)
+    }
+    const up = () => {
+      // A tap on empty field still releases; a drag never does, or exploring
+      // would throw away the thing you were exploring.
+      if (drag && moved <= 4) stepBack()
+      drag = null
+      stage.classList.remove('dragging')
+      writeCam(true)
+    }
+    const wheel = (e: WheelEvent) => {
+      e.preventDefault()
+      const f = Math.exp(-(e.deltaY || 0) * 0.0016)
+      camAt.current.k = Math.max(0.05, Math.min(3, camAt.current.k * f))
+      writeCam(false)
+    }
+    stage.addEventListener('pointerdown', down)
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', up)
+    window.addEventListener('pointercancel', up)
+    stage.addEventListener('wheel', wheel, { passive: false })
+    return () => {
+      stage.removeEventListener('pointerdown', down)
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', up)
+      window.removeEventListener('pointercancel', up)
+      stage.removeEventListener('wheel', wheel)
+    }
+    // dismiss only touches refs + setState
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fold])
+
+  // WHERE THE REST OF IT IS (her ask: an edge marker "so I can see them all at
+  // once"). Held, a neighbour is often off screen — `what an llm actually is`
+  // sits 3,510 units from Sensi — and the map's answer used to be a thread
+  // leaving the frame toward nothing you could name. These say how many are that
+  // way and how far, so a drag is aimed rather than hopeful.
+  // Recomputed on scroll and on resize, in CSS pixels, because it is chrome
+  // pinned to the frame and not part of the drawing.
+  const [edges, setEdges] = useState<{ side: 'l' | 'r'; n: number; nearest: string }[]>([])
+  useEffect(() => {
+    const stage = stageRef.current
+    const svg = svgRef.current
+    if (!stage || !svg || !heldId || fold) {
+      setEdges([])
+      return
+    }
+    const mates = new Set<string>()
+    for (const l of WORLD.links) {
+      if (l.a === heldId) mates.add(l.b)
+      else if (l.b === heldId) mates.add(l.a)
+    }
+    for (const r of WORLD.reaches) {
+      if (r.a === heldId) mates.add(r.b)
+      else if (r.b === heldId) mates.add(r.a)
+    }
+    const measure = () => {
+      const s0 = svg.getBoundingClientRect().height / WORLD.h
+      const left = stage.scrollLeft / s0
+      const right = (stage.scrollLeft + stage.clientWidth) / s0
+      const out: { side: 'l' | 'r'; n: number; nearest: string }[] = []
+      for (const side of ['l', 'r'] as const) {
+        const off = WORLD.nodes.filter(
+          (n) => mates.has(n.id) && (side === 'l' ? n.x < left : n.x > right),
+        )
+        if (!off.length) continue
+        off.sort((a, b) => (side === 'l' ? b.x - a.x : a.x - b.x))
+        out.push({ side, n: off.length, nearest: off[0]!.mapLabel ?? off[0]!.title })
+      }
+      setEdges(out)
+    }
+    measure()
+    stage.addEventListener('scroll', measure, { passive: true })
+    const ro = new ResizeObserver(measure)
+    ro.observe(stage)
+    return () => {
+      stage.removeEventListener('scroll', measure)
+      ro.disconnect()
+    }
+  }, [heldId, fold])
+
+  function travel(route: string) {
+    preloadPath(route)
+    navigate(travelTo(route), { viewTransition: true })
+  }
+
+  function releaseFold() {
+    const cam = camRef.current
+    if (cam) {
+      cam.style.transition = ''
+      cam.style.transform = ''
+    }
+    camAt.current = { tx: 0, ty: 0, k: 1 }
+    foldRef.current = false
+    setFold(null)
+  }
+
+  /** BROWSE -> HELD, or HELD -> HELD on a different mark. */
+  function hold(id: string) {
+    if (lockedId.current && lockedId.current !== id) setForce(lockedId.current, 0)
+    lockedId.current = id
+    setHeldId(id)
+    setForce(id, 1)
+  }
+
+  /** ONE STEP BACK. Escape and a tap on nothing both land here, and neither
+   *  ever jumps two rungs: from the fold you return to the neuron you were
+   *  holding, still lit, still where you left it.
+   *  It reads foldRef, NOT the fold state: the drag and Escape handlers are
+   *  installed once at mount and would close over the first render forever. */
+  function stepBack() {
+    if (foldRef.current) {
+      releaseFold()
+      return
+    }
     if (lockedId.current) {
       setForce(lockedId.current, 0)
       lockedId.current = null
+      setHeldId(null)
     }
-    // A close during a fold must win outright, or the pending timer would
-    // clear a card that has already been replaced by a newly tapped one.
-    window.clearTimeout(collapseTimer.current)
-    setCollapsing(false)
-    setCard(null)
   }
 
-  function open(n: WorldNode) {
-    if (!n.route) return
-    preloadPath(n.route)
-    navigate(travelTo(n.route), { viewTransition: true })
-  }
-
-  // A pointer click LOCKS this node's card (releasing any previously locked
-  // node's wake); clicking the locked node again closes it. Travel is the
-  // card's OPEN button, so a stray click never jumps the page. Keyboard Enter
-  // still opens directly (onKeyDown below), and screen readers travel via
-  // WorldSrNav's links.
   function onNodeClick(n: WorldNode) {
+    if (fold) {
+      // inside the fold: choosing the subject again steps back, choosing any
+      // other member re-folds on it (walking the neighbourhood)
+      if (n.id === fold.subject) {
+        releaseFold()
+        return
+      }
+      hold(n.id)
+      applyFold(n.id)
+      return
+    }
     if (lockedId.current === n.id) {
-      dismiss()
+      applyFold(n.id) // HELD -> ISOLATED
       return
     }
-    if (lockedId.current && lockedId.current !== n.id) setForce(lockedId.current, 0)
-    lockedId.current = n.id
-    setForce(n.id, 1)
-    centreOn(n.id)
-    showCard(n, true)
-  }
-
-  // The live NOW tip locks the same way; it has no route, so its card carries
-  // no OPEN button (the wake is the beat animation, not a forced energy).
-  function onNowClick(el: SVGGraphicsElement) {
-    if (lockedId.current === 'now') {
-      dismiss()
-      return
-    }
-    if (lockedId.current && lockedId.current !== 'now') setForce(lockedId.current, 0)
-    lockedId.current = 'now'
-    showNowCard(el, true)
+    hold(n.id) // BROWSE -> HELD, or hold something else
   }
 
   const sk = WORLD.skeleton
@@ -872,11 +1057,23 @@ export default function NeuralWorld() {
             reads one-handed. Two systems, two jobs. */}
         <ReachControls set={yearsSet} />
 
+        {/* what is still off the frame, and which way */}
+        {edges.map((e) => (
+          <div key={e.side} className={`nw-edge nw-edge-${e.side}`} aria-hidden="true">
+            <span className="nw-edge-n">
+              {e.side === 'l' ? '‹' : ''}
+              {e.n} more
+              {e.side === 'r' ? '›' : ''}
+            </span>
+            <span className="nw-edge-t">{e.nearest}</span>
+          </div>
+        ))}
+
         {/* the stage: full-bleed, drag/wheel/keyboard panning */}
         <section
           ref={stageRef}
           tabIndex={0}
-          className="nw-stage z-0 bg-[var(--lang-ground)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+          className={`nw-stage z-0 bg-[var(--lang-ground)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--lang-interaction)]${fold ? ' is-folded' : heldId ? ' is-held' : ''}`}
           aria-label="The whole mind as one neural world: every project, thought, milestone and award in time. It wakes near your pointer; drag sideways to explore."
         >
           {/* The seven things a flick can settle on (index.css, .nw-snap).
@@ -887,6 +1084,11 @@ export default function NeuralWorld() {
             <div key={i} className="nw-snap" style={{ left: `${x}px` }} aria-hidden="true" />
           ))}
           <svg ref={svgRef} viewBox={`0 0 ${WORLD.w} ${WORLD.h}`} preserveAspectRatio="xMidYMid meet">
+            {/* THE CAMERA. One group around the whole drawing, so a fold is a
+                lens move and not a layout: the frozen coordinates underneath it
+                never change, and releasing is the transform going back to
+                identity. */}
+            <g className="nw-cam" ref={camRef}>
             {PRERENDERING ? null : <>
             {/* year columns */}
             <g aria-hidden="true">
@@ -901,7 +1103,7 @@ export default function NeuralWorld() {
             </g>
 
             {/* the career skeleton: the record, drawn with a ruler */}
-            <g aria-hidden="true">
+            <g aria-hidden="true" className="nw-skeleton">
               {sk.lanes.map((l) => (
                 <path
                   key={l.id}
@@ -930,31 +1132,27 @@ export default function NeuralWorld() {
               <circle ref={plumbDotRef} r={3} fill="var(--lang-ink)" style={{ opacity: 0 }} />
             </g>
 
-            {/* the ONE red tip: live, still growing; its card is the NOW.
-                Only the mark beats (nw-livetip); the tag text stays at full
-                red ink (the trough would fall below AA). */}
+            {/* THE ONE RED TIP: live, still growing. It joins the ladder like
+                every other mark (Emilie, 2026-08-07) — and that ruling is what
+                deleted the whole field-card subsystem, which by then existed for
+                this one thing and nothing else. Held, it simply says what it is
+                doing, as map type. It has no page and no threads, so there is
+                nothing to isolate and nothing to open: holding IS its whole
+                interaction, and the page now has ONE interaction grammar rather
+                than two.
+                Only the mark beats (nw-livetip); the tag text stays at full red
+                ink (the trough would fall below AA). */}
             <g
-              className="nw-node"
+              className={`nw-node${heldId === 'now' ? ' is-held' : ''}`}
               tabIndex={0}
               role="img"
               aria-label={`Live, still growing: the self-employed practice. Now building ${NOW.building}; reading ${NOW.reading}; thinking about ${NOW.thinking}.`}
-              onMouseEnter={(e) => {
-                if (!lockedId.current) showNowCard(e.currentTarget, false)
-              }}
-              onMouseLeave={() => {
-                if (!lockedId.current) hideCard()
-              }}
-              onClick={(e) => onNowClick(e.currentTarget)}
-              onFocus={(e) => {
-                if (!lockedId.current) showNowCard(e.currentTarget, false)
-              }}
-              onBlur={() => {
-                if (!lockedId.current) hideCard()
-              }}
+              onClick={() => (heldId === 'now' ? stepBack() : hold('now'))}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
-                  onNowClick(e.currentTarget)
+                  if (heldId === 'now') stepBack()
+                  else hold('now')
                 }
               }}
             >
@@ -981,6 +1179,20 @@ export default function NeuralWorld() {
               <text className="nw-livetag" x={sk.liveTip.x - 10} y={sk.liveTip.y - 10} textAnchor="end">
                 LIVE · STILL GROWING
               </text>
+              {/* what the card used to carry, now drawn in the map */}
+              {heldId === 'now' && (
+                <g className="nw-nowlines">
+                  <text x={sk.liveTip.x - 10} y={sk.liveTip.y + 16} textAnchor="end">
+                    BUILDING {NOW.building}
+                  </text>
+                  <text x={sk.liveTip.x - 10} y={sk.liveTip.y + 30} textAnchor="end">
+                    READING {NOW.reading}
+                  </text>
+                  <text x={sk.liveTip.x - 10} y={sk.liveTip.y + 44} textAnchor="end">
+                    THINKING ABOUT {NOW.thinking}
+                  </text>
+                </g>
+              )}
             </g>
 
             {/* the correlations: hidden at rest, grown by the engine */}
@@ -1010,6 +1222,23 @@ export default function NeuralWorld() {
                       pathLength={1}
                       strokeDasharray="0.12 1"
                     />
+                    {/* A THREAD YOU CAN TOUCH — but only the HELD node's own, and
+                        only while it is held. That is not a hole in the rule that
+                        nothing else answers a pointer: this IS the held neuron's
+                        anatomy, so following one of its threads is asking it a
+                        question, not asking a different neuron one.
+                        It works by lighting the FAR END: the engine already
+                        drives a connection from whichever end is most awake, so
+                        one forceT lights the whole thread and names what is at
+                        the other side of it. */}
+                    {heldId && !fold && (l.a === heldId || l.b === heldId) && (
+                      <path
+                        className="nw-connhit"
+                        d={l.pulseD}
+                        onMouseEnter={() => setForce(l.a === heldId ? l.b : l.a, 1)}
+                        onMouseLeave={() => setForce(l.a === heldId ? l.b : l.a, 0)}
+                      />
+                    )}
                   </g>
                 )
               })}
@@ -1024,30 +1253,44 @@ export default function NeuralWorld() {
                 const ly = n.kind === 'milestone' ? n.y + 18 : above ? n.y - o.r - 12 : n.y + o.r + 18
                 const yy = n.kind === 'milestone' ? ly + 12 : above ? ly - 13 : ly + 12
                 const kindClass = n.kind === 'project' ? 'p' : n.kind === 'thought' ? 't' : n.kind === 'award' ? 'a' : 'm'
+                const inFold = fold?.byId.get(n.id)
                 return (
                   <g
                     key={n.id}
                     ref={nodeRefs.get(n.id)}
-                    className={`nw-node${n.route ? '' : ' still'}`}
-                    tabIndex={0}
+                    className={`nw-node${n.route ? '' : ' still'}${fold ? (inFold ? ' in-fold' : ' out-fold') : ''}`}
+                    // The slide, and only the slide: no node changes height,
+                    // because height is the axis that now means relatedness.
+                    // The stagger is oldest-first, so the direction of the whole
+                    // record is legible in the motion and not only in the layout.
+                    style={
+                      inFold
+                        ? { transform: `translate(${inFold.dx}px, 0px)`, transitionDelay: `${inFold.order * 34}ms` }
+                        : undefined
+                    }
+                    // A mark the fold has hidden must not be reachable either:
+                    // at 0.05 opacity it was still tabbable AND still hoverable,
+                    // so the isolated view had 44 invisible tab stops behind it.
+                    tabIndex={fold && !inFold ? -1 : 0}
                     role={n.route ? 'link' : 'img'}
                     aria-label={nodeAria(n)}
+                    // THE HOVER CHIP IS CUT (Emilie, 2026-08-07). It carried the
+                    // title, the kind and the date — and the title and the date
+                    // are DRAWN UNDER THE DOT, while the mark itself says the
+                    // kind, which is what the legend exists to teach. A whole
+                    // card state that repeated the map back to you. Hover now
+                    // wakes the neighbourhood and stops, which is the thing the
+                    // page is actually good at.
                     onMouseEnter={() => {
                       setForce(n.id, 1)
                       if (n.route) preloadPath(n.route)
-                      // While a card is locked, hovering only wakes the
-                      // neuron; the light chip stays suppressed so it never
-                      // fights the locked card.
-                      if (!lockedId.current) showCard(n, false)
                     }}
                     onMouseLeave={() => {
                       if (lockedId.current === n.id) return
                       setForce(n.id, 0)
-                      if (!lockedId.current) hideCard()
                     }}
                     onFocus={(e) => {
                       setForce(n.id, 1)
-                      if (!lockedId.current) showCard(n, false)
                       // Keyboard focus brings the node into view; a POINTER
                       // click must NOT scroll, or it slides the node out from
                       // under the freshly-placed card (the "opens at a random
@@ -1064,22 +1307,29 @@ export default function NeuralWorld() {
                     onBlur={() => {
                       if (lockedId.current === n.id) return
                       setForce(n.id, 0)
-                      if (!lockedId.current) hideCard()
                     }}
                     onClick={() => onNodeClick(n)}
+                    // ENTER DOES WHAT A CLICK DOES (2026-08-07). It used to
+                    // travel straight to the page, so the same mark had two
+                    // contracts: a mouse got the card and had to press OPEN, a
+                    // keyboard skipped both and left. Choosing is choosing.
                     onKeyDown={(e) => {
-                      if ((e.key === 'Enter' || e.key === ' ') && n.route) {
+                      if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault()
-                        open(n)
+                        onNodeClick(n)
                       }
                     }}
                   >
                     {/* the dimmable body: the wake dim lives HERE so it never
                         multiplies into the label's rest ink (AA floor) */}
                     <g className="nw-body" style={n.kind !== 'milestone' ? { opacity: TUNE.restInk } : undefined}>
-                      {n.dendrites.map((d, i) => (
-                        <path key={i} className="nw-dendrite" d={d} strokeWidth={o.baseW} pathLength={1} />
-                      ))}
+                      {/* what it is almost joined to: one arm per near-miss,
+                          aimed at the other end and stopping short of it */}
+                      {(armsOf.get(n.id) ?? []).map((arm) =>
+                        arm.paths.map((p, i) => (
+                          <path key={`${arm.to}-${i}`} className="nw-reachout" d={p.d} strokeWidth={p.w} />
+                        )),
+                      )}
                       {n.kind !== 'milestone' && (
                         <circle className="nw-glow" cx={n.x} cy={n.y} r={o.r * 3} fill="url(#nw-glow-grad)" />
                       )}
@@ -1121,16 +1371,38 @@ export default function NeuralWorld() {
                         <circle className="nw-soma" cx={n.x} cy={n.y} r={o.r} fill="var(--lang-ink-muted)" />
                       )}
                     </g>
+                    {/* HELD HAS TO LOOK DIFFERENT FROM HOVERED, or you cannot
+                        tell which phase you are standing in — the engine lights
+                        both the same way. A quiet ink ring, not red: red is
+                        liveness on this map and means one thing only. */}
+                    {heldId === n.id && !fold && (
+                      <circle className="nw-heldring" cx={n.x} cy={n.y} r={o.r + 7} />
+                    )}
                     <circle className="nw-hit" cx={n.x} cy={n.y} r={HIT_R} />
                     {/* initial inline opacities = TUNE.restInk for BOTH texts
                         (G4: dates ride the same rest as titles): the first
                         paint IS the rest state, no post-mount pop */}
+                    {/* Folded, a name COUNTER-SCALES so it stays the size it is
+                        now while the drawing shrinks, and drops into the lane the
+                        solver gave it. The lanes are not a nicety: spreading the
+                        nodes cannot fix label collision, because a fit-to-frame
+                        camera pulls back by whatever you spread by. Stacking is
+                        the only thing that does. */}
                     <text
                       className={`nw-lbl ${kindClass}`}
                       x={n.x + (n.labelDx ?? 0)}
                       y={ly + (n.labelDy ?? 0)}
                       textAnchor="middle"
-                      style={{ opacity: TUNE.restInk }}
+                      style={
+                        inFold
+                          ? {
+                              opacity: 1,
+                              fontSize: `${fold!.font.toFixed(2)}px`,
+                              transform: `translate(0px, ${(inFold.lane * fold!.font * 1.42).toFixed(1)}px)`,
+                              transitionDelay: `${inFold.order * 34}ms`,
+                            }
+                          : { opacity: TUNE.restInk }
+                      }
                     >
                       {n.mapLabel ?? n.title}
                     </text>
@@ -1139,7 +1411,16 @@ export default function NeuralWorld() {
                       x={n.x + (n.labelDx ?? 0)}
                       y={yy + (n.labelDy ?? 0)}
                       textAnchor="middle"
-                      style={{ opacity: TUNE.restInk }}
+                      style={
+                        inFold
+                          ? {
+                              opacity: 0.75,
+                              fontSize: `${(fold!.font * 0.76).toFixed(2)}px`,
+                              transform: `translate(0px, ${(inFold.lane * fold!.font * 1.42 + fold!.font * 0.5).toFixed(1)}px)`,
+                              transitionDelay: `${inFold.order * 34}ms`,
+                            }
+                          : { opacity: TUNE.restInk }
+                      }
                     >
                       {n.date}
                     </text>
@@ -1148,6 +1429,76 @@ export default function NeuralWorld() {
               })}
             </g>
 
+            {/* THE FOLDED THREADS. The resting fibres are baked `d` strings
+                between fixed coordinates, so they cannot follow a node that
+                slides; while folded they hide and these draw the same relations
+                between the folded positions. An unmade one still gets two arms
+                and a gap, and `foldArm` caps the arm at a third of the distance
+                so a close pair can never be drawn touching. */}
+            {fold && (
+              <g className="nw-foldlinks" aria-hidden="true">
+                {fold.links.map((l) => (
+                  <g key={l.key}>
+                    {l.fibres.map((f, i) => (
+                      <path key={i} className="nw-foldthread" d={f.d} strokeWidth={f.w} />
+                    ))}
+                    <circle
+                      className="nw-foldsyn"
+                      cx={l.synapse.x}
+                      cy={l.synapse.y}
+                      r={l.synapse.r}
+                    />
+                  </g>
+                ))}
+                {fold.arms.map((a) => (
+                  <g key={a.key}>
+                    {a.paths.map((p, i) => (
+                      <path key={i} className="nw-foldarm" d={p.d} strokeWidth={p.w} />
+                    ))}
+                  </g>
+                ))}
+              </g>
+            )}
+
+            {/* the subject's door, drawn under its own name */}
+            {fold?.open && (
+              <g
+                className="nw-foldopen"
+                role="link"
+                tabIndex={0}
+                aria-label={`Open ${WORLD.nodes.find((n) => n.id === fold.open!.id)?.title ?? ''}`}
+                onClick={() => travel(fold.open!.route)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    travel(fold.open!.route)
+                  }
+                }}
+              >
+                {/* ⚠ IT LANDED ON TOP OF THE DATE the first time, because this
+                    measured from the node's centre while the label measures from
+                    `y + r + 18`. It hangs off the subject's own baseline now,
+                    one full line under its date, and the underline makes it read
+                    as a door rather than as another caption. */}
+                <rect
+                  x={fold.open.x - Math.max(fold.hit, fold.font * 5.4) / 2}
+                  y={fold.open.y + fold.openLane * fold.font * 1.42 + 12 + fold.font * 1.9 - fold.hit * 0.72}
+                  width={Math.max(fold.hit, fold.font * 5.4)}
+                  height={fold.hit}
+                  fill="transparent"
+                />
+                <text
+                  x={fold.open.x}
+                  y={fold.open.y + fold.openLane * fold.font * 1.42 + 12 + fold.font * 1.9}
+                  textAnchor="middle"
+                  fontSize={fold.font * 0.95}
+                  textDecoration="underline"
+                >
+                  OPEN ›
+                </text>
+              </g>
+            )}
+
             <defs>
               <radialGradient id="nw-glow-grad">
                 <stop offset="0%" stopColor="var(--lang-ink)" stopOpacity={0.32} />
@@ -1155,100 +1506,12 @@ export default function NeuralWorld() {
               </radialGradient>
             </defs>
             </>}
+            </g>
           </svg>
         </section>
 
-        {/* the field card: a light CHIP on hover/focus (title + kind + date),
-            an interactive LOCKED card on click (blurb + OPEN). Always
-            aria-hidden — screen readers travel via WorldSrNav; the OPEN button
-            is a pointer affordance (tabIndex -1), and keyboard opens the node
-            directly with Enter. */}
-        {card && (
-          <aside
-            aria-hidden="true"
-            className={`nw-fieldcard lang-glass-2 fixed z-[6] rounded-[var(--r-sheet)] ${
-              collapsing ? 'infocard-exit' : 'infocard-enter'
-            } ${
-              card.locked
-                ? 'pointer-events-auto max-w-[300px] px-4 py-3.5'
-                : 'pointer-events-none max-w-[264px] px-3.5 py-2.5'
-            }`}
-            // THE MORPH SOURCE (Emilie 2026-07-26): the CARD travels into
-            // the page, not the neuron. It is what the reader is looking at
-            // when they press OPEN, it already holds the destination's title,
-            // and a 300px panel into a title block is a short honest move
-            // where a 6px dot into a full hero would be a smear. Only one
-            // card exists at a time, so the one-element-per-name rule holds.
-            style={{
-              left: card.left,
-              top: card.top,
-              viewTransitionName: card.route ? vtName(card.route) : undefined,
-            }}
-          >
-            <div className="flex items-start justify-between gap-3 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
-              <span className="flex min-w-0 flex-wrap items-center gap-x-2">
-                <span>{card.date}</span>
-                <span className={card.red ? 'text-[var(--lang-interaction)]' : 'text-[var(--lang-ink)]'}>
-                  {card.kind}
-                </span>
-              </span>
-              {/* A WAY OUT THAT IS NOT A GUESS (Emilie, 2026-08-02: "I want to
-                  have an x button on the thought card in case I want to close
-                  it"). Until now the ways to close were tapping the same node
-                  again, tapping empty field, or Escape, and a phone visitor is
-                  told none of them. The date and kind moved onto one line to
-                  make room; the glyph is small but its hit box is the 44px
-                  `after:` extender the footline and the pill links use, so the
-                  target is full size while the card stays a chip.
-                  tabIndex -1 like the OPEN button beside it: this whole aside is
-                  aria-hidden decoration and the keyboard travels via
-                  WorldSrNav, where Escape already closes. */}
-              {card.locked && (
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  onClick={dismiss}
-                  className="relative -mt-0.5 shrink-0 text-body leading-none text-[var(--lang-ink-muted)] transition-colors after:absolute after:top-1/2 after:left-1/2 after:size-11 after:-translate-x-1/2 after:-translate-y-1/2 after:content-[''] hover:text-[var(--lang-ink)]"
-                >
-                  {/* ✕ (U+2715), not × (U+00D7). This was the odd one out: the
-                      showcase sheet and the lightbox have both always used
-                      ✕, and the multiplication sign is a lighter, shorter mark
-                      that reads as a different control at the same size. One
-                      close glyph across all three overlays (2026-08-03). */}
-                  <span aria-hidden="true">✕</span>
-                </button>
-              )}
-            </div>
-            <p
-              className={`mt-1.5 leading-snug font-semibold text-[var(--lang-ink)] ${
-                card.locked ? 'text-prose' : 'text-body'
-              } ${card.serifTitle ? 'font-serif font-medium lowercase italic' : ''}`}
-            >
-              {card.title}
-            </p>
-            {card.locked && card.blurb && (
-              <p className="mt-1.5 font-serif text-small leading-relaxed text-[var(--lang-ink-muted)]">
-                {card.blurb}
-              </p>
-            )}
-            {card.locked && card.live && (
-              <p className="mt-2 flex items-center gap-1.5 font-mono text-micro tracking-[0.1em] text-[var(--lang-interaction)]">
-                <span aria-hidden="true" className="inline-block size-1.5 rounded-full bg-[var(--lang-interaction)]" />
-                LIVE · STILL GROWING
-              </p>
-            )}
-            {card.locked && card.route && (
-              <button
-                type="button"
-                tabIndex={-1}
-                onClick={() => card.route && navigate(travelTo(card.route), { viewTransition: true })}
-                className="mt-2.5 inline-flex items-center gap-1.5 rounded-[var(--r-pill)] border border-[var(--lang-hairline)] px-3 py-1.5 font-mono text-micro tracking-[0.1em] text-[var(--lang-ink)] transition-colors hover:border-[var(--lang-interaction)] hover:text-[var(--lang-interaction)]"
-              >
-                OPEN <span aria-hidden="true">›</span>
-              </button>
-            )}
-          </aside>
-        )}
+        {/* (the field card is gone: the fold answers for every node and the NOW
+            tip says its lines in the map. 2026-08-07.) */}
 
         <WorldSrNav />
       </main>

@@ -25,7 +25,7 @@
 // the Pen Table sheet tier retired with G1 (/sheets/* redirects here).
 import type { Lens } from '../components/Lens'
 import { ENTRIES, awardHrefFor, type RegistryEntry, type SheetStatus } from './registry'
-import { PROJECTS_BY_SLUG, type Project } from './projects'
+import { METAS_BY_SLUG as PROJECTS_BY_SLUG, type ProjectMeta as Project } from '../content/projects'
 import images from './images.json'
 import videos from './videos.json'
 

@@ -5,7 +5,7 @@
 // live-verified: contrast, blur, fallback, touch targets, persistence, perf.
 import { useState } from 'react'
 import TitleBlock from '../components/TitleBlock'
-import Surface from '../components/ui/Surface'
+
 import Card from '../components/ui/Card'
 import { FilterPill, LensPill, Pill, StatusPill } from '../components/ui/Pill'
 import { LENSES, type Lens } from '../components/Lens'
@@ -60,22 +60,22 @@ function PrimitiveSet({ dark = false, label }: { dark?: boolean; label?: string 
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Surface tier={1} radius="card" className="p-4">
+          <div className="lang-glass-1 rounded-[var(--r-card)] p-4">
             <div className="text-body font-semibold text-[var(--lang-ink)]" data-lab="g1-ink">
               glass-1 · raised
             </div>
             <p className="mt-1 text-small text-[var(--lang-ink-muted)]" data-lab="g1-muted">
               Cards and panels. The ground breathes through; the ink does the work.
             </p>
-          </Surface>
-          <Surface tier={2} radius="card" className="p-4">
+          </div>
+          <div className="lang-glass-2 rounded-[var(--r-card)] p-4">
             <div className="text-body font-semibold text-[var(--lang-ink)]" data-lab="g2-ink">
               glass-2 · floating
             </div>
             <p className="mt-1 text-small text-[var(--lang-ink-muted)]" data-lab="g2-muted">
               Overlays, sheets, menus. Brighter fill, stronger border.
             </p>
-          </Surface>
+          </div>
         </div>
 
         {/* What a no-backdrop-filter browser renders: the solid tier fills.
@@ -178,12 +178,12 @@ export default function Lab() {
           <ThreadField />
           <div className="relative grid grid-cols-2 gap-4 sm:grid-cols-3" data-lab="perf-field">
             {Array.from({ length: 12 }, (_, i) => (
-              <Surface key={i} tier={i % 2 === 0 ? 1 : 2} radius="card" className="p-4">
+              <div key={i} className={`${i % 2 === 0 ? 'lang-glass-1' : 'lang-glass-2'} rounded-[var(--r-card)] p-4`}>
                 <div className="font-mono text-label tracking-[0.1em] text-[var(--lang-ink-muted)]">
                   PANEL {String(i + 1).padStart(2, '0')}
                 </div>
                 <div className="mt-1 text-body font-semibold text-[var(--lang-ink)]">16px blur, bounded</div>
-              </Surface>
+              </div>
             ))}
           </div>
         </div>
