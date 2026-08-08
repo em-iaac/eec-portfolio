@@ -661,6 +661,98 @@ h3 {
   display: block;
 }
 
+/* ============================================================
+   THE TURNED MAP (Emilie 2026-08-07). Same drawing, quarter turn, so the long
+   axis runs the way a thumb already moves. Three things change and nothing
+   else does.
+   1. THE ELEMENT'S BOX. The turn lives on a <g> inside the viewBox, so the SVG
+      element itself has to be told it is now tall and narrow, or the scroller
+      would have nothing to scroll.
+   2. THE AXIS. Vertical, and only vertical.
+   3. THE TYPE. The turn matrix is its own inverse, so the very same matrix
+      applied to each label sets it upright again — no per-label arithmetic,
+      and the names are the one thing that must not take the turn. */
+.nw-stage.is-vertical {
+  overflow-x: hidden;
+  overflow-y: auto;
+  touch-action: pan-y;
+  scroll-snap-type: none;
+}
+.nw-stage.is-vertical svg {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+}
+/* ⚠ THE COUNTER-TURN IS AN SVG ATTRIBUTE, NOT THIS. It used to live here as
+   `transform-box: fill-box; transform-origin: center; transform: matrix(...)`,
+   which is correct on Chrome and INVISIBLE ON IOS — Safari does not resolve
+   `fill-box` on <text> reliably, so the origin lands somewhere else and every
+   name is thrown off the canvas. Her phone showed a map with no words on it.
+   Each label now carries its own explicit matrix, computed from its own
+   coordinates, so nothing depends on an origin keyword at all. */
+/* The lane rules run the other way now, so the year lines read as horizontal
+   rules across the column — which is what a year is when time runs down. */
+/* ⚠ THE NAV LABELS CLIPPED THEMSELVES BELOW 340px, and had done since the pill
+   was built. They are flex items with `overflow: hidden`, so when the row runs
+   out of width they shrink BELOW their own text instead of pushing back — and
+   the failure is silent: nothing overflows, nothing scrolls, the words are
+   simply cut. Measured at 320px the pill rendered "WORK HOUGHT CV :ONTAC".
+   Her ruling (i): tighten a step rather than hide anything. The tracking is the
+   cheapest 18px on the row — 21 characters carrying 0.08em each — and one step
+   of type size finds the rest. Nothing moves, nothing goes behind a scroll, and
+   above 340px not a pixel changes.
+   340 and not 360: measured, 360 renders every label whole. */
+@media (max-width: 340px) {
+  .nav-mag {
+    font-size: 8px;
+    letter-spacing: 0.01em;
+  }
+  /* ⚠ AND THE PILL'S OWN PADDING, because the type step alone does not reach.
+     MEASURED at 320: the row needs 269px of the 223 it is given — 46px short —
+     and 44 of those cannot be taken back, because every door carries
+     `min-width: 44px` and that is the touch floor, not a style. Type gets the
+     labels under 44 so the floor is the only constraint left; the last 5px come
+     out of the pill's own padding. Nothing hides, nothing scrolls, and no
+     target drops below 44. */
+  .nav-pill {
+    padding-left: 4px;
+    padding-right: 4px;
+    gap: 0;
+  }
+}
+.nw-stage.is-vertical .nw-yearline {
+  opacity: 0.5;
+}
+/* THE HALO HAS TO GROW WITH THE PROJECTION. It is 2.6 WORLD units, and turned
+   the world is drawn at 390/860 — so the same 2.6 that clears a thread on the
+   web comes out at 1.2px on a phone, which is not a halo, it is a hairline.
+   The type is scaled by the same factor (a 9.5px name is 21 world units here),
+   so the halo is too, and the one place it earns its keep is where a name
+   crosses a record row standing up along its rail. */
+.nw-stage.is-vertical .nw-lbl,
+.nw-stage.is-vertical .nw-yr {
+  stroke-width: 4.5;
+}
+/* AND SO DOES EVERY LINE. Same arithmetic as the halo: a 1-unit lane is 0.45px
+   turned, so the whole anatomy — rails, threads, the wall of a soma — drew at
+   under half weight beside full-size type. Non-scaling-stroke renders a stroke
+   at its authored width in screen pixels whatever the camera is doing, which
+   is exactly what the fold already relies on to keep a nerve from thinning
+   into a hair when it zooms. */
+.nw-stage.is-vertical .nw-lane,
+.nw-stage.is-vertical .nw-yearline,
+.nw-stage.is-vertical .nw-reach,
+.nw-stage.is-vertical .nw-reachout,
+.nw-stage.is-vertical .nw-soma,
+.nw-stage.is-vertical .nw-synapse,
+.nw-stage.is-vertical .nw-plumb,
+.nw-stage.is-vertical .nw-heldring,
+.nw-stage.is-vertical .nw-livetip circle,
+.nw-stage.is-vertical .nw-livetip line,
+.nw-stage.is-vertical .nw-skeleton circle {
+  vector-effect: non-scaling-stroke;
+}
+
 /* THE MAP PANS SIDEWAYS ONLY (her report 2026-08-03: "we can only scroll
    horizontally in this page, currently we can actually go as well slightly
    vertically").
@@ -843,6 +935,70 @@ h3 {
   }
 }
 
+/* THE DOOR'S LENS. The same glass the header magnifier is made of, so the map
+   and the chrome are speaking about the same thing when they say "this is what
+   you are about to enter". It ARRIVES rather than appearing: on a pointer it
+   drops the last few units onto the name, which is the header's own gesture
+   (that lens slides, it never cuts). */
+/* (The lens capsule retired 2026-08-07, her ruling: "even in the isolated mode
+   we should keep the pulsing ring magnifier like in the held mode, just add a
+   red arrow below the name". The glass was doing the same job the ring already
+   does one line above it, and doing it over the type instead of beside it. One
+   cue, carried from held into chosen unchanged, is a state you can follow.) */
+
+/* THE DOOR'S ARROW. Red because red is interaction on this map and nothing
+   else, and a stroke rather than a glyph so it stays a graphic mark — the type
+   rules keep the redline out of letterforms. */
+.nw-doorarrow {
+  fill: none;
+  stroke: var(--lang-interaction);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-width: 1.6;
+}
+.nw-foldopen:hover .nw-doorarrow,
+.nw-foldopen:focus-visible .nw-doorarrow {
+  stroke-width: 2.2;
+}
+
+/* The fold's own travel line. Runs from dashoffset 0 to 1 — the reverse of
+   `nw-travel` — so the dash walks from the far end IN to the chosen mark. */
+.nw-foldpulse {
+  fill: none;
+  stroke: var(--lang-interaction);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: nw-foldtravel 2760ms linear infinite;
+}
+@keyframes nw-foldtravel {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  30% {
+    opacity: 0.9;
+  }
+  38% {
+    opacity: 0;
+    stroke-dashoffset: 1;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nw-foldpulse {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 /* THE BRING (Emilie's pick D, 2026-08-07). The chosen neuron's whole
    neighbourhood in one frame, because a neighbour can live 3,000 units away and
    choosing one used to show you threads leaving the screen toward things you
@@ -861,43 +1017,42 @@ h3 {
    the frame in each direction and name the nearest one, so a drag is aimed
    rather than hopeful. Chrome, not drawing: pinned to the frame in CSS pixels,
    and pointer-transparent so it can never eat a pan. */
-.nw-edge {
-  position: fixed;
-  z-index: 4;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  max-width: 42vw;
-  pointer-events: none;
-  font-family: var(--font-mono);
+/* (.nw-edge retired 2026-08-07: the off-frame counter lives on the foot
+   band now, where it cannot collide with the drawing.) */
+/* ⚠ NO UNDERLINE ON THE DOOR'S NAME, and this is why (her flag 2026-08-07:
+   "why is the name written like this? it should be cleaner").
+   The map's names are uppercase MONO with 0.08em letter-spacing. Underline a
+   string like that and the rule runs through the word gaps at exactly the
+   weight and height of an underscore — so OPTIMIZING FOR THE MIND rendered as
+   OPTIMIZING_FOR_THE_MIND. The underline was not decorating the name, it was
+   rewriting it. The door says what it is with the ring and the arrow instead,
+   neither of which touches a letterform. */
+.nw-lbl.is-door {
+  text-decoration: none;
 }
-.nw-edge-l {
-  left: 10px;
-  align-items: flex-start;
+/* ⚠ `outline: none` IS THE FIX, and its absence is what put a black box on the
+   screen (her recording, 2026-08-07: "there is a weird black box that shows
+   when i press the door").
+   Clicking focuses this group, and Chrome then paints its OWN focus ring —
+   read off the live page as `outline: rgb(16,16,16) auto 5px`, which is the
+   fat rounded double ring in the video, drawn round the whole 44px hit area.
+   `.nw-node` has carried this line since the map was built; the door was new
+   and did not. The indicator below replaces it in the site's own language, and
+   rides `:focus-visible`, so it answers a Tab and never a click. */
+.nw-foldopen {
+  cursor: var(--cursor-live);
+  outline: none;
 }
-.nw-edge-r {
-  right: 10px;
-  align-items: flex-end;
-  text-align: right;
+.nw-foldopen:focus-visible .nw-doorarrow {
+  stroke: var(--lang-interaction);
+  stroke-width: 1.6;
 }
-.nw-edge-n {
-  font-size: var(--text-label);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--lang-interaction);
+.nw-foldopen:focus-visible .nw-doorring {
+  stroke: var(--lang-interaction);
+  stroke-width: 1.4;
+  stroke-dasharray: 4 4;
 }
-.nw-edge-t {
-  font-size: var(--text-micro);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--lang-ink-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-}
+
 /* The invisible fat stroke that makes a held node's own thread pressable. Only
    rendered while that node is held, so it can never steal a pointer in browse. */
 .nw-connhit {
@@ -907,12 +1062,37 @@ h3 {
   pointer-events: stroke;
   cursor: var(--cursor-live);
 }
+/* THE RING BREATHES, so a held mark says it has another move in it (her ask
+   2026-08-07: "add an animation cue on the mark that is held so the user knows
+   it's clickable again to isolate"). One slow breath every 2.4s at a 0.42-0.62
+   amplitude — under the threshold where motion starts pulling the eye off the
+   map, and it stops the moment the mark is gathered, because by then the cue
+   has been taken. */
 .nw-heldring {
   fill: none;
   stroke: var(--lang-ink);
   stroke-width: 1;
   opacity: 0.42;
   vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nw-ring-breathe 2400ms ease-in-out infinite;
+}
+@keyframes nw-ring-breathe {
+  0%,
+  100% {
+    opacity: 0.42;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.62;
+    transform: scale(1.09);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nw-heldring {
+    animation: none;
+  }
 }
 /* Nothing else answers a pointer once something is held — the rule that stops
    the map talking over itself. The engine enforces the wake; this stops the
@@ -921,7 +1101,8 @@ h3 {
   cursor: default;
 }
 .nw-stage.is-held .nw-node.is-held .nw-hit,
-.nw-stage.is-held .nw-heldring {
+.nw-stage.is-held .nw-heldring,
+.nw-stage.is-folded .nw-heldring {
   cursor: var(--cursor-live);
 }
 /* what the NOW card used to say, now drawn in the map while it is held */
@@ -958,19 +1139,46 @@ h3 {
 .nw-stage.is-folded .nw-node.out-fold .nw-hit {
   pointer-events: none;
 }
+/* ⚠ `!important` IS LOAD-BEARING HERE, and without it this whole block was
+   doing nothing (her recording, 2026-08-07: "the isolated mode has weird points
+   that are kind of not matching the thread, and the animation being the one of
+   the explore mode instead of its own").
+   THE PROXIMITY ENGINE WRITES INLINE `style.opacity` on exactly these elements,
+   every frame it runs, and no class selector can outrank an inline style. So
+   while the fold drew its own threads (`nw-foldthread`), its own synapses
+   (`nw-foldsyn`) and its own arms (`nw-foldarm`) at the FOLDED positions, the
+   resting ones stayed lit at the UNFOLDED ones — audited live in a fold: 8
+   `nw-synapse` at opacity 1 beside 8 `nw-foldsyn`, 9 `nw-reachout` beside 15
+   `nw-foldarm`, and 8 `nw-pulse` still firing their travel animation. Two
+   drawings of the same neighbourhood, one of them in the wrong places, plus
+   the browse animation running over the top of a view that is not browsing.
+   That is precisely what the stray dots were. */
 .nw-stage.is-folded .nw-reach,
 .nw-stage.is-folded .nw-synapse,
 .nw-stage.is-folded .nw-pulse,
 .nw-stage.is-folded .nw-reachout,
+.nw-stage.is-folded .nw-glow,
 .nw-stage.is-folded .nw-yearline,
 .nw-stage.is-folded .nw-yearlbl,
+.nw-stage.is-folded .nw-lanelbl,
+.nw-stage.is-folded .nw-livetag,
+/* The live tip is drawn outside the node loop, so it never gets an `out-fold`
+   class and sat at full strength in every fold — a red mark on the edge of a
+   neighbourhood it has no thread into. */
+.nw-stage.is-folded .nw-livetip,
 /* The ruler goes quiet too. It stayed at full strength for the first fold and
    read as a set of stray rules under a drawing it no longer belonged to: the
    folded view is a neighbourhood, and the career lanes are not part of that
    neighbourhood. Faint rather than gone, so the record is still underneath. */
 .nw-stage.is-folded .nw-skeleton,
 .nw-stage.is-folded .nw-plumb {
-  opacity: 0;
+  opacity: 0 !important;
+}
+/* The travel pulse is a CSS animation, so silencing its opacity is not enough:
+   it would still be running, and a paused-invisible animation is a phone
+   burning frames on something nobody can see. */
+.nw-stage.is-folded .nw-pulse {
+  animation: none !important;
 }
 .nw-stage.is-folded .nw-skeleton {
   opacity: 0.06;
@@ -995,6 +1203,13 @@ h3 {
   stroke-width: 2.6;
   stroke-linejoin: round;
 }
+/* The halo is measured in WORLD units, so it has to grow with the type: a
+   folded name is 25% larger and the camera is pulled back, which left 2.6 units
+   rendering at about a pixel — present in the file, invisible on the glass. */
+.nw-stage.is-folded .nw-node.in-fold .nw-lbl,
+.nw-stage.is-folded .nw-node.in-fold .nw-yr {
+  stroke-width: 4;
+}
 .nw-lbl,
 .nw-yr {
   transition:
@@ -1002,6 +1217,19 @@ h3 {
     font-size 820ms cubic-bezier(0.22, 0.61, 0.36, 1),
     opacity 420ms ease;
 }
+/* ⚠ THE FOLD'S DRAWING TAKES NO POINTER EVENTS. It is a picture of a
+   neighbourhood, not a set of targets — and while it did take them, a press
+   that landed on a thread instead of a mark was read as a press on empty field
+   and dropped you a rung (found 2026-08-07 chasing "pressing a mark in the
+   isolated mode goes back to held": the press was never reaching the mark, it
+   was hitting a fibre drawn across it).
+   The resting map's fibres are already inert for the same reason; only the
+   held node's own thread was ever pressable, and that retired with the held
+   rung it belonged to. */
+.nw-foldlinks {
+  pointer-events: none;
+}
+
 /* The threads rewoven between folded positions — the SAME anatomy as a resting
    one, because they come off the same `weave`. The first fold drew its own
    quadratic curves and she saw it instantly: "we lose the poetics of the

@@ -44,6 +44,16 @@ export interface NodeHandle {
    *  be shown making them. It is also what buys the dashes — the drawing
    *  mechanic is stroke-dasharray, so a path cannot both grow and be dashed. */
   reaches: SVGPathElement[]
+  /** The near-miss arms, grouped by the mark each one is reaching AT.
+   *  ⚠ A REACH HAS TWO ARMS AND THEY BELONG TO DIFFERENT NODES (her flag
+   *  2026-08-07: "if we isolate sensi you can see neurospace near miss wake up,
+   *  but in the held state nothing in neurospace wakes"). Driving each arm from
+   *  its OWN node's wake meant holding Sensi lit Sensi's half and left
+   *  Neurospace's half dark — half a gesture, and the half that is missing is
+   *  the one that says what the reach is aimed at.
+   *  Threads have followed their most awake END since the map was built; this
+   *  is the same rule, finally applied to the other kind of connection. */
+  arms: { to: string; paths: SVGPathElement[]; applied: number }[]
   lbl: SVGTextElement | null
   yr: SVGTextElement | null
   glow: SVGCircleElement | null
@@ -68,8 +78,31 @@ export interface ConnHandle {
 export interface EngineApi {
   /** Wake the loop after any input (focus, hover, scroll, replay). */
   kick: () => void
-  /** Chronological WATCH IT GROW sweep; settles back to rest after. */
-  replay: () => void
+  /** Chronological WATCH IT GROW sweep; settles back to rest after.
+   *  Called bare it is the BUTTON's sweep, unchanged. The options exist for the
+   *  ARRIVAL sweep (Emilie 2026-08-07), which has to be the same gesture told
+   *  more quietly: you asked for the button, you did not ask for the door. */
+  replay: (opts?: ReplayOpts) => void
+}
+
+export interface ReplayOpts {
+  /** ms between one chronological rank and the next. Lower = quicker sweep. */
+  step?: number
+  /** How awake a node gets as the wave passes it. 1 is the button's full wake. */
+  peak?: number
+  /** ms a node takes to fall back after the wave has passed. 0 keeps it lit
+   *  until the whole sweep ends, which is the button's behaviour: by the last
+   *  rank the ENTIRE map is at full wake. A decay makes it a travelling pulse
+   *  instead of a rising flood, which is the whole difference between a thing
+   *  you asked for and a thing that happened to you. */
+  decay?: number
+  /** Where the pan comes to rest, in stage scroll px. Defaults to the far end. */
+  to?: number
+  /** The map is turned: the sweep climbs the Y axis instead of crossing X.
+   *  It starts at the BOTTOM, which is the oldest end, and finishes at the top,
+   *  which is now — the same journey the horizontal sweep makes, in the
+   *  direction this screen actually reads. */
+  vertical?: boolean
 }
 
 const ease = (e: number) => e * e * (3 - 2 * e) // smoothstep
@@ -143,7 +176,13 @@ export function useProximityEngine(opts: {
     let rafId = 0
     let lastT = 0
 
-    type Replay = { t0: number; until: number; delay: Map<string, number> } | null
+    type Replay = {
+      t0: number
+      until: number
+      delay: Map<string, number>
+      peak: number
+      decay: number
+    } | null
     let replayState: Replay = null
 
     const canvasPoint = (): { x: number; y: number } | null => {
@@ -155,7 +194,27 @@ export function useProximityEngine(opts: {
     }
 
     // ---- writes (delta-quantized) ----
-    const q = (v: number) => Math.round(v * 255)
+    // THE QUANTIZER IS THE THROTTLE (the phone-lag fix, Emilie 2026-08-07:
+    // "on the phone it seems a bit laggy"). Every write here is guarded by
+    // "has the quantized value changed since last frame", so the step size IS
+    // the write budget. At 255 levels a value that is moving at all changes
+    // every single frame, so a sweep writes to hundreds of paths per frame and
+    // a phone spends the whole animation in style recalculation.
+    // Measured at 390x844 with the CPU throttled 6x: the pan alone holds 60fps
+    // (median 16.7ms) and the WAKE runs at 15 (median 66.6ms), so the cost is
+    // the writes, not the scrolling.
+    // During a sweep the values are ramping smoothly across ~900ms, so a
+    // coarser ladder is invisible: 48 levels is a 2% step in opacity, under
+    // what anyone can see on a fading hairline, and it cuts the writes by
+    // roughly five. At rest the full 255 stays, because that is where a single
+    // node is tracking a pointer and precision is the whole point.
+    // A coarse pointer is a phone, and a phone is where the budget is tight:
+    // 20 levels is a 5% opacity step, still invisible on a hairline that is
+    // fading over half a second.
+    const coarse =
+      typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+    const SWEEP_STEPS = coarse ? 20 : 48
+    const q = (v: number) => Math.round(v * (replayState ? SWEEP_STEPS : 255))
 
     const applyFibres = (n: NodeHandle) => {
       const qe = q(n.E)
@@ -185,6 +244,20 @@ export function useProximityEngine(opts: {
       // landed 2.2:1, under the AA floor on both grounds; the smaller size
       // alone keeps them quieter)
       if (n.yr) n.yr.style.opacity = ink
+    }
+
+    /** The travelling wave's value for one mark, undelayed — the same term the
+     *  nodes read, so a thread and its ends can never disagree about where the
+     *  crest is. 0 when no sweep is running. */
+    const waveAt = (id: string, now: number): number => {
+      const r = replayState
+      if (!r) return 0
+      const at = r.delay.get(id)
+      if (at == null) return 0
+      const age = now - r.t0 - at
+      if (age <= 0) return 0
+      const lit = r.decay > 0 ? Math.max(0, 1 - age / r.decay) : 1
+      return r.peak * lit
     }
 
     const applyConn = (c: ConnHandle) => {
@@ -258,10 +331,7 @@ export function useProximityEngine(opts: {
       nodes.forEach((n) => {
         let t = 0
         if (n === near && nearD <= R) t = Math.min(1, (R - nearD) / edge)
-        if (replayState) {
-          const at = replayState.delay.get(n.id)
-          if (at != null && now - replayState.t0 > at) t = 1
-        }
+        t = Math.max(t, waveAt(n.id, now))
         if (n.forceT > t) t = n.forceT
         if (n.E !== t) settled = false
         n.E = moveToward(n.E, t, dt)
@@ -270,6 +340,21 @@ export function useProximityEngine(opts: {
         if (n.E > hotE && n.kind !== 'milestone') {
           hotE = n.E
           hot = n
+        }
+      })
+
+      // THE NEAR-MISS ARMS, AFTER every E has settled this frame. It cannot ride
+      // applyFibres: that is gated on THIS node's value changing, and the whole
+      // point here is that the OTHER end moved.
+      nodes.forEach((n) => {
+        for (const a of n.arms) {
+          const far = nodes.get(a.to)
+          const e = far ? Math.max(n.E, far.E) : n.E
+          const qv = q(e)
+          if (qv === a.applied) continue
+          a.applied = qv
+          const v = (ease(e) * 0.55).toFixed(3)
+          for (const p of a.paths) p.style.opacity = v
         }
       })
 
@@ -282,6 +367,16 @@ export function useProximityEngine(opts: {
         const t = Math.max(na.E, nb.E)
         if (c.E !== t) settled = false
         c.E = moveToward(c.E, t, dt)
+        // ⚠ A SWEEP DOES NOT DRAW THE THREADS, AND THAT IS THE DESIGN.
+        // Built once and REVERTED ON SIGHT (Emilie, 2026-08-08): letting the
+        // wave write a thread outright — skipping the two first-order lags that
+        // otherwise leave it 12.5% drawn — made the wiring appear as the crest
+        // passed. She had already ruled the opposite, and she was right: "I
+        // actually think that's the point, to sometimes see the mind without
+        // the connections, like a constellation." The map grows as MARKS; the
+        // wiring is what engagement buys. DO NOT RE-PROPOSE IT.
+        // A thread still follows its most awake end, so hovering and holding
+        // draw it in full — which is the whole of the interaction.
         applyConn(c)
         fireMaybe(c, now)
         // the far end's ink brightens as the thread arrives
@@ -364,19 +459,48 @@ export function useProximityEngine(opts: {
 
     // ---- replay: WATCH IT GROW (signed, gate 6) ----
     let panRaf = 0
-    const autopan = (dur: number) => {
+    const autopan = (dur: number, to?: number, vertical?: boolean) => {
       cancelAnimationFrame(panRaf)
-      const max = stage.scrollWidth - stage.clientWidth
+      const max = vertical
+        ? stage.scrollHeight - stage.clientHeight
+        : stage.scrollWidth - stage.clientWidth
       if (max <= 0) return
+      const end = to == null ? max : Math.max(0, Math.min(max, to))
+      // Turned, the record grows UPWARD: it starts at the far end (the oldest
+      // work, at the bottom) and arrives at the top, which is now.
+      const start = vertical ? max : 0
       const t0 = performance.now()
-      stage.scrollLeft = 0
+      if (vertical) stage.scrollTop = start
+      else stage.scrollLeft = start
       let stopped = false
-      // any real input takes the wheel back: pointer, wheel, or keyboard
-      const stop = () => {
-        stopped = true
+      // THE SNAP MUST BE OFF FOR THE WHOLE PAN, not for the first 700ms of it
+      // (the phone-lag fix, Emilie 2026-08-07: "on the phone it seems a bit
+      // laggy"). `.nw-stage` carries `scroll-snap-type: x proximity` on
+      // pointer-coarse, and a sweep writes scrollLeft on every frame across a
+      // 5543px scroller — so the browser re-evaluates seven snap targets
+      // against a moving scroll position, every frame, for six seconds.
+      // Measured at 390x844 with the CPU throttled 6x: a stall of 600-870ms
+      // once a second, in a rhythm that starts the instant the arrival's
+      // 700ms `is-free` window lapses and the snap re-arms mid-pan. The mean
+      // frame during the sweep was 272-483ms; after it ended, 16.7ms.
+      // The pan already chose its destination. Snapping cannot improve on a
+      // chosen answer, it can only argue with it.
+      stage.classList.add('is-free')
+      // Any real input takes the wheel back: pointer, wheel, or keyboard. On
+      // the arrival sweep this is the ONLY way out, so it also has to end the
+      // node wave — otherwise you grab the map and it keeps lighting up
+      // underneath you, which is the map arguing with you.
+      const release = () => {
+        stage.classList.remove('is-free')
         stage.removeEventListener('pointerdown', stop)
         stage.removeEventListener('wheel', stop)
         window.removeEventListener('keydown', stop)
+      }
+      const stop = () => {
+        stopped = true
+        replayState = null
+        kick()
+        release()
       }
       stage.addEventListener('pointerdown', stop)
       stage.addEventListener('wheel', stop)
@@ -384,19 +508,33 @@ export function useProximityEngine(opts: {
       const step = (now: number) => {
         if (stopped) return
         const k = Math.min(1, (now - t0) / dur)
-        stage.scrollLeft = max * (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2)
+        const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2
+        const at = start + (end - start) * e
+        if (vertical) stage.scrollTop = at
+        else stage.scrollLeft = at
         if (k < 1) panRaf = requestAnimationFrame(step)
-        else stop()
+        else release()
       }
       panRaf = requestAnimationFrame(step)
     }
 
-    const replay = () => {
+    const replay = (o?: ReplayOpts) => {
+      const step = o?.step ?? 130
+      const peak = o?.peak ?? 1
+      const decay = o?.decay ?? 0
       const delay = new Map<string, number>()
-      ranks.forEach((r) => delay.set(r.id, r.rank * 130))
-      const total = ranks.length * 130
-      replayState = { t0: performance.now(), until: total + 2200, delay }
-      autopan(total + 800)
+      // Rank is chronological, and chronological is what the wave follows in
+      // both orientations — turned, that simply means it climbs.
+      ranks.forEach((r) => delay.set(r.id, r.rank * step))
+      const total = ranks.length * step
+      replayState = {
+        t0: performance.now(),
+        until: total + (decay > 0 ? decay + 400 : 2200),
+        delay,
+        peak,
+        decay,
+      }
+      autopan(total + 800, o?.to, o?.vertical)
       kick()
     }
 
@@ -418,6 +556,6 @@ export function useProximityEngine(opts: {
 
   return {
     kick: () => api.current.kick(),
-    replay: () => api.current.replay(),
+    replay: (o?: ReplayOpts) => api.current.replay(o),
   }
 }

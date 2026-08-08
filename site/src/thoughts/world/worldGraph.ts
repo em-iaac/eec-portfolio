@@ -183,13 +183,16 @@ export interface Obstacle {
 //   award     Martian Mono 9px, uppercase            advance 0.781 height 12
 //   milestone Martian Mono 9px, uppercase            advance 0.78  height 12
 //   the date  9px                                    advance 0.76  height 12
-const LABEL_METRIC: Record<WorldKind, { size: number; adv: number; h: number }> = {
+// Exported because the TURNED map needs them too: a name centred under its
+// mark has to know its own width before it can be kept inside a 390px frame,
+// and every kind is set in a different face at a different size.
+export const LABEL_METRIC: Record<WorldKind, { size: number; adv: number; h: number }> = {
   project: { size: 9.5, adv: 0.8, h: 12 },
   thought: { size: 12.5, adv: 0.455, h: 17.9 },
   award: { size: 9, adv: 0.781, h: 12 },
   milestone: { size: 9, adv: 0.78, h: 12 },
 }
-const DATE_METRIC = { size: 9, adv: 0.76, h: 12 }
+export const DATE_METRIC = { size: 9, adv: 0.76, h: 12 }
 
 /** Where NeuralWorld puts a node's label baseline. */
 export function labelY(kind: WorldKind, y: number): number {
@@ -315,6 +318,7 @@ function fibrePaths(
   off: number,
   baseW: number,
   obs?: ObstacleIndex,
+  route?: { margin?: number; step?: number },
 ): { main: { d: string; w: number }; twigs: { d: string; w: number }[]; pts: [number, number][] } {
   const rng = rngFrom(seed)
   const dx = to[0] - from[0]
@@ -334,8 +338,8 @@ function fibrePaths(
   }
   // The twigs branch off the ORIGINAL seven, so the anatomy keeps its shape;
   // only the main run is resampled and pushed.
-  const routed = obs ? densify(pts) : pts
-  if (obs) avoid(routed, obs)
+  const routed = obs ? densify(pts, route?.step) : pts
+  if (obs) avoid(routed, obs, route?.margin)
   const twigs: { d: string; w: number }[] = []
   const tw = 1 + Math.floor(rng() * 2)
   for (let k = 0; k < tw; k++) {
@@ -372,6 +376,11 @@ export function weave(
   /** which way the midpoint leans; the world uses the a-end's rank parity */
   lean: number,
   obs?: ObstacleIndex,
+  /** How hard to steer around the obstacles. The FOLD needs more than the
+   *  resting map: its names are 25% larger and stacked into lanes, so the same
+   *  10-unit margin and 34-unit sampling left a third of its threads still
+   *  crossing a word (measured: 28 of 82). */
+  route?: { margin?: number; step?: number },
 ): { fibres: WorldLink['fibres']; synapse: { x: number; y: number; r: number }; pulseD: string } {
   const mx = (a[0] + b[0]) / 2 + lean
   const my = (a[1] + b[1]) / 2 - (Math.abs(a[0] - b[0]) > 260 ? 46 : 22)
@@ -380,8 +389,8 @@ export function weave(
   let primB: [number, number][] = []
   for (let f = 0; f < strength; f++) {
     const off = (f - (strength - 1) / 2) * 9
-    const fA = fibrePaths(a, [mx, my], seed + f * 7 + 3, off, wA, obs)
-    const fB = fibrePaths(b, [mx, my], seed + f * 7 + 19, off, wB, obs)
+    const fA = fibrePaths(a, [mx, my], seed + f * 7 + 3, off, wA, obs, route)
+    const fB = fibrePaths(b, [mx, my], seed + f * 7 + 19, off, wB, obs, route)
     if (f === 0) {
       primA = fA.pts
       primB = fB.pts

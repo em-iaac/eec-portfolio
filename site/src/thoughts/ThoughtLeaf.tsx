@@ -8,8 +8,8 @@
 // leaf (Emilie 2026-07-19: "only all thoughts, next and in time"); the
 // pillar still links out to its cluster. No panel under the prose (glass is
 // for UI, not words); the SKETCH DOT is the one sanctioned figure (S5).
-import { useMemo, type ReactNode } from 'react'
-import { useParams } from 'react-router-dom'
+import { useEffect, useMemo, type ReactNode } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 // ONE DATE GRAMMAR (Emilie, 2026-08-05). A note page printed the raw registry
 // string, "~ THOUGHT · 2026-01", while /work and the book both rendered
@@ -22,6 +22,7 @@ import type { ReachSet } from '../components/reach/verbs'
 import { LensPill } from '../components/ui/Pill'
 import { type Lens } from '../components/Lens'
 import { vtName } from '../lib/viewTransition'
+import { travelTo } from '../lib/navIntent'
 
 // Each control: an icon + label in its own accessible accent (mode-aware
 // light-dark pairs, all clear AA on both grounds). Colour + icon aid the
@@ -60,6 +61,26 @@ export default function ThoughtLeaf(props: {
   // The morph target: /thoughts/:id names its title so the index row (or the
   // mind-graph node) that opened it travels into it (src/lib/viewTransition.ts).
   const { id } = useParams()
+
+  // ESCAPE GOES BACK TO THE MAP (Emilie 2026-08-07: "when we press x or esc we
+  // should go back to that isolated mode of that node"). A project opens as an
+  // overlay and already answered Escape; a note is a whole page and answered
+  // nothing, so the gesture she expects did not exist here at all.
+  // It goes to /thoughts rather than back through history, so it behaves the
+  // same whether you arrived from the map, from /work, or from a link someone
+  // sent you. The map picks the chosen mark up again on arrival.
+  const navigate = useNavigate()
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      // never take the key from something that is itself open and closing
+      const el = document.activeElement
+      if (el && /INPUT|TEXTAREA/.test(el.tagName)) return
+      navigate(travelTo('/thoughts'), { viewTransition: true })
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [navigate])
 
   // THE HEADER EMPTIES ON A PHONE (Emilie's ruling 2026-08-04, from the
   // consistency sweep). Measured at 390px, a note's header band was 131px

@@ -140,11 +140,50 @@ export const REACH_LEN = 74
  * so the grading was invisible exactly where the two ends were near enough to
  * compare. Now five-in-common may close to 18% and three stays above 40%.
  */
+/**
+ * THE RESTING ARMS REACH FURTHER TOO (Emilie 2026-08-07: "on hover in the
+ * explore mode the near misses do not wake up like in the isolated mode, they
+ * should"). Measured first, because the obvious reading was wrong: they DO
+ * wake — the opacity goes 0 to 0.55, exactly what the fold shows. What differs
+ * is LENGTH. An unmade pair on the open map sits 1,000 to 4,000 units apart, so
+ * the fixed cap binds and the arms came out at 64 to 110 units — about 53 to 92
+ * screen pixels, a hair at each end of a very long gap. The fold's arms are
+ * proportional and read as a reach; these read as lint.
+ * So the caps roughly double. They stay FIXED, because the reason for a cap has
+ * not changed: proportional here would put a 900-unit limb on a 2,800-unit pair,
+ * pointing at something off screen. And the gap still cannot close — it is what
+ * the drawing is claiming.
+ */
 export function armLength(shared: number, dist: number): number {
   const s = Math.max(3, Math.min(5, shared))
-  const fixed = s >= 5 ? 110 : s >= 4 ? 86 : 64
+  const fixed = s >= 5 ? 210 : s >= 4 ? 170 : 135
   const maxFrac = s >= 5 ? 0.41 : s >= 4 ? 0.36 : 0.3
   return Math.min(fixed, dist * maxFrac)
+}
+
+/**
+ * THE SAME CLAIM, DRAWN FOR A FRAME THAT HOLDS BOTH ENDS (Emilie 2026-08-07:
+ * "the near misses should be a bit longer so it's more obvious, like really
+ * nearly touching").
+ *
+ * ⚠ RAISING `armLength` COULD NOT DO THIS, and the measurement is why. On the
+ * resting map an unmade pair sits 1,000 to 4,000 units apart, so the FIXED cap
+ * binds and the fraction never gets a say: lifting the fractions moved the gaps
+ * by 102 units out of 1,388 — invisible. Lifting the fixed cap instead is the
+ * thing the resting map must never do, because a proportional arm at 2,800
+ * units is a 900-unit limb pointing at something off screen.
+ *
+ * The fold is the opposite case: it has already closed the empty years, both
+ * ends are on the frame, and the whole reason the drawing is there is so one
+ * gap can be compared against another. So here the fraction governs and there
+ * is no fixed cap. The gap can never reach zero — the fractions are below 0.5
+ * by construction, so two arms cannot span the distance however strong the
+ * case. Only her signature closes one, and that makes it a thread instead.
+ */
+export function framedArmLength(shared: number, dist: number): number {
+  const s = Math.max(3, Math.min(5, shared))
+  const frac = s >= 5 ? 0.46 : s >= 4 ? 0.44 : 0.42
+  return dist * frac
 }
 
 export function reachPath(

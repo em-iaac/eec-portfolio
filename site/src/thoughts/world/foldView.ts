@@ -25,8 +25,17 @@
 // height is the axis that now means relatedness, so it is the one thing the
 // fold refuses to borrow against. And nothing here touches the frozen layout:
 // this is a view, computed per choice, thrown away on release.
-import { armLength } from './nearMisses'
-import { idSeed, KIND_STYLE, reachFibres, weave, WORLD, type WorldNode } from './worldGraph'
+import { framedArmLength } from './nearMisses'
+import {
+  idSeed,
+  indexObstacles,
+  KIND_STYLE,
+  reachFibres,
+  weave,
+  WORLD,
+  type Obstacle,
+  type WorldNode,
+} from './worldGraph'
 
 /** Where NeuralWorld actually puts a label's baseline. Kept next to the solver
  *  that has to agree with it; if the render ever moves, this moves with it. */
@@ -63,6 +72,9 @@ export interface FoldMember {
   node: WorldNode
   /** How far this one slides sideways. Zero for the subject, always. */
   dx: number
+  /** How far it slides ACROSS relatedness. Zero unless the fold is stretching
+   *  that axis to fill a turned frame; zero for the subject, always. */
+  dy: number
   /** Which label row it sits in, 0 = closest to the mark. */
   lane: number
   /** A signed thread, an unmade one, or the subject itself. */
@@ -84,6 +96,9 @@ export interface FoldPlan {
     fibres: { d: string; w: number }[]
     synapse: { x: number; y: number; r: number }
     strength: number
+    /** The travel line, subject-end first. The fold runs it BACKWARDS so every
+     *  pulse arrives at the chosen mark instead of leaving it. */
+    pulseD: string
   }[]
   /** Two arms and a gap, in the same anatomy. Never dashed. */
   arms: { key: string; paths: { d: string; w: number }[] }[]
@@ -130,6 +145,24 @@ export function planFold(
   /** Real rendered width of a node's label at a given font size, in world
    *  units. Supplied by the view, which can read it off the DOM. */
   measure?: (nodeId: string, font: number) => number | undefined,
+  /** STRETCH THE RELATEDNESS AXIS (Emilie, 2026-08-08, looking at a turned
+   *  fold: "it can definitely be stretched sideways for the threads /
+   *  connections to be clearer").
+   *
+   *  The fold has always slid its members along TIME to close the empty years.
+   *  Turned, time is the axis running DOWN a 537px frame and relatedness is the
+   *  one running across a 390px one — and relatedness was left at its raw
+   *  values, which for one mark's neighbourhood span perhaps 50px. So the
+   *  camera spent the height and left the width empty, and every thread ran
+   *  down the same narrow corridor, on top of the others.
+   *
+   *  This is the same kind of move `dx` already is: a LINEAR stretch about the
+   *  subject, so the order of the neighbourhood and the ratios between its
+   *  gaps both survive exactly. It is a lens, not a re-layout — nothing is
+   *  reordered and nothing is invented.
+   *
+   *  1 leaves the axis alone, which is what the flat map always passes. */
+  spreadY = 1,
 ): FoldPlan | null {
   const raw = membersOf(id)
   // A LONE NODE STILL ANSWERS. Refusing to fold below two members made the
@@ -153,6 +186,10 @@ export function planFold(
   // is what lets the eye keep hold of where it was.
   const anchor = target.get(id)! - BY_ID.get(id)!.x
   const dxOf = (m: WorldNode) => target.get(m.id)! - m.x - anchor
+  // The subject anchors both axes: it does not move a pixel on either.
+  const selfY = BY_ID.get(id)!.y
+  const dyOf = (m: WorldNode) => (m.y - selfY) * (spreadY - 1)
+  const fyOf = (m: WorldNode) => m.y + dyOf(m)
 
   // LANES, solved greedily rather than by a modulus cycle. A cycle was tried and
   // measured: it still left 2 overlapping pairs out of 66, because it takes no
@@ -208,12 +245,14 @@ export function planFold(
   const members: FoldMember[] = ordered.map((m) => ({
     node: m.node,
     dx: dxOf(m.node),
+    dy: dyOf(m.node),
     lane: lane.get(m.node.id)!,
     rel: m.rel,
   }))
 
   const fx = (n: WorldNode) => n.x + dxOf(n)
-  const ys = members.map((m) => m.node.y)
+  const fy = (n: WorldNode) => fyOf(n)
+  const ys = members.map((m) => fy(m.node))
   // the lanes hang below the lowest mark, and the door hangs below those
   const deepest = Math.max(...members.map((m) => m.lane)) * font * LANE_STEP + font * 3.4
   const box = {
@@ -222,6 +261,36 @@ export function planFold(
     y0: Math.min(...ys) - font,
     y1: Math.max(...ys) + deepest,
   }
+
+  // WHAT THE FOLDED THREADS HAVE TO GET AROUND (Emilie 2026-08-07: "in the
+  // isolated mode the thread/connections do not move through obstacle... so we
+  // don't have text and thread overlap").
+  //
+  // The resting map has routed around its labels since the map rework: `weave`
+  // takes an obstacle index and nudges its waypoints out of anything they land
+  // in. The fold simply never passed one — so it drew the same anatomy with the
+  // avoidance switched off, over names that are 25% LARGER than the resting
+  // ones and stacked into lanes, which is the worst case for collisions rather
+  // than the best.
+  // The boxes have to be rebuilt here rather than reused, because nothing about
+  // them survives the fold: every x has moved by dx, every baseline has dropped
+  // by its lane, and every label has grown. `measure` gives the true rendered
+  // width when the view can supply it, and CHAR_W is the cold-start guess.
+  const obstacles: Obstacle[] = []
+  for (const m of members) {
+    const cx = fx(m.node)
+    const base = labelBaseline(m.node) + dyOf(m.node) + m.lane * font * LANE_STEP
+    const text = m.node.mapLabel ?? m.node.title
+    const halfW = (measure?.(m.node.id, font) ?? text.length * font * CHAR_W) / 2
+    obstacles.push({ x0: cx - halfW, y0: base - font * 0.95, x1: cx + halfW, y1: base + font * 0.35 })
+    // the date rides one line under the name, always seven characters
+    const dBase = base + font * 1.2
+    const dHalf = (7 * font * 0.76) / 2
+    obstacles.push({ x0: cx - dHalf, y0: dBase - font * 0.9, x1: cx + dHalf, y1: dBase + font * 0.3 })
+    const r = KIND_STYLE[m.node.kind].r
+    obstacles.push({ x0: cx - r, y0: fy(m.node) - r, x1: cx + r, y1: fy(m.node) + r })
+  }
+  const obs = indexObstacles(obstacles)
 
   const self = BY_ID.get(id)!
   const links: FoldPlan['links'] = []
@@ -238,8 +307,8 @@ export function planFold(
   }
   for (const m of members) {
     if (m.rel === 'self') continue
-    const a: [number, number] = [fx(self), self.y]
-    const b: [number, number] = [fx(m.node), m.node.y]
+    const a: [number, number] = [fx(self), fy(self)]
+    const b: [number, number] = [fx(m.node), fy(m.node)]
     const wA = KIND_STYLE[self.kind].baseW
     const wB = KIND_STYLE[m.node.kind].baseW
     if (m.rel === 'thread') {
@@ -247,8 +316,8 @@ export function planFold(
       // through the fold instead of being re-rolled into a stranger.
       const key = `${id}>${m.node.id}`
       const strength = strengthOf.get(m.node.id) ?? 1
-      const w = weave(a, b, strength, idSeed(key, 0), wA, wB, self.rank % 2 ? 14 : -14)
-      links.push({ key, fibres: w.fibres, synapse: w.synapse, strength })
+      const w = weave(a, b, strength, idSeed(key, 0), wA, wB, self.rank % 2 ? 14 : -14, obs)
+      links.push({ key, fibres: w.fibres, synapse: w.synapse, strength, pulseD: w.pulseD })
     } else {
       const key = `${id}~${m.node.id}`
       const seed = idSeed(key, 5)
@@ -257,7 +326,7 @@ export function planFold(
       // actually reads — it is the one view that brings both ends near enough to
       // compare one gap against another.
       const dist = Math.hypot(b[0] - a[0], b[1] - a[1])
-      const L = armLength(sharedWith.get(m.node.id) ?? 3, dist)
+      const L = framedArmLength(sharedWith.get(m.node.id) ?? 3, dist)
       arms.push({
         key,
         paths: [...reachFibres(a, b, L, seed, wA), ...reachFibres(b, a, L, seed + 31, wB)],
