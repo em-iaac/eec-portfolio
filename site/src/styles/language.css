@@ -780,8 +780,22 @@ textarea,
   transition: fill 200ms var(--ease-soft);
   fill: none;
 }
-.thought-row:hover .thought-ring circle,
-.thought-row:focus-within .thought-ring circle {
+/* TOUCH IS NOT HOVER (2026-08-09, her phone): a tap gave the <Link> FOCUS
+   before the route changed, so :focus-within fired the whole reveal and
+   the slip flashed over the rows on the way out of the page — a desktop
+   affordance answering a gesture that already means "open it". Long-press
+   held it there, because iOS applies :hover to whatever you are holding.
+   TWO gates, one per trigger, because the two triggers fail differently:
+   HOVER needs a hover-capable pointer (iOS makes :hover sticky on tap),
+   FOCUS needs :focus-visible (a tap focuses, a keyboard focuses VISIBLY).
+   Touch visitors get the plain rows, which is what the mechanic always
+   promised; keyboard visitors keep the reveal on any device. */
+@media (hover: hover) and (pointer: fine) {
+  .thought-row:hover .thought-ring circle {
+    fill: var(--lang-ink);
+  }
+}
+.thought-row:has(:focus-visible) .thought-ring circle {
   fill: var(--lang-ink);
 }
 /* Round 4: the opening reveal FLOATS under its row (a small glass slip)
@@ -805,8 +819,13 @@ textarea,
   visibility: hidden;
   pointer-events: none;
 }
-.thought-row:hover .thought-open,
-.thought-row:focus-within .thought-open {
+@media (hover: hover) and (pointer: fine) {
+  .thought-row:hover .thought-open {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+.thought-row:has(:focus-visible) .thought-open {
   opacity: 1;
   visibility: visible;
 }

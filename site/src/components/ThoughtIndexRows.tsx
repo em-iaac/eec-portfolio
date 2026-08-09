@@ -88,11 +88,24 @@ function ScreenRow({
       )}
     </>
   )
+  // TOUCH IS NOT HOVER (2026-08-09): pointerenter FIRES ON TOUCH, and a tap
+  // focuses the <Link> before the route changes, so on a phone BOTH triggers
+  // were lighting the cross-glow on the way out of the page. The two gates
+  // here are the JS half of the CSS pair in language.css and must stay in
+  // step with it: mouse-only for the pointer, :focus-visible for the focus
+  // (a tap focuses the link, a keyboard focuses it VISIBLY). Leave always
+  // clears — an ungated null can only ever turn the glow off.
   const hoverProps = onThoughtHover
     ? {
-        onPointerEnter: () => onThoughtHover(e.id),
-        onPointerLeave: () => onThoughtHover(null),
-        onFocus: () => onThoughtHover(e.id),
+        onPointerEnter: (ev: React.PointerEvent) => {
+          if (ev.pointerType === 'mouse') onThoughtHover(e.id)
+        },
+        onPointerLeave: (ev: React.PointerEvent) => {
+          if (ev.pointerType === 'mouse') onThoughtHover(null)
+        },
+        onFocus: (ev: React.FocusEvent<HTMLElement>) => {
+          if (ev.currentTarget.matches(':focus-visible')) onThoughtHover(e.id)
+        },
         onBlur: () => onThoughtHover(null),
       }
     : undefined
