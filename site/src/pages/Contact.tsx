@@ -272,10 +272,15 @@ export default function Contact() {
               THE QUESTION MARK IS HERS TOO, and it is the stronger ending: it
               is what a person actually says out loud at the top of a climb,
               and an unanswered question is how nearly every good thing on this
-              site closes. */}
+              site closes.
+              THE SWEAR CUT (her call, 2026-08-11): the line carried an
+              intensifier before "believe" until a recruiter-facing read of
+              /contact. It held the volume of the outdoors against the indoors;
+              without it the contrast now rests on "honestly rather", which was
+              already in the sentence doing the same job more quietly. */}
           <p className={`mt-4 text-[var(--lang-ink)] ${PROSE}`}>
             Most days I am indoors arguing with a machine when I would honestly rather be at the end
-            of a hike going: can you fucking believe how beautiful our planet is?
+            of a hike going: can you believe how beautiful our planet is?
           </p>
 
           {/* SIGNED (G4), and "What's in yours?" IS THE MAILTO AGAIN (her note,
