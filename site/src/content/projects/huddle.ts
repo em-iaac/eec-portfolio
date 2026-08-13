@@ -25,7 +25,32 @@ const huddle: ProjectMeta = {
   // and stays the book plate below.
   image: { slug: 'huddle', name: 'wasp-growth', alt: 'Animated WASP growth study for The Huddle: modules aggregating along the wind across the Punta Arenas plot' },
   // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
+  // ⚠ NO spreadFit HERE, AND THAT IS THE RULE (Emilie, 2026-08-12): "for the
+  // renders we can just crop and zoom in, because it won't look wrong, it's a
+  // picture". A contain ground was BUILT for this plate and reverted on sight.
+  // The distinction that came out of it: cropping a RENDER costs framing, and
+  // cropping a SCREEN costs information. Sensi's crop removed the panel that
+  // proves the tool scores anything; this one removes some pavement.
+  // Measured before deciding: this image's bottom edge varies by 53 across the
+  // strip (cars, awnings, palms), so no flat ground could ever match it and the
+  // band printed as a slab.
   spreadAssets: [{ slug: 'huddle', name: 'axonometric' }],
+  // PAGE TWO (Emilie, 2026-08-11): "wasp growth, panels, renders". The
+  // aggregation and the panel logic on top, then three views from inside the
+  // place. Page one is an axonometric with nobody in it; this page is where
+  // Punta Arenas turns up.
+  // Her order kept: "wasp growth, panels, renders". CUT: axonometric-zoom,
+  // which is a close-up of the axonometric already filling the plate on the
+  // facing page, so of the five it was the one that repeated rather than added.
+  //
+  // The growth study has to open the page (it is the first beat of her order),
+  // so this lead stays at the top.
+  bookLead: { slug: 'huddle', name: 'wasp-growth', corner: 'top-outer' },
+  bookRegister: [
+    { slug: 'huddle', name: 'global-index' },
+    { slug: 'huddle', name: 'perspective-1' },
+    { slug: 'huddle', name: 'perspective-2' },
+  ],
   showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 

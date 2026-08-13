@@ -12,16 +12,22 @@
 import type { ReactNode } from 'react'
 import LogoMark from '../components/LogoMark'
 import { LENSES, LensGlyph, type Lens } from '../components/Lens'
-import { VOICE } from '../landing/identity'
+import { ADJECTIVES, BIO, BIO_VARIABLES, VOICE } from '../landing/identity'
 import { MIND, THREADS, VIEWBOX, spline, starPath } from '../landing/mindGraph'
-import { METAS_BY_SLUG } from '../content/projects'
+import type { BookAsset } from '../content/projects/types'
 import { thoughtIndexEntries } from '../data/registry'
 import { WORK_ENTRIES } from '../data/work'
 import ThoughtIndexRows, { fmtMonthYear } from '../components/ThoughtIndexRows'
-import { EDUCATION, EXPERIENCE, AWARDS, SKILLS, LANGUAGES, CERTIFICATES, UPDATED } from '../data/cv'
+import { UPDATED } from '../data/cv'
 import A4Page, { sideOf, type PageSide } from './A4Page'
 import { BOOK_SPREADS, type SpreadData } from './bookContents'
-import { printImageSrc } from './printImage'
+import { printImageSrc, gridImage } from './printImage'
+import { layoutAssetPage } from './assetGeometry'
+import { PRINT_FIGURES } from './figures'
+// ⚠ CvSheet is no longer imported here. The CV page left the book on
+// 2026-08-12 ("remove the record. no need for it in the book"); the component
+// still exists and /print/cv still renders it into the standalone CV PDF.
+import { WORK_ARTIFACTS } from '../components/work/artifacts'
 
 // The design gates (Emilie, 2026-07-12, this session) collapsed the
 // exploration variants to her picks: cover = THE MIND ON PAPER (the landing
@@ -38,16 +44,49 @@ import { printImageSrc } from './printImage'
 
 const SITE = 'emiliechidiac.com'
 
+// THE COVER, settled over three rounds (Emilie, 2026-08-11 and 12). It is the
+// landing mind graph, and every mark is drawn in ITS OWN CATEGORY INK; the
+// eight projects that hold pages sit larger, and nothing is numbered.
+//
+// Two versions were built and rejected, and both are worth not repeating.
+// The /thoughts world printed as a cover: the better drawing, but it carries
+// no words and the map is six times wider than it is tall, so any cover-shaped
+// view of it is a window rather than the map. And the eight marked in RED and
+// numbered: it reversed print.css's own rule that red is never a category, and
+// once the contents moved onto the CV page overleaf the numbers had no job on
+// a drawing anyway.
+
+
+// The lens inks, in print. Cyan, magenta and yellow are the printer's own
+// process inks, which is why print.css carries its own darker set rather than
+// the screen pens: these have to hold on paper at 3.6px.
+// Keyed by the mind graph's own LensKey ('c' | 'p' | 'e' from landing/palette),
+// not by the long lens names: the graph stores the short key and a long-name
+// map silently resolves to nothing, which is exactly how the first draft of
+// this came out uniformly black.
+const LENS_INK: Record<string, string> = {
+  c: '#0e7490',
+  p: '#a8186b',
+  e: '#7a5e00',
+}
+// The cover's third tier. Lighter than --pr-ink-muted on purpose: these labels
+// have to recede behind the eight project names without vanishing on an office
+// laser, and #565b63 put them level with the projects instead of under them.
+const THREAD_GREY = '#9aa1ab'
+// Every mark on the cover that is NOT one of the eight. Light enough to recede
+// behind them, dark enough to survive an office laser: this is the drawing, not
+// a watermark, and the shape of the graph still has to be readable.
+const QUIET_MARK = '#cdd2d8'
+
 const NAME = 'Emilie El Chidiac'
-// draftCopy: the cover subtitle COMPOSES the locked anchor title
-// ("Design Technology Architect", the CV header string) with the landing's
-// signed positioning line (landing/identity.ts). Both pieces are signed;
-// the join is new and needs Emilie's nod.
-const SUBTITLE = `Design Technology Architect. ${VOICE}`
-// The cover rail's award fact is the SIGNED award line from the Sensi
-// master, never authored here (the spec-era fact line retired with the
-// landing's G4 wording; the record is the single source).
-const AWARD_FACT = METAS_BY_SLUG['sensi']?.award ?? ''
+// ⚠ SUBTITLE and AWARD_FACT ARE GONE (Emilie, 2026-08-12). The cover carried
+// "Design Technology Architect. I work with design, technology and minds." and
+// "PORTFOLIO · 2026 · ✦ MACAD AWARDS 2026 · DESIGN COPILOTS · WINNER". Her
+// ruling: "I don't want below my name to have awards and bla bla, just that
+// this is the selected work portfolio 2026." The award still leads the Sensi
+// page that earned it and still marks its tile in the index, so nothing is
+// lost from the book; it just stops being the first thing a stranger reads.
+// The VOICE line moved to page 2, where it is the about page's standfirst.
 
 // The date grammar moved into the shared index-rows module (Session 1
 // REINDEX, 2026-07-16): the /work index and this book render the same rows.
@@ -83,7 +122,26 @@ function LensPill({ lens }: { lens: Lens }) {
    THE MIND ON PAPER (Emilie's pick over the carbon night): ink threads on
    white, the landing's own light mode, office-printer friendly. */
 
-function MindGraphArt({ ink, anno }: { ink: string; anno: string }) {
+// THE EIGHT, MARKED (draft A). Page one is the cover, then every project holds
+// a facing pair, so project i (0-based) opens on page 2 + 2i. The node knows
+// which project it is through its sheetRoute, which is the same /work/:id the
+// spread's foot prints, so this cannot drift from the book's contents.
+const BOOK_PAGE_BY_ROUTE = new Map(
+  BOOK_SPREADS.map((d, i) => [`/work/${d.entry.id}`, 3 + i * 2]),
+)
+// The cover names each of the eight from its MASTER, never from the graph's
+// node label: the graph stores an uppercase string tuned for a screen, and
+// uppercasing is exactly what destroys "lEgoarCh".
+const BOOK_TITLE_BY_ROUTE = new Map(
+  BOOK_SPREADS.map(d => [`/work/${d.entry.id}`, d.master.title]),
+)
+
+/** Is this node one of the eight the book holds a pair for? */
+function isInBook(marked: boolean, n: { sheetRoute?: string }): boolean {
+  return marked && n.sheetRoute ? BOOK_PAGE_BY_ROUTE.has(n.sheetRoute) : false
+}
+
+function MindGraphArt({ ink, marked = false }: { ink: string; marked?: boolean }) {
   return (
     <svg
       viewBox={`0 0 ${VIEWBOX.w} ${VIEWBOX.h}`}
@@ -98,9 +156,19 @@ function MindGraphArt({ ink, anno }: { ink: string; anno: string }) {
           stroke={ink}
           strokeWidth={1.2}
           strokeLinecap="round"
-          opacity={0.28}
+          // 0.28 -> 0.20 in the same calming pass. The web is the quietest
+          // thing on the page now, which is what lets eight coloured marks read
+          // as the subject rather than as more of the same drawing.
+          opacity={0.2}
         />
       ))}
+      {/* THE THREAD NAMES SIT BELOW THE PROJECTS (Emilie, 2026-08-12: "the
+          thread names should also be thinner than Emilie or greyish for
+          hierarchy"). Three tiers now read at a glance on the cover: her name
+          in display black, the eight projects in their category ink, and these
+          in light grey mono. They were the same size and the same grey as the
+          project labels, which is why a reader could not tell that SENSI is a
+          project and NEURO is a category. */}
       {THREADS.filter(t => t.label).map(t => (
         <text
           key={`${t.id}-label`}
@@ -108,53 +176,102 @@ function MindGraphArt({ ink, anno }: { ink: string; anno: string }) {
           y={t.label![1]}
           textAnchor={t.anchor}
           fontFamily="Martian Mono"
-          fontSize={8}
-          letterSpacing={1.1}
-          fill={anno}
+          fontSize={7.5}
+          letterSpacing={1.3}
+          fill={THREAD_GREY}
         >
           {t.id}
         </text>
       ))}
-      {MIND.nodes.map(n => (
-        <g key={n.id}>
+      {/* ⚠ PAINT ORDER, NOT DATA ORDER (Emilie, 2026-08-12: "fix the Verve
+          smudge"). A grey node sits almost exactly on Verve City Walk's mark in
+          the model, and drawn in MIND.nodes order it landed ON TOP of the
+          magenta dot, so the one thing the page is pointing at read as a smudge.
+          Every quiet mark is now drawn FIRST and the eight go over them.
+
+          Deleting the colliding node was the other option and it is worse: the
+          graph is the site's own model and this page is a rendition of it, not
+          an edit of it. Paint order changes nothing about what is true, and it
+          fixes every future collision rather than this one. */}
+      {[...MIND.nodes].sort((a, b) => Number(isInBook(marked, a)) - Number(isInBook(marked, b))).map(n => {
+        // In the book = drawn LARGER. Not a different colour and not numbered:
+        // she ruled both of those out on sight, and the page numbers now live
+        // on the contents overleaf where a reader looks for them.
+        const inBook = isInBook(marked, n)
+        // ONLY THE EIGHT KEEP THEIR INK (Emilie, 2026-08-12: "I feel like the
+        // drawing is overpowering the page, it should be calmer").
+        //
+        // The diagnosis that produced this rather than a weight tweak: the page
+        // was not too dark, it was too EVEN. Twenty-one marks all carrying full
+        // category ink compete at equal strength, so nothing on the cover is
+        // first and the drawing shouts as a whole. Greying everything that is
+        // not in the book turns the colour into a statement of membership, and
+        // the eight arrive without a single mark getting louder.
+        //
+        // The unmarked variant keeps every lens ink, because there the graph is
+        // the subject rather than a field the eight sit in.
+        const paint = marked && !inBook ? QUIET_MARK : LENS_INK[n.lens] ?? ink
+        return (
+        // data-book marks the eight so a calmer treatment can reach every mark
+        // that is NOT one of them without re-deriving membership in CSS.
+        <g key={n.id} data-book={inBook ? '1' : undefined}>
           {n.award ? (
-            <path d={starPath(n.x, n.y, 5.6)} fill={ink} />
+            <path d={starPath(n.x, n.y, inBook ? 8 : 5.6)} fill={paint} />
           ) : n.kind === 'project' ? (
-            <circle cx={n.x} cy={n.y} r={3.6} fill={ink} />
+            <circle cx={n.x} cy={n.y} r={inBook ? 6.4 : 3.6} fill={paint} />
           ) : (
-            <circle cx={n.x} cy={n.y} r={3.2} fill="none" stroke={ink} strokeWidth={1.4} />
+            <circle cx={n.x} cy={n.y} r={3.2} fill="none" stroke={paint} strokeWidth={1.4} />
           )}
-          {n.rest &&
-            (n.kind === 'project' ? (
-              <text
-                x={n.x + n.d[0]}
-                y={n.y + n.d[1]}
-                textAnchor={n.a}
-                fontFamily="Martian Mono"
-                fontSize={8}
-                letterSpacing={0.8}
-                fill={ink}
-              >
-                {n.label}
-              </text>
-            ) : (
-              <text
-                x={n.x + n.d[0]}
-                y={n.y + n.d[1]}
-                textAnchor={n.a}
-                fontFamily="Source Serif 4"
-                fontStyle="italic"
-                fontSize={9.5}
-                fill={anno}
-              >
-                {n.label}
-              </text>
-            ))}
+          {/* ONLY THE EIGHT ARE NAMED (Emilie, 2026-08-12). The landing labels
+              a resting SUBSET of nodes and reveals the rest on hover, which is
+              right on a screen and meaningless on paper: printed, that subset
+              is just a scatter of names with no rule behind it. So the cover
+              names the projects that hold pages and nothing else. The thread
+              names down the right stay: those are the graph's own spine and they
+              are structural, not a selection.
+
+              THREE THINGS ABOUT THIS LABEL, all hers on seeing the four drafted
+              covers (2026-08-12):
+
+              1. IT IS PAINTED IN ITS CATEGORY INK, the same ink as the mark it
+                 belongs to. That does NOT breach print.css's "red is never a
+                 category": these are the three lens inks, and red stays the
+                 emblem's alone. It also keeps the sitewide rule that colour
+                 never means alone, because the mark's SHAPE still carries the
+                 lens whether or not the ink survives a greyscale printer.
+              2. IT IS CENTRED ABOVE THE MARK. ⚠ It sat BESIDE the mark for one
+                 build, on my argument that a label on the baseline beside a dot
+                 reads as attached to it. On the page it did the opposite: set
+                 beside the mark the name runs INTO the threads to its right, and
+                 "Falcon Square" printed with a curve through it. Reverted on her
+                 sight of it, 2026-08-12. Above the mark the label has the one
+                 direction on this drawing where nothing else is.
+              2b. IT IS LIGHT. Bold at 14 made eight names shout over their own
+                 drawing; 500 at 11.5 lets the marks stay the loudest thing.
+              3. IT IS THE MASTER'S OWN TITLE, not the graph's node label. The
+                 graph stores an uppercase label for a screen, and uppercasing
+                 loses the one thing lEgoarCh's name is doing. */}
+          {inBook && (
+            <text
+              x={n.x}
+              y={n.y - 12}
+              textAnchor="middle"
+              fontFamily="var(--font-display)"
+              fontSize={11.5}
+              fontWeight={500}
+              letterSpacing={-0.1}
+              fill={paint}
+            >
+              {BOOK_TITLE_BY_ROUTE.get(n.sheetRoute ?? '') ?? n.label}
+            </text>
+          )}
         </g>
-      ))}
+        )
+      })}
     </svg>
   )
 }
+
 
 function Cover() {
   const ink = '#16181d'
@@ -162,43 +279,59 @@ function Cover() {
 
   return (
     <A4Page>
-      <div
-        style={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          background: '#ffffff',
-        }}
-      >
-        {/* The artwork: 297mm wide at the model's own aspect leaves the
-            bottom band free for the identity rail, like the landing's scrim. */}
-        <div style={{ height: '166mm', overflow: 'hidden' }}>
-          <MindGraphArt ink={ink} anno={anno} />
+      {/* THE VOID BECOMES THE TITLE (Emilie's pick, 2026-08-12, from four
+          compositions drawn against the real artwork).
+
+          The old cover stacked two objects: the drawing in a 166mm band, then
+          an identity rail underneath it. Her three notes on that page were the
+          empty upper left, the labels, and the type reading as a slab. All
+          three have one cause and one fix. The mind graph's ink is dense in the
+          centre and right and near-empty across the upper left, so THE NAME
+          GOES IN THE EMPTINESS: the drawing now fills the whole page and bleeds
+          off the bottom and the right, and the type sits inside it rather than
+          under it. Nothing is cropped, and the fault becomes the frame.
+
+          ⚠ THE AWARD LINE IS GONE FROM THE COVER, by her ruling: "I don't want
+          below my name to have awards and bla bla, just that this is the
+          selected work portfolio 2026." One line replaces three. The award is
+          not lost: it still leads the Sensi page that earned it, and it is
+          still in the index. AWARD_FACT and SUBTITLE are no longer read here,
+          which is why the cover's old draftCopy note no longer applies to them.
+
+          The standfirst went with it. That is not a second decision: page 2 now
+          opens with the same VOICE line, and printing it twice in the first two
+          pages was the stutter this pass has spent its time removing. */}
+      <div style={{ position: 'relative', height: '100%', background: '#ffffff' }}>
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+          <MindGraphArt ink={ink} marked />
         </div>
+        <div style={{ position: 'absolute', left: '18mm', top: '26mm', width: '135mm' }}>
+          <h1
+            className="pr-title"
+            style={{ fontSize: '38pt', lineHeight: 0.94, margin: 0, color: ink, letterSpacing: '-0.022em' }}
+          >
+            {NAME.toUpperCase()}
+          </h1>
+          {/* draftCopy: structural, and her words. */}
+          <p className="pr-mono" style={{ margin: '7mm 0 0', color: anno, letterSpacing: '0.15em' }}>
+            SELECTED WORK · PORTFOLIO 2026
+          </p>
+        </div>
+        {/* The emblem sits CENTRED OVER the URL (Emilie, 2026-08-12), not
+            right-aligned with it. Right-aligned, a square mark above a long
+            word reads as two things that happen to share an edge. */}
         <div
           style={{
-            flex: 1,
+            position: 'absolute',
+            right: '14mm',
+            bottom: '11mm',
             display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
-            gap: '8mm',
-            padding: '0 14mm 11mm 18mm',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <div>
-            <h1 className="pr-title" style={{ fontSize: '26pt', margin: 0, color: ink }}>
-              {NAME.toUpperCase()}
-            </h1>
-            <p className="pr-dek" style={{ margin: '2.4mm 0 0', color: ink }}>{SUBTITLE}</p>
-            {/* draftCopy: the PORTFOLIO · 2026 rail label is new (structural). */}
-            <p className="pr-mono" style={{ margin: '3.4mm 0 0', color: anno }}>
-              PORTFOLIO · 2026 · ✦ {AWARD_FACT}
-            </p>
-          </div>
-          <div style={{ textAlign: 'right', flex: 'none' }}>
-            <LogoMark size={52} />
-            <p className="pr-mono" style={{ margin: '2.4mm 0 0', color: anno }}>{SITE}</p>
-          </div>
+          <LogoMark size={52} />
+          <p className="pr-mono" style={{ margin: '2.4mm 0 0', color: anno }}>{SITE}</p>
         </div>
       </div>
     </A4Page>
@@ -216,7 +349,26 @@ function SpineSection({ label, children }: { label: string; children: ReactNode 
   )
 }
 
-function Spread({ data, side, plate }: { data: SpreadData; side: PageSide; plate: number }) {
+/** THE FOLIO (Emilie, 2026-08-12: "we don't mention the page number, we should
+ *  find a place for that in the footer").
+ *
+ *  ⚠ THE BOOK HAD NO PAGE NUMBERS AT ALL, on any of its twenty pages, while the
+ *  contents overleaf pointed at 03, 05, 07 and so on. A contents page that names
+ *  numbers a reader cannot find on the page is worse than no contents.
+ *
+ *  It sits at the OUTER edge of the foot line, which is where a folio belongs in
+ *  a bound book: left on a verso, right on a recto, so it always falls under the
+ *  thumb rather than in the gutter. `sideOf` already computes that, so re-ordering
+ *  the book moves the number to the correct edge on its own. */
+function Folio({ n, side }: { n: number; side: PageSide }) {
+  return (
+    <span className="pr-folio" data-side={side}>
+      {String(n).padStart(2, '0')}
+    </span>
+  )
+}
+
+function Spread({ data, side, plate, page }: { data: SpreadData; side: PageSide; plate: number; page: number }) {
   const { master, entry } = data
   // The dominant plate: the master's curated spreadAssets first (the
   // print-resolution rung), the card cover as the honest fallback.
@@ -227,8 +379,18 @@ function Spread({ data, side, plate }: { data: SpreadData; side: PageSide; plate
       ? master.image.alt
       : `${master.title}, the book plate`
 
+  // THE FITTED PLATE (2026-08-11). A dominant image that is a DIAGRAM cannot
+  // be cropped to the plate's 1.51 shape without losing whatever sits at its
+  // edges, which for lEgoarCh's outputs slide is the labels. Fitting it whole
+  // on its own ground costs nothing there, because the ground is black and the
+  // letterbox is invisible. Photographs keep filling the plate: cropping a
+  // render costs nothing, which is why every other plate is untouched.
+  const fit = master.spreadFit
   const figure = plateRef && img && (
-    <figure className="pr-spread__figure" style={{ margin: 0 }}>
+    <figure
+      className={`pr-spread__figure${fit ? ' pr-spread__figure--fit' : ''}`}
+      style={{ margin: 0, ...(fit ? { background: fit.ground } : null) }}
+    >
       <img src={img} alt={alt} />
     </figure>
   )
@@ -241,8 +403,16 @@ function Spread({ data, side, plate }: { data: SpreadData; side: PageSide; plate
 
   const head = (
     <>
+      {/* ⚠ THE P-NUMBER IS NOT PRINTED (Emilie, 2026-08-12). The book carried
+          TWO numbering systems on one page: `P-101` here, which is the SITE's
+          catalogue number, and `PLATE 01` up the seam, which is the book's own
+          sequence. In book order the P-numbers read 101, 106, 102, 105, 103,
+          104, 108, 121, so to anyone who has not memorised the site they look
+          arbitrary, and they sat in the most prominent corner of the page.
+          PLATE NN survives because it counts 01 to 08 in the order the reader
+          meets them. `entry.number` is still the site's, and /work still shows
+          it; only the book stops repeating it. */}
       <div className="pr-spread__meta">
-        <span className="pr-mono pr-mono--muted">{entry.number}</span>
         <LensPill lens={entry.lens} />
         <span className="pr-mono pr-mono--muted">{master.meta}</span>
       </div>
@@ -291,6 +461,7 @@ function Spread({ data, side, plate }: { data: SpreadData; side: PageSide; plate
       <span className="pr-mono pr-mono--muted">
         {SITE}/work/{entry.id} · {fmtDate(entry.date)}
       </span>
+      <Folio n={page} side={side} />
     </div>
   )
 
@@ -339,6 +510,179 @@ function Spread({ data, side, plate }: { data: SpreadData; side: PageSide; plate
   )
 }
 
+/* ---- 2b · THE ASSET PAGE -------------------------------------------------
+   THE EDITORIAL PASS (Emilie, 2026-08-12). The first version of this page was
+   a grid: every asset a rounded box inside a margin on all four sides, every
+   asset in a row the same height, every caption the same size. Her verdict:
+   "I would not want the stuff to be filleted, and want it to be more editorial
+   like the first page. not all assets should be the same size."
+
+   THE DIAGNOSIS THAT PRODUCED THIS LAYOUT. Page one is a COMPOSITION and page
+   two was a GRID, and the difference is one move: on page one a single image
+   dominates and BLEEDS OFF THE TRIM, so the type sits in a deliberate white
+   shoulder beside it. Page two floated inside a box on all four sides. It also
+   repeated three of page one's four furniture elements verbatim (the same
+   number, the same meta row, the same seam caption), which is a stutter rather
+   than a rhyme. So this page now makes page one's move instead of borrowing
+   its trim.
+
+   A LEAD AND A REGISTER. `bookLead` is promoted: it runs off two edges of the
+   page and the head meta moves into the white beside it. `bookRegister` is one
+   justified row, subordinate. The row still justifies, so every image keeps its
+   true aspect and NOTHING IS EVER CROPPED, which matters because most of these
+   are diagrams and a cropped diagram loses the labels that made it printable.
+
+   ⚠ WHY FOUR ASSETS, AND WHY 04 DIED. Both were settled by measuring, not by
+   taste, and the numbers are worth keeping because they will re-decide this if
+   the assets change:
+     · A full-bleed BAND across all 297mm ends 13mm PAST the trim on every one
+       of the eight. The widest asset in the book is 2.47 and a band needs about
+       3.2 to leave room for anything underneath. So a band is not a layout; it
+       is this layout with a wide lead.
+     · A register row of three is 42 to 46mm tall at this measure; a row of two
+       is 65 to 73mm. Six assets therefore spend 130mm of a 178mm body and the
+       lead collapses to 48mm, which is no longer a lead. At lead + three every
+       project clears, with the lead between 54% and 71% of the page width.
+
+   The geometry is computed, not guessed, because the page must be able to fail
+   loudly. These numbers mirror print.css and scripts/print-assets.mjs, which
+   sizes each baked image to the width it is actually drawn at. Change one,
+   change all three. */
+
+// The geometry lives in ./assetGeometry, which is pure and is imported by the
+// bake script and the census test as well. It used to be copied into all three
+// with a comment saying so; a wrong number in the bake script fails nothing and
+// ships a soft image instead, which is invisible at A4.
+
+type Sized = { w: number; h: number; src: string; alt: string; figure?: string }
+
+function resolve(ref: BookAsset | undefined): Sized | null {
+  if (!ref) return null
+  // A DRAWN FIGURE carries its own proportions, so the layout can size it the
+  // same way it sizes a photograph without anything existing on disk.
+  if (ref.figure) {
+    const fig = PRINT_FIGURES[ref.figure]
+    if (!fig) return null
+    return { w: fig.w, h: fig.h, src: '', alt: ref.caption ?? '', figure: ref.figure }
+  }
+  const img = gridImage(ref.slug, ref.name)
+  // The print caption overrides the manifest alt only where an asset declares
+  // one, which today is only the two inverted falcon sheets.
+  return img ? (ref.caption ? { ...img, alt: ref.caption } : img) : null
+}
+
+function AssetPage({ data, side, plate, page }: { data: SpreadData; side: PageSide; plate: number; page: number }) {
+  const { master, entry } = data
+  const leadRef = master.bookLead
+  const leadImg = resolve(leadRef)
+  const lead = leadImg && leadRef ? { ...leadImg, corner: leadRef.corner } : null
+  const register = (master.bookRegister ?? []).map(resolve).filter(Boolean) as Sized[]
+  const columnAsset = resolve(master.bookColumn)
+  const laid = layoutAssetPage(lead, register, side === 'verso', columnAsset, master.bookRegisterScale ?? 1)
+  // ⚠ NO CAPTION EVER FLOWS INSIDE THE META NOW. Every corner places the lead's
+  // caption at laid.leadCap, which for a top lead is the band directly under the
+  // lead. The meta block is a HEAD: what the page is, who made it, what it was
+  // built with, and nothing that describes a picture.
+  const capInMeta = false
+  const mm = (v: number) => `${v}mm`
+
+  return (
+    <A4Page>
+      <div className={`pr-assets pr-assets--${side}`}>
+        {/* THE SEAM CAPTION IS GONE, and that is the point rather than an
+            omission. It read "PLATE 05 · THE HUDDLE" on both pages of the
+            pair, which is the stutter her review named. This page says whose
+            it is once, in the head row, and once more in the foot. */}
+        <div
+          className="pr-assets__meta"
+          style={{ left: mm(laid.meta.x), top: mm(laid.meta.y), width: mm(laid.meta.w) }}
+        >
+          {/* ⚠ NO P-NUMBER HERE EITHER (2026-08-12). It came off the project page
+              first and this one was missed for an hour, so the book briefly
+              printed the site's catalogue number on its even pages and not its
+              odd ones. PLATE NN stays: it counts 01 to 08 in reading order. */}
+          <span className="pr-mono pr-mono--muted">
+            PLATE {String(plate).padStart(2, '0')}
+          </span>
+          <span className="pr-mono pr-mono--muted">{master.meta}</span>
+          {/* THE HEAD NOW CARRIES THE TECH LINE, under a hairline (Emilie,
+              2026-08-12: "maybe we should have some type of header with the
+              plate, the context and the tools or tech used"). The facing project
+              page states the same three facts in its foot; before this the asset
+              page stated two of them and a picture caption, which is why the
+              block read as a stack rather than as a head. The rule divides the
+              page's own facts from what it was built with. */}
+          <span className="pr-assets__headrule" />
+          <span className="pr-mono pr-mono--muted pr-assets__tech">{master.tech}</span>
+
+        </div>
+
+        {laid.lead && (
+          <figure
+            className="pr-assets__lead"
+            style={{ left: mm(laid.lead.x), top: mm(laid.lead.y), width: mm(laid.lead.w), height: mm(laid.lead.h) }}
+          >
+            {laid.lead.figure ? PRINT_FIGURES[laid.lead.figure]?.node : (
+              <img src={laid.lead.src} alt={laid.lead.alt} />
+            )}
+          </figure>
+        )}
+
+        {/* THE COLUMN ASSET. Positioned, not flowed, and anchored to the
+            REGISTER ROW rather than to the head: its bottom edge meets the
+            row's, so its caption starts on the same line as theirs and the
+            spare height collects above it as one band. A credit line that wraps
+            to two lines therefore moves nothing. */}
+        {laid.column && (
+          <figure
+            className="pr-assets__fig"
+            style={{ left: mm(laid.column.x), top: mm(laid.column.y), width: mm(laid.column.w) }}
+          >
+            <img src={laid.column.src} alt={laid.column.alt} style={{ height: mm(laid.column.h) }} />
+            <figcaption className="pr-assets__cap">{laid.column.alt}</figcaption>
+          </figure>
+        )}
+
+        {laid.register.map((box, i) => (
+          <figure
+            key={i}
+            className="pr-assets__fig"
+            style={{ left: mm(box.x), top: mm(box.y), width: mm(box.w) }}
+          >
+            {box.figure ? (
+              <div style={{ height: mm(box.h) }}>{PRINT_FIGURES[box.figure]?.node}</div>
+            ) : (
+              <img src={box.src} alt={box.alt} style={{ height: mm(box.h) }} />
+            )}
+            <figcaption className="pr-assets__cap">{box.alt}</figcaption>
+          </figure>
+        ))}
+
+        {/* A bottom lead's caption goes in the empty quadrant beside it, and a
+            field lead's under its own foot. Both are white, never over an
+            image and never under the lead where it met the register. */}
+        {laid.lead && !capInMeta && (
+          <p
+            className="pr-assets__leadcap"
+            style={{ left: mm(laid.leadCap.x), top: mm(laid.leadCap.y), width: mm(laid.leadCap.w) }}
+          >
+            {laid.lead.alt}
+          </p>
+        )}
+
+        <div className="pr-assets__rule" style={{ top: mm(laid.ruleY) }} />
+        <div className="pr-assets__foot" style={{ top: mm(laid.ruleY + 4) }}>
+          <span className="pr-mono">{master.title}</span>
+          <span className="pr-mono pr-mono--muted">
+            {SITE}/work/{entry.id} · {fmtDate(entry.date)}
+          </span>
+          <Folio n={page} side={side} />
+        </div>
+      </div>
+    </A4Page>
+  )
+}
+
 /* ---- 3 · THE INDEX ------------------------------------------------------- */
 
 // The rows themselves live in components/ThoughtIndexRows (print skin): the
@@ -357,23 +701,12 @@ function IndexPage({ side }: { side: PageSide }) {
             THE THOUGHTS heading each give back ~2mm, which is 6mm against a
             4.5mm overrun. Re-measure if a fifth note ships; the next one
             probably wants the thoughts list to run in more columns instead. */}
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '1.6mm' }}>
-          <h2 className="pr-title" style={{ fontSize: '20pt', margin: 0 }}>Index</h2>
-          <span className="pr-kicker">
-            EVERYTHING · {WORK_ENTRIES.length} PROJECTS + {THOUGHTS.length} THOUGHTS · {SITE}
-          </span>
-        </div>
-        {/* Colour never means alone: the ticks are named once per page.
-            (S4b: 15 projects = a third tile row; the legend + THE THOUGHTS
-            margins each gave back ~1.75mm so the page keeps its box.) */}
-        <div className="pr-legend pr-kicker" style={{ marginBottom: '1.8mm' }}>
-          {(Object.keys(LENSES) as Lens[]).map(l => (
-            <span key={l}>
-              <PrLensTick lens={l} size={6} /> {LENSES[l].label.toUpperCase()}
-            </span>
-          ))}
-          <span>✦ RECOGNITION</span>
-        </div>
+        {/* THE HEADER AND FOOTER, SORTED (Emilie, 2026-08-12: the page "look
+            busy"). The header is now the word and nothing else. The counts and
+            the legend moved to a foot rule at the bottom, which is where a
+            reader looks for them and where they stop competing with the work.
+            The sheet numbers came off every tile in the same pass. */}
+        <h2 className="pr-title" style={{ fontSize: '20pt', margin: '0 0 4mm' }}>Index</h2>
 
         {/* The WORK grid's manner, in print (Emilie's pick over the rows
             contents page): image tiles for every project, quiet tiles where
@@ -383,12 +716,17 @@ function IndexPage({ side }: { side: PageSide }) {
             = 3 rows and the page keeps its box; measured live.) */}
         <div className="pr-index__grid" style={{ gridTemplateColumns: 'repeat(7, 1fr)' }}>
           {WORK_ENTRIES.map(w => {
-            const src = w.cover && printImageSrc(w.cover.slug, w.cover.name)
+            // THE TILES ARE HER DRAWINGS (Emilie, 2026-08-11). Each project's
+            // parti from /work, in ink. A photograph printed 36mm wide reads as
+            // texture; a parti was drawn to be read small. It also removes the
+            // last of the index's weight, which was the heaviest thing in the
+            // book before this session.
+            const art = WORK_ARTIFACTS[w.id]
             return (
               <div key={w.id}>
                 <div className="pr-tile__img">
-                  {src ? (
-                    <img src={src} alt={w.cover?.alt ?? w.title} />
+                  {art ? (
+                    <div className="pr-art">{art}</div>
                   ) : (
                     <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <span className="pr-mono pr-mono--muted">{w.hero === 'audio' ? 'LISTEN' : w.number}</span>
@@ -401,91 +739,165 @@ function IndexPage({ side }: { side: PageSide }) {
                     {w.title}
                   </span>
                 </div>
-                {/* S2 round 6: the origin stamp joins the printed index too,
-                    so both renditions read "P-108 · SOMA" (the screen face
-                    carries ✦ on its recognition line; print keeps it here). */}
+                {/* The sheet number LEFT this line (2026-08-12). "P-108 · SOMA"
+                    said two things and only one of them meant anything to a
+                    reader holding the book: the number is an internal id and
+                    the origin is the institution. Twenty-one of them were a
+                    third of the page's text for no return. */}
                 <div className="pr-mono pr-mono--muted" style={{ marginTop: '0.6mm' }}>
-                  {w.number} · {w.origin}
+                  {w.origin}
                   {w.recognition ? ' · ✦' : ''}
                 </div>
               </div>
             )
           })}
         </div>
-        <h3 className="pr-kicker" style={{ margin: '3mm 0 1.6mm' }}>THE THOUGHTS</h3>
-        <ThoughtIndexRows skin="print" />
+        {/* TEN, NOT EIGHTEEN (Emilie, 2026-08-12). The full list ran four
+            columns deep and was most of why the page felt busy; ten in three
+            columns is four rows instead of five, and the rest are a line away.
+            They are already ordered newest first, so "the latest ten" is just
+            the top of the list rather than a second judgement. */}
+        <h3 className="pr-kicker" style={{ margin: '5mm 0 2.2mm' }}>THE THOUGHTS, LATEST FIRST</h3>
+        <ThoughtIndexRows skin="print" limit={9} columns={3} />
+
+        {/* THE FOOT. The counts and the legend live here now. Colour still
+            never means alone: this is where the ticks get named. */}
+        <div className="pr-index__foot">
+          {/* The SHORT lens names here, not the long ones: on a foot rule the
+              full "COMPUTATION & RESEARCH" pushed the counts onto a second
+              line. The long labels still lead each project page. */}
+          <div className="pr-legend pr-kicker">
+            {(Object.keys(LENSES) as Lens[]).map(l => (
+              <span key={l}>
+                <PrLensTick lens={l} size={6} /> {LENSES[l].short.toUpperCase()}
+              </span>
+            ))}
+            <span>✦ RECOGNITION</span>
+          </div>
+          <span className="pr-kicker">
+            {WORK_ENTRIES.length} PROJECTS · {THOUGHTS.length} THOUGHTS · {SITE}
+          </span>
+        </div>
       </div>
     </A4Page>
   )
 }
 
-/* ---- 4 · THE CV TAIL ----------------------------------------------------- */
+/* ---- 4 · THE ABOUT PAGE ---------------------------------------------------
+   THE CV CAME OUT (Emilie, 2026-08-12): "I am thinking of removing the CV and
+   instead have an about instead and the index in this book design page."
 
-function CvTail({ side }: { side: PageSide }) {
+   She was right and the reasons are worth keeping, because the CV page had
+   survived two rounds of improvement before anyone asked whether it belonged.
+   It was the ONE page in the book wearing another document's typography (the
+   CV's pink rules, its icons, its 6.1pt body). It spent about six hundred words
+   before a reader had seen a single project. Its right half was 60% empty. And
+   it duplicated a document that already ships twice, as /cv and as a separate
+   one-page PDF beside this one.
+
+   HER PICK: option 03·B, "the book's own grammar" with the ink. This page wears
+   a PROJECT PAGE'S LAYOUT, at the same coordinates: the meta line at 46mm, the
+   title at 58mm, the standfirst at 74mm, the columns from 100mm, the foot rule
+   at 196mm, and page one's 32mm white shoulder above all of it. So the book
+   teaches its own structure one page before Sensi uses it.
+
+   THE WORDS ARE NOT NEW. The prose is the landing BIO rendered verbatim from
+   landing/identity.ts, which Emilie signed on 2026-08-06 and whose closing
+   paragraph she wrote herself at round seven. Nothing on this page ships draft,
+   which is the whole reason it reads in her voice: it is her voice.
+
+   THE RECORD COLUMN WAS BUILT AND CUT. A third column carrying two schools,
+   four roles and the languages was drawn and offered as the thing the book
+   loses when the CV sheet goes. Her ruling, same day: "remove the record. no
+   need for it in the book." So the page holds two columns and the white where
+   the third one was, and the record lives where it always did, at /cv and in
+   the CV PDF. The foot line still points at it. */
+
+/**
+ * The BIO's two variables in italic, and nothing else.
+ *
+ * A LIST, NOT A HEURISTIC, and that distinction is load-bearing (see
+ * landing/identity.ts): "italicise any standalone single letter" would catch
+ * every "I" in the first paragraph. LandingCover does the same job for the
+ * screen off the same BIO_VARIABLES export, so the two renditions cannot drift.
+ */
+function renderBioParagraph(para: string): ReactNode[] {
+  const vars = new Set<string>(BIO_VARIABLES)
+  return para.split(/\b/).map((piece, i) =>
+    vars.has(piece) ? <em key={i}>{piece}</em> : <span key={i}>{piece}</span>,
+  )
+}
+
+function AboutPage() {
   return (
     <A4Page>
-      <div className={`pr-cv pr-cv--${side}`}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '5mm' }}>
-          {/* The locked CV header string, verbatim. */}
-          <h2 className="pr-title" style={{ fontSize: '20pt', margin: 0 }}>
-            {NAME} <span style={{ fontWeight: 400, color: 'var(--pr-ink-muted)' }}>| Design Technology Architect</span>
-          </h2>
-          <span className="pr-mono pr-mono--muted">chidiacemilie@gmail.com · {SITE}</span>
+      <div className="pr-about">
+        {/* The four adjectives ARE the landing's claim (identity.ts: the role
+            title was offered as a fifth tier and Emilie cut it, twice). They
+            take the slot a project page gives its number and lens pill. */}
+        <p className="pr-about__meta pr-kicker">{ADJECTIVES.toUpperCase()}</p>
+        {/* One word, set like a project title, the same way the index page's
+            "Index" is set. The name is in the standfirst under it rather than
+            here, because the cover two pages ago is where the name belongs at
+            size and printing it twice at 30pt is the stutter this pass spent
+            its time removing. */}
+        <h2 className="pr-about__title">About</h2>
+        <p className="pr-about__stand">
+          {NAME}. {VOICE}
+        </p>
+
+        <div className="pr-about__cols">
+          <div>
+            <p className="pr-about__ch">Who</p>
+            {BIO.map((para, i) => (
+              <p className="pr-about__bio" key={i}>
+                {/* THE TWO VARIABLES SET IN ITALIC, the same rendering the
+                    landing does off BIO_VARIABLES. A list, not a heuristic:
+                    italicising every standalone letter would catch the "I" in
+                    paragraph one. See identity.ts for why the variables are
+                    variables and must never be resolved into an example. */}
+                {renderBioParagraph(para)}
+              </p>
+            ))}
+          </div>
+          <div>
+            <p className="pr-about__ch">In this book</p>
+            {BOOK_SPREADS.map((d, i) => (
+              <div key={d.master.slug} className="pr-about__row">
+                {/* HER INK (option 03·B). Each of the eight carries its own
+                    parti, the same drawing the index page gives all twenty-one
+                    seventeen pages later. The mark sits BESIDE the name it
+                    belongs to, which is what makes it a key rather than
+                    decoration: the rejected 03·C ran them as a band across the
+                    shoulder, where they floated free of their titles. */}
+                {/* ⚠ THE .pr-art WRAPPER IS LOAD-BEARING, not decoration.
+                    Every shape in an artifact carries a class (ln, th, dt, ac)
+                    and print.css styles them as `.pr-art .ln` and so on. Drawn
+                    without the wrapper the selectors never match, so the shapes
+                    fall back to the SVG default of FILLED BLACK WITH NO STROKE
+                    and eight line drawings print as eight solid blobs. It looked
+                    like an icon-size problem for a whole round and was a missing
+                    div. The index page has always had it, which is why the same
+                    drawings are correct seventeen pages later. */}
+                <span className="pr-about__parti">
+                  <div className="pr-art">{WORK_ARTIFACTS[d.entry.id]}</div>
+                </span>
+                <span className="pr-about__ti">{d.master.title}</span>
+                <span className="pr-about__leader" />
+                <span className="pr-mono pr-mono--muted">{String(3 + i * 2).padStart(2, '0')}</span>
+              </div>
+            ))}
+            <div className="pr-about__row pr-about__row--rest">
+              <span className="pr-about__ti">Everything else, and the thoughts</span>
+              <span className="pr-about__leader" />
+              <span className="pr-mono pr-mono--muted">{BOOK_PAGE_COUNT - 1}</span>
+            </div>
+          </div>
         </div>
 
-        <div className="pr-cv__cols">
-          <div>
-            <h3>EDUCATION</h3>
-            {EDUCATION.map(e => (
-              <div key={e.title} className="pr-cv__entry">
-                <p className="pr-mono pr-mono--muted" style={{ margin: 0 }}>{e.dates}</p>
-                <p className="pr-body" style={{ margin: '0.6mm 0 0', fontFamily: 'var(--font-display)', fontWeight: 600 }}>
-                  {e.title} · {e.org}
-                </p>
-                <p className="pr-body" style={{ margin: '0.6mm 0 0' }}>{e.notes}</p>
-              </div>
-            ))}
-            <h3 style={{ marginTop: '5mm' }}>CERTIFICATES</h3>
-            {CERTIFICATES.map(c => (
-              <p key={c} className="pr-mono" style={{ margin: '0 0 1.4mm', letterSpacing: '0.02em' }}>{c}</p>
-            ))}
-            <h3 style={{ marginTop: '5mm' }}>LANGUAGES</h3>
-            <p className="pr-mono" style={{ margin: 0, letterSpacing: '0.02em' }}>{LANGUAGES}</p>
-          </div>
-
-          <div>
-            <h3>EXPERIENCE</h3>
-            {EXPERIENCE.map(e => (
-              <div key={e.org + e.dates} className="pr-cv__entry">
-                <p className="pr-mono pr-mono--muted" style={{ margin: 0 }}>{e.dates}</p>
-                <p className="pr-body" style={{ margin: '0.6mm 0 0', fontFamily: 'var(--font-display)', fontWeight: 600 }}>
-                  {e.title} · {e.org}
-                </p>
-                <p className="pr-body" style={{ margin: '0.6mm 0 0' }}>{e.notes}</p>
-              </div>
-            ))}
-          </div>
-
-          <div>
-            <h3>AWARDS & RECOGNITION</h3>
-            {AWARDS.map(a => (
-              <div key={a.text} style={{ display: 'grid', gridTemplateColumns: '10mm 1fr', gap: '2mm', marginBottom: '1mm' }}>
-                <span className="pr-mono pr-mono--muted">{a.year}</span>
-                <span className="pr-body" style={{ fontSize: '8.5pt', lineHeight: 1.32 }}>{a.text}</span>
-              </div>
-            ))}
-            <h3 style={{ marginTop: '4mm' }}>SKILLS</h3>
-            {SKILLS.map(s => (
-              <div key={s.group} style={{ marginBottom: '1.2mm' }}>
-                <span className="pr-mono pr-mono--muted">{s.group} · </span>
-                <span className="pr-mono" style={{ letterSpacing: '0.01em' }}>{s.items}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ marginTop: 'auto', paddingTop: '3mm', borderTop: '0.5pt solid var(--pr-hairline)', display: 'flex', justifyContent: 'space-between' }}>
-          <span className="pr-mono pr-mono--muted">UPDATED {UPDATED.toUpperCase()}</span>
+        <div className="pr-about__rule" />
+        <div className="pr-about__foot">
+          <span className="pr-mono pr-mono--muted">{NAME.toUpperCase()}</span>
           <span className="pr-mono pr-mono--muted">THE FULL RECORD · {SITE}/cv</span>
         </div>
       </div>
@@ -533,27 +945,38 @@ function Colophon() {
 
 /* ---- The book ------------------------------------------------------------ */
 
-// The book's page count: cover + the spreads + index + CV tail + colophon.
-// The render script asserts the PDF matches this exactly (a page that
-// silently overflows or vanishes fails the build).
-export const BOOK_PAGE_COUNT = BOOK_SPREADS.length + 4
+// The book's page count: cover + TWO pages per project + index + CV tail +
+// colophon. The render script asserts the PDF matches this exactly (a page
+// that silently overflows or vanishes fails the build).
+export const BOOK_PAGE_COUNT = BOOK_SPREADS.length * 2 + 4
 
 export default function PrintBook() {
-  // Page numbers are the binding truth: cover = 1 (recto), spreads follow.
-  let page = 1
-  const spreadPages = BOOK_SPREADS.map((data, i) => {
-    page += 1
-    return <Spread key={data.master.slug} data={data} side={sideOf(page)} plate={i + 1} />
+  // THE ORDER (Emilie, 2026-08-12): cover, then the about and the book's own
+  // contents, then the work, then the index, then the colophon. Page 2 was the
+  // CV for one day; it became the ABOUT in the same session, and the page count
+  // did not move.
+  //
+  // It costs one thing, recorded so nobody re-derives it: projects now START ON
+  // AN ODD PAGE, so a project's two pages are no longer a facing pair in a
+  // bound copy. That only matters if this is ever printed and bound, and never
+  // on a screen, so it was traded knowingly rather than defended.
+  let page = 2 // 1 is the cover, 2 is the about
+  const spreadPages = BOOK_SPREADS.flatMap((data, i) => {
+    const left = (page += 1)
+    const right = (page += 1)
+    return [
+      <Spread key={data.master.slug} data={data} side={sideOf(left)} plate={i + 1} page={left} />,
+      <AssetPage key={`${data.master.slug}-assets`} data={data} side={sideOf(right)} plate={i + 1} page={right} />,
+    ]
   })
   const indexSide = sideOf(++page)
-  const cvSide = sideOf(++page)
 
   return (
     <>
       <Cover />
+      <AboutPage />
       {spreadPages}
       <IndexPage side={indexSide} />
-      <CvTail side={cvSide} />
       <Colophon />
     </>
   )

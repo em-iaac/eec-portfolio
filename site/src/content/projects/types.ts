@@ -1,3 +1,67 @@
+/** One image on the book's second page, named the way the manifest names it. */
+export interface BookAsset {
+  /** Trim this fraction of the image's SHORTER side off every edge at bake time.
+   *
+   *  It exists for ONE thing: an image that arrives with a rounded corner baked
+   *  into the picture. Print trims, it does not round, and a fillet we did not
+   *  draw is still a fillet on the page. lEgoarCh's pipeline diagram is a cream
+   *  card with a 30px radius and a 2px white margin, measured, so 0.042 of its
+   *  782px height takes 32px off each edge and the corner is square again.
+   *
+   *  A fraction of the shorter side rather than a pixel count, so it survives
+   *  the original being re-exported at another resolution. */
+  trim?: number
+  /** Crop these fractions off each edge at bake time.
+   *
+   *  `trim` above is symmetric and exists for a rounded corner. This one is
+   *  per-edge and exists for BAKED TEXT: assets exported from a studio sheet
+   *  arrive with their own heading and their own stage labels burnt into the
+   *  picture, in a type family the book uses nowhere else, so the page ends up
+   *  with two title systems and two caption systems arguing. The bands are
+   *  measured off the image's own ink profile, never guessed. */
+  crop?: { top?: number; bottom?: number; left?: number; right?: number }
+  /** Draw a figure from src/print/figures.tsx instead of printing a picture.
+   *  When set, `slug`/`name` are only an id: nothing is baked and nothing is
+   *  read from disk. Used where the honest asset is a drawing the book makes
+   *  rather than a screenshot of somebody else's diagram. */
+  figure?: string
+  slug: string
+  name: string
+  invert?: boolean
+  caption?: string
+}
+
+/**
+ * WHERE THE LEAD BLEEDS OFF THE TRIM (Emilie, 2026-08-12): "we are always
+ * using the hero on the left side, we can switch sometimes and have it on the
+ * right? or down right, not always upper left."
+ *
+ * Every asset page is an EVEN page, so `outer` is the left edge and `bound` is
+ * the right one. The book alternates outer / bound down its whole length, and
+ * varies the vertical only where the project's reading order allows it: a lead
+ * at the bottom is read AFTER its register, so it is only ever given to a
+ * project whose lead is a summation rather than an opening (lEgoarCh's
+ * pipeline, NeuroSpace's pipeline). Sensi's flowchart, Huddle's growth study,
+ * Ballooning's process and Falcon's first sketch sheet all have to come first
+ * by Emilie's own per-project rulings, so those stay at the top.
+ *
+ * `field-*` is the full-height variant, which needs a portrait asset to be
+ * worth doing. There is exactly one in the book (The Lungs' Speckle capture,
+ * at 0.64), so there is exactly one field page.
+ *
+ * ⚠ A `bound` lead bleeds toward the GUTTER. That is fine for a PDF and for
+ * loose sheets, which is how this leave-behind actually travels, and it would
+ * lose a few millimetres into the spine if it were ever perfect-bound. Traded
+ * knowingly for the variation she asked for, not overlooked.
+ */
+export type BookCorner =
+  | 'top-outer'
+  | 'top-bound'
+  | 'bottom-outer'
+  | 'bottom-bound'
+  | 'field-outer'
+  | 'field-bound'
+
 // THE MASTER CONTENT FILE (G1, 2026-07-10; REDESIGN-SPEC §11). ONE file per
 // project under content/projects/ is the canonical home of everything the
 // project SAYS: the card copy that used to live in data/projects.tsx plus the
@@ -83,7 +147,73 @@ export interface ProjectMeta {
 
   // ---- Future renditions (declared now so the shape is complete) ----------
   cvLine?: string
+  // THE BOOK PLATE: the dominant image on the project's page one. Baked to a
+  // ~300dpi print rung by scripts/print-assets.mjs.
   spreadAssets?: { slug: string; name: string }[]
+  // THE BOOK'S SECOND PAGE (2026-08-11): the asset grid facing the project
+  // page. Curated with Emilie project by project, because the right count and
+  // arrangement depend entirely on what shape that project's images are: a
+  // page of 2:1 slides and a page holding a portrait Speckle capture beside a
+  // square plan are not the same page.
+  //
+  // A LEAD AND A REGISTER, not a grid (Emilie, 2026-08-12, the editorial
+  // pass). The grid was the complaint: "not all assets should be the same
+  // size", and "more editorial like the first page". Page one is a
+  // composition because ONE image dominates and BLEEDS OFF THE TRIM, so page
+  // two now makes the same move. `bookLead` is the promoted asset and the
+  // corner it bleeds from; `bookRegister` is the subordinate row beneath or
+  // beside it.
+  //
+  // WHY FOUR ASSETS AND NOT SIX, measured rather than judged. A register row
+  // of three is 42 to 46mm tall at this measure; a row of two is 65 to 73mm.
+  // With six assets the register eats 130mm of the 178mm body, which leaves
+  // the lead 48mm and it stops being a lead. At lead + three every project in
+  // the book clears with the lead at 54 to 71% of the page width. The surplus
+  // assets each project used to carry were cut by Emilie, one at a time,
+  // against that arithmetic; the cut ones are recorded in each master.
+  //
+  // A ROW STILL JUSTIFIES: every image keeps its true aspect and the row's
+  // widths divide in proportion to them, so nothing is ever cropped and a
+  // portrait capture simply takes a narrow column beside a wide diagram. This
+  // is also what lets print-assets.mjs bake each image to the width it is
+  // actually drawn at (~220dpi, invisible on screen and on an office printer),
+  // which is what keeps a 20-page book under the mail ceiling.
+  //
+  // `invert` flips a drawing that was scanned or exported white-on-black back
+  // to ink-on-paper (Emilie, 2026-08-11, on the falcon sketches: two flooded
+  // black rectangles on a printed page, where the same drawing dark-on-white is
+  // closer to what it actually is). The bake inverts LIGHTNESS and rotates the
+  // hue back, because a straight negative turns her red annotations cyan.
+  //
+  // `caption` overrides the manifest alt FOR PRINT ONLY. It exists for exactly
+  // one reason: an inverted drawing's signed alt can describe the ground it no
+  // longer has ("ink sketches ON BLACK", printed on white). The site keeps her
+  // wording because there the description is still true. Any override ships
+  // draftCopy until she signs it.
+  bookLead?: BookAsset & { corner: BookCorner }
+  bookRegister?: BookAsset[]
+  /** An asset that STANDS IN THE HEAD COLUMN, under the plate/credit/tech block.
+   *
+   *  It exists for one shape: a page whose best lead is wide and whose remaining
+   *  assets include a TALL one. A portrait dropped into a justified row shrinks
+   *  to a sliver, because a row gives width in proportion to aspect; standing it
+   *  in the column instead spends the page's spare HEIGHT on it, which is the
+   *  one thing a landscape lead leaves over.
+   *  Declaring it narrows the register row to the lead's inner edge, so the two
+   *  never collide. The Lungs is the only page in the book that needs it. */
+  bookColumn?: BookAsset
+  /** How much of the measure page two's register row spends. 1 fills it.
+   *
+   *  Lower it to make the LEAD bigger: a justified row's height comes out of the
+   *  lead's, so a shorter row is a taller lead. Verve is the only page that
+   *  needs it, because dropping its elevation left a row of two, and a row of
+   *  two is 84mm tall against a row of three at 62. */
+  bookRegisterScale?: number
+  // The plate FITS instead of filling, on its own ground. For a dominant image
+  // that is a diagram rather than a photograph, where cropping to the plate's
+  // shape would cut the labels off the edges (lEgoarCh's outputs slide, whose
+  // black ground makes the letterbox invisible).
+  spreadFit?: { mode: 'contain'; ground: string }
 }
 
 // ---- The showcase spine (G1) ----------------------------------------------

@@ -188,23 +188,31 @@
   height: 210mm;
   overflow: hidden;
 }
-/* The plate keeps its edge on light images (design-critique fix): a
-   hairline on the two INNER edges only — the seam and the foot — so the
-   plate reads as a plate on any ground; the bleed edges stay clean. */
-.pr-spread--recto .pr-spread__figure {
-  border-left: 0.5pt solid var(--pr-hairline);
-}
-.pr-spread--verso .pr-spread__figure {
-  border-right: 0.5pt solid var(--pr-hairline);
-}
-.pr-spread--plate .pr-spread__figure {
-  border-bottom: 0.5pt solid var(--pr-hairline);
-}
+/* THE PLATE HAIRLINE IS GONE (Emilie, 2026-08-11), reversing the
+   design-critique fix that added it. It existed so a LIGHT image still read as
+   a plate rather than floating, and the replacement solves that better: a
+   plate whose image is a drawing or a screen now FITS on its own declared
+   ground (spreadFit), and a ground gives an edge without drawing one. Images
+   dark enough to define themselves never needed the line in the first place. */
 .pr-spread__figure img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+/* THE FITTED PLATE (2026-08-11): a dominant image that is a DIAGRAM cannot be
+   cropped to the plate's shape without losing what sits at its edges. It fits
+   whole on its own ground instead. The ground is set inline from the master's
+   spreadFit, because it has to be the image's own (lEgoarCh's outputs slide is
+   black, so the letterbox is invisible and the plate still reads as a bleed). */
+.pr-spread__figure--fit img {
+  object-fit: contain;
+  /* ⚠ CENTRED, and top-anchoring was tried and reverted the same day. Anchored
+     to the top the ground falls entirely below the image, which halves the
+     matching problem and looks like a mistake: a single band under a picture
+     reads as a slip, not as a frame. Centred it is a frame, and the cost is
+     that the ground must match two edges. Sensi can with one colour; the Lungs
+     needs a gradient; the two renders stopped fitting altogether and crop. */
 }
 /* The plate caption stands in the seam between text and image, vertical,
    ink on paper: legible over any plate, on any office printer. */
@@ -276,9 +284,19 @@
   flex: 1;
   min-height: 0;
 }
+/* THE SEAM CAPTION SITS AT THE TRIM (Emilie, 2026-08-12), not on the page's top
+   margin. ⚠ 14mm here was DELIBERATE, not a side effect of the bottom anchoring
+   in the base rule: this override has always set it explicitly. Measured across
+   all eight plates it held at exactly 14mm with zero drift, growing downward as
+   the title lengthens (33mm on Sensi, 62mm on A Ballooning Market).
+   What the measuring showed is that the alignment is real and invisible: NOTHING
+   else on a project page sits on 14mm, because the plate bleeds to 0 and the
+   title block starts at 43. At 8mm it reads as a mark stamped on the sheet
+   rather than as a line of text that missed its column, which is the vernacular
+   a vertical plate number is already borrowing. */
 .pr-spread--plate .pr-spread__caption {
   bottom: auto;
-  top: 14mm;
+  top: 8mm;
 }
 .pr-spread--plate.pr-spread--recto .pr-spread__caption {
   right: 146.5mm;
@@ -384,6 +402,129 @@
   gap: 1.2mm;
 }
 
+/* ---- The asset page (the facing recto of every project) ------------------
+   THE BOOK REWORK (2026-08-11). The row heights and widths arrive as inline
+   mm from layoutAssetRows in PrintBook.tsx: a row justifies, so every image
+   keeps its true aspect and NOTHING IS CROPPED, which matters because most of
+   these are diagrams and a cropped diagram loses its labels. The margins and
+   gaps here are mirrored by that function and by scripts/print-assets.mjs,
+   which sizes each baked image to the width it is actually drawn at. Change
+   one, change all three. */
+/* EVERY BOX IS PLACED IN ABSOLUTE MILLIMETRES by layoutAssetPage, and that is
+   deliberate rather than lazy: the whole point of this page is that the lead
+   BLEEDS OFF THE TRIM, and a flow layout inside a padded box is exactly the
+   thing that cannot do that. The padding that used to live here is gone; the
+   margins are in the layout function, which is also the only place that knows
+   which edge is the outer one. */
+.pr-assets {
+  position: relative;
+  height: 100%;
+}
+.pr-assets__meta,
+.pr-assets__foot {
+  position: absolute;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6mm;
+}
+/* ⚠ THE HEAD IS A COLUMN, not a wrapping row. It was `flex-wrap: wrap` with
+   `space-between`, which is a ROW that happens to fold, so a full-width hairline
+   between its lines was impossible: a block child of a flex row is a flex ITEM
+   and collapses to its own content width, which for a border-only rule is zero.
+   It rendered as a gap with no line for one build. A head with three stacked
+   facts and a rule through it is a column, and saying so in one property is
+   what makes the rule possible. */
+.pr-assets__meta {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 2.6mm;
+}
+/* A wide lead leaves a narrow meta column, so the two halves of the head row
+   stack rather than sit on one line when there is not room for both. */
+.pr-assets__meta {
+  flex-wrap: wrap;
+  row-gap: 1.6mm;
+}
+.pr-assets__rule {
+  position: absolute;
+  left: 12mm;
+  right: 18mm;
+  border-top: 0.5pt solid var(--pr-hairline);
+}
+.pr-assets--recto .pr-assets__rule {
+  left: 18mm;
+  right: 12mm;
+}
+.pr-assets__foot {
+  left: 12mm;
+  right: 18mm;
+}
+.pr-assets--recto .pr-assets__foot {
+  left: 18mm;
+  right: 12mm;
+}
+/* THE LEAD. It fills its box and is allowed to crop, because a promoted asset
+   is chosen for what it looks like at size, and because its box is derived
+   from its own aspect ratio so the crop is nil in practice. NO BORDER RADIUS
+   ANYWHERE ON THIS PAGE (Emilie, 2026-08-12: "I would not want the stuff to be
+   filleted"). Print trims; it does not round. */
+.pr-assets__lead {
+  position: absolute;
+  margin: 0;
+  overflow: hidden;
+}
+.pr-assets__lead img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.pr-assets__fig {
+  position: absolute;
+  margin: 0;
+  min-width: 0;
+}
+.pr-assets__fig img {
+  width: 100%;
+  display: block;
+  object-fit: contain;
+}
+/* THE CAPTIONS ARE DEMOTED (2026-08-12). They were the same serif at the same
+   size under every asset, so a two-line note under a small diagram shouted as
+   loudly as the render above it. They are now mono, a size down and muted:
+   they label, they do not compete. min-height keeps the page geometry
+   deterministic, and a caption that outgrows it pushes the page past its box,
+   where the build's overflow probe fails it rather than clipping it quietly. */
+.pr-assets__cap,
+.pr-assets__leadcap {
+  font-family: var(--font-mono);
+  font-size: 5.6pt;
+  line-height: 1.42;
+  letter-spacing: 0.01em;
+  color: var(--pr-ink-muted);
+  margin: 1.6mm 0 0;
+}
+.pr-assets__cap {
+  min-height: 8mm;
+}
+/* The lead's caption rides in the meta column so the lead is never interrupted
+   by type. It is allowed one size more than the register's, because it is the
+   only line of prose on the page. */
+.pr-assets__leadcap {
+  position: absolute;
+  font-size: 6.2pt;
+  margin: 0;
+}
+/* The flow variant: a full-width third row of the meta block, so a meta that
+   wraps to three lines pushes the caption down instead of printing over it. */
+.pr-assets__leadcap--flow {
+  position: static;
+  flex: 0 0 100%;
+  margin-top: 3.4mm;
+}
+
 /* ---- The index ----------------------------------------------------------- */
 .pr-index {
   height: 100%;
@@ -400,13 +541,72 @@
 .pr-index__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 4mm 5mm;
+  /* Opened up at her "it looks busy" review (2026-08-12). The tiles stay the
+     size they were, because at seven across that is the only way all 21 fit;
+     the air comes from the gaps, from the sheet numbers leaving, and from ten
+     thoughts instead of eighteen. */
+  gap: 7mm 6mm;
+}
+/* The index's own foot: the legend and the counts, on a rule, at the bottom.
+   Both used to sit at the top and fight the word "Index" for the eye. */
+.pr-index__foot {
+  margin-top: auto;
+  padding-top: 3mm;
+  border-top: 0.5pt solid var(--pr-hairline);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8mm;
 }
 .pr-tile__img {
   aspect-ratio: 4 / 3;
   border-radius: 2mm; /* the fillet, in print */
   overflow: hidden;
   background: #eceef0;
+}
+/* THE INK PARTIS, IN PRINT (Emilie, 2026-08-11), reversing artifacts.tsx's own
+   note that they are "screen-only by intent". Her reasons beat the old rule:
+   they are her drawings in her own pen grammar, at a 36mm tile a photograph
+   reads as texture while a parti is legible by design, and they weigh
+   essentially nothing next to 21 baked photographs.
+   The screen grammar (.work-art) hangs on Tailwind and a per-tile accent
+   variable; print re-declares the same four classes against ink, because a
+   printed page has no lens accent and no hover. */
+.pr-art {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #ffffff;
+}
+.pr-art .ln {
+  fill: none;
+  stroke: var(--pr-ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.pr-art .th {
+  fill: none;
+  stroke: var(--pr-ink-muted);
+  stroke-width: 1;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.pr-art .dt {
+  fill: var(--pr-ink);
+}
+/* The one accent per drawing keeps its job: on paper it is the red the cover
+   now also marks the book's eight with, so "the thing to look at" reads the
+   same way in both places. */
+.pr-art .ac {
+  fill: var(--pr-accent);
+}
+.pr-art .acs {
+  fill: none;
+  stroke: var(--pr-accent);
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
 }
 .pr-tile__img img {
   width: 100%;
@@ -487,6 +687,203 @@
   gap: 8mm;
   flex: 1;
   min-height: 0;
+}
+/* ---- The about page (page 2) ---------------------------------------------
+   HER PICK 03·B (Emilie, 2026-08-12), then rebuilt after a design critique of
+   the built page (same day). The composition survived; almost none of the type
+   did, and that was the critique's real finding.
+
+   ⚠ THIS PAGE HAD INVENTED ITS OWN TYPE SCALE. Measured against a project page
+   rather than judged by eye: the title was Archivo 700 at 30pt where the book's
+   is 600 at 26pt; the body was 8.5pt where the book's is 9pt; and the column
+   heads were 6pt, UNDER print.css's own 7.5pt mono floor, four lines above in
+   this very file. So "it does not fit the design language" was literally true.
+   Every value below is now the book's own, taken from .pr-title, .pr-body and
+   .pr-kicker rather than re-chosen here.
+
+   THE GRID IS 81mm + 174mm, not three equal columns of which one stood empty.
+   The old page used two of three and left 81mm of the sheet carrying nothing,
+   so it leaned left; the contents now takes the remaining two columns as ONE
+   measure, which is also what lets the leaders run long enough to read as a
+   contents rather than as a second column of names. The ratio is 1:2, the
+   page's own asymmetry rather than an imposed one.
+
+   THE WHOLE BLOCK IS OPTICALLY CENTRED, and this is where page 2 stops copying
+   a project page. A project page opens its title block at 46mm because a PLATE
+   fills everything above it; page 2 has no plate, so the same 46mm was simply a
+   void, and 72mm of the sheet passed before anything began (Emilie, 2026-08-12:
+   "we have so much white space at the top").
+   The field a reader sees is the top trim to the foot rule, 196mm. The content
+   runs 142mm from the meta line to the closing row, so the balanced top margin
+   is (196 - 142) / 2 = 27mm, and everything below follows from it: title 36,
+   standfirst 51, columns 69.
+
+   THE PARTIS ARE 17.8 x 10mm, not 13 x 7.3 (Emilie: "is there a way we can
+   have the icons bigger so they are cleaner and clearer"). At 6mm the eight
+   drawings read as specks and their differing densities read as a ragged edge;
+   at 10mm they read as eight different drawings, which is what they are.
+   ⚠ The alternative composition (the contents in the plate's position) LOOKS
+   like it allows a bigger icon and does not: once the title block and the bio
+   have to fit underneath it, its ceiling is 9.5mm. Measured, not assumed, and
+   it is the reason this composition won. */
+.pr-about {
+  position: relative;
+  height: 100%;
+}
+.pr-about__meta {
+  position: absolute;
+  left: 12mm;
+  top: 27mm;
+  margin: 0;
+}
+.pr-about__title {
+  position: absolute;
+  left: 11mm; /* 1mm of optical inset: the display face overhangs its box */
+  top: 36mm;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 26pt;
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+}
+.pr-about__stand {
+  position: absolute;
+  left: 12mm;
+  top: 51mm;
+  width: 150mm;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 11.5pt;
+  line-height: 1.4;
+}
+.pr-about__cols {
+  position: absolute;
+  left: 12mm;
+  right: 18mm;
+  top: 69mm;
+  bottom: 20mm;
+  display: grid;
+  grid-template-columns: 81mm 174mm;
+  column-gap: 12mm;
+}
+.pr-about__ch {
+  font-family: var(--font-mono);
+  font-size: 7.5pt; /* the mono floor, which this page used to sit under */
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pr-ink-muted);
+  margin: 0 0 4mm;
+}
+.pr-about__bio {
+  font-family: var(--font-serif);
+  font-size: 9pt;
+  line-height: 1.45;
+  margin: 0 0 3mm;
+}
+/* A contents line: the parti, the title, a dotted leader, the page. The leader
+   is what makes a list of eight read as a contents rather than as another
+   column of names. */
+.pr-about__row {
+  display: flex;
+  align-items: center;
+  gap: 3mm;
+  /* 10.6mm put the closing line's baseline 1mm off the foot rule, which is not
+     clearance, it is a collision waiting for one more character. 10mm leaves
+     6mm and costs the parti half a millimetre. Measured on the built page. */
+  height: 10mm;
+}
+.pr-about__row--rest {
+  margin-top: 4mm;
+}
+.pr-about__ti {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 10pt;
+  white-space: nowrap;
+}
+/* The closing line has no parti, so it is indented by one to keep every title
+   on the same left edge. */
+.pr-about__row--rest .pr-about__ti {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--pr-ink-muted);
+  white-space: normal;
+  margin-left: 20.8mm;
+}
+.pr-about__leader {
+  flex: 1;
+  border-bottom: 0.5pt dotted var(--pr-ink-muted);
+}
+/* HER INK, at 18.7 x 10.5mm. ⚠ THE SLOT IS THE ARTIFACT'S OWN ASPECT, 160 x 90.
+   An earlier build made it a 5.4mm SQUARE, and because an SVG defaults to
+   preserveAspectRatio="meet" every parti fitted itself into that box at 5.4 by
+   3mm and printed as a speck. A mark has to be given the shape it was drawn in.
+   align-items: center on the row does the vertical, so a glyph never sits on a
+   text baseline it has no business sitting on. */
+.pr-about__parti {
+  flex: 0 0 17.8mm;
+  height: 10mm;
+}
+.pr-about__parti .pr-art {
+  width: 100%;
+  height: 100%;
+}
+.pr-about__rule {
+  position: absolute;
+  left: 12mm;
+  right: 18mm;
+  top: 196mm;
+  border-top: 0.5pt solid var(--pr-hairline);
+}
+.pr-about__foot {
+  position: absolute;
+  left: 12mm;
+  right: 18mm;
+  top: 200mm;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6mm;
+}
+
+.pr-cv__split {
+  display: grid;
+  grid-template-columns: 130mm 1fr;
+  gap: 9mm;
+  flex: 1;
+  min-height: 0;
+}
+.pr-cv__sheet {
+  border: 0.5pt solid var(--pr-hairline);
+  border-radius: 2mm;
+  /* 5mm, not 6: the first build of this page ran 4px past its box and the
+     overflow probe refused the PDF. The room came out of the padding rather
+     than the type, the same trade the CV pass made in 2026-07. */
+  padding: 5mm 6mm;
+  min-height: 0;
+}
+.pr-cv__sheet h3:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.pr-cv__contents {
+  min-height: 0;
+}
+/* A contents line: title, a dotted leader, the page. The leader is what makes
+   a list of eight read as a contents rather than as another column of names. */
+.pr-cv__line {
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+  margin-bottom: 1.6mm;
+}
+.pr-cv__leader {
+  flex: 1;
+  border-bottom: 0.5pt dotted var(--pr-ink-muted);
+  transform: translateY(-0.6mm);
 }
 .pr-cv h3 {
   font-family: var(--font-mono);
@@ -640,4 +1037,48 @@
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+/* THE FOLIO. It rides the existing two-part foot line as a third item, and
+   `order` puts it at the OUTER edge: first on a verso, last on a recto, so the
+   number always falls under the thumb rather than into the gutter. The feet are
+   flex rows with space-between, so a third child would otherwise sit in the
+   middle and break the pair that is already there. */
+.pr-folio {
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  letter-spacing: 0.08em;
+  color: var(--pr-ink-muted);
+  flex: 0 0 auto;
+}
+.pr-folio[data-side='verso'] {
+  order: -1;
+  margin-right: 6mm;
+}
+.pr-folio[data-side='recto'] {
+  order: 1;
+  margin-left: 6mm;
+}
+
+/* The asset page's head: plate, credit, hairline, tech. */
+.pr-assets__headrule {
+  display: block;
+  border-top: 0.5pt solid var(--pr-hairline, #c8ccd2);
+  margin: 3.6mm 0;
+}
+.pr-assets__tech {
+  display: block;
+}
+
+/* An asset standing in the head column. It flows under the head rather than
+   being positioned, so it clears a credit line that wraps to two. */
+.pr-assets__colfig {
+  margin: 5mm 0 0;
+}
+.pr-assets__colfig img {
+  width: 100%;
+  display: block;
+}
+.pr-assets__colfig .pr-assets__cap {
+  margin-top: 3mm;
 }

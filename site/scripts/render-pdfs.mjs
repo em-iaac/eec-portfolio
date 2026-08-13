@@ -135,13 +135,40 @@ function assertBook(text, domPages) {
     text.numPages === domPages,
     `PDF page count matches the rendered document (${text.numPages} vs ${domPages} pages)`,
   )
-  check(domPages >= 9, `a whole book (${domPages} pages: cover + spreads + index + record + colophon)`)
+  // THE BOOK REWORK (2026-08-11): each project holds a facing pair, so the
+  // floor moved from 9 to 20 (cover + 8 pairs + index + CV + colophon).
+  check(domPages >= 20, `a whole book (${domPages} pages: cover + about + 8 facing pairs + index + colophon)`)
   const empty = text.pages.map((p, i) => (p.length === 0 ? i + 1 : null)).filter(Boolean)
   // The cover page is allowed to be text-light but never empty (name +
-  // rail); any empty page means a layout overflowed or vanished.
+  // rail); any empty page means a layout overflowed or vanished. The asset
+  // pages each carry a header line and their captions, so they count too.
   check(empty.length === 0, `no empty pages${empty.length ? ` (pages ${empty.join(', ')})` : ''}`)
   const all = text.pages.flat().join('\n')
   check(!all.includes('—'), 'zero em dashes')
+}
+
+// THE WEIGHT (2026-08-11). This book is a LEAVE-BEHIND: it gets attached to
+// an application. Above 10MB many corporate mail servers drop the message
+// silently and the sender never finds out, and the practical advice for a
+// portfolio anyone actually emails is to stay under 5MB. Growing the book
+// from 10 to 20 pages made this a real constraint rather than a note, so it
+// is a build assertion: HARD FAIL past 9MB, and a loud warning past 5MB so
+// the drift is visible long before it is a problem.
+const PDF_HARD_MAX = 9 * 1024 * 1024
+const PDF_TARGET = 5 * 1024 * 1024
+function assertWeight(bytes, kind) {
+  const mb = (bytes / 1024 / 1024).toFixed(1)
+  // The thresholds are read from the constants, never restated: a message
+  // that can disagree with the rule it is reporting is worse than no message.
+  const max = (PDF_HARD_MAX / 1024 / 1024).toFixed(0)
+  const target = (PDF_TARGET / 1024 / 1024).toFixed(0)
+  if (bytes > PDF_HARD_MAX) {
+    fail(`${kind} PDF is ${mb}MB, past the ${max}MB ceiling (10MB is where mail servers start dropping it)`)
+  } else if (bytes > PDF_TARGET) {
+    console.warn(`  ! ${kind} PDF is ${mb}MB, over the ${target}MB target for something she emails`)
+  } else {
+    console.log(`  ✓ ${mb}MB, inside the ${target}MB target`)
+  }
 }
 
 // ---- serve + print --------------------------------------------------------
@@ -190,6 +217,29 @@ try {
       )
     }
 
+    // A BOX THAT MUST CONTAIN ITS OWN CONTENT (2026-08-11). The page probe
+    // above only sees content pushed past the SHEET. The CV page's record
+    // block failed a different way: its content ran out through its own border
+    // and printed on top of the footer, while the page box stayed exactly A4
+    // and the probe passed. Anything marked data-must-fit is measured on its
+    // own terms, so that class of collision fails the build too.
+    const spilling = await page.evaluate(() =>
+      [...document.querySelectorAll('[data-must-fit]')]
+        .map((el, i) => ({
+          i: i + 1,
+          cls: el.className,
+          ow: el.scrollWidth - el.clientWidth,
+          oh: el.scrollHeight - el.clientHeight,
+        }))
+        .filter(x => x.ow > 1 || x.oh > 1),
+    )
+    if (spilling.length) {
+      fail(
+        `${target.route}: content escapes its own box in ` +
+          spilling.map(x => `.${x.cls} (${x.ow}x${x.oh}px over)`).join(', '),
+      )
+    }
+
     const pdf = await page.pdf({
       printBackground: true,
       preferCSSPageSize: true,
@@ -205,7 +255,8 @@ try {
     const text = await pdfText(pdf)
     if (target.kind === 'cv') assertCv(text)
     else assertBook(text, domPages)
-    const ok = failures.length === before && overflowing.length === 0
+    assertWeight(pdf.length, target.kind)
+    const ok = failures.length === before && overflowing.length === 0 && spilling.length === 0
 
     const distOut = join(DIST, 'assets')
     mkdirSync(distOut, { recursive: true })

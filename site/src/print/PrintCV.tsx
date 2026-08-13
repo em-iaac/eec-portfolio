@@ -76,10 +76,17 @@ function Record({ dates, title, org, notes, projects }: CvEntry) {
   )
 }
 
-export default function PrintCV() {
+/**
+ * The CV itself, WITHOUT a page around it, so two documents can render the
+ * identical sheet: this route at A4 portrait, and the book's CV page, which
+ * lays an A4 landscape out as two A5 portraits and puts this one, scaled to
+ * A5, in the left half (Emilie, 2026-08-12). Scaling rather than re-laying it
+ * out is the point: the book then carries the SAME design and the WHOLE
+ * record, at 1/√2, instead of a differently-designed extract.
+ */
+export function CvSheet() {
   return (
-    <A4Page orientation="portrait">
-      <div className="pr-ats">
+    <div className="pr-ats">
         {/* The locked header string: name | role, one line, zero tracking. The
             UPDATED stamp rides the same line, small and right (her call), so it
             stops spending a line of its own. It sits AFTER the name in the DOM,
@@ -145,7 +152,14 @@ export default function PrintCV() {
         <Sec name="writing">WRITING &amp; RESEARCH</Sec>
         <p>{WRITING}</p>
 
-      </div>
+    </div>
+  )
+}
+
+export default function PrintCV() {
+  return (
+    <A4Page orientation="portrait">
+      <CvSheet />
     </A4Page>
   )
 }

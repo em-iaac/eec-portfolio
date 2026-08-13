@@ -1,38 +1,367 @@
 {
-  "sensi": {
-    "app-shape": {
-      "file": "assets/print/sensi/app-shape-print.jpg",
-      "w": 1388
+  "plates": {
+    "sensi": {
+      "app-shape": {
+        "file": "assets/print/sensi/app-shape-print.jpg",
+        "w": 1388,
+        "h": 740
+      }
+    },
+    "legoarch": {
+      "outputs": {
+        "file": "assets/print/legoarch/outputs-print.jpg",
+        "w": 1800,
+        "h": 939
+      }
+    },
+    "neurospace": {
+      "view": {
+        "file": "assets/print/neurospace/view-print.jpg",
+        "w": 1800,
+        "h": 963
+      }
+    },
+    "lungs": {
+      "tower": {
+        "file": "assets/print/lungs/tower-print.jpg",
+        "w": 1800,
+        "h": 1012
+      }
+    },
+    "huddle": {
+      "axonometric": {
+        "file": "assets/print/huddle/axonometric-print.jpg",
+        "w": 1800,
+        "h": 1005
+      }
+    },
+    "ballooning-market": {
+      "render-1": {
+        "file": "assets/print/ballooning-market/render-1-print.jpg",
+        "w": 1800,
+        "h": 1005
+      }
+    },
+    "verve": {
+      "dusk-facade": {
+        "file": "assets/print/verve/dusk-facade-print.jpg",
+        "w": 880,
+        "h": 860
+      }
+    },
+    "falcon": {
+      "storm-takeoff-view": {
+        "file": "assets/print/falcon/storm-takeoff-view-print.jpg",
+        "w": 1800,
+        "h": 1013
+      }
     }
   },
-  "neurospace": {
-    "landing": {
-      "file": "assets/print/neurospace/landing-print.jpg",
-      "w": 2400
+  "grid": {
+    "sensi": {
+      "onboarding": {
+        "file": "assets/print/sensi/onboarding-grid.jpg",
+        "w": 741,
+        "h": 398
+      },
+      "green-lens": {
+        "file": "assets/print/sensi/green-lens-grid.jpg",
+        "w": 743,
+        "h": 398
+      },
+      "report": {
+        "file": "assets/print/sensi/report-grid.jpg",
+        "w": 743,
+        "h": 398
+      },
+      "act-2-flow": {
+        "file": "assets/print/sensi/act-2-flow-grid.jpg",
+        "w": 1819,
+        "h": 845
+      }
+    },
+    "legoarch": {
+      "honest-part": {
+        "file": "assets/print/legoarch/honest-part-grid.jpg",
+        "w": 697,
+        "h": 363
+      },
+      "split-and-merge": {
+        "file": "assets/print/legoarch/split-and-merge-grid.jpg",
+        "w": 834,
+        "h": 363
+      },
+      "real-parts": {
+        "file": "assets/print/legoarch/real-parts-grid.jpg",
+        "w": 696,
+        "h": 363
+      },
+      "pipeline": {
+        "file": "assets/print/legoarch/pipeline-grid.jpg",
+        "w": 1819,
+        "h": 744
+      }
+    },
+    "neurospace": {
+      "score-1": {
+        "file": "assets/print/neurospace/score-1-grid.jpg",
+        "w": 1142,
+        "h": 598
+      },
+      "score-2": {
+        "file": "assets/print/neurospace/score-2-grid.jpg",
+        "w": 1128,
+        "h": 598
+      }
+    },
+    "lungs": {
+      "kpi-map": {
+        "file": "assets/print/lungs/kpi-map-grid.jpg",
+        "w": 1378,
+        "h": 669
+      },
+      "stress-test": {
+        "file": "assets/print/lungs/stress-test-grid.jpg",
+        "w": 892,
+        "h": 669
+      },
+      "timeline": {
+        "file": "assets/print/lungs/timeline-grid.jpg",
+        "w": 1711,
+        "h": 692
+      },
+      "speckle-live": {
+        "file": "assets/print/lungs/speckle-live-grid.jpg",
+        "w": 516,
+        "h": 812
+      }
+    },
+    "huddle": {
+      "global-index": {
+        "file": "assets/print/huddle/global-index-grid.jpg",
+        "w": 788,
+        "h": 402
+      },
+      "perspective-1": {
+        "file": "assets/print/huddle/perspective-1-grid.jpg",
+        "w": 720,
+        "h": 402
+      },
+      "perspective-2": {
+        "file": "assets/print/huddle/perspective-2-grid.jpg",
+        "w": 720,
+        "h": 402
+      },
+      "wasp-growth": {
+        "file": "assets/print/huddle/wasp-growth-grid.jpg",
+        "w": 1819,
+        "h": 920
+      }
+    },
+    "ballooning-market": {
+      "process": {
+        "file": "assets/print/ballooning-market/process-grid.jpg",
+        "w": 1312,
+        "h": 297
+      },
+      "render-3": {
+        "file": "assets/print/ballooning-market/render-3-grid.jpg",
+        "w": 657,
+        "h": 367
+      },
+      "algorithm": {
+        "file": "assets/print/ballooning-market/algorithm-grid.jpg",
+        "w": 1321,
+        "h": 558
+      }
+    },
+    "verve": {
+      "unit-selector": {
+        "file": "assets/print/verve/unit-selector-grid.jpg",
+        "w": 1280,
+        "h": 614
+      },
+      "lounge-interior": {
+        "file": "assets/print/verve/lounge-interior-grid.jpg",
+        "w": 748,
+        "h": 731
+      },
+      "amenities-plan": {
+        "file": "assets/print/verve/amenities-plan-grid.jpg",
+        "w": 1207,
+        "h": 630
+      }
+    },
+    "falcon": {
+      "aircraft-anatomy-sketches": {
+        "file": "assets/print/falcon/aircraft-anatomy-sketches-grid.jpg",
+        "w": 670,
+        "h": 491
+      },
+      "takeoff-angle-sketches": {
+        "file": "assets/print/falcon/takeoff-angle-sketches-grid.jpg",
+        "w": 688,
+        "h": 491
+      },
+      "site-plan": {
+        "file": "assets/print/falcon/site-plan-grid.jpg",
+        "w": 870,
+        "h": 491
+      },
+      "process-01-mirroring": {
+        "file": "assets/print/falcon/process-01-mirroring-grid.jpg",
+        "w": 1546,
+        "h": 870
+      }
     }
   },
-  "legoarch": {
-    "sagrada-render": {
-      "file": "assets/print/legoarch/sagrada-render-print.jpg",
-      "w": 1024
-    }
-  },
-  "lungs": {
-    "tower": {
-      "file": "assets/print/lungs/tower-print.jpg",
-      "w": 2400
-    }
-  },
-  "huddle": {
-    "axonometric": {
-      "file": "assets/print/huddle/axonometric-print.jpg",
-      "w": 2400
-    }
-  },
-  "ballooning-market": {
-    "render-1": {
-      "file": "assets/print/ballooning-market/render-1-print.jpg",
-      "w": 2400
+  "index": {
+    "sensi": {
+      "galaxy-cover": {
+        "file": "assets/print/sensi/galaxy-cover-tile.jpg",
+        "w": 480,
+        "h": 389
+      }
+    },
+    "legoarch": {
+      "demo-cover": {
+        "file": "assets/print/legoarch/demo-cover-tile.jpg",
+        "w": 480,
+        "h": 270
+      }
+    },
+    "neurospace": {
+      "demo-cover": {
+        "file": "assets/print/neurospace/demo-cover-tile.jpg",
+        "w": 480,
+        "h": 269
+      }
+    },
+    "lungs": {
+      "demo-cover": {
+        "file": "assets/print/lungs/demo-cover-tile.jpg",
+        "w": 480,
+        "h": 225
+      }
+    },
+    "huddle": {
+      "wasp-growth": {
+        "file": "assets/print/huddle/wasp-growth-tile.jpg",
+        "w": 480,
+        "h": 243
+      }
+    },
+    "ballooning-market": {
+      "process": {
+        "file": "assets/print/ballooning-market/process-tile.jpg",
+        "w": 480,
+        "h": 232
+      }
+    },
+    "urban-risk": {
+      "assessment-ui": {
+        "file": "assets/print/urban-risk/assessment-ui-tile.jpg",
+        "w": 480,
+        "h": 313
+      }
+    },
+    "cappelletti": {
+      "galapagos-run": {
+        "file": "assets/print/cappelletti/galapagos-run-tile.jpg",
+        "w": 480,
+        "h": 195
+      }
+    },
+    "podcast": {
+      "demo-cover": {
+        "file": "assets/print/podcast/demo-cover-tile.jpg",
+        "w": 480,
+        "h": 270
+      }
+    },
+    "narkomfin": {
+      "graph-cover": {
+        "file": "assets/print/narkomfin/graph-cover-tile.jpg",
+        "w": 480,
+        "h": 270
+      }
+    },
+    "data-geometry": {
+      "workflow-cover": {
+        "file": "assets/print/data-geometry/workflow-cover-tile.jpg",
+        "w": 480,
+        "h": 270
+      }
+    },
+    "tsukiji": {
+      "form-iterations": {
+        "file": "assets/print/tsukiji/form-iterations-tile.jpg",
+        "w": 480,
+        "h": 235
+      }
+    },
+    "chair-sim": {
+      "voxel-sizes": {
+        "file": "assets/print/chair-sim/voxel-sizes-tile.jpg",
+        "w": 480,
+        "h": 600
+      }
+    },
+    "astroidal": {
+      "star-cover": {
+        "file": "assets/print/astroidal/star-cover-tile.jpg",
+        "w": 480,
+        "h": 270
+      }
+    },
+    "playscape": {
+      "net-settle": {
+        "file": "assets/print/playscape/net-settle-tile.jpg",
+        "w": 480,
+        "h": 480
+      }
+    },
+    "homage": {
+      "homage-cover": {
+        "file": "assets/print/homage/homage-cover-tile.jpg",
+        "w": 480,
+        "h": 270
+      }
+    },
+    "verve": {
+      "unit-selector": {
+        "file": "assets/print/verve/unit-selector-tile.jpg",
+        "w": 480,
+        "h": 230
+      }
+    },
+    "mars": {
+      "mars-cover": {
+        "file": "assets/print/mars/mars-cover-tile.jpg",
+        "w": 480,
+        "h": 270
+      }
+    },
+    "encounter": {
+      "encounter-cover": {
+        "file": "assets/print/encounter/encounter-cover-tile.jpg",
+        "w": 480,
+        "h": 270
+      }
+    },
+    "falcon": {
+      "falcon-cover": {
+        "file": "assets/print/falcon/falcon-cover-tile.jpg",
+        "w": 480,
+        "h": 270
+      }
+    },
+    "xr": {
+      "reaction-cover": {
+        "file": "assets/print/xr/reaction-cover-tile.jpg",
+        "w": 480,
+        "h": 270
+      }
     }
   }
 }

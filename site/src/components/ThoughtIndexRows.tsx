@@ -133,10 +133,18 @@ export default function ThoughtIndexRows({
   skin,
   lens = null,
   variant = 'bottom',
+  limit,
+  columns = 4,
   onThoughtHover,
 }: {
   /** 'print' = the book's pr-* grammar (router-free) · 'screen' = /work */
   skin: 'print' | 'screen'
+  /** print only · show the first N rows (the list is newest first, so this is
+      "the latest N" without a second judgement about which ones). The book's
+      index takes 10 of 18; the rest are a line away on the site. */
+  limit?: number
+  /** print only · how many columns the rows run in. */
+  columns?: number
   /** the /work lens facet reaches the rows too; null = all (print always all) */
   lens?: Lens | null
   /** screen only · 'wide' = the /work closing block (round 4, option B:
@@ -160,20 +168,25 @@ export default function ThoughtIndexRows({
       // round takes the structural fix instead: 19 rows across four columns is
       // five rows rather than seven.
       //
-      // AND THE DATE COMES OFF THE PRINT ROW. Four columns leaves each cell
-      // about 40mm on A4, which is not enough for "when the tool scores
-      // people" AND "T-118 · JUL 2026" without wrapping, and a wrapped row
-      // would give back the height the extra column just bought. The T-number
-      // is the thing that earns its place on a contents page (the book's index
-      // is ordered by it); the date is already on every leaf and in the
-      // record. Screen rows keep their date: they have the width.
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', columnGap: '5mm' }}>
-        {thoughts.map((t) => (
+      // THE DATE CAME OFF, AND HAS NOW COME BACK (Emilie, 2026-08-11). The
+      // 2026-07-29 note below is kept because its reasoning is what changed,
+      // not its arithmetic: the T-number won that round because "the book's
+      // index is ordered by it", and since her ruling of 2026-08-05 it is not.
+      // These rows are ordered by DATE, newest first, so the date is now the
+      // column that explains the order and the T-number is the one that does
+      // not. Only ONE of them ships, which is what keeps the cell inside its
+      // width; the stamp went from about 8mm ("T-118") to about 13mm
+      // ("JUL 2026") against roughly 55mm of text column, and the build's
+      // overflow probe is the check on that.
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, 1fr)`, columnGap: '7mm' }}>
+        {(limit ? thoughts.slice(0, limit) : thoughts).map((t) => (
           <div key={t.id} className="pr-row">
             <span className="pr-mark pr-mark--thought" />
             <span style={{ display: 'flex', justifyContent: 'space-between', gap: '2.5mm', alignItems: 'baseline' }}>
               <span className="pr-body" style={{ fontStyle: 'italic' }}>{t.title}</span>
-              <span className="pr-mono pr-mono--muted">{t.note?.number}</span>
+              <span className="pr-mono pr-mono--muted" style={{ whiteSpace: 'nowrap' }}>
+                {fmtMonthYear(t.date)}
+              </span>
             </span>
           </div>
         ))}

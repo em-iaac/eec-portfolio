@@ -1,11 +1,33 @@
 // G5 · the book's contents, in one place (THE ECONOMY: the validator and
 // the census test read this same list; changing the book = editing here).
 //
-// THE FLAGSHIP SIX (proposed this session; Emilie's pick at the G5 gate):
-// the two flagships + the three awarded studio projects + one solo
-// exploration. SOMA / Marsception stay index-only: the `professional` slug
-// has no local high-res originals (and SOMA's NDA check is still open), so
-// neither can carry a 300dpi dominant image honestly.
+// THE EIGHT (Emilie, 2026-08-11, re-chosen from all 21 against the roles she
+// is actually applying for). The book stopped being a lab report and became a
+// LEAVE-BEHIND FOR A RECRUITER: selective, skimmable, strongest first.
+//
+// The old note here said SOMA and Marsception were index-only because the
+// `professional` slug had no high-res originals and SOMA's NDA was open. BOTH
+// REASONS ARE DEAD: the NDA was lifted in 2026-07, and the `verve` and `mars`
+// manifest slugs carry originals up to 9930px. That stale comment is exactly
+// why the selection was re-checked against the files on disk rather than
+// against the record of a previous decision.
+//
+// Print feasibility was checked BEFORE choosing, not after. Ruled out on it:
+// Chair Simulation (nothing above 1550px), A Playscape (only a Grasshopper
+// canvas grab survives), Astroidal Ellipsoid (its one large image is portrait
+// and the plate is landscape).
+//
+// Raised and declined: The Homage, which carries the one recognition a
+// stranger can verify in a click (Top 100 of 422 teams). She kept A Ballooning
+// Market instead and reaffirmed it after the argument, so The Homage stays in
+// the index. Also considered and left out: Encoding Urban Risk, Rings of Mars,
+// Tsukiji, Falcon's sibling The Encounter.
+//
+// EACH PROJECT NOW HOLDS A FACING PAIR: the project page (unchanged, she likes
+// it) on the verso, and an asset grid on the facing recto. 8 pairs + cover +
+// index + CV + colophon = 20 pages, which is what the object can afford at the
+// 10MB ceiling once the index stops embedding 21 covers at four times the
+// resolution paper can use.
 //
 // THE BOOK IS THE ONE EAGER CONSUMER (2026-08-03). The showcase spine is lazy
 // everywhere else, but a printed spread cannot await: renderToString in
@@ -16,14 +38,15 @@ import { METAS_BY_SLUG, type ProjectMaster } from '../content/projects'
 import { SPINES_BY_SLUG } from '../content/projects/spines.eager'
 import { WORK_ENTRIES, type WorkEntry } from '../data/work'
 
-export const BOOK_SLUGS = [
-  'sensi',
-  'neurospace',
-  'legoarch',
-  'lungs',
-  'huddle',
-  'ballooning-market',
-] as const
+// Her order, verbatim: the five MaCAD projects as /work already ranks them,
+// then the two practice pages at the end. Verve is delivery inside a big team,
+// Falcon she led from the first sketch, and a reader takes those as two
+// different answers to "has she done this for real".
+//
+// The list itself lives in bookPlates.ts with the asset declarations, so the
+// bake script can read them without evaluating a spine (see that file).
+import { BOOK_SLUGS } from './bookPlates'
+export { BOOK_SLUGS }
 
 export interface SpreadData {
   master: ProjectMaster

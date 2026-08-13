@@ -35,7 +35,38 @@ const sensi: ProjectMeta = {
   image: { slug: 'sensi', name: 'galaxy-cover', alt: "Sensi's relationship galaxy: six senses as glowing constellations, every thread a coupling between two comfort scores" },
   // G5: the book spread's dominant plate stays app-shape; scripts/
   // print-assets.mjs bakes the committed print-resolution rung.
+  // A PLATE NEVER CROPS (Emilie, 2026-08-12). The plate box is 145 x 96mm,
+  // aspect 1.51, and the app screenshot is 1.88ish, so `cover` pushed a fifth of it
+  // past the trim. On Sensi that was the entire SENSES / CONFLICTS column,
+  // which is the part that proves the tool scores anything.
+  // Stretching was drawn and rejected on sight: at 24% horizontal distortion
+  // the app's circular score badges print as ovals.
+  // THE IMAGE IS CENTRED, so the ground shows as an equal band above and below
+  // (Emilie, 2026-08-12: anchored to the top it "looks wrong", and she is right,
+  // a single band under a picture reads as a slip rather than as a frame).
+  // That means the ground has to match BOTH edges. Sensi is the plate where it
+  // can: measured, the top strip is #151515 and the bottom #110f0e, both nearly
+  // flat (variation 6 and 15), so one colour between them disappears at each.
+  spreadFit: { mode: 'contain', ground: '#131211' },
   spreadAssets: [{ slug: 'sensi', name: 'app-shape' }],
+  // THE BOOK'S PAGE TWO (Emilie, 2026-08-11): "the system, then the thing".
+  // act-2-flow leads at full width because Sensi's explanatory images are
+  // dense with small type and stop being information below about 150mm; the
+  // three app shots under it are the copilot asking who you are, scoring a
+  // real plan, and handing the report back. coupling-map and sensory-layer
+  // lost their seats to that width, and the three demo gifs are near
+  // duplicates of stills already here.
+  // Her ruling: "1 · the system, then the thing". The flowchart leads and the
+  // three screens follow it. Nothing was cut here: Sensi already carried
+  // exactly four, which is the ceiling the register arithmetic sets.
+  // The flowchart is the widest lead in the book at 2.15, so it runs 210mm and
+  // stands 98mm, and the meta sits in the 77mm of white beside it.
+  bookLead: { slug: 'sensi', name: 'act-2-flow', corner: 'top-outer' },
+  bookRegister: [
+    { slug: 'sensi', name: 'onboarding' },
+    { slug: 'sensi', name: 'green-lens' },
+    { slug: 'sensi', name: 'report' },
+  ],
   showcaseDraft: false, // spine signed by Emilie (G4, 2026-07-12)
 }
 
