@@ -15,14 +15,34 @@ export function sideOf(pageNumber: number): PageSide {
 export default function A4Page({
   orientation = 'landscape',
   className,
+  id,
+  outline,
   children,
 }: {
   orientation?: 'landscape' | 'portrait'
   className?: string
+  /** THE LINKS PASS (2026-08-16). A page id is the anchor an in-document link
+      lands on: headless Chrome turns a same-page href="#id" into a real PDF
+      link annotation with a destination, which is how the about page's
+      contents rows jump to their plate inside the file. Optional, because
+      only the pages something points AT need one. */
+  id?: string
+  /** THE BOOKMARK PANEL (2026-08-16). A page that names itself here becomes a
+      row in the reader's outline. Only pages a reader would JUMP to carry one
+      (the cover, the about, the eight projects, the index, the colophon): an
+      asset page is the back of its plate, not a chapter of its own, so it
+      stays out of the panel and the panel stays 12 rows rather than 20.
+      render-pdfs.mjs reads these off the printed DOM, which is what keeps the
+      outline and the book in the same order by construction. */
+  outline?: string
   children: ReactNode
 }) {
   return (
-    <div className={`pr-page pr-page--${orientation}${className ? ` ${className}` : ''}`}>
+    <div
+      id={id}
+      data-outline={outline}
+      className={`pr-page pr-page--${orientation}${className ? ` ${className}` : ''}`}
+    >
       {children}
     </div>
   )

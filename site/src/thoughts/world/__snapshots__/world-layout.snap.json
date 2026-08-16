@@ -7,7 +7,7 @@
       "kind": "thought",
       "date": "2020-06",
       "x": 215,
-      "y": 121.4,
+      "y": 122.8,
       "route": "/thoughts/charcoal"
     },
     {
@@ -31,7 +31,7 @@
       "kind": "project",
       "date": "2022-04",
       "x": 605,
-      "y": 470,
+      "y": 356.6,
       "route": "/work/falcon"
     },
     {
@@ -55,7 +55,7 @@
       "kind": "project",
       "date": "2022-06",
       "x": 995,
-      "y": 330,
+      "y": 340.4,
       "route": "/work/xr"
     },
     {
@@ -63,7 +63,7 @@
       "kind": "thought",
       "date": "2022-09",
       "x": 1125,
-      "y": 117,
+      "y": 143.9,
       "route": "/thoughts/xreal"
     },
     {
@@ -79,7 +79,7 @@
       "kind": "project",
       "date": "2023-06",
       "x": 1385,
-      "y": 398.6,
+      "y": 398.5,
       "route": "/work/homage"
     },
     {
@@ -95,7 +95,7 @@
       "kind": "award",
       "date": "2023-09",
       "x": 1427,
-      "y": 456.6,
+      "y": 456.5,
       "route": "/work/homage"
     },
     {
@@ -103,7 +103,7 @@
       "kind": "project",
       "date": "2023-10",
       "x": 1775,
-      "y": 350.8,
+      "y": 351.1,
       "route": "/work/mars"
     },
     {
@@ -111,7 +111,7 @@
       "kind": "thought",
       "date": "2023-12",
       "x": 1905,
-      "y": 169.5,
+      "y": 170.7,
       "route": "/thoughts/genai"
     },
     {
@@ -119,7 +119,7 @@
       "kind": "project",
       "date": "2024-02",
       "x": 2035,
-      "y": 470,
+      "y": 340.4,
       "route": "/work/soma"
     },
     {
@@ -135,7 +135,7 @@
       "kind": "award",
       "date": "2024-03",
       "x": 1817,
-      "y": 408.8,
+      "y": 409.1,
       "route": "/work/mars"
     },
     {
@@ -159,7 +159,7 @@
       "kind": "thought",
       "date": "2025-09",
       "x": 2685,
-      "y": 150.3,
+      "y": 149.9,
       "route": "/thoughts/llm"
     },
     {
@@ -175,7 +175,7 @@
       "kind": "project",
       "date": "2025-10",
       "x": 2945,
-      "y": 372.4,
+      "y": 372.3,
       "route": "/work/astroidal"
     },
     {
@@ -183,7 +183,7 @@
       "kind": "project",
       "date": "2025-10",
       "x": 3075,
-      "y": 374.1,
+      "y": 373.8,
       "route": "/work/playscape"
     },
     {
@@ -191,7 +191,7 @@
       "kind": "thought",
       "date": "2025-10",
       "x": 3205,
-      "y": 223.8,
+      "y": 224.1,
       "route": "/thoughts/rules"
     },
     {
@@ -199,7 +199,7 @@
       "kind": "thought",
       "date": "2025-11",
       "x": 3335,
-      "y": 232.4,
+      "y": 231.6,
       "route": "/thoughts/solvers"
     },
     {
@@ -207,7 +207,7 @@
       "kind": "project",
       "date": "2025-11",
       "x": 3465,
-      "y": 375.8,
+      "y": 375.3,
       "route": "/work/chair-sim"
     },
     {
@@ -215,7 +215,7 @@
       "kind": "project",
       "date": "2025-11",
       "x": 3595,
-      "y": 367.1,
+      "y": 366.6,
       "route": "/work/cappelletti"
     },
     {
@@ -223,7 +223,7 @@
       "kind": "thought",
       "date": "2025-11",
       "x": 3725,
-      "y": 175.6,
+      "y": 173.8,
       "route": "/thoughts/evosearch"
     },
     {
@@ -231,7 +231,7 @@
       "kind": "project",
       "date": "2025-12",
       "x": 3855,
-      "y": 382.3,
+      "y": 382,
       "route": "/work/ballooning"
     },
     {
@@ -239,7 +239,7 @@
       "kind": "project",
       "date": "2025-12",
       "x": 3985,
-      "y": 385.5,
+      "y": 385.4,
       "route": "/work/huddle"
     },
     {
@@ -247,7 +247,7 @@
       "kind": "project",
       "date": "2025-12",
       "x": 4115,
-      "y": 353.3,
+      "y": 352.3,
       "route": "/work/tsukiji"
     },
     {
@@ -263,7 +263,7 @@
       "kind": "thought",
       "date": "2025-12",
       "x": 4375,
-      "y": 139,
+      "y": 136.4,
       "route": "/thoughts/neuroaes"
     },
     {
@@ -271,7 +271,7 @@
       "kind": "thought",
       "date": "2026-01",
       "x": 4505,
-      "y": 153,
+      "y": 151,
       "route": "/thoughts/bim"
     },
     {
@@ -279,7 +279,7 @@
       "kind": "project",
       "date": "2026-01",
       "x": 4635,
-      "y": 341.2,
+      "y": 341.1,
       "route": "/work/podcast"
     },
     {
@@ -287,7 +287,7 @@
       "kind": "project",
       "date": "2026-02",
       "x": 4765,
-      "y": 350.8,
+      "y": 352,
       "route": "/work/neurospace"
     },
     {
@@ -295,7 +295,7 @@
       "kind": "thought",
       "date": "2026-03",
       "x": 4895,
-      "y": 169.1,
+      "y": 184.6,
       "route": "/thoughts/drawiface"
     },
     {
@@ -303,7 +303,7 @@
       "kind": "project",
       "date": "2026-03",
       "x": 5025,
-      "y": 344.3,
+      "y": 343.3,
       "route": "/work/data-geometry"
     },
     {
@@ -311,7 +311,7 @@
       "kind": "project",
       "date": "2026-03",
       "x": 5155,
-      "y": 331.7,
+      "y": 330,
       "route": "/work/lungs"
     },
     {
@@ -319,7 +319,7 @@
       "kind": "thought",
       "date": "2026-04",
       "x": 5285,
-      "y": 142.1,
+      "y": 145,
       "route": "/thoughts/latent"
     },
     {
@@ -327,7 +327,7 @@
       "kind": "thought",
       "date": "2026-04",
       "x": 5415,
-      "y": 147.2,
+      "y": 145.7,
       "route": "/thoughts/scoring"
     },
     {
@@ -335,7 +335,7 @@
       "kind": "project",
       "date": "2026-04",
       "x": 5545,
-      "y": 348.1,
+      "y": 347.2,
       "route": "/work/urban-risk"
     },
     {
@@ -343,7 +343,7 @@
       "kind": "project",
       "date": "2026-05",
       "x": 5675,
-      "y": 351.2,
+      "y": 352,
       "route": "/work/legoarch"
     },
     {
@@ -359,7 +359,7 @@
       "kind": "thought",
       "date": "2026-05",
       "x": 5935,
-      "y": 113.8,
+      "y": 113.7,
       "route": "/thoughts/comfort"
     },
     {
@@ -367,7 +367,7 @@
       "kind": "project",
       "date": "2026-05",
       "x": 6065,
-      "y": 376.4,
+      "y": 375.8,
       "route": "/work/narkomfin"
     },
     {
@@ -375,7 +375,7 @@
       "kind": "project",
       "date": "2026-06",
       "x": 6195,
-      "y": 341.9,
+      "y": 342.1,
       "route": "/work/sensi"
     },
     {
@@ -383,7 +383,7 @@
       "kind": "thought",
       "date": "2026-06",
       "x": 6325,
-      "y": 177.7,
+      "y": 176,
       "route": "/thoughts/adjacency"
     },
     {
@@ -391,7 +391,7 @@
       "kind": "thought",
       "date": "2026-06",
       "x": 6455,
-      "y": 121.2,
+      "y": 117.6,
       "route": "/thoughts/respond"
     },
     {
@@ -399,7 +399,7 @@
       "kind": "award",
       "date": "2026-06",
       "x": 4027,
-      "y": 443.5,
+      "y": 443.4,
       "route": "/work/huddle"
     },
     {
@@ -407,7 +407,7 @@
       "kind": "award",
       "date": "2026-06",
       "x": 5717,
-      "y": 409.2,
+      "y": 410,
       "route": "/work/legoarch"
     },
     {
@@ -415,7 +415,7 @@
       "kind": "award",
       "date": "2026-06",
       "x": 5197,
-      "y": 389.7,
+      "y": 388,
       "route": "/work/lungs"
     },
     {
@@ -431,7 +431,7 @@
       "kind": "award",
       "date": "2026-06",
       "x": 6237,
-      "y": 399.9,
+      "y": 400.1,
       "route": "/work/sensi"
     },
     {
@@ -439,7 +439,7 @@
       "kind": "thought",
       "date": "2026-07",
       "x": 7235,
-      "y": 151.6,
+      "y": 154.7,
       "route": "/thoughts/explain"
     },
     {

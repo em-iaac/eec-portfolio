@@ -15,7 +15,7 @@
 import { Link } from 'react-router-dom'
 import SheetPage from '../components/SheetPage'
 import { ENTRIES } from '../data/registry'
-import { isPillarRelated } from '../lib/pillar'
+import { isPillarRelated, PILLAR_SHORT } from '../lib/pillar'
 // Three recipes on this page, on purpose (Emilie, 2026-08-05):
 //   QUIET_LINK_TAP  the three names inside the prose. Ink, dashed, red on hover.
 //   RED_LINK_ROW    the door rows and the way back. Calls to action, and
@@ -61,7 +61,23 @@ export default function Pillar() {
           behavior information modeling
         </h1>
 
-        {/* The definitive prose (S5, 2026-07-18). */}
+        {/* The definitive prose (S5, 2026-07-18).
+            ⚠ BeIM ENTERS HERE AND ONLY HERE (Emilie, 2026-08-16, her pick A of
+            three drafts). The short form had never shipped anywhere on the
+            site — it lived in her strategy notes — and the book's footer rail
+            now wants it, so it needed a home where it arrives explained. This
+            is that home: the sentence before it has just spelled out what the
+            letters do, which satisfies her own standing rule (WORDS-BRIEF §2)
+            that the coinage never appears without a gloss within a line of it.
+            A footer cannot carry a gloss, so the rail is the echo and this is
+            the debut.
+            The seam she chose to walk past rather than argue: written short it
+            takes one more letter than it borrows, so "keep the letters" is
+            true of the reframe and not quite true of the abbreviation. A draft
+            that owned that out loud was offered and declined as too much
+            attention on a small thing. The full phrase still carries every
+            position that matters (the slug, the h1, the title, knowsAbout), so
+            nothing about the page's search position moves. */}
         <div className="prose-rag max-w-[62ch] font-serif text-prose leading-[1.75] text-[var(--lang-ink)] [&_p]:mb-[1.15em] [&_p:last-child]:mb-0">
           <p>
             What if how a space will make someone feel could be treated as design data, scored
@@ -75,7 +91,7 @@ export default function Pillar() {
             daylight, the curve of a wall: what if none of that is decoration? What if it's
             input, and the mind has outputs? Then the fix is almost typographic. Keep the
             letters, change the noun: the B stands for behavior, the person in the room, not
-            just the room.
+            just the room. {PILLAR_SHORT}, if you need it short.
           </p>
           <p>
             The name happened on air. An hour into{' '}

@@ -22,10 +22,15 @@
 // ONLY in the screen skin. Rows without a drafted note (none today) render
 // as plain text on screen rather than a dead link.
 import { Link } from 'react-router-dom'
+// The print skin renders into a PDF that travels off the site, so its hrefs
+// must be absolute. (The screen skin routes; only this one needs an origin.)
+// One origin for the whole site — it was briefly a third private copy here.
+import { SITE_ORIGIN } from '../lib/routes'
 import { thoughtIndexEntries, type RegistryEntry } from '../data/registry'
 import { THOUGHT_OPENINGS } from '../thoughts/openings'
 import type { Lens } from './Lens'
 import { vtName } from '../lib/viewTransition'
+
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 // 'YYYY-MM' -> 'JUL 2026' (the book's date grammar; PrintBook reuses this).
@@ -179,17 +184,35 @@ export default function ThoughtIndexRows({
       // ("JUL 2026") against roughly 55mm of text column, and the build's
       // overflow probe is the check on that.
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, 1fr)`, columnGap: '7mm' }}>
-        {(limit ? thoughts.slice(0, limit) : thoughts).map((t) => (
-          <div key={t.id} className="pr-row">
-            <span className="pr-mark pr-mark--thought" />
-            <span style={{ display: 'flex', justifyContent: 'space-between', gap: '2.5mm', alignItems: 'baseline' }}>
-              <span className="pr-body" style={{ fontStyle: 'italic' }}>{t.title}</span>
-              <span className="pr-mono pr-mono--muted" style={{ whiteSpace: 'nowrap' }}>
-                {fmtMonthYear(t.date)}
+        {(limit ? thoughts.slice(0, limit) : thoughts).map((t) => {
+          // THE LINKS PASS (Emilie, 2026-08-16). The printed index listed its
+          // thoughts as dead type like every other URL in the book. These are
+          // PLAIN <a href> and never the router's <Link>: the print skin is
+          // renderToString'd with no router by printBook.test.tsx, and a
+          // <Link> there throws. A row whose thought has no note stays a
+          // <div>, so the book can never print a link to a page that is not
+          // written yet.
+          const row = (
+            <>
+              <span className="pr-mark pr-mark--thought" />
+              <span style={{ display: 'flex', justifyContent: 'space-between', gap: '2.5mm', alignItems: 'baseline' }}>
+                <span className="pr-body" style={{ fontStyle: 'italic' }}>{t.title}</span>
+                <span className="pr-mono pr-mono--muted" style={{ whiteSpace: 'nowrap' }}>
+                  {fmtMonthYear(t.date)}
+                </span>
               </span>
-            </span>
-          </div>
-        ))}
+            </>
+          )
+          return t.note ? (
+            <a key={t.id} href={`${SITE_ORIGIN}${t.note.route}`} className="pr-row pr-link">
+              {row}
+            </a>
+          ) : (
+            <div key={t.id} className="pr-row">
+              {row}
+            </div>
+          )
+        })}
       </div>
     )
 

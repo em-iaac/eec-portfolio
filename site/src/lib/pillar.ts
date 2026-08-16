@@ -11,6 +11,17 @@
 export const PILLAR_PATH = '/behavior-information-modeling'
 export const PILLAR_PHRASE = 'Behavior Information Modeling'
 
+// THE SHORT FORM (Emilie, 2026-08-16). "BeIM" had never shipped anywhere — it
+// lived only in her strategy notes — until the book's footer rail needed a name
+// short enough to fit and the pillar gave it a home with a gloss beside it.
+//
+// ⚠ It lives HERE, next to the full phrase, and not in the print layer, which
+// composes and never authors. It was typed independently in two files for a
+// day (the pillar's prose and bookPlates' THREAD_LABEL) and that is exactly the
+// drift this module exists to prevent: the lowercase "e" IS the coinage, so a
+// second copy is a second chance to lose it.
+export const PILLAR_SHORT = 'BeIM'
+
 export function isPillarRelated(tags: readonly string[]): boolean {
   return tags.includes('neuro')
 }

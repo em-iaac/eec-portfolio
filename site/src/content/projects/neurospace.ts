@@ -21,6 +21,14 @@ const neurospace: ProjectMeta = {
   // (the locked hero asks the same); the TOOL's claim stays score/estimate in
   // the dek and spine, never measure. Question + dot set SIGNED by Emilie (REINDEX batch A, 2026-07-16).
   question: 'Can you visualize the parameters that affect how a room makes you feel?',
+  // ⚠ ALL FOUR ITEMS STAY (Emilie, 2026-08-16). Grasshopper was taken off this
+  // line for one round, when the book's footer rail started naming the thought
+  // each project made her think of and this plate's ran 96 characters against a
+  // rail that measures 78. Trimming the stack was the wrong lever and it was
+  // not enough anyway: she solved it in the words instead, and the rail now
+  // prints the coinage's short form, so the whole stack fits with room to
+  // spare. If this line ever grows, printBook.test.tsx fails with the measured
+  // ceiling rather than letting the PDF wrap.
   tech: 'GRASSHOPPER · RHINO.COMPUTE · VUE 3 · THREE.JS',
   links: [
     // THE HONEST LABEL (2026-07-26). IAAC's Rhino Compute server is gone, so the

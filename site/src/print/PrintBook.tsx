@@ -21,6 +21,8 @@ import ThoughtIndexRows, { fmtMonthYear } from '../components/ThoughtIndexRows'
 import { UPDATED } from '../data/cv'
 import A4Page, { sideOf, type PageSide } from './A4Page'
 import { BOOK_SPREADS, type SpreadData } from './bookContents'
+import { BOOK_THREAD, THREAD_LABEL } from './bookPlates'
+import { SITE_ORIGIN } from '../lib/routes'
 import { printImageSrc, gridImage } from './printImage'
 import { layoutAssetPage } from './assetGeometry'
 import { PRINT_FIGURES } from './figures'
@@ -28,6 +30,7 @@ import { PRINT_FIGURES } from './figures'
 // 2026-08-12 ("remove the record. no need for it in the book"); the component
 // still exists and /print/cv still renders it into the standalone CV PDF.
 import { WORK_ARTIFACTS } from '../components/work/artifacts'
+import RecognitionMark from '../components/RecognitionMark'
 
 // The design gates (Emilie, 2026-07-12, this session) collapsed the
 // exploration variants to her picks: cover = THE MIND ON PAPER (the landing
@@ -43,6 +46,89 @@ import { WORK_ARTIFACTS } from '../components/work/artifacts'
 // applied to a new surface), and /work's DOWNLOAD THE BOOK (PDF).
 
 const SITE = 'emiliechidiac.com'
+// ⚠ NOT a fourth private copy. lib/routes owns the origin (prerender.mjs and
+// headData read the same one); SITE is only the DISPLAY string the rail prints,
+// which is deliberately without the scheme.
+const ORIGIN = SITE_ORIGIN
+
+// THE LINKS PASS (Emilie, 2026-08-16). The book printed every URL it carries
+// as dead type: 20 pages, zero link annotations, so a reader holding the file
+// had to retype emiliechidiac.com/work/sensi by hand. The whole job of a
+// leave-behind is to hand someone to the live work, and it could not.
+//
+// Her ruling was ALL OF IT: the footers, the index's 21 projects and its
+// thoughts, the about page's contents, the colophon's three addresses.
+//
+// ⚠ THE SECOND HALF OF THAT RULING WAS REVERSED THE SAME DAY, and this comment
+// asserted the old one for a while. She first chose INVISIBLE everywhere
+// (option A over a hairline and a dotted rule). Once the rail began carrying a
+// door to each thought as well as each project, she marked the FOOTERS and the
+// colophon with a dotted underline — "a reader cannot be expected to guess that
+// a printed line is live" — while the index and the about page stay unmarked,
+// because p19 is a drawn object and 21 dotted rules would turn it into a list.
+// So pr-link itself still adds NO ink; print.css decides, per surface, whether
+// a link is allowed to show. The marking rule lives there, next to the reason.
+function PrLink({
+  href,
+  className,
+  style,
+  children,
+}: {
+  href: string
+  className?: string
+  style?: React.CSSProperties
+  children: ReactNode
+}) {
+  return (
+    <a href={href} className={`pr-link${className ? ` ${className}` : ''}`} style={style}>
+      {children}
+    </a>
+  )
+}
+
+// The one place a page's own anchor name is composed, so the about page's
+// contents rows and the plate pages cannot drift apart.
+const plateAnchor = (slug: string) => `plate-${slug}`
+// ⚠ AND THE SAME FOR THE INDEX, which was the hole this rule was written to
+// close and then missed. Eight contents rows went through plateAnchor(); the
+// ninth hard-coded "the-index" at BOTH ends, in two files' worth of distance
+// from each other. Chrome emits NO link annotation at all for an href whose
+// target id does not exist — it drops it silently — so renaming either half
+// would have turned that row into dead type with every build check still
+// green. render-pdfs now also resolves every in-document destination, because
+// a shared constant only protects against renames, not against deletions.
+const INDEX_ANCHOR = 'the-index'
+
+// THE RAIL'S THOUGHT (2026-08-16). BOOK_THREAD holds her pick per project as
+// an ID; the rail prints the note's own TITLE, looked up here, so renaming a
+// thought renames it in the book too and the two can never disagree. Returns
+// undefined for anything unmapped, which prints nothing rather than an id.
+function threadOf(slug: string): { label: string; href?: string } | undefined {
+  const id = BOOK_THREAD[slug]
+  if (!id) return undefined
+  const note = thoughtIndexEntries().find(t => t.id === id)
+  if (!note) return undefined
+  // A thought that declares a printed form (THREAD_LABEL) prints VERBATIM;
+  // everything else is the note's own title, shouted to match the rail.
+  const label = THREAD_LABEL[id] ?? note.title.toUpperCase()
+  // THE THREAD IS A DOOR (Emilie, 2026-08-16). Naming the thought and then
+  // making a reader search for it is the same defect the links pass fixed
+  // everywhere else in this book. A note still in draft has no route, and
+  // then the rail names it without linking rather than printing a dead one.
+  return { label, href: note.note ? `${ORIGIN}${note.note.route}` : undefined }
+}
+
+// The contents-row leader. Geometry, never a gradient: see .pr-about__leader
+// in print.css for why a CSS gradient prints as a bitmap here.
+function PrLeader() {
+  return (
+    <span className="pr-about__leader" aria-hidden="true">
+      <svg preserveAspectRatio="none" focusable="false">
+        <line x1="0" y1="50%" x2="100%" y2="50%" />
+      </svg>
+    </span>
+  )
+}
 
 // THE COVER, settled over three rounds (Emilie, 2026-08-11 and 12). It is the
 // landing mind graph, and every mark is drawn in ITS OWN CATEGORY INK; the
@@ -104,6 +190,10 @@ function PrLensTick({ lens, size }: { lens: Lens; size: number }) {
     </svg>
   )
 }
+
+// The recognition mark moved to components/RecognitionMark (2026-08-16): the
+// social cards render to files at build time too and were carrying the same
+// machine-dependent glyph, so the shape is defined once for both.
 
 function LensPill({ lens }: { lens: Lens }) {
   return (
@@ -278,7 +368,7 @@ function Cover() {
   const anno = '#565b63'
 
   return (
-    <A4Page>
+    <A4Page outline="Cover">
       {/* THE VOID BECOMES THE TITLE (Emilie's pick, 2026-08-12, from four
           compositions drawn against the real artwork).
 
@@ -331,7 +421,9 @@ function Cover() {
           }}
         >
           <LogoMark size={52} />
-          <p className="pr-mono" style={{ margin: '2.4mm 0 0', color: anno }}>{SITE}</p>
+          <p className="pr-mono" style={{ margin: '2.4mm 0 0', color: anno }}>
+            <PrLink href={ORIGIN}>{SITE}</PrLink>
+          </p>
         </div>
       </div>
     </A4Page>
@@ -370,6 +462,11 @@ function Folio({ n, side }: { n: number; side: PageSide }) {
 
 function Spread({ data, side, plate, page }: { data: SpreadData; side: PageSide; plate: number; page: number }) {
   const { master, entry } = data
+  // The thought this plate names in its rail (BOOK_THREAD, her pick per
+  // project). Resolved through the registry so the rail prints the note's
+  // OWN title and can never drift from it; an unmapped slug simply prints no
+  // thread rather than an id.
+  const thread = threadOf(master.slug)
   // The dominant plate: the master's curated spreadAssets first (the
   // print-resolution rung), the card cover as the honest fallback.
   const plateRef = master.spreadAssets?.[0] ?? master.image
@@ -417,7 +514,9 @@ function Spread({ data, side, plate, page }: { data: SpreadData; side: PageSide;
         <span className="pr-mono pr-mono--muted">{master.meta}</span>
       </div>
       {entry.recognition && (
-        <span className="pr-mono pr-spread__award">✦ {entry.recognition}</span>
+        <span className="pr-mono pr-spread__award">
+          <RecognitionMark size={6} /> {entry.recognition}
+        </span>
       )}
       <h2 className="pr-title pr-spread__title">{master.title}</h2>
       {master.dek && <p className="pr-dek pr-spread__dek">{master.dek}</p>}
@@ -455,11 +554,28 @@ function Spread({ data, side, plate, page }: { data: SpreadData; side: PageSide;
   const foot = (
     <div className="pr-spread__foot">
       <span className="pr-mono">
+        {/* ⚠ THE RAIL MUST STAY ONE LINE, and the reason is not the rail.
+            `.pr-spine` above it is a TWO-COLUMN multicol with `flex: 1`, so
+            every millimetre the foot grows is a millimetre the spine loses —
+            and when its content stops fitting two columns, CSS multicol does
+            not clip, it opens a THIRD column off the side of the sheet. Giving
+            the thread its own line cost 311px of horizontal overflow on three
+            pages and the build refused the PDF. Measured, not guessed: the
+            probe found the offending element was the HOW list, not the foot.
+            So the thread runs on, and its budget is characters. */}
         {master.tech}
-        {master.stat && <span className="pr-mono--muted"> · {master.stat}</span>}
+        {thread && (
+          <span className="pr-mono--muted">
+            {' · MADE ME THINK OF: '}
+            {thread.href ? <PrLink href={thread.href}>{thread.label}</PrLink> : thread.label}
+          </span>
+        )}
       </span>
       <span className="pr-mono pr-mono--muted">
-        {SITE}/work/{entry.id} · {fmtDate(entry.date)}
+        <PrLink href={`${ORIGIN}/work/${entry.id}`}>
+          {SITE}/work/{entry.id}
+        </PrLink>{' '}
+        · {fmtDate(entry.date)}
       </span>
       <Folio n={page} side={side} />
     </div>
@@ -470,7 +586,7 @@ function Spread({ data, side, plate, page }: { data: SpreadData; side: PageSide;
   // (the fallback form below, whose content column simply spans wider).
   if (figure) {
     return (
-      <A4Page>
+      <A4Page id={plateAnchor(master.slug)} outline={master.title}>
         <div className={`pr-spread pr-spread--plate pr-spread--${side}`}>
           <div className="pr-plate__top">
             {side === 'recto' ? (
@@ -498,7 +614,7 @@ function Spread({ data, side, plate, page }: { data: SpreadData; side: PageSide;
   // No figure: the honest all-text page. The side class keeps the bound
   // gutter's 18mm; the solo modifier spans the content across the full page.
   return (
-    <A4Page>
+    <A4Page id={plateAnchor(master.slug)} outline={master.title}>
       <div className={`pr-spread pr-spread--${side}`}>
         <div className="pr-spread__content pr-spread__content--solo">
           {head}
@@ -674,7 +790,10 @@ function AssetPage({ data, side, plate, page }: { data: SpreadData; side: PageSi
         <div className="pr-assets__foot" style={{ top: mm(laid.ruleY + 4) }}>
           <span className="pr-mono">{master.title}</span>
           <span className="pr-mono pr-mono--muted">
-            {SITE}/work/{entry.id} · {fmtDate(entry.date)}
+            <PrLink href={`${ORIGIN}/work/${entry.id}`}>
+              {SITE}/work/{entry.id}
+            </PrLink>{' '}
+            · {fmtDate(entry.date)}
           </span>
           <Folio n={page} side={side} />
         </div>
@@ -692,7 +811,7 @@ const THOUGHTS = thoughtIndexEntries()
 
 function IndexPage({ side }: { side: PageSide }) {
   return (
-    <A4Page>
+    <A4Page id={INDEX_ANCHOR} outline="Index">
       <div className={`pr-index pr-index--${side}`}>
         {/* THE WORDS (2026-07-28): four new thoughts pushed this page 17px
             (~4.5mm) past its A4 box. Same remedy as the S4b and S2 overruns
@@ -723,7 +842,12 @@ function IndexPage({ side }: { side: PageSide }) {
             // book before this session.
             const art = WORK_ARTIFACTS[w.id]
             return (
-              <div key={w.id}>
+              // THE LINKS PASS (2026-08-16): the tile IS the link, so the
+              // drawing, the title and the origin line all reach the project
+              // rather than only the name. `display: block` keeps it an
+              // ordinary grid child; pr-link adds no ink, so p19 prints
+              // exactly as it did (her ruling: the index stays a drawn object).
+              <PrLink key={w.id} href={`${ORIGIN}/work/${w.id}`} style={{ display: 'block' }}>
                 <div className="pr-tile__img">
                   {art ? (
                     <div className="pr-art">{art}</div>
@@ -746,9 +870,14 @@ function IndexPage({ side }: { side: PageSide }) {
                     third of the page's text for no return. */}
                 <div className="pr-mono pr-mono--muted" style={{ marginTop: '0.6mm' }}>
                   {w.origin}
-                  {w.recognition ? ' · ✦' : ''}
+                  {w.recognition ? (
+                    <>
+                      {' · '}
+                      <RecognitionMark size={6} />
+                    </>
+                  ) : null}
                 </div>
-              </div>
+              </PrLink>
             )
           })}
         </div>
@@ -772,10 +901,13 @@ function IndexPage({ side }: { side: PageSide }) {
                 <PrLensTick lens={l} size={6} /> {LENSES[l].short.toUpperCase()}
               </span>
             ))}
-            <span>✦ RECOGNITION</span>
+            <span>
+              <RecognitionMark size={6} /> RECOGNITION
+            </span>
           </div>
           <span className="pr-kicker">
-            {WORK_ENTRIES.length} PROJECTS · {THOUGHTS.length} THOUGHTS · {SITE}
+            {WORK_ENTRIES.length} PROJECTS · {THOUGHTS.length} THOUGHTS ·{' '}
+            <PrLink href={ORIGIN}>{SITE}</PrLink>
           </span>
         </div>
       </div>
@@ -830,7 +962,7 @@ function renderBioParagraph(para: string): ReactNode[] {
 
 function AboutPage() {
   return (
-    <A4Page>
+    <A4Page outline="About">
       <div className="pr-about">
         {/* The four adjectives ARE the landing's claim (identity.ts: the role
             title was offered as a fifth tier and Emilie cut it, twice). They
@@ -846,7 +978,12 @@ function AboutPage() {
           {NAME}. {VOICE}
         </p>
 
-        <div className="pr-about__cols">
+        {/* data-must-fit: the page probe only sees content pushed past the SHEET,
+            and this column is absolutely positioned inside a box that is 20mm
+            short of it — so a ninth contents row could run through the foot rule
+            and print over it while the A4 box stayed exactly A4. Measured on its
+            own terms instead. */}
+        <div className="pr-about__cols" data-must-fit>
           <div>
             <p className="pr-about__ch">Who</p>
             {BIO.map((para, i) => (
@@ -863,7 +1000,16 @@ function AboutPage() {
           <div>
             <p className="pr-about__ch">In this book</p>
             {BOOK_SPREADS.map((d, i) => (
-              <div key={d.master.slug} className="pr-about__row">
+              // A CONTENTS ROW POINTS INSIDE THE BOOK, not out at the site
+              // (2026-08-16): the row already carries a page number, and a
+              // contents line that opens a browser instead of turning to
+              // page 09 would be answering a question nobody asked. The
+              // plate's own footer is the way out to the live work.
+              <PrLink
+                key={d.master.slug}
+                href={`#${plateAnchor(d.master.slug)}`}
+                className="pr-about__row"
+              >
                 {/* HER INK (option 03·B). Each of the eight carries its own
                     parti, the same drawing the index page gives all twenty-one
                     seventeen pages later. The mark sits BESIDE the name it
@@ -883,22 +1029,37 @@ function AboutPage() {
                   <div className="pr-art">{WORK_ARTIFACTS[d.entry.id]}</div>
                 </span>
                 <span className="pr-about__ti">{d.master.title}</span>
-                <span className="pr-about__leader" />
+                {/* THE ORIGIN JOINS THE CONTENTS (Emilie, 2026-08-16). Six of
+                    the eight plates are MaCAD and the two with a client sit at
+                    pages 15 and 17, so a reader skimming page two met eight
+                    titles that all looked like the same kind of thing. The
+                    index has always printed this stamp under every tile; the
+                    front of the book simply was not doing what the back does.
+                    Her ruling in the same breath: the ORDER does not move. The
+                    practice pages stay last, because they are the closing
+                    answer to "has she done this for real" rather than the
+                    opening claim. This only lets a reader SEE that the answer
+                    is in there, seventeen pages before they reach it. */}
+                <span className="pr-mono pr-mono--muted pr-about__origin">{d.entry.origin}</span>
+                <PrLeader />
                 <span className="pr-mono pr-mono--muted">{String(3 + i * 2).padStart(2, '0')}</span>
-              </div>
+              </PrLink>
             ))}
-            <div className="pr-about__row pr-about__row--rest">
+            <PrLink href={`#${INDEX_ANCHOR}`} className="pr-about__row pr-about__row--rest">
               <span className="pr-about__ti">Everything else, and the thoughts</span>
-              <span className="pr-about__leader" />
+              <PrLeader />
               <span className="pr-mono pr-mono--muted">{BOOK_PAGE_COUNT - 1}</span>
-            </div>
+            </PrLink>
           </div>
         </div>
 
         <div className="pr-about__rule" />
         <div className="pr-about__foot">
           <span className="pr-mono pr-mono--muted">{NAME.toUpperCase()}</span>
-          <span className="pr-mono pr-mono--muted">THE FULL RECORD · {SITE}/cv</span>
+          <span className="pr-mono pr-mono--muted">
+            THE FULL RECORD ·{' '}
+            <PrLink href={`${ORIGIN}/cv`}>{SITE}/cv</PrLink>
+          </span>
         </div>
       </div>
     </A4Page>
@@ -909,17 +1070,30 @@ function AboutPage() {
 
 function Colophon() {
   return (
-    <A4Page>
-      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '7mm' }}>
+    <A4Page outline="Contact">
+      {/* pr-colophon exists so the dotted link mark can reach this page's three
+          addresses without reaching the index or the about (2026-08-16). It
+          carries no styles of its own. */}
+      <div className="pr-colophon" style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '7mm' }}>
         <LogoMark size={88} />
         {/* The landing's signed caption, reused verbatim as the closing line. */}
         <p className="pr-dek" style={{ margin: 0 }}>this is what's on my mind</p>
+        {/* THE LAST PAGE IS THE ONE THAT HAS TO WORK (2026-08-16). These three
+            were the whole point of the links pass: a reader who reaches the
+            colophon has decided to get in touch, and until now the file
+            answered that by making them retype an address. */}
         <div style={{ display: 'flex', gap: '5mm' }}>
-          <span className="pr-mono">chidiacemilie@gmail.com</span>
+          <span className="pr-mono">
+            <PrLink href="mailto:chidiacemilie@gmail.com">chidiacemilie@gmail.com</PrLink>
+          </span>
           <span className="pr-mono pr-mono--muted">·</span>
-          <span className="pr-mono">linkedin.com/in/EmilieElChidiac</span>
+          <span className="pr-mono">
+            <PrLink href="https://linkedin.com/in/EmilieElChidiac">linkedin.com/in/EmilieElChidiac</PrLink>
+          </span>
           <span className="pr-mono pr-mono--muted">·</span>
-          <span className="pr-mono">github.com/hi-em</span>
+          <span className="pr-mono">
+            <PrLink href="https://github.com/hi-em">github.com/hi-em</PrLink>
+          </span>
         </div>
         {/* The sanctioned functional touch (§9's UPDATED line), nothing more:
             the "rendered from the live site" provenance line the critique
@@ -936,7 +1110,8 @@ function Colophon() {
             people keep. The ATS CV gets nothing; a © line is noise to a
             résumé parser. */}
         <span className="pr-mono pr-mono--muted">
-          © EMILIE EL CHIDIAC · {SITE} · UPDATED {UPDATED.toUpperCase()}
+          © EMILIE EL CHIDIAC · <PrLink href={ORIGIN}>{SITE}</PrLink> · UPDATED{' '}
+          {UPDATED.toUpperCase()}
         </span>
       </div>
     </A4Page>

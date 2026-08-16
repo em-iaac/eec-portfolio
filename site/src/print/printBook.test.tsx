@@ -16,10 +16,12 @@ import { PrintContext } from './PrintContext'
 import PrintBook, { BOOK_PAGE_COUNT } from './PrintBook'
 import PrintCV from './PrintCV'
 import { BOOK_SLUGS, BOOK_SPREADS } from './bookContents'
+import { BOOK_THREAD, THREAD_LABEL } from './bookPlates'
 import { PRINT_FIGURES } from './figures'
 import printImages from '../data/print-images.json'
 import { WORK_ENTRIES } from '../data/work'
-import { ENTRIES, thoughtIndexEntries } from '../data/registry'
+import { ENTRIES, CORRELATIONS, thoughtIndexEntries } from '../data/registry'
+import { fmtMonthYear } from '../components/ThoughtIndexRows'
 import { BIO, BIO_VARIABLES } from '../landing/identity'
 import { layoutAssetPage, registerRowHeight, leadDrawnWidth } from './assetGeometry'
 import { EDUCATION, EXPERIENCE, ESSAY_COUNT, BLOG_COUNT } from '../data/cv'
@@ -68,8 +70,15 @@ describe('the book contents', () => {
     //   sensi/app-shape is a 1388px screenshot, all that exists.
     //   verve/dusk-facade is an 880px square export, and so is every Verve
     //     render. Emilie asked for it as the plate, was shown that it lands near
-    //     154dpi filled, and asked again; it FITS instead, which draws it 98mm
-    //     wide and takes it to about 228dpi. Sanctioned at what it really is.
+    //     154dpi filled, and asked again. Sanctioned at what it really is.
+    //     ⚠ The justification here USED to end "it FITS instead, which draws it
+    //     98mm wide and takes it to about 228dpi". That is not true of the
+    //     built book: soma-towers declares no `spreadFit`, so the plate does
+    //     not fit, it FILLS — PrintBook only adds pr-spread__figure--fit when
+    //     spreadFit is set. The sanction stands on her decision, which is real;
+    //     the arithmetic that dressed it up described a page that was never
+    //     built. If the softness ever matters, the honest fix is a bigger
+    //     export, not a better sentence.
     const SANCTIONED_SOFT = new Map([
       ['sensi/app-shape', 1388],
       ['verve/dusk-facade', 880],
@@ -435,5 +444,70 @@ describe('the ATS CV page', () => {
       readFileSync(join(mastersDir, f), 'utf8').includes('blog.iaac.net'),
     ).length
     expect(BLOG_COUNT).toBe(withBlog)
+  })
+
+  // THE RAIL CANNOT CLAIM A RELATION THE RECORD DOES NOT HAVE (2026-08-16).
+  // Every plate's footer names the thought that project made her think of.
+  // That line is a CLAIM about the map, so it is checked against the map: the
+  // id must be a real thought, and CORRELATIONS must actually carry a thread
+  // between the two. Without this, renaming or cutting a thread would leave
+  // the printed book asserting a connection the site no longer draws — and a
+  // PDF people keep is the worst place to find that out.
+  test('every plate names a thought the map really threads to it', () => {
+    const thoughts = new Set(ENTRIES.filter(e => e.kind === 'thought').map(e => e.id))
+    for (const { master, entry } of BOOK_SPREADS) {
+      const thoughtId = BOOK_THREAD[master.slug]
+      expect(thoughtId, `${master.slug} has no thread chosen for its rail`).toBeTruthy()
+      expect(thoughts.has(thoughtId!), `${master.slug} names "${thoughtId}", which is not a thought`).toBe(true)
+      const threaded = CORRELATIONS.some(
+        ([a, b]) =>
+          (a === entry.id && b === thoughtId) || (b === entry.id && a === thoughtId),
+      )
+      expect(threaded, `the book says ${entry.id} -> ${thoughtId}, but the map carries no such thread`).toBe(true)
+    }
+  })
+
+  // The rail is ONE LINE by construction (see PrintBook: a second line starves
+  // the two-column spine, which then opens a third column off the sheet). The
+  // build's overflow probe is the real guard, but it only runs when a PDF is
+  // rendered; this catches the same mistake in a two-second unit run, and names
+  // the ceiling so the next person editing a tech string knows one exists.
+  test('no plate rail can outgrow its one line', () => {
+    // THE RAIL IS ONE MEASURE SHARED BY TWO CELLS, which is why an earlier
+    // version of this guard was wrong in both directions: it used a single
+    // character ceiling, let a 96-character line through, and then failed
+    // Sensi at 80 characters even though Sensi fits.
+    //
+    // The right-hand cell (url · date) sizes to its content and the LEFT cell
+    // takes what is left, because the left one carries `flex: 1; min-width: 0`
+    // and the right one has no flex at all. NeuroSpace has the longest URL in
+    // the book, which is exactly why it was the plate that broke: same measure,
+    // less of it left over.
+    //
+    // ⚠ NOT because the right cell is nowrap. An earlier version of this note
+    // said so and it is false: print.css scopes `white-space: nowrap` to
+    // `.pr-spread__foot > :last-child`, and the last child is the FOLIO, not
+    // the url. The behaviour is right; the reason given for it was wrong.
+    //
+    // Calibrated from the browser, not guessed. The mono advances 7.6px per
+    // character at 7.5pt with the rail's tracking, and NeuroSpace's left cell
+    // measured 599px against its 44-character right cell, so the two cells
+    // together hold about 121 characters. Every other plate agrees: Verve's
+    // shorter URL measured 644px of left cell, which is the same total.
+    const RAIL_CHARS = 121
+    for (const { master, entry } of BOOK_SPREADS) {
+      const id = BOOK_THREAD[master.slug]
+      // Must mirror PrintBook's threadTitle: a declared spelling prints as it
+      // is written, everything else is shouted. Measuring the wrong string
+      // would make this guard agree with a book that overflows.
+      const title = THREAD_LABEL[id!] ?? (ENTRIES.find(e => e.id === id)?.title ?? '').toUpperCase()
+      const left = `${master.tech} · MADE ME THINK OF: ${title}`
+      const right = `emiliechidiac.com/work/${entry.id} · ${fmtMonthYear(entry.date)}`
+      const total = left.length + right.length
+      expect(
+        total,
+        `${master.slug}'s rail needs ${total} characters (${left.length} left + ${right.length} right): "${left}"`,
+      ).toBeLessThanOrEqual(RAIL_CHARS)
+    }
   })
 })

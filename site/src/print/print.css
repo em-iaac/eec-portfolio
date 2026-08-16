@@ -93,9 +93,23 @@
   }
 }
 
-/* The greyscale proof pass (?bw=1): the office-printer truth. */
-.pr-bw .pr-page {
-  filter: grayscale(1);
+/* THE GREYSCALE PROOF PASS (?bw=1): the office-printer truth.
+   ⚠ THIS MUST NOT USE `filter: grayscale(1)`, which is what it did until
+   2026-08-17. A CSS filter forces Chrome to rasterise everything beneath it,
+   so the one surface built for judging PRINT FIDELITY was itself a bitmap:
+   every page became a single flattened image, all text and vector art gone,
+   and a proof that cannot show you a hairline is not a proof.
+   Desaturating the TOKENS instead keeps the document vector and answers the
+   real question better, because it shows the exact ink each colour collapses
+   to rather than a filter's guess. Values are the sRGB luma (0.2126R +
+   0.7152G + 0.0722B) of each pen, computed once and written here so the proof
+   is reproducible rather than live-computed. */
+.pr-bw {
+  --pr-cyan: #5c5c5c;
+  --pr-magenta: #464646;
+  --pr-yellow: #545454;
+  --pr-red: #3f3f3f;
+  --pr-accent: #3f3f3f;
 }
 
 /* ---- Type scale (print-native, pt) -------------------------------------- */
@@ -126,6 +140,45 @@
   font-size: 9pt;
   line-height: 1.45;
   color: var(--pr-ink);
+}
+/* THE LINKS PASS (Emilie, 2026-08-16 — her option A, "invisible").
+   Every URL in this book used to print as dead type, so the file's whole job,
+   handing a reader to the live work, needed retyping by hand. The links are
+   real now and they add NOTHING to the sheet: no colour, no underline, no
+   inherited browser blue. A link here is a destination, never a mark, which
+   is why this rule sets exactly three properties and no more — anything else
+   would be a design change smuggled in under a functional fix.
+   `display` is deliberately absent: pr-link is worn BY existing layout
+   classes (.pr-row is a grid, .pr-about__row is a flex row, an index tile
+   sets its own block), and a display here would silently flatten all three. */
+.pr-link {
+  color: inherit;
+  text-decoration: none;
+  background: none;
+}
+
+/* THE FOOTERS SAY SO, THE INDEX DOES NOT (Emilie, 2026-08-16), revisiting her
+   own "invisible everywhere" ruling from earlier the same day once the rail
+   started carrying a door to each thought as well as to each project. A reader
+   cannot be expected to guess that a printed line is live.
+   It is marked in the FOOTERS ONLY: the sixteen project pages and the
+   colophon. The index and the about page stay unmarked by her ruling, because
+   p19 is a drawn object and 21 dotted rules would turn it into a list.
+   ⚠ COLOUR WAS NOT AVAILABLE, and the constraint is this file's own: red is
+   "the emblem's one red node only; never text, never category" (see the token
+   above), and cyan/magenta/yellow already MEAN category on every plate, so
+   borrowing one for links would collide with the meaning system. A dotted rule
+   is the quietest mark that still says something happens here, and it reads as
+   a note rather than as a rule.
+   The offset keeps the dots clear of the mono's descenders; `skip-ink` off
+   because at 0.4pt a broken dotted line reads as a printing fault. */
+.pr-spread__foot .pr-link,
+.pr-assets__foot .pr-link,
+.pr-colophon .pr-link {
+  text-decoration: underline dotted 0.4pt;
+  text-underline-offset: 2.2pt;
+  text-decoration-skip-ink: none;
+  text-decoration-color: var(--pr-ink-muted);
 }
 .pr-mono {
   font-family: var(--font-mono);
@@ -668,26 +721,6 @@
   flex: none;
 }
 
-/* ---- The CV pages (tail + the standalone portrait PDF) ------------------- */
-.pr-cv {
-  height: 100%;
-  padding: 14mm 12mm 12mm;
-  display: flex;
-  flex-direction: column;
-}
-.pr-cv--recto {
-  padding-left: 18mm;
-}
-.pr-cv--verso {
-  padding-right: 18mm;
-}
-.pr-cv__cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 8mm;
-  flex: 1;
-  min-height: 0;
-}
 /* ---- The about page (page 2) ---------------------------------------------
    HER PICK 03·B (Emilie, 2026-08-12), then rebuilt after a design critique of
    the built page (same day). The composition survived; almost none of the type
@@ -813,9 +846,61 @@
   white-space: normal;
   margin-left: 20.8mm;
 }
+/* The origin stamp sits between the title and the leader, so the leader still
+   runs to the folio and the row keeps one continuous line to follow. It is set
+   in the index's own grammar (mono, muted, uppercase in the data) rather than
+   a new one: the same stamp, in the same voice, at both ends of the book. */
+.pr-about__origin {
+  margin-left: 2.4mm;
+  white-space: nowrap;
+}
+/* THE LEADER IS DRAWN IN SVG, AND THAT IS NOT A STYLE CHOICE (2026-08-16).
+   She asked for "plain points" instead of the browser's dotted border, whose
+   dot rhythm is not controllable and at 0.5pt read as a grey smear. The first
+   attempt used a radial-gradient background, which LOOKED right and was a real
+   regression she caught on sight: it printed pixelated.
+   ⚠ A CSS GRADIENT IS NOT VECTOR IN A PDF. Chrome cannot express one in PDF
+   drawing operators, so it rasterises it — and it does so as a TILING PATTERN
+   whose paint is a full-sheet 842x595px RGB image plus an alpha SMask, one per
+   leader. Nine rows meant nine whole-page bitmaps, 90,916 bytes, at an
+   effective 72dpi on a sheet that prints at 300. Measured in the built file,
+   which also showed page 2's vector drawing count collapsing from 325 to 61.
+   The same trap waits for box-shadow, filter and backdrop-filter — which is
+   why the greyscale proof route no longer uses one either, and why the build
+   now runs a raster census over the drawn pages.
+   So the dots are geometry: a stroked line with a round cap and a zero dash
+   length, the vector idiom for a row of points, with the period and the dot
+   size both explicit.
+   ⚠ AND IT IS NOT FREE, which an earlier version of this comment got wrong in
+   both directions. Chrome does not emit a PDF dash array for stroke-dasharray;
+   it expands the dashes into EXPLICIT GEOMETRY, one four-curve circle per dot.
+   At the first spacing that was 2,162 dots, and it took page 2's content
+   stream from 133,510 to 609,250 bytes. The gap is 4pt rather than 2.4pt
+   because she picked it off three printed proofs: ~1,300 dots, and the row
+   still reads as points rather than as a rule. The FILE is smaller than before
+   the pass regardless (these streams Flate-compress), but the geometry is real
+   and the next person reaching for a finer dot should know what it costs. */
 .pr-about__leader {
   flex: 1;
-  border-bottom: 0.5pt dotted var(--pr-ink-muted);
+  align-self: center;
+  margin: 0 2.4mm;
+  min-width: 6mm;
+  height: 1pt;
+}
+.pr-about__leader svg {
+  display: block;
+  width: 100%;
+  height: 1pt;
+  overflow: visible;
+}
+.pr-about__leader line {
+  stroke: var(--pr-ink-muted);
+  stroke-width: 0.5pt;
+  stroke-linecap: round;
+  /* A zero-length dash with a round cap paints a dot of the stroke's own
+     diameter; the gap is the period. 4pt is her pick off three printed proofs
+     (2.4 / 4 / 6), and it is ~40% less geometry than 2.4. */
+  stroke-dasharray: 0 4pt;
 }
 /* HER INK, at 18.7 x 10.5mm. ⚠ THE SLOT IS THE ARTIFACT'S OWN ASPECT, 160 x 90.
    An earlier build made it a 5.4mm SQUARE, and because an SVG defaults to
@@ -849,60 +934,14 @@
   gap: 6mm;
 }
 
-.pr-cv__split {
-  display: grid;
-  grid-template-columns: 130mm 1fr;
-  gap: 9mm;
-  flex: 1;
-  min-height: 0;
-}
-.pr-cv__sheet {
-  border: 0.5pt solid var(--pr-hairline);
-  border-radius: 2mm;
-  /* 5mm, not 6: the first build of this page ran 4px past its box and the
-     overflow probe refused the PDF. The room came out of the padding rather
-     than the type, the same trade the CV pass made in 2026-07. */
-  padding: 5mm 6mm;
-  min-height: 0;
-}
-.pr-cv__sheet h3:first-child {
-  padding-top: 0;
-  border-top: 0;
-}
-.pr-cv__contents {
-  min-height: 0;
-}
-/* A contents line: title, a dotted leader, the page. The leader is what makes
-   a list of eight read as a contents rather than as another column of names. */
-.pr-cv__line {
-  display: flex;
-  align-items: baseline;
-  gap: 2mm;
-  margin-bottom: 1.6mm;
-}
-.pr-cv__leader {
-  flex: 1;
-  border-bottom: 0.5pt dotted var(--pr-ink-muted);
-  transform: translateY(-0.6mm);
-}
-.pr-cv h3 {
-  font-family: var(--font-mono);
-  font-size: 7.5pt;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--pr-ink-muted);
-  margin: 0 0 2.4mm;
-  padding-top: 2.4mm;
-  border-top: 0.5pt solid var(--pr-hairline);
-}
-.pr-cv__entry {
-  margin-bottom: 1.8mm;
-}
-.pr-cv__entry .pr-body {
-  font-size: 8.5pt;
-  line-height: 1.34;
-}
+/* ---- The CV pages: REMOVED (2026-08-17) ---------------------------------
+   The whole .pr-cv* family died with the book's CV page on 2026-08-12
+   ("remove the record. no need for it in the book"). It sat here for five days
+   with zero consumers — PrintCV.tsx renders the standalone portrait PDF and
+   uses none of these classes — and it was not harmless: it carried a SECOND,
+   contradictory `__leader` recipe seventy lines below the one that explains
+   why the real leader is drawn the way it is. Two recipes for one idea, one of
+   them unreachable, is how the next person learns the wrong rule. */
 
 /* ---- The standalone ATS CV (fully plain; single column) ------------------
    THE CV PASS (2026-07-27) tightened the leading and the section margins

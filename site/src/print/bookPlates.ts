@@ -14,6 +14,7 @@
 import { METAS_BY_SLUG } from '../content/projects'
 import type { BookAsset, BookCorner } from '../content/projects/types'
 import { WORK_ENTRIES } from '../data/work'
+import { PILLAR_SHORT } from '../lib/pillar'
 
 export const BOOK_SLUGS = [
   'sensi',
@@ -25,6 +26,70 @@ export const BOOK_SLUGS = [
   'soma-towers',
   'falcon',
 ] as const
+
+// THE THOUGHT EACH PLATE NAMES (Emilie, 2026-08-16, picked one by one).
+//
+// The footer rail used to end on a MEASURED NUMBER, and only three of the
+// eight had one: five plates carried a visible blank in a slot the eye had
+// been trained to read, so five projects looked unmeasured. Filling the blanks
+// was the obvious repair and she chose the better one — the rail now names the
+// thought the project made her think of.
+//
+// It is the choice that makes the book argue its own thesis. The cover IS the
+// mind graph and the index lists the thoughts; until now a reader had to infer
+// that the work and the thinking are one nervous system. Every spread says it
+// now, and the three numbers I traced were not wasted: they live on `stat`,
+// which the site's own showcase renders.
+//
+// ⚠ THE DIRECTION IS NOT CONSISTENT, and that is why the rail says MADE ME
+// THINK OF rather than LED TO. All seven of Sensi's threads point INTO Sensi —
+// the thinking came first and the project applied it — while NeuroSpace points
+// OUT to `scoring` and `drawiface`. A causal verb would be false on half the
+// plates; an associative one is true on all of them.
+//
+// Six of these existed already; `soma` and `falcon` are the two threads she
+// wrote into CORRELATIONS in the same pass. Several projects carry more than
+// one thread (Sensi has seven) and the pick is hers per project, NOT the
+// strongest by strength — she overrode that on three of them. printBook's test
+// asserts every id here is a real thought AND that the map actually carries a
+// thread between the two, so the book can never name a relation the record
+// does not have.
+export const BOOK_THREAD: Record<string, string> = {
+  sensi: 'llm',
+  legoarch: 'genai',
+  neurospace: 'bim',
+  lungs: 'respond',
+  huddle: 'rules',
+  'ballooning-market': 'solvers',
+  'soma-towers': 'xreal',
+  falcon: 'drawiface',
+}
+
+// THE ONE WORD THE RAIL DOES NOT SHOUT (Emilie, 2026-08-16).
+//
+// The rail sets every thought's title in caps, which is right for seven of the
+// eight and fatal for the eighth: `behavior information modeling` is her
+// coinage, and its short form carries a lowercase "e" that is the whole joke,
+// because the argument is "keep the letters, change the noun". Uppercased it
+// reads BEIM and the coinage dies on the page meant to announce it.
+//
+// So a thought may declare a printed form here, and a thought that declares one
+// is printed VERBATIM rather than uppercased. Deliberately a map and not a
+// flag: the next coinage will want its own spelling, not a boolean.
+//
+// ⚠ THE SPELLING ITSELF IS NOT AUTHORED HERE. The print layer composes and
+// never authors (THE ECONOMY), and for one day this file held the string
+// 'BeIM' while Pillar.tsx held a second copy typed by hand. Both now read
+// PILLAR_SHORT from lib/pillar, beside the full phrase it abbreviates, so the
+// lowercase "e" has exactly one place it can be lost.
+//
+// The pillar is also where the term is INTRODUCED, with a gloss in the
+// sentence before it, because her standing rule (WORDS-BRIEF §2) is that the
+// coinage never appears without one and a footer cannot carry a gloss. This
+// rail is the echo, not the debut.
+export const THREAD_LABEL: Record<string, string> = {
+  bim: PILLAR_SHORT,
+}
 
 export interface BookPlate {
   slug: string

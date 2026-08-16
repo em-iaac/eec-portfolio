@@ -1379,8 +1379,16 @@ export const CORRELATIONS: readonly Correlation[] = [
   // live. Proposal tense on both sides, so the Lungs ceiling holds.
   //
   // (Verve City Walk -> bim was PROPOSED and DECLINED at the walk: delivering a
-  // BIM set does not make the tower part of the argument against BIM. Verve
-  // stays an orphan with The Encounter and Falcon Square, all three by ruling.)
+  // BIM set does not make the tower part of the argument against BIM. That
+  // ruling STANDS and no bim thread exists.
+  //
+  // ⚠ The rest of that note said Verve stayed an orphan "with The Encounter and
+  // Falcon Square, all three by ruling". Emilie superseded it for two of the
+  // three on 2026-08-16, when the book's footer rail became the thought each
+  // project made her think of and two of its eight plates had nothing to name.
+  // The two threads below are hers, and neither is the declined one: they make
+  // a different claim about a different note. THE ENCOUNTER IS UNTOUCHED and is
+  // still an orphan by the original ruling.)
   //
   // T-113 `explaining things`, the last note of the walk. Terminal because it
   // is the newest thing on the record, which is arithmetic and not a gap.
@@ -1388,6 +1396,25 @@ export const CORRELATIONS: readonly Correlation[] = [
   // models" as the boring subjects that decide how buildings treat people
   ['bim', 'explain', 1], // "keep the letters, change the noun" is explanation
   // design: this note's thesis, applied to her own coinage
+  //
+  // THE BOOK ASKED THE RECORD A QUESTION IT COULD NOT ANSWER (Emilie,
+  // 2026-08-16). The printed rail now names the thought each project made her
+  // think of, and six of the eight plates already had one. Two did not, so the
+  // gap was in the record rather than in the page. Both are her calls, both
+  // fire forward, and both light their project on the map as a side effect —
+  // which is the point: these are threads first and footer lines second.
+  ['xreal', 'soma', 2], // SEP 2022 -> FEB 2024. Her thread. The plate earns it
+  // in its own words: Revit families built with the visualisation team, "3D
+  // prints, renders, a VR walkthrough in Unreal", and a client putting on a
+  // headset to walk a tower that did not exist yet. That is the XR note's
+  // subject arriving in a delivery job, which is a different claim from the
+  // declined bim one above.
+  ['falcon', 'drawiface', 1], // APR 2022 -> MAR 2026, so the project is the
+  // earlier end and the note is what it grew toward. The whole plate is ink:
+  // takeoff pitches sketched by hand, the drawings mirrored twice until the
+  // void closed, and the design led from the first sketch to the proposal.
+  // Strength 1 by her call: the monument is drawing STEERING a build, where
+  // the note is about drawing as the interface itself.
 ]
 
 // THE PAIRS SHE HAS LOOKED AT AND RULED ARE NOT NEAR-MISSES (2026-08-07).

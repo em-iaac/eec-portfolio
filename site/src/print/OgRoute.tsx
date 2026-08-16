@@ -25,6 +25,7 @@ import { VOICE } from '../landing/identity'
 import { MIND, THREADS, spline, starPath } from '../landing/mindGraph'
 import { printImageSrc } from './printImage'
 import { WORK_ARTIFACTS } from '../components/work/artifacts'
+import RecognitionMark, { MARK_TO_TYPE } from '../components/RecognitionMark'
 import {
   AdjacencyFigure,
   BimFigure,
@@ -356,7 +357,12 @@ export default function OgRoute() {
         </p>
         {card.recognition && (
           <p className="mt-5 font-mono text-[16px] tracking-[0.1em] text-[var(--lang-ink)]">
-            <span aria-hidden="true">✦ </span>
+            {/* DRAWN, NOT TYPED (2026-08-16). These cards render to PNGs at
+                build time, so the ✦ they used to carry was whatever font the
+                build machine had — the same defect the book had, baked into
+                41 images that get scraped by LinkedIn and left in caches for
+                months. 16px mono × MARK_TO_TYPE = the 10px box. */}
+            <RecognitionMark size={Math.round(16 * MARK_TO_TYPE)} />{' '}
             {card.recognition}
           </p>
         )}
