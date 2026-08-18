@@ -23,7 +23,7 @@ import { WORK_ENTRIES } from '../data/work'
 import { ENTRIES, CORRELATIONS, thoughtIndexEntries } from '../data/registry'
 import { fmtMonthYear } from '../components/ThoughtIndexRows'
 import { BIO, BIO_VARIABLES } from '../landing/identity'
-import { layoutAssetPage, registerRowHeight, leadDrawnWidth } from './assetGeometry'
+import { layoutAssetPage, LEAD_HEMLINE_MM, LEAD_CAP_MM, LEAD_GAP_MM } from './assetGeometry'
 import { EDUCATION, EXPERIENCE, ESSAY_COUNT, BLOG_COUNT } from '../data/cv'
 
 const PUBLIC = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'public')
@@ -45,6 +45,46 @@ type Rung = { file: string; w: number; h: number }
 const manifest = printImages as {
   plates?: Record<string, Record<string, Rung>>
   grid?: Record<string, Record<string, Rung>>
+}
+
+// THE PAGE AS THE RENDERER LAYS IT (the guards audit, 2026-08-18). Every
+// geometry assertion below runs against layoutAssetPage called with the SAME
+// inputs PrintBook passes: the real baked dimensions from print-images.json
+// (read at run time, never hardcoded — the bake regenerates them), the real
+// figure proportions from PRINT_FIGURES, the column asset, and the project's
+// own bookRegisterScale. An earlier version substituted placeholder dims for
+// drawn figures and dropped the scale, so it measured a page the book never
+// prints.
+type SizedBox = { w: number; h: number; src: string; alt: string; figure?: string }
+type BookMaster = (typeof BOOK_SPREADS)[number]['master']
+function sizedOf(a: { slug: string; name: string; figure?: string }): SizedBox | null {
+  if (a.figure) {
+    const fig = PRINT_FIGURES[a.figure]
+    return fig ? { w: fig.w, h: fig.h, src: '', alt: '', figure: a.figure } : null
+  }
+  const rung = manifest.grid?.[a.slug]?.[a.name]
+  return rung ? { w: rung.w, h: rung.h, src: rung.file, alt: '' } : null
+}
+function laidFor(master: BookMaster) {
+  const lead = sizedOf(master.bookLead!)
+  expect(lead, `${master.slug}: the bookLead resolves to real dimensions`).toBeTruthy()
+  const register = master.bookRegister!.map((a, i) => {
+    const s = sizedOf(a)
+    expect(s, `${master.slug}: register[${i}] resolves to real dimensions`).toBeTruthy()
+    return s!
+  })
+  const col = master.bookColumn ? sizedOf(master.bookColumn) : null
+  if (master.bookColumn) {
+    expect(col, `${master.slug}: the bookColumn resolves to real dimensions`).toBeTruthy()
+  }
+  return layoutAssetPage(
+    { ...lead!, corner: master.bookLead!.corner },
+    register,
+    // Asset pages are always even and therefore verso: the outer edge is left.
+    true,
+    col,
+    master.bookRegisterScale ?? 1,
+  )
 }
 
 describe('the book contents', () => {
@@ -154,17 +194,6 @@ describe('the book contents', () => {
           `${master.slug}: register names figure "${a.figure}", which figures.tsx does not export`,
         ).toBeTruthy()
       }
-      const photos = register!.filter(a => !a.figure)
-      const rungs = photos.map(({ slug, name }) => rungOf(slug, name))
-      // The SAME functions the renderer and the bake script call, imported
-      // rather than re-derived. This test used to re-implement the arithmetic,
-      // which meant it could agree with itself and disagree with the page.
-      const aspects = rungs.map(r => r.w / r.h)
-      const rowH = registerRowHeight(aspects)
-      photos.forEach(({ slug, name }, i) => {
-        checkDpi(slug, name, rungs[i]!.w, aspects[i]! * rowH)
-      })
-
       const lead = master.bookLead
       expect(lead, `${master.slug} declares a bookLead`).toBeTruthy()
       // ⚠ A DRAWN LEAD HAS NO RUNG AND NO DPI, so it is checked for the one
@@ -176,10 +205,67 @@ describe('the book contents', () => {
           PRINT_FIGURES[lead!.figure],
           `${master.slug}: bookLead names figure "${lead!.figure}", which figures.tsx does not export`,
         ).toBeTruthy()
-      } else {
-        const lr = rungOf(lead!.slug, lead!.name)
-        checkDpi(lead!.slug, lead!.name, lr.w, leadDrawnWidth(lead!.corner, lr.w / lr.h, rowH))
       }
+      // Every photograph on the page must carry a committed rung...
+      for (const a of [lead!, ...register!, ...(master.bookColumn ? [master.bookColumn] : [])]) {
+        if (!a.figure) rungOf(a.slug, a.name)
+      }
+      // ...and its dpi is measured AT THE WIDTH THE PAGE DRAWS IT, which comes
+      // from the one layout function the renderer calls, fed the same inputs
+      // (figures included, bookRegisterScale included — see laidFor). This test
+      // used to re-run pieces of the arithmetic itself, which meant it could
+      // agree with itself and disagree with the page: a register beside a
+      // column asset is NARROWER than the raw justified row, and the column
+      // itself was never checked at all.
+      const laid = laidFor(master)
+      laid.register.forEach((box, i) => {
+        const a = register![i]!
+        if (!a.figure) checkDpi(a.slug, a.name, manifest.grid![a.slug]![a.name]!.w, box.w)
+      })
+      if (!lead!.figure) {
+        checkDpi(lead!.slug, lead!.name, manifest.grid![lead!.slug]![lead!.name]!.w, laid.lead!.w)
+      }
+      const col = master.bookColumn
+      if (col && !col.figure) {
+        expect(laid.column, `${master.slug}: the layout places the declared column asset`).toBeTruthy()
+        checkDpi(col.slug, col.name, manifest.grid![col.slug]![col.name]!.w, laid.column!.w)
+      }
+    }
+  })
+
+  // THE FIGURE-FIT GUARD (the guards audit, 2026-08-18; the assertion that
+  // would have caught Flags 09 and 10). LEAD_HEMLINE_MM exists so every top
+  // lead's bottom edge sits on ONE line across the book; a new lead whose
+  // aspect cannot reach the hemline inside LEAD_MAX_W_MM caps early, misses
+  // it, and must fail HERE, loudly, instead of quietly wandering the band of
+  // air the way the old pages did. Measured with the real baked dimensions
+  // and the real registerScale — the same call the renderer makes.
+  //
+  // ⚠ THE COLUMN PAGE IS PINNED TOO (2026-08-18, same day): the first cut of
+  // this guard had to exempt lungs, whose lead stopped 5.1mm short because
+  // leadDrawnWidth reserved room from the FULL-MEASURE row while the page
+  // draws a NARROWED register. layoutAssetPage now solves that as a fixed
+  // point (the narrowed row frees room, the freed room widens the lead), so
+  // the ruling's actual words — "one line on all EIGHT pages" — are what this
+  // test asserts, with no exemptions left.
+  test('every top lead lands on the hemline and clears its register', () => {
+    const tops = BOOK_SPREADS.filter(({ master }) => master.bookLead!.corner.startsWith('top'))
+    // The loop below must never be vacuous: today all eight leads are top leads.
+    expect(tops.length, 'the book has top leads to hold to the hemline').toBeGreaterThan(0)
+    for (const { master } of tops) {
+      const laid = laidFor(master)
+      const leadBottom = laid.lead!.y + laid.lead!.h
+      expect(
+        Math.abs(leadBottom - LEAD_HEMLINE_MM),
+        `${master.slug}: the lead's bottom edge sits at ${leadBottom.toFixed(2)}mm, off the ${LEAD_HEMLINE_MM}mm hemline`,
+      ).toBeLessThanOrEqual(0.1)
+      // The band of air: the register may start no closer than LEAD_GAP_MM
+      // below the lead's caption band, or the caption prints into the row.
+      const registerTop = Math.min(...laid.register.map(b => b.y))
+      expect(
+        registerTop - (leadBottom + LEAD_CAP_MM),
+        `${master.slug}: only ${(registerTop - leadBottom - LEAD_CAP_MM).toFixed(1)}mm of air between the lead's caption band and the register`,
+      ).toBeGreaterThanOrEqual(LEAD_GAP_MM)
     }
   })
 
@@ -190,32 +276,21 @@ describe('the book contents', () => {
   //
   // Checked in the GEOMETRY rather than on the rendered page, because that is
   // where it can actually be guaranteed: a justified row hands out different
-  // WIDTHS, so the images have slightly different heights, and captions hung off
-  // each image's own bottom would drift by a millimetre or two per page. The
-  // layout returns ONE captionY for the row and every box shares one y.
+  // WIDTHS, so the images have slightly different heights, and captions hung
+  // off each image's own bottom would drift by a millimetre or two per page.
+  // PrintBook hangs each figcaption off its own box, so what pins the caption
+  // line is the row's bottoms agreeing. (The layout used to also return a
+  // captionY that NOTHING rendered; the guards audit removed the dead field,
+  // and the assertion that leaned on it with it.)
   //
-  // The column asset is deliberately NOT in this: it stands in another zone of
-  // the page, so aligning it to a row it is not part of would be a false
-  // alignment rather than a true one.
-  test('every register row sits on one line, and its captions on one more', () => {
+  // ⚠ Measured through laidFor, i.e. with the real figure dimensions and the
+  // project's own bookRegisterScale — the same call the renderer makes. The
+  // old version substituted a 900x420 placeholder for a drawn lead and never
+  // passed the scale, so it aligned a page the book does not print.
+  test('every register row sits on one line, and its captions with it', () => {
     for (const { master } of BOOK_SPREADS) {
-      const sized = (a: { slug: string; name: string }) => {
-        const rung = manifest.grid?.[a.slug]?.[a.name]
-        return rung ? { w: rung.w, h: rung.h, src: rung.file, alt: '' } : null
-      }
-      const register = master.bookRegister!.map(sized).filter(Boolean) as {
-        w: number
-        h: number
-        src: string
-        alt: string
-      }[]
-      if (register.length === 0) continue
-      const leadRung = master.bookLead!.figure ? null : sized(master.bookLead!)
-      const lead = leadRung
-        ? { ...leadRung, corner: master.bookLead!.corner }
-        : { w: 900, h: 420, src: '', alt: '', corner: master.bookLead!.corner }
-      const col = master.bookColumn ? sized(master.bookColumn) : null
-      const laid = layoutAssetPage(lead, register, true, col)
+      const laid = laidFor(master)
+      if (laid.register.length === 0) continue
       const ys = new Set(laid.register.map(b => b.y.toFixed(3)))
       expect(ys.size, `${master.slug}: the register row sits on ${ys.size} different lines`).toBe(1)
       const bottoms = laid.register.map(b => b.y + b.h)
@@ -223,9 +298,6 @@ describe('the book contents', () => {
         Math.max(...bottoms) - Math.min(...bottoms),
         `${master.slug}: justified row images differ in height, so a per-image caption would drift`,
       ).toBeLessThan(1.5)
-      expect(laid.captionY, `${master.slug}: the row has one caption line`).toBeGreaterThan(
-        Math.max(...bottoms) - 0.01,
-      )
       // A COLUMN ASSET JOINS THAT LINE. It sits in another zone of the page, so
       // it is the one image whose alignment could drift unnoticed; anchoring it
       // to the row's bottom edge is what puts its caption on the row's caption
@@ -329,7 +401,13 @@ describe('the book census', () => {
   })
 
   test('the index lists every project, and the nine latest thoughts', () => {
-    for (const w of WORK_ENTRIES) expect(bookHtml).toContain(w.title)
+    for (const w of WORK_ENTRIES) {
+      // THE ONE SHORTENED NAME (Emilie, 2026-08-18): "Rings of Mars: Ring
+      // 4000" was the only title of 21 that wrapped its index row, so the
+      // index prints "Rings of Mars"; the project page keeps the full name.
+      const printed = w.title === 'Rings of Mars: Ring 4000' ? 'Rings of Mars' : w.title
+      expect(bookHtml, `${w.title} is on the index`).toContain(printed)
+    }
 
     // THE THOUGHTS ARE NOW A SELECTION (Emilie, 2026-08-12): nine of eighteen,
     // because the full list was most of why the page read as busy. The rows
@@ -390,14 +468,31 @@ describe('the book census', () => {
   // THE CONTENTS ON PAGE 2 MUST NAME REAL PAGES. A page number that drifts is
   // the one error in a contents list a reader always catches and never
   // forgives, and it cannot be caught by eye across twenty pages.
-  test('the contents points at the page each project actually opens on', () => {
+  //
+  // ⚠ SCOPED TO THE ROW, NOT THE BOOK (the guards audit, 2026-08-18). The old
+  // version asserted `>03</span>` against the WHOLE rendered book, and the
+  // FOLIO on page 3 prints exactly that markup: deleting the entire contents
+  // list changed nothing. Each row is now isolated by the anchor that gives it
+  // its identity (#plate-<slug>, the same id the plate page declares), so the
+  // number and the door it belongs to are asserted together.
+  test('the contents rows name the page each project actually opens on', () => {
     BOOK_SPREADS.forEach((d, i) => {
       const page = String(3 + i * 2).padStart(2, '0')
-      expect(
-        bookHtml,
-        `${d.master.title} is listed at page ${page}`,
-      ).toContain(`>${page}</span>`)
+      const row = bookHtml.match(
+        new RegExp(`<a[^>]*href="#plate-${d.master.slug}"[^>]*>[\\s\\S]*?</a>`),
+      )
+      expect(row, `${d.master.title} has a contents row reaching #plate-${d.master.slug}`).toBeTruthy()
+      expect(row![0], `${d.master.title}'s contents row names page ${page}`).toContain(
+        `>${page}</span>`,
+      )
     })
+    // The ninth row: the index door, naming the page before the colophon.
+    const rest = bookHtml.match(/<a[^>]*href="#the-index"[^>]*>[\s\S]*?<\/a>/)
+    expect(rest, 'the contents reaches the index at #the-index').toBeTruthy()
+    expect(
+      rest![0],
+      `the index row names page ${BOOK_PAGE_COUNT - 1}`,
+    ).toContain(`>${BOOK_PAGE_COUNT - 1}<`)
   })
 
   test('no em dashes anywhere in the printed book', () => {

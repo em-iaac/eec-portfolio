@@ -25,16 +25,16 @@ const ballooningMarket: ProjectMeta = {
   // sitting in the register at 88mm, where its boxes and arrows are decoration.
   // At 210mm they are readable. The cost is that the four-stage inflation sheet
   // drops to a register width and its own stage labels stop being legible, which
-  // is survivable because the book's caption already names those four stages.
+  // is survivable because the book’s caption already names those four stages.
   //
   // THE CROPS. Every asset on this page arrived with its own title burnt in
   // ("// ballooooooning", "// the algorithm", "// epic fails") plus its own red
-  // stage labels and grey descriptions. Printed, the lead's heading set LARGER
+  // stage labels and grey descriptions. Printed, the lead’s heading set LARGER
   // THAN THE PROJECT TITLE on the facing page, in a face the book uses nowhere
   // else: two title systems, two caption systems, one spread.
-  // Her ruling: crop them, and let the book's full captions do the labelling.
+  // Her ruling: crop them, and let the book’s full captions do the labelling.
   //
-  // The bands below are MEASURED off each image's own row-by-row ink profile,
+  // The bands below are MEASURED off each image’s own row-by-row ink profile,
   // not guessed. algorithm: heading occupies 4-11% of the height, drawing runs
   // 18-98%. process: heading 6-13%, drawing 34-63%, red labels 77-79%,
   // descriptions 85-97%. epic-fails: heading 5-13%, drawing 27-78%, error
@@ -47,7 +47,7 @@ const ballooningMarket: ProjectMeta = {
   },
   // ⚠ epic-fails LEFT THE PAGE, and the crops are why (Emilie, 2026-08-12:
   // "I like how it is without the labels but there is something off about the
-  // secondary asset row ... let's remove the epic fails here and just make the
+  // secondary asset row ... let’s remove the epic fails here and just make the
   // two assets bigger").
   //
   // The chain is worth writing down because it is not obvious: cropping the
@@ -58,7 +58,7 @@ const ballooningMarket: ProjectMeta = {
   // a 76mm render. REMOVING BAKED TEXT COSTS REGISTER HEIGHT, and this is what
   // paying for it looks like.
   //
-  // Nothing is lost by dropping it: the failures are told in the facing page's
+  // Nothing is lost by dropping it: the failures are told in the facing page’s
   // own WHAT CAME OF IT, "the balloons had no physical awareness of each other,
   // just ghosting through one another in a chaotic, colorful mess". The picture
   // was the second telling, not the only one.
@@ -83,14 +83,14 @@ const ballooningMarket: ProjectMeta = {
   // process gif, still at rest, playing on hover; render-1 moved into the
   // strip and stays the book plate below.
   image: { slug: 'ballooning-market', name: 'process', alt: 'The Kangaroo inflation running: balloons seeding, anchoring and settling into a roof over Bab al-Luq market' },
-  // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
+  // G5: the book spread’s dominant plate (print-assets.mjs bakes the rung).
   // ⚠ NO spreadFit HERE, AND THAT IS THE RULE (Emilie, 2026-08-12): "for the
-  // renders we can just crop and zoom in, because it won't look wrong, it's a
+  // renders we can just crop and zoom in, because it won’t look wrong, it’s a
   // picture". A contain ground was BUILT for this plate and reverted on sight.
   // The distinction that came out of it: cropping a RENDER costs framing, and
-  // cropping a SCREEN costs information. Sensi's crop removed the panel that
+  // cropping a SCREEN costs information. Sensi’s crop removed the panel that
   // proves the tool scores anything; this one removes some pavement.
-  // Measured before deciding: this image's bottom edge varies by 53 across the
+  // Measured before deciding: this image’s bottom edge varies by 53 across the
   // strip (cars, awnings, palms), so no flat ground could ever match it and the
   // band printed as a slab.
   spreadAssets: [{ slug: 'ballooning-market', name: 'render-1' }],

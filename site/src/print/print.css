@@ -25,7 +25,13 @@
   --pr-cyan: #0e7490;
   --pr-magenta: #a8186b;
   --pr-yellow: #7a5e00;
-  --pr-red: #be123c; /* the emblem's one red node only; never text, never category */
+  /* TWO RED ROLES, BOTH RULED (the second by Emilie at round 2, 2026-08-19,
+     after a design critique and a five-advisor council both recommended it):
+     the emblem's one red node, and the THREAD NAMES in the project feet —
+     live links, and on her site red has exactly one meaning, "you can press
+     this". Never a category, never a paragraph, never the award line (her
+     standing ruling below stands, reasons on file). */
+  --pr-red: #be123c;
   /* THE CV'S ONE ACCENT: the site's own red (her call 2026-07-27, after
      burgundy and slate were both tried). It touches SECTION HEADINGS, RULES
      AND ICONS ONLY; the name stays plain ink to match the landing.
@@ -174,6 +180,8 @@
    because at 0.4pt a broken dotted line reads as a printing fault. */
 .pr-spread__foot .pr-link,
 .pr-assets__foot .pr-link,
+.pr-about__foot .pr-link,
+.pr-index__foot .pr-link,
 .pr-colophon .pr-link {
   text-decoration: underline dotted 0.4pt;
   text-underline-offset: 2.2pt;
@@ -253,19 +261,18 @@
   object-fit: cover;
   display: block;
 }
-/* THE FITTED PLATE (2026-08-11): a dominant image that is a DIAGRAM cannot be
-   cropped to the plate's shape without losing what sits at its edges. It fits
-   whole on its own ground instead. The ground is set inline from the master's
-   spreadFit, because it has to be the image's own (lEgoarCh's outputs slide is
-   black, so the letterbox is invisible and the plate still reads as a bleed). */
-.pr-spread__figure--fit img {
-  object-fit: contain;
-  /* ⚠ CENTRED, and top-anchoring was tried and reverted the same day. Anchored
-     to the top the ground falls entirely below the image, which halves the
-     matching problem and looks like a mistake: a single band under a picture
-     reads as a slip, not as a frame. Centred it is a frame, and the cost is
-     that the ground must match two edges. Sensi can with one colour; the Lungs
-     needs a gradient; the two renders stopped fitting altogether and crop. */
+/* THE FITTED PLATE (2026-08-11) AND EVERYTHING IT GREW — grounds, plinths,
+   whispers — ALL LEFT AT ROUND 2 (Emilie, 2026-08-19). It existed because a
+   screenshot could not crop to a 1.51 plate; the plate is ~1.88 now, the
+   screenshots' own shape, so every hero fills identically. */
+/* THE RED THREAD (Emilie, round 2, 2026-08-19; V1 of the red audit). The
+   thread name in every project foot is the book's signature idea and a live
+   link; it wears the site's red because red means "you can press this" and
+   nothing else. The mono theme collapses --pr-red to ink, so an office
+   greyscale print degrades to a slightly darker thread, measured, not
+   guessed (74 vs 90 luminance). */
+.pr-thread {
+  color: var(--pr-red);
 }
 /* The plate caption stands in the seam between text and image, vertical,
    ink on paper: legible over any plate, on any office printer. */
@@ -292,9 +299,16 @@
   display: flex;
   flex-direction: column;
 }
+/* ⚠ ONE HERO RATIO, THE SCREENSHOTS' OWN (Emilie, round 2, 2026-08-19:
+   "take the ratio we have for sensi, legoarch... and match all the other
+   assets that are render to that ratio"). The three fitted heroes were the
+   plates that could not crop; at 145×77mm (~1.88, their native shape) they
+   fill edge to edge with no ground, no plinth, no band, and the five render
+   heroes simply crop a little more, which renders can afford. The 19mm the
+   heroes gave up flows into the spine below. */
 .pr-plate__top {
   display: grid;
-  height: 96mm;
+  height: 77mm;
   flex: none;
 }
 .pr-spread--plate.pr-spread--recto .pr-plate__top {
@@ -303,20 +317,18 @@
 .pr-spread--plate.pr-spread--verso .pr-plate__top {
   grid-template-columns: 145mm 1fr;
 }
+/* 18mm side padding on BOTH sides (Emilie, round 3, 2026-08-19: the dek ran
+   too close to the plate; shown 10/14/18 she took 18, which also matches the
+   outer margin). One value both sides made the old recto/verso outer-edge
+   overrides redundant, so they left. */
 .pr-plate__head {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 14mm 8mm 5mm;
-}
-.pr-spread--plate.pr-spread--recto .pr-plate__head {
-  padding-left: 18mm;
-}
-.pr-spread--plate.pr-spread--verso .pr-plate__head {
-  padding-right: 18mm;
+  padding: 14mm 18mm 5mm;
 }
 .pr-plate__top .pr-spread__figure {
-  height: 96mm;
+  height: 77mm;
   width: 100%;
 }
 .pr-plate__body {
@@ -336,6 +348,16 @@
   columns: 3;
   flex: 1;
   min-height: 0;
+}
+/* THE COLUMNS ARE PINNED (Emilie, 2026-08-18, closing Flag 07). Nothing used
+   to assign the four sections to the three columns: Chrome's balancer dealt
+   them by height per plate, seven happened to land WHAT+WHY | HOW | OUTCOME,
+   and Falcon's long WHAT re-dealt the eighth into WHAT | WHY | HOW+OUTCOME,
+   burying the payoff. HOW and WHAT CAME OF IT now always start a column, so
+   every plate — and every future word edit — deals the same shape. */
+.pr-plate__body .pr-spine section:nth-of-type(3),
+.pr-plate__body .pr-spine section:nth-of-type(4) {
+  break-before: column;
 }
 /* THE SEAM CAPTION SITS AT THE TRIM (Emilie, 2026-08-12), not on the page's top
    margin. ⚠ 14mm here was DELIBERATE, not a side effect of the bottom anchoring
@@ -373,11 +395,15 @@
 .pr-spread--verso .pr-spread__content {
   padding-right: 18mm;
 }
+/* ONE HEADER GEOMETRY FOR ALL EIGHT (Emilie, 2026-08-18): the meta used to sit
+   beside the chip when short and wrap under it when long, so neighboring
+   plates wore two different heads. The meta line now always takes its own row
+   below the chip, the way The Lungs already printed. */
 .pr-spread__meta {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.8mm 3mm;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.8mm;
   margin-bottom: 4mm;
 }
 .pr-spread__meta > * {
@@ -423,27 +449,43 @@
 .pr-spine p {
   margin: 0 0 2.2mm;
 }
+/* Flush with every other section's body (Emilie, 2026-08-18): the list indent
+   made HOW the one column with two left edges, conspicuous wherever HOW shares
+   a column. The steps still read as steps by their spacing. */
 .pr-spine ol {
   margin: 0;
-  padding-left: 4.5mm;
+  padding-left: 0;
+  list-style: none;
 }
 .pr-spine ol li {
   margin-bottom: 1.8mm;
 }
+/* ⚠ ONE FOOT GRID, EVERY PAGE BUT THE COVER AND COLOPHON (Emilie, round 4,
+   2026-08-19): "left, link of project, middle the thought link, right is the
+   page." The old flex space-between let the middle element DRIFT with the
+   widths around it — the project url sat at the right end on page one and
+   near the middle on page two. A 1fr·auto·1fr grid pins all three slots to
+   the same x on every page. */
 .pr-spread__foot {
   margin-top: 4mm;
   padding-top: 3mm;
   border-top: 0.5pt solid var(--pr-hairline);
-  display: flex;
+  display: grid;
+  /* Round 5 (2026-08-19): "make the thoughts attached to the right next to
+     the page, so the middle is free" — link left, then open middle, then
+     thought · folio grouped at the right edge. */
+  grid-template-columns: 1fr auto auto;
   align-items: baseline;
-  justify-content: space-between;
   gap: 6mm;
 }
-.pr-spread__foot > :first-child {
-  flex: 1;
-  min-width: 0;
+.pr-spread__foot > :nth-child(2),
+.pr-assets__foot > :nth-child(2) {
+  justify-self: end;
+  text-align: right;
 }
-.pr-spread__foot > :last-child {
+.pr-spread__foot > :last-child,
+.pr-assets__foot > :last-child {
+  justify-self: end;
   white-space: nowrap;
 }
 /* The strip's content column is narrow; the foot stacks into two quiet
@@ -473,12 +515,21 @@
   position: relative;
   height: 100%;
 }
-.pr-assets__meta,
-.pr-assets__foot {
+/* ⚠ THE META AND THE FOOT SPLIT HERE (round 5, 2026-08-19). Round 4's grid
+   conversion hit the old shared selector and turned the HEAD into a
+   three-column grid too: PLATE 03 / title / meta spilled sideways on every
+   asset page. The head is a column; only the foot is a grid. */
+.pr-assets__meta {
   position: absolute;
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
+  gap: 6mm;
+}
+.pr-assets__foot {
+  position: absolute;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: baseline;
   gap: 6mm;
 }
 /* ⚠ THE HEAD IS A COLUMN, not a wrapping row. It was `flex-wrap: wrap` with
@@ -606,10 +657,17 @@
   margin-top: auto;
   padding-top: 3mm;
   border-top: 0.5pt solid var(--pr-hairline);
-  display: flex;
+  /* The same pinned 3-column grid as every project foot (round 4). */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: baseline;
-  justify-content: space-between;
   gap: 8mm;
+}
+.pr-index__foot > :nth-child(2) {
+  justify-self: center;
+}
+.pr-index__foot > :last-child {
+  justify-self: end;
 }
 .pr-tile__img {
   aspect-ratio: 4 / 3;
@@ -829,6 +887,14 @@
 }
 .pr-about__row--rest {
   margin-top: 4mm;
+}
+/* The gloss under the contents (Emilie, 2026-08-18): the one place the origin
+   stamps are expanded. Quiet on purpose. */
+.pr-about__gloss {
+  margin: 3.4mm 0 0;
+  font-size: 6.2pt;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
 }
 .pr-about__ti {
   font-family: var(--font-display);

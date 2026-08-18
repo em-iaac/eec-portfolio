@@ -196,7 +196,12 @@ export default function ThoughtIndexRows({
             <>
               <span className="pr-mark pr-mark--thought" />
               <span style={{ display: 'flex', justifyContent: 'space-between', gap: '2.5mm', alignItems: 'baseline' }}>
-                <span className="pr-body" style={{ fontStyle: 'italic' }}>{t.title}</span>
+                {/* The one nickname bridge (Emilie, 2026-08-18): plate 03's
+                    rail says BeIM and this row is the only place the book can
+                    say they are the same thought. Print skin only. */}
+                <span className="pr-body" style={{ fontStyle: 'italic' }}>
+                  {t.title === 'behavior information modeling' ? 'behavior information modeling (BeIM)' : t.title}
+                </span>
                 <span className="pr-mono pr-mono--muted" style={{ whiteSpace: 'nowrap' }}>
                   {fmtMonthYear(t.date)}
                 </span>

@@ -23,15 +23,15 @@ const huddle: ProjectMeta = {
   // THE COVER = THE GROWTH, ALIVE (Emilie, 2026-07-15): the WASP aggregation
   // gif, still at rest, playing on hover; axonometric moved into the strip
   // and stays the book plate below.
-  image: { slug: 'huddle', name: 'wasp-growth', alt: 'Animated WASP growth study for The Huddle: modules aggregating along the wind across the Punta Arenas plot' },
-  // G5: the book spread's dominant plate (print-assets.mjs bakes the rung).
+  image: { slug: 'huddle', name: 'wasp-growth', alt: 'The WASP growth study for The Huddle: modules aggregating along the wind across the Punta Arenas plot' },
+  // G5: the book spread’s dominant plate (print-assets.mjs bakes the rung).
   // ⚠ NO spreadFit HERE, AND THAT IS THE RULE (Emilie, 2026-08-12): "for the
-  // renders we can just crop and zoom in, because it won't look wrong, it's a
+  // renders we can just crop and zoom in, because it won’t look wrong, it’s a
   // picture". A contain ground was BUILT for this plate and reverted on sight.
   // The distinction that came out of it: cropping a RENDER costs framing, and
-  // cropping a SCREEN costs information. Sensi's crop removed the panel that
+  // cropping a SCREEN costs information. Sensi’s crop removed the panel that
   // proves the tool scores anything; this one removes some pavement.
-  // Measured before deciding: this image's bottom edge varies by 53 across the
+  // Measured before deciding: this image’s bottom edge varies by 53 across the
   // strip (cars, awnings, palms), so no flat ground could ever match it and the
   // band printed as a slab.
   spreadAssets: [{ slug: 'huddle', name: 'axonometric' }],
@@ -45,7 +45,17 @@ const huddle: ProjectMeta = {
   //
   // The growth study has to open the page (it is the first beat of her order),
   // so this lead stays at the top.
-  bookLead: { slug: 'huddle', name: 'wasp-growth', corner: 'top-outer' },
+  // ASSET RETOUCH (2026-08-18, ruled): the sheet's right-hand "information
+  // output" column — two WASP data tables plus their "WASP | information
+  // output" caption (caption ink starts at x 2015 of 2538) — is illegible at
+  // register size and is DROPPED; the crop keeps to x 2005 so caption, tables
+  // and their carousel arrows all leave together (the context massing it
+  // slices through bleeds off the edge like the rest of the map). The top
+  // 1% goes with it: the tables sat 13px (~1mm) from the top trim, and with
+  // them gone the first ink in the kept region starts at row 60 of 1271, so
+  // nothing crowds the trim any more. Site-plan middle panel and the left
+  // bubble-diagram stay. Measured off frame 0 of studio2.gif.
+  bookLead: { slug: 'huddle', name: 'wasp-growth', corner: 'top-outer', crop: { top: 0.01, right: 0.21 } },
   bookRegister: [
     { slug: 'huddle', name: 'global-index' },
     { slug: 'huddle', name: 'perspective-1' },

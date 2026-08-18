@@ -51,10 +51,11 @@ jobs:
           key: puppeteer-${{ runner.os }}-${{ hashFiles('site/package-lock.json') }}
       - run: npm ci
         working-directory: site
-      # Registry guardrails (snapshot + validator) fail the deploy here, with
-      # clean attribution, before the heavier build (which also runs them).
-      - run: npm test
-        working-directory: site
+      # ⚠ No standalone `npm test` step (the guards audit, 2026-08-18): the
+      # build script's own first command IS `vitest run` (site/package.json),
+      # so a separate step ran the entire suite twice per deploy for identical
+      # coverage. A test failure still stops the deploy in the same place —
+      # before tsc, vite and the PDF render — with the same attribution.
       # /contact posts to Web3Forms. The access key is public by design (Vite
       # inlines VITE_* into the bundle, so it ships in the deployed JS either
       # way), but it is kept out of the repo, so the deploy reads it from a

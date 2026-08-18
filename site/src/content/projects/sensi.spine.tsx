@@ -1,7 +1,7 @@
 // THE SPINE of sensi: WHAT / WHY / HOW / WHAT CAME OF IT.
 // Split out of sensi.tsx on 2026-08-03 (the phone pass). This module is
 // LAZY: content/projects/index.ts reaches it through import.meta.glob, so a
-// visitor downloads one project's prose, not all 21. The meta half stays in
+// visitor downloads one project’s prose, not all 21. The meta half stays in
 // sensi.ts and is still statically barrelled, because the grid, the plate
 // face, the CV line, headData and the OG card all need it synchronously.
 import NB from '../../components/ui/NB'
@@ -19,8 +19,8 @@ const spine: ProjectSpine = {
       Every tool in the stack could tell us how a building performs. None of them would say how a
       room feels. Sensi closes that gap: a copilot that reads a floor plan and scores comfort
       across six senses (thermal, visual, acoustic, spatial, olfactory, tactile), calibrated to
-      one person at a time, not an average. Project lead, A to Z, built with a team of four:
-      Lakzhmy Mari Zaro, María Sánchez Domínguez, Charles Abi Chahine, and me.
+      one person at a time, not an average. Project lead, A to Z, built by a team of four:
+      Lakzhmy Mari Zaro, María Sánchez Domínguez, Charles Abi Chahine and me.
     </>
   ),
   why: (
@@ -32,17 +32,17 @@ const spine: ProjectSpine = {
   ),
   how: [
     <>
-      Onboarding calibrates the copilot to the person in the room, their thermal grudges, their
-      noise tolerance. Comfort without a subject is just weather.
+      Onboarding calibrates the copilot to one person, their thermal grudges, their noise
+      tolerance.
     </>,
     <>
       One action classifier, a single LLM call per turn, routes each request through a LangGraph
       state graph: analyze, edit, preview, audit.
     </>,
     <>
-      A coupling matrix ripples every change into the neighbouring senses, so a fix that quietly
+      A coupling matrix ripples every change into the neighboring senses, so a fix that quietly
       breaks another score gets flagged, not hidden.
-      <NB note="the six scores argue like a family. the coupling matrix is the dinner table." />
+      <NB note={'the six scores argue like a family. the coupling matrix is the dinner table.'} />
     </>,
     <>
       The copilot suggests edits the layout can absorb, previews them without committing, then

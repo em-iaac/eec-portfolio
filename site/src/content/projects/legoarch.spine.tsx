@@ -1,7 +1,7 @@
 // THE SPINE of legoarch: WHAT / WHY / HOW / WHAT CAME OF IT.
 // Split out of legoarch.tsx on 2026-08-03 (the phone pass). This module is
 // LAZY: content/projects/index.ts reaches it through import.meta.glob, so a
-// visitor downloads one project's prose, not all 21. The meta half stays in
+// visitor downloads one project’s prose, not all 21. The meta half stays in
 // legoarch.ts and is still statically barrelled, because the grid, the plate
 // face, the CV line, headData and the OG card all need it synchronously.
 import type { ProjectSpine } from './types'
@@ -44,8 +44,8 @@ const spine: ProjectSpine = {
     <>
       The most instructive moment was a failure: an intermediate model came back connected and
       supported, yet not legible as architecture. Structurally sound and visually wrong is still
-      wrong, so legibility joined the constraints. The final pipeline was benched on three
-      buildings, and the jury gave it their award.
+      wrong, so legibility joined the constraints. The final pipeline was benchmarked on three
+      buildings.
     </>
   ),
 }

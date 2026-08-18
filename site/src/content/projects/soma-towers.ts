@@ -1,6 +1,6 @@
 // P-108 · Verve City Walk (practice). S2 FIX ROUND (2026-07-16): retitled
-// from "Towers at SOMA" at Emilie's call: Verve City Walk is the project's
-// name; the entry id 'soma' and this file's slug stay (permanent URLs).
+// from "Towers at SOMA" at Emilie’s call: Verve City Walk is the project’s
+// name; the entry id 'soma' and this file’s slug stay (permanent URLs).
 // Verve leads; District O, Enara and Saria stay woven with their public
 // links (her pick at the gate). Responsibilities woven from her LinkedIn
 // record (Design Architect, SOMA, Aug 2023 - Jul 2024: Rhino + Grasshopper
@@ -17,7 +17,7 @@ const somaTowers: ProjectMeta = {
   lens: 'practice',
   meta: 'SOMA · DESIGN ARCHITECT · 2023-24',
   myPart: 'Design architect at SOMA: parametric facade studies in Rhino and Grasshopper, carried into the Revit BIM set.',
-  dek: 'Verve at City Walk, from parametric facade studies to the BIM set, with three more Dubai towers behind it.',
+  dek: 'Verve at City Walk, from parametric facade studies to the BIM set.',
   dekSigned: true, // SIGNED by Emilie (S2 sign-off, 2026-07-17)
   // THE QUESTION (D4 round 2, Emilie 2026-07-14: "good", lead kept; still
   // true of the retitled entry). Question + dot set SIGNED by Emilie
@@ -28,7 +28,7 @@ const somaTowers: ProjectMeta = {
   // page that answers whether a parametric study survives into a real drawing
   // set, which is the question the rest of the site leaves open. The two-tower
   // elevation is the plate because it is 9930px, it is almost exactly the
-  // plate's shape so it barely crops, and it is a drawing rather than a
+  // plate’s shape so it barely crops, and it is a drawing rather than a
   // marketing render. PAGE TWO puts what she drew above what the development
   // sells: her contribution here is facade and massing studies carried into
   // the Revit set, and three glossy renders leading a page under her name
@@ -63,7 +63,7 @@ const somaTowers: ProjectMeta = {
   // and lounge-interior are all 1.02, so a justified row of them is three equal
   // squares. Without a promoted asset this page is a chessboard.
 
-  // The public anchors (NDA lifted): the developer's page, SOMA's own
+  // The public anchors (NDA lifted): the developer’s page, SOMA’s own
   // project pages, and the three sibling towers from the same year.
   // ⚠ THE DUSK RENDER LEADS (Emilie, 2026-08-12). unit-selector led before, and
   // it is a screen capture of a 3D viewer mid-orbit: untextured grey massing
@@ -93,7 +93,19 @@ const somaTowers: ProjectMeta = {
   // 56mm tall, and the balcony rhythm the whole facade study is about was not
   // visible at that size: a drawing doing nothing is worse than a drawing absent.
   bookRegister: [
-    { slug: 'verve', name: 'unit-selector' },
+    // ASSET RETOUCH (2026-08-18): the capture carried the viewer's own chrome
+    // into print — a half-cropped compass strip at the top (ticks at rows
+    // 0-25 of 614), the dark Filters/AR pill at the bottom (rows 546-599,
+    // then a 14-row white strip), and a stray "›" chevron at the right edge
+    // (x 1268-1275 of 1280). All three are app furniture, not the building;
+    // measured off frame 0 of the webp, cropped with a few px of margin.
+    // ⚠ FRAME 29, NOT FRAME 0 (Emilie, round 2, 2026-08-18: "use a different
+    // frame of the gif where it clearly shows that it's interactive and you
+    // can hover to get info and the ar info"). Frame 29 holds the hover card
+    // (unit 1402: area, status) with the red floorplan footprint lit on the
+    // tower. The Filters/AR pill now STAYS in the crop — it is the AR info she
+    // wants seen — so the bottom crop only sheds the white strip under it.
+    { slug: 'verve', name: 'unit-selector', frame: 29, crop: { top: 0.045, right: 0.02, bottom: 0.023 } },
     { slug: 'verve', name: 'lounge-interior' },
     // ⚠ A DRAWN FIGURE IN THE REGISTER (Emilie, 2026-08-14). Shortening the row
     // to 72% left a 75 x 60mm block at its end, and rather than stretch a
@@ -107,7 +119,7 @@ const somaTowers: ProjectMeta = {
       // draftCopy. Every clause is the signed WHAT restated: "a shared amenities
       // podium under both towers, balconies cut into the facade rather than hung
       // off it". A figure gets a caption like any other asset, and it sits on the
-      // register's caption line with the two photographs beside it.
+      // register’s caption line with the two photographs beside it.
       caption:
         'Two towers of different height over one shared amenities podium, with the balconies cut into the facade rather than hung off it',
     },
@@ -125,7 +137,7 @@ const somaTowers: ProjectMeta = {
     { label: 'SARIA @ BEYOND', href: 'https://beyonddevelopments.ae/en/new-launches/saria' },
   ],
   // S2 fix round cover: the interactive 3D unit selector capture (cropped to
-  // the viewport; the sales platform's panel and watermark never ship).
+  // the viewport; the sales platform’s panel and watermark never ship).
   image: {
     slug: 'verve',
     name: 'unit-selector',

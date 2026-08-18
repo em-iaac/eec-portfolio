@@ -3,7 +3,7 @@
     {
       "name": "galaxy-cover",
       "role": "gif",
-      "alt": "Sensi's relationship galaxy at rest: six senses as glowing constellations, every thread a coupling between two scores",
+      "alt": "Sensi’s relationship galaxy at rest: six senses as glowing constellations, every thread a coupling between two scores",
       "aspect": 1.7778,
       "animated": true,
       "variants": [
@@ -65,7 +65,7 @@
     {
       "name": "onboarding",
       "role": "gallery",
-      "alt": "Sensi's onboarding chat calibrating the comfort copilot to one person: their noise tolerance, their thermal grudges",
+      "alt": "Sensi’s onboarding chat calibrating the comfort copilot to one person: their noise tolerance, their thermal grudges",
       "aspect": 1.8619,
       "variants": [
         {
@@ -396,7 +396,7 @@
     {
       "name": "score-2",
       "role": "gallery",
-      "alt": "The report's breakdown: contribution bars and a brain impact map behind the room's estimated wellbeing score",
+      "alt": "The report’s breakdown: contribution bars and a brain impact map behind the room’s estimated wellbeing score",
       "aspect": 1.8873,
       "variants": [
         {
@@ -421,7 +421,7 @@
     {
       "name": "wasp-growth",
       "role": "gif",
-      "alt": "Animated WASP growth study: modules aggregating along wind and program across the Punta Arenas plot",
+      "alt": "Stills from the WASP growth study: modules aggregating along wind and program across the Punta Arenas plot",
       "aspect": 1.7778,
       "animated": true,
       "variants": [
@@ -692,7 +692,7 @@
     {
       "name": "speckle-live",
       "role": "gallery",
-      "alt": "Speckle streams the design teams' tower model into the app, so performance gradients sit on the geometry itself",
+      "alt": "Speckle streams the design teams’ tower model into the app, so performance gradients sit on the geometry itself",
       "aspect": 0.6355,
       "variants": [
         {
@@ -710,7 +710,7 @@
     {
       "name": "timeline",
       "role": "gallery",
-      "alt": "Ten weeks as a live timeline: three team tracks and the weekly deliverables the app kept honest",
+      "alt": "Ten weeks as a live timeline: three team tracks whose lines converge wherever the teams overlap, and the weekly deliverables the app kept honest",
       "aspect": 2.4734,
       "variants": [
         {
@@ -756,7 +756,7 @@
     {
       "name": "discover",
       "role": "gallery",
-      "alt": "The Discover tab publishing the tower's vitals: three systems, one tower, and the numbers the studio stood behind",
+      "alt": "The Discover tab publishing the tower’s vitals: three systems, one tower, and the numbers the studio stood behind",
       "aspect": 0.5938,
       "variants": [
         {
@@ -799,7 +799,7 @@
     {
       "name": "demo-cover",
       "role": "gif",
-      "alt": "Saint Basil's Cathedral solving into a brick layout in lEgoarCh, the stage with no AI in it on purpose",
+      "alt": "Saint Basil’s Cathedral solving into a brick layout in lEgoarCh, the stage with no AI in it on purpose",
       "aspect": 1.7778,
       "animated": true,
       "variants": [
@@ -968,7 +968,7 @@
     {
       "name": "honest-part",
       "role": "gallery",
-      "alt": "The instructive failure: the Guggenheim prompt returned a voxel blob, structurally sound but not legible as architecture",
+      "alt": "The failure that taught the constraint: the Guggenheim came back connected and supported, and still not legible as architecture",
       "aspect": 1.9219,
       "variants": [
         {
@@ -1014,7 +1014,7 @@
     {
       "name": "real-parts",
       "role": "gallery",
-      "alt": "Real parts and real moulds: 44 BrickLink parts in 48 colours, the catalog the optimizer is allowed to build from",
+      "alt": "Real parts and real molds: 44 BrickLink parts in 48 colors, the catalog the optimizer is allowed to build from",
       "aspect": 1.92,
       "variants": [
         {
@@ -1062,7 +1062,7 @@
     {
       "name": "galapagos-run",
       "role": "gif",
-      "alt": "Galapagos optimization running live, vertex octa lattice displacement traded against mass for the pavilion's outer shell",
+      "alt": "Galapagos optimization running live, vertex octa lattice displacement traded against mass for the pavilion’s outer shell",
       "aspect": 1.7778,
       "animated": true,
       "variants": [
@@ -1116,7 +1116,7 @@
     {
       "name": "pasta-atlas",
       "role": "gallery",
-      "alt": "The team's pasta atlas page: parametric equations of a cappelletti, the starting geometry for the pavilion's optimization",
+      "alt": "The team’s pasta atlas page: parametric equations of a cappelletti, the starting geometry for the pavilion’s optimization",
       "aspect": 0.8922,
       "variants": [
         {
@@ -1580,7 +1580,7 @@
     {
       "name": "betweenness",
       "role": "gallery",
-      "alt": "Betweenness centrality over the team's spatial graph of Type K, one hot line showing every Narkomfin path crossing the corridor",
+      "alt": "Betweenness centrality over the team’s spatial graph of Type K, one hot line showing every Narkomfin path crossing the corridor",
       "aspect": 3.0738,
       "variants": [
         {
@@ -1603,7 +1603,7 @@
     {
       "name": "communities-f",
       "role": "gallery",
-      "alt": "Community detection across the three Type F levels, the spatial graph reading Ginzburg's duplexes as full-height vertical slices",
+      "alt": "Community detection across the three Type F levels, the spatial graph reading Ginzburg’s duplexes as full-height vertical slices",
       "aspect": 2.447,
       "variants": [
         {
@@ -1626,7 +1626,7 @@
     {
       "name": "graphsage-f",
       "role": "gallery",
-      "alt": "The team's GraphSAGE room classifier reading conventional Type F rooms at 91.3 percent, graph machine learning as a plan reader",
+      "alt": "The team’s GraphSAGE room classifier reading conventional Type F rooms at 91.3 percent, graph machine learning as a plan reader",
       "aspect": 2.9557,
       "variants": [
         {
@@ -1649,7 +1649,7 @@
     {
       "name": "graphsage-k",
       "role": "gallery",
-      "alt": "GraphSAGE prediction for the communal Type K unit at 67.9 percent, the team's model flagging the rooms that break domestic rules",
+      "alt": "GraphSAGE prediction for the communal Type K unit at 67.9 percent, the team’s model flagging the rooms that break domestic rules",
       "aspect": 2.8116,
       "variants": [
         {
@@ -1674,7 +1674,7 @@
     {
       "name": "assessment-ui",
       "role": "gif",
-      "alt": "The team's street safety assessment interface scoring a neighborhood's segments from OpenStreetMap features",
+      "alt": "The team’s street safety assessment interface scoring a neighborhood’s segments from OpenStreetMap features",
       "aspect": 1.7778,
       "animated": true,
       "variants": [
@@ -1751,7 +1751,7 @@
     {
       "name": "pipeline",
       "role": "gallery",
-      "alt": "The team's pipeline from OpenStreetMap data fetching through feature checks and risk scoring to model training and deployment",
+      "alt": "The team’s pipeline from OpenStreetMap data fetching through feature checks and risk scoring to model training and deployment",
       "aspect": 3.1258,
       "variants": [
         {
@@ -1820,7 +1820,7 @@
     {
       "name": "shap-explanations",
       "role": "gallery",
-      "alt": "SHAP plots the team used to explain every prediction, comparing what drives risk in Islington and Barcelona's Eixample",
+      "alt": "SHAP plots the team used to explain every prediction, comparing what drives risk in Islington and Barcelona’s Eixample",
       "aspect": 1.9877,
       "variants": [
         {
@@ -1868,7 +1868,7 @@
     {
       "name": "workflow-cover",
       "role": "gif",
-      "alt": "The data team's boards flipping in sequence: the Speckle-to-Revit workflow, the thermal family, the KPI views and the control room",
+      "alt": "The data team’s boards flipping in sequence: the Speckle-to-Revit workflow, the thermal family, the KPI views and the control room",
       "aspect": 1.7778,
       "animated": true,
       "variants": [
@@ -1899,7 +1899,7 @@
     {
       "name": "workflow",
       "role": "hero",
-      "alt": "The data team's workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
+      "alt": "The data team’s workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
       "aspect": 1.7778,
       "variants": [
         {
@@ -1945,7 +1945,7 @@
     {
       "name": "thermal-in-model",
       "role": "gallery",
-      "alt": "Thermal comfort KPIs coloring the Hyperbuilding towers level by level, the team's Revit families carrying analysis into BIM",
+      "alt": "Thermal comfort KPIs coloring the Hyperbuilding towers level by level, the team’s Revit families carrying analysis into BIM",
       "aspect": 1.9613,
       "variants": [
         {
@@ -1986,7 +1986,7 @@
     {
       "name": "data-team",
       "role": "gallery",
-      "alt": "The data team's four roles on Hyperbuilding 01: process, information structure, data translation and communication",
+      "alt": "The data team’s four roles on Hyperbuilding 01: process, information structure, data translation and communication",
       "aspect": 2.0562,
       "variants": [
         {
@@ -2124,7 +2124,7 @@
     {
       "name": "climate-stress",
       "role": "gallery",
-      "alt": "UTCI thermal stress maps from the team's environmental analysis: Tokyo swings the site from cold stress to summer heat",
+      "alt": "UTCI thermal stress maps from the team’s environmental analysis: Tokyo swings the site from cold stress to summer heat",
       "aspect": 2.0269,
       "variants": [
         {
@@ -2193,7 +2193,7 @@
     {
       "name": "galapagos",
       "role": "gif",
-      "alt": "Galapagos evolutionary search running on the roof form, hunting a geometry that performs in Tokyo's humid climate",
+      "alt": "Galapagos evolutionary search running on the roof form, hunting a geometry that performs in Tokyo’s humid climate",
       "aspect": 1.9753,
       "animated": true,
       "variants": [
@@ -2224,7 +2224,7 @@
     {
       "name": "form-evolution",
       "role": "gallery",
-      "alt": "Five form iterations from the team's environmental analysis, each revision answering a radiation, comfort or daylight study",
+      "alt": "Five form iterations from the team’s environmental analysis, each revision answering a radiation, comfort or daylight study",
       "aspect": 1.5099,
       "variants": [
         {
@@ -2249,7 +2249,7 @@
     {
       "name": "demo-cover",
       "role": "gif",
-      "alt": "The podcast quote reel: seven timestamped lines from the conversation on architecture and the brain, in Emilie and Dr. Valentine's words",
+      "alt": "The podcast quote reel: seven timestamped lines from the conversation on architecture and the brain, in Emilie and Dr. Valentine’s words",
       "aspect": 1.7757,
       "animated": true,
       "variants": [
@@ -2431,7 +2431,7 @@
     {
       "name": "episode-art",
       "role": "gallery",
-      "alt": "Episode key art: a building cutaway splitting from grey efficiency into a warm, neuron-lit half, picturing the show's core question",
+      "alt": "Episode key art: a building cutaway splitting from grey efficiency into a warm, neuron-lit half, picturing the show’s core question",
       "aspect": 1.8318,
       "variants": [
         {
@@ -2505,7 +2505,7 @@
     {
       "name": "strategy-quote",
       "role": "gallery",
-      "alt": "Strategy board pairing Niemeyer's line about Tripoli's two hearts with the adaptive reuse argument of The Homage",
+      "alt": "Strategy board pairing Niemeyer’s line about Tripoli’s two hearts with the adaptive reuse argument of The Homage",
       "aspect": 2.4974,
       "variants": [
         {
@@ -2967,7 +2967,7 @@
     {
       "name": "takeoff-angle-sketches",
       "role": "gallery",
-      "alt": "Ink sketches on black of jets and a take-off diagram, tracing climb angles, flaps and slats that seed the monument's lines",
+      "alt": "Ink sketches on black of jets and a take-off diagram, tracing climb angles, flaps and slats that seed the monument’s lines",
       "aspect": 1.4007,
       "variants": [
         {
@@ -3501,7 +3501,7 @@
     {
       "name": "dusk-facade",
       "role": "hero",
-      "alt": "Dusk render of the Verve facade above the fog, double height planted terraces with Burj Khalifa in the distance",
+      "alt": "Dusk render of the Verve facade above the fog, double-height planted terraces with Burj Khalifa in the distance",
       "aspect": 1.0233,
       "variants": [
         {
@@ -3550,7 +3550,7 @@
     {
       "name": "amenities-plan",
       "role": "gallery",
-      "alt": "Amenities level plan for the two Verve towers: gym, spa, yoga studio, cinema, kids pool and playgrounds on the podium",
+      "alt": "Amenities level plan for the two Verve towers: gym, spa, yoga studio, cinema, kids’ pool and playgrounds on the podium",
       "aspect": 1.9157,
       "variants": [
         {
@@ -3596,7 +3596,7 @@
     {
       "name": "lounge-interior",
       "role": "gallery",
-      "alt": "Interior render of a double height Verve lounge, a suspended chandelier and floor to ceiling glass over the skyline",
+      "alt": "Interior render of a double-height Verve lounge, a suspended chandelier and floor-to-ceiling glass over the skyline",
       "aspect": 1.0233,
       "variants": [
         {

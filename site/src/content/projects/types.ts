@@ -20,6 +20,11 @@ export interface BookAsset {
    *  with two title systems and two caption systems arguing. The bands are
    *  measured off the image's own ink profile, never guessed. */
   crop?: { top?: number; bottom?: number; left?: number; right?: number }
+  /** Which page of an ANIMATED original the bake prints (sharp's `page`).
+   *  Undeclared = the first frame, which is what every asset got before.
+   *  Exists for the unit-selector (Emilie, round 2, 2026-08-18): frame 29 is
+   *  the moment the hover card and the red unit footprint are both visible. */
+  frame?: number
   /** Draw a figure from src/print/figures.tsx instead of printing a picture.
    *  When set, `slug`/`name` are only an id: nothing is baked and nothing is
    *  read from disk. Used where the honest asset is a drawing the book makes
@@ -213,7 +218,9 @@ export interface ProjectMeta {
   // that is a diagram rather than a photograph, where cropping to the plate's
   // shape would cut the labels off the edges (lEgoarCh's outputs slide, whose
   // black ground makes the letterbox invisible).
-  spreadFit?: { mode: 'contain'; ground: string }
+  /* spreadFit is GONE (Emilie, round 2 of the book audit, 2026-08-19): the
+   * plate hero takes the screenshots' own ~1.88 ratio, so no image needs to
+   * fit on a declared ground any more — every hero fills. */
 }
 
 // ---- The showcase spine (G1) ----------------------------------------------

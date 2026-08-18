@@ -1,7 +1,7 @@
 // THE SPINE of ballooning-market: WHAT / WHY / HOW / WHAT CAME OF IT.
 // Split out of ballooning-market.tsx on 2026-08-03 (the phone pass). This module is
 // LAZY: content/projects/index.ts reaches it through import.meta.glob, so a
-// visitor downloads one project's prose, not all 21. The meta half stays in
+// visitor downloads one project’s prose, not all 21. The meta half stays in
 // ballooning-market.ts and is still statically barrelled, because the grid, the plate
 // face, the CV line, headData and the OG card all need it synchronously.
 import NB from '../../components/ui/NB'
@@ -19,7 +19,7 @@ const spine: ProjectSpine = {
       A historic Cairo market receives a new roof of pressure-packed balloons that borrows the
       existing steel frame without modifying it.
       <NB note="the frame is the client, the balloons are the tenants, the solver is the lease." />{' '}
-      Each balloon is a Kangaroo body with collision, inflation, and anchor goals; the settled
+      Each balloon is a Kangaroo body with collision, inflation and anchor goals; the settled
       cluster is meshed with Dendro and lit through CMY membranes in D5.
     </>
   ),
@@ -37,13 +37,16 @@ const spine: ProjectSpine = {
     <>Add collision and inflation goals; anchor the cluster; let the solver settle.</>,
     <>Mesh the settled cluster with Dendro; render daylight through the CMY membranes in D5.</>,
   ],
+  // ✔ SIGNED by Emilie, 2026-08-18 (the book audit): reshaped so this plate and
+  // lEgoarCh stop closing on the same instructive-failure story shape; the word
+  // "instructive" now lives on lEgoarCh alone, and this slot ends on the
+  // checkable record.
   outcome: (
     <>
-      The first run failed in an instructive way: the balloons had no physical awareness of each
-      other, just ghosting through one another in a chaotic, colorful mess. The fail stayed in
-      the record on purpose; people read honesty faster than polish. And the tuning became the
-      craft: collision too low and they cuddle, too high and they panic. You tune it like a
-      thermostat.
+      Tuning became the craft: collision too low and the balloons cuddle, too high and they
+      panic. You tune it like a thermostat. And the run where they had no awareness of each
+      other at all, just ghosting through one another in a chaotic, colorful mess? It stayed in
+      the record on purpose, first in the gallery: people read honesty faster than polish.
     </>
   ),
 }

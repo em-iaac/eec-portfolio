@@ -1,7 +1,7 @@
 // THE SPINE of neurospace: WHAT / WHY / HOW / WHAT CAME OF IT.
 // Split out of neurospace.tsx on 2026-08-03 (the phone pass). This module is
 // LAZY: content/projects/index.ts reaches it through import.meta.glob, so a
-// visitor downloads one project's prose, not all 21. The meta half stays in
+// visitor downloads one project’s prose, not all 21. The meta half stays in
 // neurospace.ts and is still statically barrelled, because the grid, the plate
 // face, the CV line, headData and the OG card all need it synchronously.
 import NB from '../../components/ui/NB'
@@ -9,7 +9,7 @@ import type { ProjectSpine } from './types'
 
 const spine: ProjectSpine = {
   alsoAnswers: [
-    { q: "What if a room could tell you what it's doing to you, while you design it?", beat: 'what' },
+    { q: "What if a room could tell you what it’s doing to you, while you design it?", beat: 'what' },
     { q: 'Does ceiling height really change how stressed you are?', beat: 'how' },
     { q: 'Does the score prove the hypothesis, hand you a new one, or the opposite?', beat: 'outcome' },
     { q: 'What happens when BIM starts describing you instead of the building?', beat: 'why' },
@@ -50,14 +50,15 @@ const spine: ProjectSpine = {
       trip, so the number answers as fast as you can drag.
     </>,
   ],
+  // ✔ SIGNED by Emilie, 2026-08-18 (the book audit): the slot used to carry no
+  // event at all; it now leads with the checkable and keeps every honesty line.
   outcome: (
     <>
-      The score is a heuristic, not an instrument. It leans on neuroarchitecture research and
-      turns it into weights you can read in the public repo, which means you can also argue with
-      them.
-      <NB note="a score you can argue with beats a number you have to trust." /> It estimates; it
-      never measures your body, and it shows every assumption on the way to the number so you are
-      free to overrule it.
+      It shipped live: the app runs in the browser today, and the weights it scores with sit in
+      the public repo, which means you can read them and argue with them.
+      <NB note="a score you can argue with beats a number you have to trust." /> The score stays
+      a heuristic, not an instrument. It estimates; it never measures your body, and it shows
+      every assumption on the way to the number so you are free to overrule it.
     </>
   ),
 }

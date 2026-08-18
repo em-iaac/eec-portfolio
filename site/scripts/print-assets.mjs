@@ -42,7 +42,6 @@ const DATA = join(SITE, 'src', 'data')
 const PLATE_WIDTH = 1800
 const QUALITY = 88
 const GRID_QUALITY = 84
-const INDEX_QUALITY = 78
 
 // ⚠ THE PAGE GEOMETRY IS NOT COPIED HERE ANY MORE. It is imported from
 // src/print/assetGeometry.ts, the same module the renderer and the census test
@@ -82,8 +81,8 @@ async function loadBook() {
   const result = await build({
     stdin: {
       contents: [
-        "export { BOOK_PLATES, INDEX_TILES } from './src/print/bookPlates.ts'",
-        "export { registerRowHeight, leadDrawnWidth, PAGE_W_MM, BOUND_MARGIN_MM, OUTER_MARGIN_MM, GAP_MM } from './src/print/assetGeometry.ts'",
+        "export { BOOK_PLATES } from './src/print/bookPlates.ts'",
+        "export { registerRowHeight, leadDrawnWidth, layoutAssetPage } from './src/print/assetGeometry.ts'",
       ].join('\n'),
       resolveDir: SITE,
       loader: 'ts',
@@ -106,8 +105,7 @@ async function loadBook() {
   return import(url)
 }
 
-const { BOOK_PLATES, INDEX_TILES, registerRowHeight, leadDrawnWidth, PAGE_W_MM, BOUND_MARGIN_MM, OUTER_MARGIN_MM, GAP_MM } =
-  await loadBook()
+const { BOOK_PLATES, registerRowHeight, leadDrawnWidth, layoutAssetPage } = await loadBook()
 
 const problems = []
 
@@ -130,7 +128,7 @@ function effectiveSize(meta, job) {
 }
 
 // Resolve one declared asset to an original on disk, or record why not.
-function resolve({ slug, name, invert, trim, figure, crop }) {
+function resolve({ slug, name, invert, trim, figure, crop, frame }) {
   // A FIGURE IS DRAWN, NOT BAKED. It has no original on disk, so resolving it
   // as one would report a missing file and abort the whole run.
   if (figure) return null
@@ -145,7 +143,17 @@ function resolve({ slug, name, invert, trim, figure, crop }) {
     problems.push(`${slug}/${name}: original missing at ${src} (OneDrive dehydrated? incoming/ not synced?)`)
     return null
   }
-  return { slug, name, src, invert: invert === true, trim: typeof trim === 'number' ? trim : 0, crop: crop ?? null }
+  // frame: which page of an ANIMATED original to bake (Emilie, round 2,
+  // 2026-08-18: FIG 7.2 moved to frame 29 of the unit-selector, the moment
+  // the hover card and the red unit footprint are both visible). Undeclared
+  // = sharp's default first frame, which is what every asset got before.
+  return {
+    slug, name, src,
+    invert: invert === true,
+    trim: typeof trim === 'number' ? trim : 0,
+    crop: crop ?? null,
+    frame: typeof frame === 'number' ? frame : null,
+  }
 }
 
 // PASS 1 · resolve everything BEFORE writing anything, so a missing original
@@ -188,34 +196,45 @@ for (const master of BOOK_PLATES) {
     // The lead is 159 to 210mm wide, far wider than any register image, which
     // is why it cannot share the register's rung. Its drawn width comes from
     // the SAME function the renderer calls, so the two cannot diverge.
+    // ⚠ BOTH THE LEAD AND THE COLUMN ARE SIZED BY layoutAssetPage ITSELF, the
+    // SAME call the renderer makes, because this file's own arithmetic baked
+    // the column 12 to 18mm narrower than drawn — and since the hemline fix a
+    // column page's LEAD width is a fixed point with its narrowed register
+    // (assetGeometry iterates it), which leadDrawnWidth alone cannot know.
+    // A wrong number here fails nothing on its own, it just ships a soft
+    // image; the DPI test measures at layoutAssetPage's widths, so the two
+    // routes now agree by construction. Asset pages are always even and
+    // therefore verso, hence outerLeft: true.
     const lead = master.bookLead
     const leadHit = lead ? resolve(lead) : null
-    if (leadHit) {
-      const lm = effectiveSize(await sharp(leadHit.src).metadata(), leadHit)
-      const drawnMm = leadDrawnWidth(lead.corner, lm.width / lm.height, rowH)
-      jobs.push({ ...leadHit, kind: 'grid', width: Math.ceil(drawnMm * PX_PER_MM), drawnMm })
-    }
-
-    // A COLUMN ASSET stands under the head at the head's own width, which is
-    // whatever the lead does not use. Sized here rather than assumed, so the
-    // bake matches the width the page actually draws it at.
     const col = master.bookColumn
     const colHit = col ? resolve(col) : null
-    if (colHit && leadHit) {
+    if (leadHit) {
       const lm = effectiveSize(await sharp(leadHit.src).metadata(), leadHit)
-      const leadMm = leadDrawnWidth(lead.corner, lm.width / lm.height, rowH)
-      const colMm = PAGE_W_MM - BOUND_MARGIN_MM - OUTER_MARGIN_MM - leadMm - GAP_MM * 2
-      jobs.push({ ...colHit, kind: 'grid', width: Math.ceil(colMm * PX_PER_MM), drawnMm: colMm })
+      const cm = colHit ? effectiveSize(await sharp(colHit.src).metadata(), colHit) : null
+      const laid = layoutAssetPage(
+        { w: lm.width, h: lm.height, src: '', alt: '', corner: lead.corner },
+        metas.map(m => ({ w: m.width, h: m.height, src: '', alt: '' })),
+        true,
+        cm ? { w: cm.width, h: cm.height, src: '', alt: '' } : null,
+        master.bookRegisterScale ?? 1,
+      )
+      const drawnMm = laid.lead.w
+      jobs.push({ ...leadHit, kind: 'grid', width: Math.ceil(drawnMm * PX_PER_MM), drawnMm })
+      if (colHit && laid.column) {
+        const colMm = laid.column.w
+        jobs.push({ ...colHit, kind: 'grid', width: Math.ceil(colMm * PX_PER_MM), drawnMm: colMm })
+      }
     }
   }
 }
 
-// The index page's 21 tiles, printed ~36mm wide. 480px is ~339dpi there.
-const INDEX_TILE_W = 480
-for (const ref of INDEX_TILES) {
-  const hit = resolve(ref)
-  if (hit) jobs.push({ ...hit, kind: 'index', width: INDEX_TILE_W })
-}
+// ⚠ NO INDEX-TILE BAKE ANY MORE (the guards audit, 2026-08-18). The index
+// page's tiles became her drawn partis (WORK_ARTIFACTS, 2026-08-11 round two),
+// so the 21 baked cover JPEGs were dead weight the book never referenced:
+// printImage's indexTileSrc had zero call sites. The prune pass below retires
+// the committed tiles on the next run, because the manifest no longer wants
+// them.
 
 if (problems.length) {
   console.error('PRINT ASSETS INCOMPLETE (nothing written):')
@@ -230,7 +249,7 @@ if (problems.length) {
     const { slug, name, src, kind, width } = job
     const outDir = join(OUT, slug)
     mkdirSync(outDir, { recursive: true })
-    const suffix = { plate: 'print', grid: 'grid', index: 'tile' }[kind]
+    const suffix = { plate: 'print', grid: 'grid' }[kind]
     const fileName = `${name}-${suffix}.jpg`
     // INVERT, in three operations, and each one is load-bearing:
     //
@@ -246,7 +265,7 @@ if (problems.length) {
     //     puts her red back where the pen put it.
     // TRIM BEFORE RESIZE, so the fraction is measured against the original and
     // the crop is exact rather than resampled twice.
-    let pipe = sharp(src)
+    let pipe = sharp(src, job.frame != null ? { page: job.frame } : undefined)
     // PER-EDGE CROP, for assets that carry their own baked headings and labels.
     // Applied before the symmetric trim and before the resize, so the fractions
     // are measured against the original.
@@ -280,13 +299,13 @@ if (problems.length) {
     }
     const r = await pipe
       .jpeg({
-        quality: { plate: QUALITY, grid: GRID_QUALITY, index: INDEX_QUALITY }[kind],
+        quality: { plate: QUALITY, grid: GRID_QUALITY }[kind],
         progressive: true,
         mozjpeg: true,
       })
       .toFile(join(outDir, fileName))
     totalBytes += r.size
-    const bucket = (manifest[{ plate: 'plates', grid: 'grid', index: 'index' }[kind]] ??= {})
+    const bucket = (manifest[{ plate: 'plates', grid: 'grid' }[kind]] ??= {})
     ;(bucket[slug] ??= {})[name] = {
       file: `assets/print/${slug}/${fileName}`,
       w: r.width,
@@ -298,8 +317,6 @@ if (problems.length) {
       if (r.width < 1700) {
         console.warn(`  ! ${slug}/${name} original is only ${r.width}px wide; below ~300dpi at the plate width`)
       }
-    } else if (kind === 'index') {
-      console.log(`tile  ${slug}/${name} -> ${r.width}w ${Math.round(r.size / 1024)}KB`)
     } else {
       const dpi = Math.round(r.width / (job.drawnMm / 25.4))
       console.log(

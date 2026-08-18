@@ -41,12 +41,15 @@ const PRACTICE = '#a8186b'
 // like the UI of the app to match the design elements of this project."
 const CARD = '#f4f5f6'
 const VIEWPORT = '#2b2f36'
+// Spelled out in full since the book audit (Emilie, 2026-08-18): the codes
+// CH/WQ/NL/BF/PP appeared nowhere else on the page, so the legend now carries
+// the report's own dimension names.
 const DIMS: [string, string, string][] = [
-  ['CH', '.22', '#3b7fb0'],
-  ['WQ', '.25', '#d55109'],
-  ['NL', '.22', '#6f66a9'],
-  ['BF', '.18', '#379e59'],
-  ['PP', '.13', '#66b768'],
+  ['CEILING HEIGHT', '.22', '#3b7fb0'],
+  ['WALL QUALITY', '.25', '#d55109'],
+  ['NATURAL LIGHT', '.22', '#6f66a9'],
+  ['BIOPHILIC FORM', '.18', '#379e59'],
+  ['POTTED PLANTS', '.13', '#66b768'],
 ]
 
 function Arrow({ x, y, accent = false }: { x: number; y: number; accent?: boolean }) {
@@ -166,8 +169,12 @@ const NEURO_TWO_PATHS: PrintFigure = {
           card, so the text is what has to yield. At 6.27 units per character the
           usable measure is 110, which is 17 characters, and every line below is
           inside that. Anything longer added here will overflow again. */}
-      {['ceiling height', 'wall count', 'curvature', 'openings', 'organic form', 'plants'].map((t, i) => (
-        <text key={t} x={56} y={262 + i * 13} fontFamily="Martian Mono" fontSize={8.5} letterSpacing={0.3} fill={QUIET}>
+      {/* SEVEN names for SEVEN sliders (the book audit's B15): "openings" was
+          really two sliders in the app, Opening Count and Opening Size, so the
+          diagram's own title stopped adding up. All lines stay inside the
+          17-character measure the note above establishes. */}
+      {['ceiling height', 'wall count', 'curvature', 'opening count', 'opening size', 'organic form', 'plants'].map((t, i) => (
+        <text key={t} x={56} y={258 + i * 12} fontFamily="Martian Mono" fontSize={8.5} letterSpacing={0.3} fill={QUIET}>
           {t}
         </text>
       ))}
@@ -205,11 +212,14 @@ const NEURO_TWO_PATHS: PrintFigure = {
         THE FAST PATH · IN THE BROWSER
       </text>
       <Box x={230} y={262} w={310} h={58} label="NEUROSCORE" sub="a transparent weighted sum, no round trip" accent />
+      {/* Stacked, not in a row: five full names at 9pt-equivalent measure ~101
+          units wide, ending at y=396 inside the card's 416 bottom, well left of
+          the gauge at x~530. */}
       {DIMS.map(([k, v, c], i) => (
         <g key={k}>
-          <rect x={230 + i * 62} y={340} width={8} height={8} fill={c} />
-          <text x={242 + i * 62} y={348} fontFamily="Martian Mono" fontSize={9} letterSpacing={0.3} fill={MUTED}>
-            {k} {v}
+          <rect x={230} y={332 + i * 16 - 7} width={8} height={8} fill={c} />
+          <text x={242} y={332 + i * 16} fontFamily="Martian Mono" fontSize={9} letterSpacing={0.3} fill={MUTED}>
+            {v} {k}
           </text>
         </g>
       ))}
@@ -337,7 +347,7 @@ const VERVE_STACK: PrintFigure = {
         gym · spa · yoga · cinema
       </text>
       <text x={0} y={232} fontFamily="Martian Mono" fontSize={9.5} letterSpacing={0.3} fill={QUIET}>
-        kids pool · playgrounds
+        kids&rsquo; pool · playgrounds
       </text>
     </svg>
   ),

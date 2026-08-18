@@ -34,6 +34,16 @@ export const LEAD_CAP_MM = 10
 export const CAP_CLEARANCE_MM = 6
 /** 210mm leaves 69mm of white for the meta column even at the outer margin. */
 export const LEAD_MAX_W_MM = 210
+/** THE HEMLINE (Emilie, 2026-08-18, closing Flags 09+10 as option D: "own the
+ *  air"). Every top lead's bottom edge now sits on ONE line, so the band of
+ *  air between lead and register starts at the same height on all eight asset
+ *  pages instead of wandering 12 to 46mm as each lead's aspect dictated.
+ *  84.9 and not a rounder number because the hemline must be REACHABLE by the
+ *  widest lead in the book inside LEAD_MAX_W_MM: lungs/timeline at aspect
+ *  2.473 needs 84.9 × 2.473 = 209.97mm. A new lead wider than 2.473 will cap
+ *  at 210mm, miss the hemline, and the figure-fit guard fails the build,
+ *  which is the loud failure this whole audit existed to create. */
+export const LEAD_HEMLINE_MM = 84.9
 /** A field lead holds the page's height rather than a corner of it. */
 export const FIELD_H_MM = 170
 /** The head block, plate through tech, on any page that stands something under
@@ -66,8 +76,6 @@ export interface AssetPageLayout {
   register: AssetBox[]
   /** An asset standing under the head, when the page declares one. */
   column: AssetBox | null
-  /** Where the register's captions start (they are the same width as their image). */
-  captionY: number
   /** The head meta: the sheet number, the plate number and the woven credit. */
   meta: { x: number; y: number; w: number }
   /** The lead's caption, always in white rather than over an image. */
@@ -100,6 +108,11 @@ export function leadDrawnWidth(corner: BookCorner, leadAspect: number, rowH: num
   const room = corner.startsWith('top')
     ? FOOT_RULE_MM - CAP_CLEARANCE_MM - (LEAD_CAP_MM + LEAD_GAP_MM + rowH + CAPTION_MM)
     : PAGE_H_MM - (BOTTOM_REGISTER_Y_MM + rowH + CAPTION_MM + LEAD_GAP_MM)
+  // A top lead stops at the hemline; `room` still binds when a tall register
+  // leaves less than the hemline, so the lead can never run into its own row.
+  if (corner.startsWith('top')) {
+    return Math.min(LEAD_MAX_W_MM, room * leadAspect, LEAD_HEMLINE_MM * leadAspect)
+  }
   return Math.min(LEAD_MAX_W_MM, room * leadAspect)
 }
 
@@ -150,7 +163,6 @@ export function layoutAssetPage(
       lead: null,
       register: rowAt(y),
       column: null,
-      captionY: y + rowH + 3,
       meta: { x: left, y: TOP_MARGIN_MM, w: right - left },
       leadCap: { x: left, y: TOP_MARGIN_MM, w: 0 },
       ruleY: FOOT_RULE_MM,
@@ -197,7 +209,6 @@ export function layoutAssetPage(
       lead: { src: lead.src, alt: lead.alt, figure: lead.figure, x: lx, y: 0, w: lw, h: FIELD_H_MM },
       register: boxes,
       column: null,
-      captionY: 0, // each field-column caption sits under its own image
       meta: { x: colX, y: TOP_MARGIN_MM, w: colW },
       // The same margin rule the top branch follows: a field lead bleeds off one
       // trim, so its caption starts at the page margin on the bled side rather
@@ -210,7 +221,28 @@ export function layoutAssetPage(
   }
 
   const atTop = lead.corner.startsWith('top')
-  const lw = leadDrawnWidth(lead.corner, la, rowH)
+  let lw = leadDrawnWidth(lead.corner, la, rowH)
+  // ⚠ THE COLUMN PAGE JOINS THE HEMLINE (Emilie's D ruling is "one line on all
+  // EIGHT pages", and the first cut of the hemline missed this page by 5.1mm).
+  // leadDrawnWidth reserves room from the FULL-measure row height, but a page
+  // with a column asset draws a NARROWED register, so the lead has more room
+  // than it assumed — and the narrowed row's measure depends on the lead's own
+  // width, so the two are solved as a fixed point. Converges in 2 iterations
+  // for every real page; the 0.01mm exit is far below anything printable.
+  if (atTop && columnAsset) {
+    const sumAspects = aspects.reduce((a, b) => a + b, 0)
+    for (let i = 0; i < 4; i++) {
+      const lxI = leadOnLeft ? 0 : PAGE_W_MM - lw
+      const metaXI = leadOnLeft ? lw + GAP_MM * 2 : left
+      const metaWI = leadOnLeft ? right - metaXI : lxI - GAP_MM * 2 - left
+      const rowRightI = leadOnLeft ? lxI + lw : right
+      const rowLeftI = !leadOnLeft ? metaXI + metaWI + GAP_MM * 2 : left
+      const narrowHI = (rowRightI - rowLeftI - GAP_MM * (register.length - 1)) / sumAspects
+      const next = leadDrawnWidth(lead.corner, la, narrowHI)
+      if (Math.abs(next - lw) < 0.01) break
+      lw = next
+    }
+  }
   const lh = lw / la
   const lx = leadOnLeft ? 0 : PAGE_W_MM - lw
   const ly = atTop ? 0 : PAGE_H_MM - lh
@@ -285,7 +317,6 @@ export function layoutAssetPage(
       lead: { src: lead.src, alt: lead.alt, figure: lead.figure, x: lx, y: ly, w: lw, h: lh },
       register: columnAsset ? rowAtNarrow(ry) : rowAt(ry),
       column: colBox,
-      captionY: ry + useH + 3,
       meta: { x: metaX, y: TOP_MARGIN_MM, w: metaW },
       // ⚠ THE LEAD'S CAPTION IS BACK UNDER THE LEAD (Emilie, 2026-08-12), and
       // the comment this replaces was right about the collision and wrong about
@@ -322,7 +353,6 @@ export function layoutAssetPage(
     lead: { src: lead.src, alt: lead.alt, figure: lead.figure, x: lx, y: ly, w: lw, h: lh },
     register: rowAt(ry),
     column: null,
-    captionY: ry + rowH + 3,
     meta: { x: left, y: TOP_MARGIN_MM - 5, w: right - left },
     // The empty quadrant beside a bottom lead is where its caption belongs: it
     // is the only white left on the page, and it puts the words next to the

@@ -1,7 +1,7 @@
 // THE SPINE of soma-towers: WHAT / WHY / HOW / WHAT CAME OF IT.
 // Split out of soma-towers.tsx on 2026-08-03 (the phone pass). This module is
 // LAZY: content/projects/index.ts reaches it through import.meta.glob, so a
-// visitor downloads one project's prose, not all 21. The meta half stays in
+// visitor downloads one project’s prose, not all 21. The meta half stays in
 // soma-towers.ts and is still statically barrelled, because the grid, the plate
 // face, the CV line, headData and the OG card all need it synchronously.
 import type { ProjectSpine } from './types'
@@ -15,23 +15,22 @@ const spine: ProjectSpine = {
   ],
   what: (
     <>
-      Verve City Walk is the two tower high-rise SOMA designed at City Walk in Dubai: a shared
-      amenities podium under both towers, balconies cut into the facade rather than hung off it.
-      As a design architect at SOMA I ran design exploration and parametric facade studies in
-      Rhino and Grasshopper, and carried them into the Revit BIM model for floorplans, facade
-      strategies and interior layouts of the residential towers. The same year carried three
-      more Dubai towers, District O, Enara and Saria, from massing studies into their BIM sets.
+      Verve is a two-tower high-rise in Dubai: a shared amenities podium under both towers,
+      balconies cut into the facade rather than hung off it. As a design architect at SOMA I ran
+      the parametric facade studies in Rhino and Grasshopper, then carried what survived into
+      the Revit model: floorplans, facade strategies, the interiors of a residential tower. The
+      same desk carried District O, Enara and Saria from massing studies into their BIM sets.
     </>
   ),
   why: (
     <>
-      These are the years where I learned that a parametric study only matters if it survives
+      These are the years when I learned that a parametric study only matters if it survives
       contact with a drawing set. Practice is where the elegant definition meets the door
       schedule, and both have to win.
     </>
   ),
   // ✔ SIGNED by Emilie, 2026-08-14. HOW and WHAT CAME OF IT were new to this
-  // spine (it stopped at WHY, and the book's project page renders all four
+  // spine (it stopped at WHY, and the book’s project page renders all four
   // beats, so Verve could not hold a page without them). They went through three
   // versions and the last one is hers: the facts are her account of the actual
   // workflow, and the voice is the emilie-voice calibration rather than mine.
@@ -78,15 +77,17 @@ const spine: ProjectSpine = {
       is the submission and it has to be true on the day it leaves.
     </>,
   ],
+  // ✔ RE-SIGNED by Emilie, 2026-08-18 (the book audit): slimmed by a third, US
+  // spelling per her ruling, the facade clause kept once (in WHAT), and the
+  // slot now ends on the checkable headset day.
   outcome: (
     <>
-      At university nobody pays for the square metres, so nobody counts them. Then you are in
-      practice and gross floor area is the only number in the room: every balcony cut into the
-      facade, every core shifted, every planted terrace, all of it weighed against that one
-      figure. I used to think that was the boring part. It turns out to be the part that decides
-      what gets built. What came of these years is the coordination more than any drawing:
-      everyone working into one model, and a client putting on a headset to walk a tower that
-      did not exist yet.
+      At university nobody pays for the square meters, so nobody counts them. Then you are in
+      practice and gross floor area is the only number in the room: every balcony, every core
+      shifted, every planted terrace, weighed against that one figure. I used to think that was
+      the boring part. It turns out to be the part that decides what gets built. The proof of
+      the coordination came the day a client put on a headset and walked a tower that did not
+      exist yet.
     </>
   ),
 }

@@ -7,15 +7,15 @@
 // 2026-07-16, verified 0 missing). The frozen `professional` sources are gone
 // by design and never read.
 //
-// FINALIZE THE WORK ROOM (2026-07-14): the full gallery refresh. Every slug's
+// FINALIZE THE WORK ROOM (2026-07-14): the full gallery refresh. Every slug’s
 // flip-through was re-curated from the staged blog frames (incoming/<slug>/blog/),
-// each frame honesty-checked (only the team's/hers ships; the Data into Geometry
+// each frame honesty-checked (only the team’s/hers ships; the Data into Geometry
 // image-309 precedent binds), every entry now carries an authored alt (80-140
-// chars, context not contents). Array order IS the plate's flip order (hero
+// chars, context not contents). Array order IS the plate’s flip order (hero
 // first, then the strip in manifest order). Cover + book-spread frame names
 // never change (printBook census + width floor). ALL alts SIGNED by Emilie
 // (REINDEX batches A-D, 2026-07-16; the lungs stress-test leaderboard frame
-// confirmed shipping the same day). Privacy fix: legoarch's mesh-vs-lego /
+// confirmed shipping the same day). Privacy fix: legoarch’s mesh-vs-lego /
 // shelf / outputs swapped to clean crops (the old sources exposed personal
 // browser tabs).
 export const MANIFEST = {
@@ -29,7 +29,7 @@ export const MANIFEST = {
   sensi: [
     {
       src: 'academic/iaac/sensi/app-screenshots/galaxy-cover-web.webp', role: 'gif', name: 'galaxy-cover', frame16x9: true, bg: '#424242',
-      alt: "Sensi's relationship galaxy at rest: six senses as glowing constellations, every thread a coupling between two scores",
+      alt: "Sensi’s relationship galaxy at rest: six senses as glowing constellations, every thread a coupling between two scores",
     },
     {
       src: 'academic/iaac/sensi/demos/blog gifs/Sensi_Demo1.gif', role: 'gif', name: 'demo-onboarding',
@@ -37,7 +37,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/sensi/app-screenshots/01-onboarding.png', role: 'gallery', name: 'onboarding',
-      alt: "Sensi's onboarding chat calibrating the comfort copilot to one person: their noise tolerance, their thermal grudges",
+      alt: "Sensi’s onboarding chat calibrating the comfort copilot to one person: their noise tolerance, their thermal grudges",
     },
     {
       src: 'academic/iaac/sensi/app-screenshots/06-shape.png', role: 'hero', name: 'app-shape',
@@ -75,7 +75,7 @@ export const MANIFEST = {
   // NEUROSPACE (finalized with Emilie, 2026-07-15): the cover is a live cut
   // of the red room morphing under a slider drag (neuro-cover-web.webp,
   // ffmpeg 8s @ 8fps from the recording, cropped INSIDE the app: the raw
-  // capture's browser chrome held personal tabs and never ships). Landing
+  // capture’s browser chrome held personal tabs and never ships). Landing
   // moved into the strip; the cropped silent slider-tour video leads.
   neurospace: [
     {
@@ -104,7 +104,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/neurospace/Images/score02.png', role: 'gallery', name: 'score-2',
-      alt: "The report's breakdown: contribution bars and a brain impact map behind the room's estimated wellbeing score",
+      alt: "The report’s breakdown: contribution bars and a brain impact map behind the room’s estimated wellbeing score",
     },
   ],
   // THE HUDDLE (Emilie, 2026-07-15): the cover is the WASP growth gif (the
@@ -113,7 +113,7 @@ export const MANIFEST = {
   huddle: [
     {
       src: 'academic/iaac/huddle/blog/studio2.gif', role: 'gif', name: 'wasp-growth', frame16x9: true, bg: '#ffffff',
-      alt: 'Animated WASP growth study: modules aggregating along wind and program across the Punta Arenas plot',
+      alt: 'Stills from the WASP growth study: modules aggregating along wind and program across the Punta Arenas plot',
     },
     {
       src: 'academic/iaac/huddle/IMAGES/axonometric.jpg', role: 'hero', name: 'axonometric',
@@ -168,11 +168,11 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/lungs/blog/image-484.png', role: 'gallery', name: 'speckle-live',
-      alt: "Speckle streams the design teams' tower model into the app, so performance gradients sit on the geometry itself",
+      alt: "Speckle streams the design teams’ tower model into the app, so performance gradients sit on the geometry itself",
     },
     {
       src: 'academic/iaac/lungs/blog/image-482-scaled.png', role: 'gallery', name: 'timeline',
-      alt: 'Ten weeks as a live timeline: three team tracks and the weekly deliverables the app kept honest',
+      alt: 'Ten weeks as a live timeline: three team tracks whose lines converge wherever the teams overlap, and the weekly deliverables the app kept honest',
     },
     {
       src: 'academic/iaac/lungs/blog/image-483.png', role: 'gallery', name: 'stress-test',
@@ -180,7 +180,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/lungs/blog/image-478.png', role: 'gallery', name: 'discover',
-      alt: "The Discover tab publishing the tower's vitals: three systems, one tower, and the numbers the studio stood behind",
+      alt: "The Discover tab publishing the tower’s vitals: three systems, one tower, and the numbers the studio stood behind",
     },
     {
       src: 'academic/iaac/lungs/blog/image-479.png', role: 'gallery', name: 'why-how-what',
@@ -188,7 +188,7 @@ export const MANIFEST = {
     },
   ],
   // LEGOARCH (finalized with Emilie, 2026-07-15, round 4): the cover is a
-  // live cut of Saint Basil's solving into its brick layout; the flip-through
+  // live cut of Saint Basil’s solving into its brick layout; the flip-through
   // is SLIDES + APP SCREENSHOTS ONLY (her rule: explanation or web
   // screenshot, no product renders; the film + cover carry the visuals).
   // The golden sagrada-render left the web gallery but remains the BOOK
@@ -196,7 +196,7 @@ export const MANIFEST = {
   legoarch: [
     {
       src: 'academic/iaac/legoarch/legoarch-cover-web.webp', role: 'gif', name: 'demo-cover',
-      alt: "Saint Basil's Cathedral solving into a brick layout in lEgoarCh, the stage with no AI in it on purpose",
+      alt: "Saint Basil’s Cathedral solving into a brick layout in lEgoarCh, the stage with no AI in it on purpose",
     },
     {
       src: 'academic/iaac/legoarch/blog/pipeline.png', role: 'gallery', name: 'pipeline',
@@ -224,7 +224,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/legoarch/blog/slide-bilbao.png', role: 'gallery', name: 'honest-part',
-      alt: 'The instructive failure: the Guggenheim prompt returned a voxel blob, structurally sound but not legible as architecture',
+      alt: 'The failure that taught the constraint: the Guggenheim came back connected and supported, and still not legible as architecture',
     },
     {
       src: 'academic/iaac/legoarch/blog/slide-outputs.png', role: 'gallery', name: 'outputs',
@@ -232,7 +232,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/legoarch/blog/slide-catalog.png', role: 'gallery', name: 'real-parts',
-      alt: 'Real parts and real moulds: 44 BrickLink parts in 48 colours, the catalog the optimizer is allowed to build from',
+      alt: 'Real parts and real molds: 44 BrickLink parts in 48 colors, the catalog the optimizer is allowed to build from',
     },
     {
       src: 'academic/iaac/legoarch/blog/10-shelf-3d.png', role: 'gallery', name: 'shelf',
@@ -244,7 +244,7 @@ export const MANIFEST = {
   cappelletti: [
     {
       src: 'academic/iaac/cappelletti/blog/Recording-2025-12-18-182036.gif', role: 'gif', name: 'galapagos-run', frame16x9: true, bg: '#ffffff',
-      alt: "Galapagos optimization running live, vertex octa lattice displacement traded against mass for the pavilion's outer shell",
+      alt: "Galapagos optimization running live, vertex octa lattice displacement traded against mass for the pavilion’s outer shell",
     },
     {
       src: 'academic/iaac/cappelletti/working files/Images/poster-01.jpeg', role: 'hero', name: 'poster',
@@ -252,7 +252,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/cappelletti/blog/pasta-atlas-team-crop.png', role: 'gallery', name: 'pasta-atlas',
-      alt: "The team's pasta atlas page: parametric equations of a cappelletti, the starting geometry for the pavilion's optimization",
+      alt: "The team’s pasta atlas page: parametric equations of a cappelletti, the starting geometry for the pavilion’s optimization",
     },
     {
       src: 'academic/iaac/cappelletti/blog/Recording-2025-12-18-181501.gif', role: 'gif', name: 'equations-script',
@@ -321,10 +321,10 @@ export const MANIFEST = {
       alt: 'Render of the playscape tunnel through the balloon field, a kid running the voronoi net spine',
     },
   ],
-  // S4b · THE FIVE (2026-07-14): sources are Emilie's public IAAC blog posts,
+  // S4b · THE FIVE (2026-07-14): sources are Emilie’s public IAAC blog posts,
   // downloaded into incoming/<slug>/ (her approval at the session gate).
   narkomfin: [
-    // (LOOK & ORDER 2026-07-18, Emilie's ask: the slow zoom became a
+    // (LOOK & ORDER 2026-07-18, Emilie’s ask: the slow zoom became a
     // FLIPBOOK of the deck assets, hard cuts, fast start; still at rest =
     // the voxel graph as before. Alt reworded for the flip; hers to sign.)
     {
@@ -349,25 +349,25 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/narkomfin/blog/Blog_GraphML_G02_Maria_Lakzhmy_Charles_Emilie_page-0019.jpg', role: 'gallery', name: 'betweenness',
-      alt: "Betweenness centrality over the team's spatial graph of Type K, one hot line showing every Narkomfin path crossing the corridor",
+      alt: "Betweenness centrality over the team’s spatial graph of Type K, one hot line showing every Narkomfin path crossing the corridor",
     },
     {
       src: 'academic/iaac/narkomfin/blog/Blog_GraphML_G02_Maria_Lakzhmy_Charles_Emilie_page-0025.jpg', role: 'gallery', name: 'communities-f',
-      alt: "Community detection across the three Type F levels, the spatial graph reading Ginzburg's duplexes as full-height vertical slices",
+      alt: "Community detection across the three Type F levels, the spatial graph reading Ginzburg’s duplexes as full-height vertical slices",
     },
     {
       src: 'academic/iaac/narkomfin/blog/Blog_GraphML_G02_Maria_Lakzhmy_Charles_Emilie_page-0029.jpg', role: 'gallery', name: 'graphsage-f',
-      alt: "The team's GraphSAGE room classifier reading conventional Type F rooms at 91.3 percent, graph machine learning as a plan reader",
+      alt: "The team’s GraphSAGE room classifier reading conventional Type F rooms at 91.3 percent, graph machine learning as a plan reader",
     },
     {
       src: 'academic/iaac/narkomfin/blog/Blog_GraphML_G02_Maria_Lakzhmy_Charles_Emilie_page-0027.jpg', role: 'gallery', name: 'graphsage-k',
-      alt: "GraphSAGE prediction for the communal Type K unit at 67.9 percent, the team's model flagging the rooms that break domestic rules",
+      alt: "GraphSAGE prediction for the communal Type K unit at 67.9 percent, the team’s model flagging the rooms that break domestic rules",
     },
   ],
   'urban-risk': [
     {
       src: 'academic/iaac/urban-risk/ui-gif.gif', role: 'gif', name: 'assessment-ui', frame16x9: true, bg: '#ffffff',
-      alt: "The team's street safety assessment interface scoring a neighborhood's segments from OpenStreetMap features",
+      alt: "The team’s street safety assessment interface scoring a neighborhood’s segments from OpenStreetMap features",
     },
     {
       src: 'academic/iaac/urban-risk/Group01_RiskAssessment_Charles-Emilie-Lakzhmy-Maria_page-0005-scaled.jpg', role: 'gallery', name: 'safety-theories',
@@ -379,7 +379,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/urban-risk/blog/Group01_RiskAssessment_Charles-Emilie-Lakzhmy-Maria_page-0020-scaled.jpg', role: 'gallery', name: 'pipeline',
-      alt: "The team's pipeline from OpenStreetMap data fetching through feature checks and risk scoring to model training and deployment",
+      alt: "The team’s pipeline from OpenStreetMap data fetching through feature checks and risk scoring to model training and deployment",
     },
     {
       src: 'academic/iaac/urban-risk/Group01_RiskAssessment_Charles-Emilie-Lakzhmy-Maria_page-0024-scaled.jpg', role: 'gallery', name: 'risk-score',
@@ -391,7 +391,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/urban-risk/blog/Group01_RiskAssessment_Charles-Emilie-Lakzhmy-Maria_page-0039.jpg', role: 'gallery', name: 'shap-explanations',
-      alt: "SHAP plots the team used to explain every prediction, comparing what drives risk in Islington and Barcelona's Eixample",
+      alt: "SHAP plots the team used to explain every prediction, comparing what drives risk in Islington and Barcelona’s Eixample",
     },
     {
       src: 'academic/iaac/urban-risk/blog/Group01_RiskAssessment_Charles-Emilie-Lakzhmy-Maria_page-0044-scaled.jpg', role: 'gallery', name: 'spanish-neighborhoods',
@@ -399,16 +399,16 @@ export const MANIFEST = {
     },
   ],
   'data-geometry': [
-    // (LOOK & ORDER 2026-07-18, Emilie's ask: the slow zoom became a
+    // (LOOK & ORDER 2026-07-18, Emilie’s ask: the slow zoom became a
     // FLIPBOOK of the deck assets, hard cuts, fast start; still at rest =
     // the workflow board as before. Alt reworded for the flip; hers to sign.)
     {
       src: 'academic/iaac/data-geometry/datageom-cover-web.webp', role: 'gif', name: 'workflow-cover',
-      alt: "The data team's boards flipping in sequence: the Speckle-to-Revit workflow, the thermal family, the KPI views and the control room",
+      alt: "The data team’s boards flipping in sequence: the Speckle-to-Revit workflow, the thermal family, the KPI views and the control room",
     },
     {
       src: 'academic/iaac/data-geometry/image-301.png', role: 'hero', name: 'workflow', frame16x9: true, bg: '#ffffff',
-      alt: "The data team's workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
+      alt: "The data team’s workflow: a Speckle model and parameter sheets flowing through Grasshopper into versioned Revit models and IFC",
     },
     {
       src: 'academic/iaac/data-geometry/image-302.png', role: 'gallery', name: 'thermal-family',
@@ -416,7 +416,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/data-geometry/blog/image-305.png', role: 'gallery', name: 'thermal-in-model',
-      alt: "Thermal comfort KPIs coloring the Hyperbuilding towers level by level, the team's Revit families carrying analysis into BIM",
+      alt: "Thermal comfort KPIs coloring the Hyperbuilding towers level by level, the team’s Revit families carrying analysis into BIM",
     },
     {
       src: 'academic/iaac/data-geometry/blog/image-307.png', role: 'gallery', name: 'air-spheres',
@@ -424,7 +424,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/data-geometry/image-308.png', role: 'gallery', name: 'data-team',
-      alt: "The data team's four roles on Hyperbuilding 01: process, information structure, data translation and communication",
+      alt: "The data team’s four roles on Hyperbuilding 01: process, information structure, data translation and communication",
     },
     {
       src: 'academic/iaac/data-geometry/image-310.png', role: 'gallery', name: 'control-room',
@@ -452,7 +452,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/tsukiji/blog/7-2-scaled.jpg', role: 'gallery', name: 'climate-stress',
-      alt: "UTCI thermal stress maps from the team's environmental analysis: Tokyo swings the site from cold stress to summer heat",
+      alt: "UTCI thermal stress maps from the team’s environmental analysis: Tokyo swings the site from cold stress to summer heat",
     },
     {
       src: 'academic/iaac/tsukiji/blog/9-1-scaled.jpg', role: 'gallery', name: 'radiation-sun-hours',
@@ -464,23 +464,23 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/tsukiji/ea-blogpost-galapagos-scaled.gif', role: 'gif', name: 'galapagos',
-      alt: "Galapagos evolutionary search running on the roof form, hunting a geometry that performs in Tokyo's humid climate",
+      alt: "Galapagos evolutionary search running on the roof form, hunting a geometry that performs in Tokyo’s humid climate",
     },
     {
       src: 'academic/iaac/tsukiji/blog/8.jpg', role: 'gallery', name: 'form-evolution',
-      alt: "Five form iterations from the team's environmental analysis, each revision answering a radiation, comfort or daylight study",
+      alt: "Five form iterations from the team’s environmental analysis, each revision answering a radiation, comfort or daylight study",
     },
   ],
-  // OPTIMIZING FOR THE MIND (Emilie's design, 2026-07-16): the plate is a
+  // OPTIMIZING FOR THE MIND (Emilie’s design, 2026-07-16): the plate is a
   // QUOTE REEL. The card cover is a lighter gif of the reel (still at rest,
   // playing on hover); the crisp reel video leads the plate (video-manifest),
   // then the 7 verbatim quote cards flip individually, then the episode art.
   // Quote wording is VERBATIM from the transcript with true timestamps; the
-  // blog science diagrams stay OUT (they render Dr. Valentine's methods).
+  // blog science diagrams stay OUT (they render Dr. Valentine’s methods).
   podcast: [
     {
       src: 'academic/iaac/podcast/podcast-reel-web.webp', role: 'gif', name: 'demo-cover',
-      alt: "The podcast quote reel: seven timestamped lines from the conversation on architecture and the brain, in Emilie and Dr. Valentine's words",
+      alt: "The podcast quote reel: seven timestamped lines from the conversation on architecture and the brain, in Emilie and Dr. Valentine’s words",
     },
     {
       src: 'academic/iaac/podcast/cards/1-open.png', role: 'gallery', name: 'quote-icebreaker',
@@ -512,10 +512,10 @@ export const MANIFEST = {
     },
     {
       src: 'academic/iaac/podcast/blog/efficiency_vs_behavior.png', role: 'gallery', name: 'episode-art',
-      alt: "Episode key art: a building cutaway splitting from grey efficiency into a warm, neuron-lit half, picturing the show's core question",
+      alt: "Episode key art: a building cutaway splitting from grey efficiency into a warm, neuron-lit half, picturing the show’s core question",
     },
   ],
-  // (Pelagñou was ingested here in S4b then pulled at Emilie's gate call:
+  // (Pelagñou was ingested here in S4b then pulled at Emilie’s gate call:
   // parked as a THOUGHT candidate, see data/registry.ts. Its sources stay in
   // incoming/pelagnou/ for that future session.)
 
@@ -527,7 +527,7 @@ export const MANIFEST = {
   // every fix-round and final-assets frame included.
 
   // THE HOMAGE (LAU bachelor thesis, Tamayouz Top 100 2023): adaptive reuse of
-  // Oscar Niemeyer's Rachid Karami Fair in Tripoli. Cover = the moonlit slab
+  // Oscar Niemeyer’s Rachid Karami Fair in Tripoli. Cover = the moonlit slab
   // render (native 16:9). The 35000px Sections-and-Plans board stays out; the
   // sectional-axo board ships split in two (derived crops).
   homage: [
@@ -543,7 +543,7 @@ export const MANIFEST = {
     },
     {
       src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/final-assets/strategy-quote.png', role: 'gallery', name: 'strategy-quote',
-      alt: "Strategy board pairing Niemeyer's line about Tripoli's two hearts with the adaptive reuse argument of The Homage",
+      alt: "Strategy board pairing Niemeyer’s line about Tripoli’s two hearts with the adaptive reuse argument of The Homage",
     },
     {
       src: 'academic/lau/the homage - thesis bachelor degree - tamayouz award/final-assets/exploded-axo.jpg', role: 'gallery', name: 'exploded-axo',
@@ -571,11 +571,11 @@ export const MANIFEST = {
     },
   ],
   // THE ENCOUNTER (S2 fix round, 2026-07-16: the Jemma internship year SPLIT
-  // into its two competitions at Emilie's call; she was an ARCHITECTURAL
+  // into its two competitions at Emilie’s call; she was an ARCHITECTURAL
   // DESIGNER per her LinkedIn record). The Anfeh cemetery, Ctrl Act Design,
   // shortlisted finalist. Cover = a crossfade cut of the four key renders
   // (encounter-cover-web.webp, derived; still = the bell tower). The
-  // certificate raster is BOTH a gallery frame and the FINALIST pill's link
+  // certificate raster is BOTH a gallery frame and the FINALIST pill’s link
   // target (her call: no public URL exists, the certificate anchors it).
   // (Round 4, 2026-07-17, her final-assets review: certificate OUT of the
   // deck (it stays baked under its own `encounter-cert` slug so the FINALIST
@@ -625,7 +625,7 @@ export const MANIFEST = {
       alt: 'Long section through the cemetery, the spire and sunken steps between semi buried tombs and the tree lined slope',
     },
   ],
-  // The FINALIST pill's link target, OUT of the deck (round 4): baked under
+  // The FINALIST pill’s link target, OUT of the deck (round 4): baked under
   // its own slug so no strip ever picks it up.
   'encounter-cert': [
     {
@@ -633,9 +633,9 @@ export const MANIFEST = {
       alt: 'The certificate of achievement from Ctrl Act Design naming Emilie Chidiac, shortlisted as finalist of the Cemetery Challenge',
     },
   ],
-  // FALCON SQUARE (round 3, 2026-07-17: the deck IS Emilie's final-assets
+  // FALCON SQUARE (round 3, 2026-07-17: the deck IS Emilie’s final-assets
   // folder, her own picks renamed by caption; her pattern for every project).
-  // MIDAN AL SAKR, the office's Moujassam Watan entry for Al Khobar; she LED
+  // MIDAN AL SAKR, the office’s Moujassam Watan entry for Al Khobar; she LED
   // the design from the first aircraft sketches to the proposal. Cover =
   // teaser-cover.webp, a 6s cut (8s-14s) of HER teaser video: real footage,
   // so it stays a deck page (unlike the created montage covers). Story
@@ -653,7 +653,7 @@ export const MANIFEST = {
     },
     {
       src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/takeoff-angle-sketches.png', role: 'gallery', name: 'takeoff-angle-sketches',
-      alt: "Ink sketches on black of jets and a take-off diagram, tracing climb angles, flaps and slats that seed the monument's lines",
+      alt: "Ink sketches on black of jets and a take-off diagram, tracing climb angles, flaps and slats that seed the monument’s lines",
     },
     {
       src: 'work/jemma-chidiac-office-work/round-about-chahine/final-assets/aircraft-anatomy-sketches.png', role: 'gallery', name: 'aircraft-anatomy-sketches',
@@ -755,12 +755,12 @@ export const MANIFEST = {
   // soma-towers cover + strip. HONESTY: boards 05-08 of the portfolio set are
   // EXCLUDED (they show a multi-building courtyard masterplan, likely a
   // different City Walk plot; Emilie confirms before they ever ship). The TG
-  // renders are the project's marketing imagery (viz-studio work), captioned
+  // renders are the project’s marketing imagery (viz-studio work), captioned
   // as project imagery, never as personal renders. verve-ar-web.webp is a
   // derived crop of the sales configurator capture, cut to the 3D viewport so
-  // the third-party sales platform's watermark + unit panel stay out.
+  // the third-party sales platform’s watermark + unit panel stay out.
   // (S2 fix round: the interactive unit-selector capture is the COVER now,
-  // Emilie's call; the dusk facade leads the strip.)
+  // Emilie’s call; the dusk facade leads the strip.)
   verve: [
     {
       src: 'work/soma-work-office/soma -verve city walk/final-assets/unit-selector.webp', role: 'gif', name: 'unit-selector',
@@ -768,21 +768,21 @@ export const MANIFEST = {
     },
     {
       src: 'work/soma-work-office/soma -verve city walk/final-assets/dusk-facade.jpg', role: 'hero', name: 'dusk-facade',
-      alt: 'Dusk render of the Verve facade above the fog, double height planted terraces with Burj Khalifa in the distance',
+      alt: 'Dusk render of the Verve facade above the fog, double-height planted terraces with Burj Khalifa in the distance',
     },
     {
       src: 'work/soma-work-office/soma -verve city walk/final-assets/podium-pool.jpg', role: 'gallery', name: 'podium-pool',
       alt: 'Render of the Verve podium pool deck, an infinity lap pool and cabanas with Downtown Dubai on the horizon',
     },
     {
-      // The numbers are the board's own level ladder (018_LEVEL 36 T.O.S. at
+      // The numbers are the board’s own level ladder (018_LEVEL 36 T.O.S. at
       // 161.00 m printed on the drawing), not an external claim.
       src: 'work/soma-work-office/soma -verve city walk/final-assets/two-tower-elevation.jpg', role: 'gallery', name: 'two-tower-elevation',
       alt: 'Elevation of the twin Verve towers on their podium, 36 levels rising to 161 meters with planted balconies stepping up',
     },
     {
       src: 'work/soma-work-office/soma -verve city walk/final-assets/amenities-plan.jpg', role: 'gallery', name: 'amenities-plan',
-      alt: 'Amenities level plan for the two Verve towers: gym, spa, yoga studio, cinema, kids pool and playgrounds on the podium',
+      alt: 'Amenities level plan for the two Verve towers: gym, spa, yoga studio, cinema, kids’ pool and playgrounds on the podium',
     },
     {
       src: 'work/soma-work-office/soma -verve city walk/final-assets/typical-plan.jpg', role: 'gallery', name: 'typical-plan',
@@ -790,18 +790,18 @@ export const MANIFEST = {
     },
     {
       src: 'work/soma-work-office/soma -verve city walk/final-assets/lounge-interior.jpg', role: 'gallery', name: 'lounge-interior',
-      alt: 'Interior render of a double height Verve lounge, a suspended chandelier and floor to ceiling glass over the skyline',
+      alt: 'Interior render of a double-height Verve lounge, a suspended chandelier and floor-to-ceiling glass over the skyline',
     },
   ],
   // RINGS OF MARS (S2 enrich, 2026-07-16): the real competition board joins
   // the record and the project moves off the shared frozen `professional`
-  // slug onto its own, so the plate finally gets a strip. HONESTY (Emilie's
+  // slug onto its own, so the plate finally gets a strip. HONESTY (Emilie’s
   // plan-gate ruling): the Top 50 recognition anchors on the OFFICIAL badge +
   // the public results page link; the certificate of participation on disk
   // stays OUT (it evidences participation, not placement). The board is
   // anonymized to the entry code, so the duo credit lives in the captions.
-  // S2 FIX ROUND (2026-07-16, Emilie's fixes): the badge frame REMOVED at
-  // her call (the TOP 50 pill links her entry's gallery on the public
+  // S2 FIX ROUND (2026-07-16, Emilie’s fixes): the badge frame REMOVED at
+  // her call (the TOP 50 pill links her entry’s gallery on the public
   // results page instead); her flattened PSD exports join the strip; cover
   // is a crossfade cut (mars-cover-web.webp, derived; still = the crater).
   mars: [
@@ -844,7 +844,7 @@ export const MANIFEST = {
   // first real cover + gallery from the LAU XR Lab chemistry AR set. Modest
   // on purpose: she plans to expand this project later. xr-cover-web.webp is
   // a derived 8s cut of the SN2 reaction render (still at rest, hover-play);
-  // the sn1 stills are derived frames of the 2.4GB master. The Chem101 PDF's
+  // the sn1 stills are derived frames of the 2.4GB master. The Chem101 PDF’s
   // dead QR links stay out; the qr board ships as the overview frame.
   xr: [
     {
@@ -867,7 +867,7 @@ export const MANIFEST = {
   // A PLAYSCAPE (MaCAD bootcamp mini, 2025-10, "just for fun"): Kangaroo
   // pressure mounds + two dropped nets. Cover = playscape-cover-web.webp, a
   // derived re-cut of the second net simulation whose FIRST frame is the
-  // settled dome (the pipeline's static ladder uses frame one, so the tile
+  // settled dome (the pipeline’s static ladder uses frame one, so the tile
   // rests on the finished form and the fall plays on hover).
   playscape: [
     {
