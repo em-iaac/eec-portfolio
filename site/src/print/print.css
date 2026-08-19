@@ -223,6 +223,42 @@
   text-decoration: none;
   color: var(--pr-red);
 }
+
+/* THE CV MARKS ITS LINKS TOO, AND NOT IN RED (Emilie, 2026-08-19, option A of
+   three printed proofs: "A and mark all of them like now"). The printed CV
+   carried 15 live targets and no sign of a single one; her ask was the screen
+   page's own move — "subtle but there".
+   ⚠ WHY NOT THE FOOTER'S RED, twenty lines above: this sheet spent red FIRST
+   and spent it twice. The name is red TYPE and every section rule is red (the
+   CV pass, 2026-07-27, where the ruling was ONE accent, never a category). A
+   red link here would be the third meaning of one colour on one page, and it
+   would put red type beside red type. The book can mark in red because red
+   means exactly one thing on those spreads. This surface is not that surface.
+   ⚠ WHY NOT THE SCREEN'S DASH, which is what /cv actually wears (QUIET_LINK in
+   lib/linkStyles: ink type, thin DASHED muted underline, red on hover). Two
+   halves of it cannot print and this file already paid to learn both:
+   `text-decoration-style` is IGNORED by Chrome's print pipeline (the book's
+   dotted mark shipped as a solid bar), and a dotted BORDER anti-aliases back
+   into a dash at fit zoom. Hover does not exist on paper either. What survives
+   translation is the colour and the position, so that is what crosses over: the
+   faint pen, hung under the word.
+   ⚠ WHY A BORDER RATHER THAN AN UNDERLINE: text-decoration hands Chrome the
+   weight, and print ignores the thickness too. A border is a rule this file
+   sets in points, so 0.3pt means 0.3pt — the same hairline weight .pr-rule
+   uses everywhere else in the book.
+   ⚠ AND WHY THE PADDING IS SAFE: vertical padding on an INLINE box is painted
+   but never joins the line box, so the mark hangs clear of the descenders
+   without moving a baseline. Measured against the unmarked sheet: all 49
+   baselines, both margins, every type size and the one-page fit identical.
+   ALL FIFTEEN ARE MARKED, by her ruling — the contact row, the eight project
+   names and the writing line alike. (The book marks only its footers because
+   21 marks would turn its index into a list; this page is 15 marks across a
+   whole A4 of prose, which is a different picture, and she looked at it.) */
+.pr-ats .pr-link {
+  border-bottom: 0.3pt solid var(--pr-rule);
+  padding-bottom: 0.35mm;
+}
+
 .pr-mono {
   font-family: var(--font-mono);
   font-size: 7.5pt;

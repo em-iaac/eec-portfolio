@@ -12,7 +12,11 @@ const sensi: ProjectMeta = {
   slug: 'sensi',
   title: 'Sensi',
   lens: 'computation',
-  meta: 'MACAD STUDIO · TEAM OF 4',
+  // · LIVE APP joined the meta 2026-08-19, when Sensi moved to her own GitHub
+  // and went up as a public demo. It is the same third segment The Lungs and
+  // NeuroSpace already carry: a project with a running deployment says so on
+  // the card, not only down in its links row.
+  meta: 'MACAD STUDIO · TEAM OF 4 · LIVE APP',
   award: 'MACAD AWARDS 2026 · DESIGN COPILOTS · WINNER',
   awardShort: "MACAD '26 WINNER",
   dek: 'Comfort, designed on purpose: a copilot scores a plan across six senses, calibrated to a person, not an average.',
@@ -25,9 +29,19 @@ const sensi: ProjectMeta = {
   myPart: 'Project lead, A to Z. Built with a team of four.',
   stat: 'LLM BENCH · 2 PROVIDERS × 3 SCENES',
   tech: 'PYTHON · LANGGRAPH · FASTAPI · REACT',
+  // SENSI MOVED HOUSE (2026-08-19). The code used to live in the studio's
+  // shared repo, in a team folder under someone else's account
+  // (sclebow/AIA26_Studio/tree/main/team_02) — an address that made the
+  // project lead look like a contributor, and that she does not control. It
+  // is her own repo now, and there is a public demo to press.
+  // LIVE APP LEADS, and the label is the house's plain noun for a running
+  // deployment — the same one The Lungs wears (her pick, 2026-08-19, over
+  // LIVE DEMO and TRY IT LIVE). A verb-led label is spent only where a
+  // caveat earns it, which is why NeuroSpace's says ALMOST.
   links: [
+    { label: 'LIVE APP', href: 'https://sensi.emiliechidiac.com' },
     { label: 'BLOG', href: 'https://blog.iaac.net/sensi-making-comfort-a-design-layer/' },
-    { label: 'GITHUB', href: 'https://github.com/sclebow/AIA26_Studio/tree/main/team_02' },
+    { label: 'GITHUB', href: 'https://github.com/hi-em/sensi' },
   ],
   // THE COVER = THE GALAXY (Emilie’s pick at the desk, 2026-07-14): the sense
   // constellation sits still on the card and ripples on hover, rhyming with

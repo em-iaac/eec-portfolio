@@ -84,6 +84,26 @@ if (!existsSync(join(DIST, 'index.html'))) {
 // no canvas/DOMMatrix). Items are grouped into lines by their rounded y so
 // "Emilie El Chidiac" can be asserted contiguous even though Chromium emits
 // many small text items per line.
+//
+// ⚠ THE RUNS ARE JOINED BY THEIR GEOMETRY, NOT BLINDLY BY A SPACE
+// (2026-08-19, the CV's links pass). This used to be `.join(' ')`, which was a
+// guess that held only because nothing had ever split a run mid-word. Chrome
+// emits a separate text run per inline box, and where the source has a space
+// at that boundary it does NOT emit a space CHARACTER — it advances the pen
+// instead. Measured on the printed CV, at the writing line:
+//   "Charles Abi Chahine:" | gap 2.054pt | "Optimizing for the Mind" | gap
+//   0.003pt | ", with Dr. Cleo Valentine"
+// One of those boundaries is a space and the other is not, and they are
+// indistinguishable to a rule that inserts a space at every seam: linking the
+// podcast title made the plain-text CV read "the Mind , with Dr.", which is
+// what an ATS would have parsed. Measuring the gap tells the two apart, and it
+// is also simply what the bytes say — pdf.js's own text-layer builder and
+// pdfminer both position runs rather than assuming separators.
+// The threshold is a quarter of the smallest space on the sheet (7pt mono
+// measures 2.05pt), which sits an order of magnitude clear of both cases.
+// PROVEN NON-DESTRUCTIVE: re-extracted under this rule, the CV printed BEFORE
+// any link existed reads character-for-character as it did under `.join(' ')`.
+const RUN_GAP_PT = 0.6
 async function pdfText(bytes) {
   const doc = await getDocument({ data: new Uint8Array(bytes) }).promise
   const pages = []
@@ -95,15 +115,20 @@ async function pdfText(bytes) {
       if (!('str' in item) || item.str.trim() === '') continue
       const y = Math.round(item.transform[5])
       if (!lines.has(y)) lines.set(y, [])
-      lines.get(y).push({ x: item.transform[4], str: item.str })
+      lines.get(y).push({ x: item.transform[4], w: item.width, str: item.str })
     }
     const ordered = [...lines.entries()]
       .sort((a, b) => b[0] - a[0]) // PDF y grows upward; read top-down
       .map(([, parts]) =>
         parts
           .sort((a, b) => a.x - b.x)
-          .map(p => p.str)
-          .join(' ')
+          .reduce(
+            (line, part, i, all) =>
+              i === 0
+                ? part.str
+                : line + (part.x - (all[i - 1].x + all[i - 1].w) > RUN_GAP_PT ? ' ' : '') + part.str,
+            '',
+          )
           .replace(/\s+/g, ' ')
           .trim(),
       )
@@ -124,6 +149,35 @@ function assertCv(text) {
   check(all.includes('Aug 2024 - Present'), 'real "Aug 2024 - Present" dates in the embedded text')
   check(all.includes('Rhino Compute'), '"Rhino Compute" spelled with the space')
   check(!all.includes('—'), 'zero em dashes')
+
+  // THE TEXT LAYER SURVIVED THE LINKS (2026-08-19). Wrapping the four
+  // addresses in <a> elements splits one paragraph into four inline boxes, and
+  // Chrome emits a separate text run per box. This extractor joins the runs on
+  // a line with a single space, so a link boundary that falls anywhere OTHER
+  // than an existing space would insert one — "Optimizing for the Mind ,
+  // with Dr. Cleo Valentine" — and the plain-text CV an ATS reads would quietly
+  // stop matching the page. The contact row is the densest case (four links and
+  // three separators on one justified line) and it is asserted whole: if the
+  // links ever fracture the text layer, this is where it shows first.
+  check(
+    lines.some(
+      l =>
+        l ===
+        'chidiacemilie@gmail.com · linkedin.com/in/EmilieElChidiac · github.com/hi-em · emiliechidiac.com',
+    ),
+    'the contact row extracts as one unbroken line, links and all',
+  )
+  // The writing line's third part links a title MID-SENTENCE, which is the
+  // only boundary on the page that does not fall on a space. Its two halves are
+  // asserted contiguous for the same reason.
+  check(
+    all.includes('18 essays at emiliechidiac.com/thoughts'),
+    'the writing line still reads through its first link',
+  )
+  check(
+    all.includes('Optimizing for the Mind, with Dr. Cleo Valentine'),
+    'the podcast title still reads into the words after it (no space before the comma)',
+  )
 
   // Single column ⇒ the sections extract in reading order. The order changed at
   // the CV pass (2026-07-27): education leads, skills moved above the awards,
@@ -156,6 +210,95 @@ function assertCv(text) {
   } else {
     console.log('  · calibration file not on disk (CI?); keyword spot-check skipped')
   }
+}
+
+// THE CV'S LINKS (Emilie, 2026-08-19). The book learned to carry real link
+// annotations at the links pass; the CV never did, and it is the one document
+// in the set whose entire job is to be followed up on. Measured before the
+// repair: 1 page, 0 annotations, 0 targets — every address on it dead type.
+//
+// ⚠ THE GRAMMAR IS THE BOOK'S, deliberately, because the book's was argued
+// down twice already (see assertLinks below): DISTINCT TARGETS, never
+// annotation counts — Chrome emits one /Link per inline text run, so a JSX
+// tidy-up moves the annotation total and means nothing — and PER SURFACE,
+// never one global sum, because a surplus on one surface hides the total loss
+// of another.
+//
+// The load-bearing check is the two-way agreement with the printed DOM.
+// Chrome writes NO annotation at all for an href it cannot resolve: a link
+// that dies dies SILENTLY, leaving type that still looks like an address.
+// Comparing the page's own hrefs against the targets actually in the bytes is
+// the only thing that sees that, and it cannot go stale, because both sides
+// are read off this build.
+//
+// ⚠ AND A SCRAPE THAT RETURNS NOTHING MUST NOT PASS. `[...] .every()` over an
+// empty list is true, so a rotted `.pr-ats a[href]` selector would make the
+// agreement check vacuous and green. The four contact targets are therefore
+// restated LITERALLY here — they are the page's fixed furniture, unchanged
+// since the CV pass — and the per-surface counts are pinned, so the scrape has
+// to be alive before its own assertion means anything.
+const CV_CONTACT_TARGETS = [
+  'mailto:chidiacemilie@gmail.com',
+  'https://linkedin.com/in/EmilieElChidiac',
+  'https://github.com/hi-em',
+  'https://emiliechidiac.com',
+]
+// 8 project bullets (data/cv.ts's CV_PROJECT_LINKS, whose count and one-bullet
+// -each uniqueness cv.test.ts pins independently) + the podcast in the writing
+// line = 9 distinct /work/ doors.
+const CV_WORK_TARGETS = 9
+// Chrome normalises a bare origin to a trailing slash in the annotation URI,
+// so the two sides are compared without one.
+const trimSlash = (u) => u.replace(/\/$/, '')
+
+async function assertCvLinks(bytes, domHrefs) {
+  const check = (cond, msg) => (cond ? console.log('  ✓ ' + msg) : fail('CV PDF: ' + msg))
+  const { annots, pages } = await readLinks(bytes)
+  const uris = new Set(pages.flatMap(p => p.uris).map(trimSlash))
+  const dests = pages.flatMap(p => p.dests)
+  console.log(`  · ${uris.size} distinct link targets across ${annots} annotations`)
+
+  const want = new Set(domHrefs.map(trimSlash))
+  check(want.size > 0, `the printed CV declares link hrefs at all (found ${want.size})`)
+
+  const dropped = [...want].filter(h => !uris.has(h))
+  check(
+    dropped.length === 0,
+    `every href the page declares became a real annotation${dropped.length ? ` (Chrome dropped: ${dropped.join(', ')})` : ''}`,
+  )
+  const stray = [...uris].filter(u => !want.has(u))
+  check(
+    stray.length === 0,
+    `the PDF reaches nothing the page does not declare${stray.length ? ` (stray: ${stray.join(', ')})` : ''}`,
+  )
+
+  const missingContact = CV_CONTACT_TARGETS.filter(t => !uris.has(trimSlash(t)))
+  check(
+    missingContact.length === 0,
+    `the contact row reaches all four addresses${missingContact.length ? ` (missing: ${missingContact.join(', ')})` : ''}`,
+  )
+
+  const works = [...uris].filter(u => u.includes('/work/'))
+  check(
+    works.length === CV_WORK_TARGETS,
+    `the record reaches ${CV_WORK_TARGETS} project pages (found ${works.length}: ${works.map(w => w.split('/work/')[1]).join(', ')})`,
+  )
+
+  const writing = ['/thoughts', 'blog.iaac.net', '/work/podcast']
+  const missingWriting = writing.filter(w => ![...uris].some(u => u.includes(w)))
+  check(
+    missingWriting.length === 0,
+    `the writing line reaches all three of its destinations${missingWriting.length ? ` (missing: ${missingWriting.join(', ')})` : ''}`,
+  )
+
+  // A one-page document has nowhere to jump, so the five section headings are
+  // NOT anchors here (they are on screen, where the record is four screens
+  // long). An in-document destination on this sheet means someone wired a
+  // link from a heading to itself.
+  check(
+    dests.length === 0,
+    `nothing links inside the sheet${dests.length ? ` (in-document destinations: ${dests.join(', ')})` : ''}`,
+  )
 }
 
 // THE LINKS PASS (Emilie, 2026-08-16), REBUILT 2026-08-17 after an adversarial
@@ -730,6 +873,12 @@ try {
     const svgTextCounts = await page.evaluate(() =>
       [...document.querySelectorAll('.pr-page')].map(p => p.querySelectorAll('svg text').length),
     )
+    // Every href the printed CV declares, so the link assertion compares the
+    // bytes against the page rather than against a list in this file. Empty on
+    // the book route, which never renders .pr-ats.
+    const atsHrefs = await page.evaluate(() =>
+      [...document.querySelectorAll('.pr-ats a[href]')].map(a => a.href),
+    )
     // Each project page's own /work/ door, read off its printed foot, so the
     // per-plate link assertion knows WHICH id page i must reach.
     const footWorkHrefs = await page.evaluate(() =>
@@ -756,8 +905,10 @@ try {
     // copy always lands: a failed build never deploys anyway.
     const before = failures.length
     const text = await pdfText(pdf)
-    if (target.kind === 'cv') assertCv(text)
-    else {
+    if (target.kind === 'cv') {
+      assertCv(text)
+      await assertCvLinks(pdf, atsHrefs)
+    } else {
       assertBook(text, domPages)
       // (domPages - 4) / 2 = the project count, read off the printed book
       // rather than imported, so this file never needs to know the contents.

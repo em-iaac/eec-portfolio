@@ -15,19 +15,63 @@
 // SELECTED WORK section and no line is said twice. FOCUS is now a summary
 // under the header rather than an italic tagline: it is the line a six-second
 // scan actually reads.
+import { Fragment, type ReactNode } from 'react'
 import {
   EDUCATION,
   EXPERIENCE,
   AWARDS,
   SKILLS,
-  WRITING,
+  WRITING_PARTS,
   LANGUAGES,
   FOCUS,
   FOCUS_NOBREAK,
+  splitProjectLink,
 } from '../data/cv'
 import type { CvEntry } from '../data/cv'
 import { CvIcon, type CvSection } from '../components/ui/cvIcons'
+import { SITE_ORIGIN } from '../lib/routes'
 import A4Page from './A4Page'
+
+// THE CV'S LINKS PASS (Emilie, 2026-08-19). The book learned to carry real
+// link annotations at the links pass (2026-08-16); this file had not, so the
+// PDF a recruiter actually opens printed every address it names as dead type.
+// A CV is the ONE document in the set whose whole job is to be followed up on,
+// and it was the last one you could not click.
+//
+// ⚠ NOTHING HERE IS NEW MACHINERY, on purpose. The links are made the same way
+// the book makes them: a real <a href> in the printed DOM, which headless
+// Chrome turns into a /Link annotation by itself, wearing `.pr-link` — the
+// class print.css already defines as "a destination, never a mark" (color
+// inherit, no decoration, no background). scripts/render-pdfs.mjs then reads
+// them back out of the BYTES with the book's own readLinks(), so the CV is
+// held to the same distinct-target grammar as the book.
+//
+// ⚠ AND THEY ARE MARKED, but not the way the book marks its footers. The mark
+// is a 0.3pt hairline in the faint pen, hung under the word: her ruling
+// 2026-08-19 ("A, and mark all of them"), taken off three real printed proofs
+// rather than a drawing, because the two marks this project tried before both
+// looked right on screen and failed on paper. The reasoning — why not red,
+// why not the screen's dash, why a border and not an underline — lives with
+// the rule in print.css, next to the pen it sets. It costs no geometry: all 49
+// baselines, both margins, every type size and the one-page fit measured
+// identical to the unmarked sheet.
+//
+// The set is exactly what links on /cv: the contact row's four addresses, the
+// project name that LEADS a bullet (splitProjectLink, the same lookup the
+// screen uses), and the three destinations in the writing line. Internal
+// routes are absolutised against SITE_ORIGIN — a printed page has no origin to
+// resolve "/thoughts" against.
+//
+// NOT linked, and deliberately: the five section headings. On screen they are
+// anchors that scroll you down a 4-screen record; in a one-page PDF a link
+// from a heading to itself is a hit target that does nothing.
+function CvLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} className="pr-link">
+      {children}
+    </a>
+  )
+}
 
 // Section heading + its glyph, the same five glyphs the screen page uses. The
 // label is always plain text; the glyph is an SVG path and contributes nothing
@@ -66,12 +110,27 @@ function Record({ dates, title, org, notes, projects }: CvEntry) {
         {dates ? ` · ${dates}` : ''}
       </p>
       {notes ? <p className="pr-notes">{notes}</p> : null}
-      {projects?.map(p => (
-        <p key={p} style={{ color: 'var(--pr-ink-muted)', paddingLeft: '3.2mm', textIndent: '-3.2mm' }}>
-          {'› '}
-          {p}
-        </p>
-      ))}
+      {projects?.map(p => {
+        // The LEADING project name is the door to its showcase, and only the
+        // leading one — exactly the rule the screen page follows, from the
+        // same lookup. A bullet that opens with a verb (the duty lines), the
+        // methods line and the licensure line stay flat text, so the record
+        // still reads as a document rather than a link farm.
+        const link = splitProjectLink(p)
+        return (
+          <p key={p} style={{ color: 'var(--pr-ink-muted)', paddingLeft: '3.2mm', textIndent: '-3.2mm' }}>
+            {'› '}
+            {link ? (
+              <>
+                <CvLink href={`${SITE_ORIGIN}/work/${link.id}`}>{link.name}</CvLink>
+                {link.rest}
+              </>
+            ) : (
+              p
+            )}
+          </p>
+        )
+      })}
     </div>
   )
 }
@@ -101,8 +160,16 @@ export function CvSheet() {
         <p className="pr-lead" style={{ margin: '2mm 0 0' }}>
           <Lead />
         </p>
+        {/* THE ROW THAT MOST NEEDED IT. Four addresses, each now the thing it
+            names: the email opens a composer, the other three open in a
+            browser. The separators and the spaces around them are untouched,
+            so the justified line measures exactly as it did and the extracted
+            string is character-for-character the same. */}
         <p className="pr-contact" style={{ margin: '1.6mm 0 0' }}>
-          chidiacemilie@gmail.com · linkedin.com/in/EmilieElChidiac · github.com/hi-em · emiliechidiac.com
+          <CvLink href="mailto:chidiacemilie@gmail.com">chidiacemilie@gmail.com</CvLink> ·{' '}
+          <CvLink href="https://linkedin.com/in/EmilieElChidiac">linkedin.com/in/EmilieElChidiac</CvLink> ·{' '}
+          <CvLink href="https://github.com/hi-em">github.com/hi-em</CvLink> ·{' '}
+          <CvLink href={SITE_ORIGIN}>emiliechidiac.com</CvLink>
         </p>
 
         <Sec name="education">EDUCATION</Sec>
@@ -150,7 +217,22 @@ export function CvSheet() {
         {/* CERTIFICATES retired from the CV (her review + a unanimous council
             call). The printed book's record page still carries them. */}
         <Sec name="writing">WRITING &amp; RESEARCH</Sec>
-        <p>{WRITING}</p>
+        {/* Assembled from WRITING_PARTS rather than from the joined WRITING
+            string, so the two addresses this line NAMES are the addresses it
+            GOES to — the same repair board B2 made on the screen. The parts
+            are the single source and cv.test.ts pins their join to the exact
+            string this paragraph used to print, so the separator grammar and
+            the ATS text cannot drift apart. */}
+        <p>
+          {WRITING_PARTS.map((part, i) => (
+            <Fragment key={part.link}>
+              {i > 0 ? ' · ' : null}
+              {part.before}
+              <CvLink href={part.to ? `${SITE_ORIGIN}${part.to}` : part.href!}>{part.link}</CvLink>
+              {part.after}
+            </Fragment>
+          ))}
+        </p>
 
     </div>
   )
