@@ -16,6 +16,7 @@ import puppeteer from 'puppeteer'
 import { preview } from 'vite'
 import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs'
 import { addOutline, readLinks, definedDestinations, rasterCensus } from './pdf-outline.mjs'
+import { designCensus, channelDelta } from './pdf-design.mjs'
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -342,6 +343,217 @@ async function assertVector(bytes, domPages, domImgCounts) {
   )
 }
 
+// THE HOUSE STYLE (the consistency pass, Emilie's rulings, 2026-08-19). Five
+// agents measured the built book — footer geometry, margins as spreads, a font
+// census, a color census, baseline rhythm — and every drift they found was
+// ruled on. These four laws are the rulings, re-measured from the PDF BYTES on
+// every build so none of them can reopen quietly:
+//   1 · THE FOOT. It used to JUMP 6.1mm at every page turn (plates derived
+//       theirs from flow padding, asset pages pinned theirs to a hemline) and
+//       the folio wandered between three distances from the trim. One
+//       baseline now, one folio edge — and after her judgment round
+//       (2026-08-19, "i want things centered") no parity mirror either.
+//   2 · THE UNIFORM FRAME. 12mm on every side of every page (her ruling,
+//       2026-08-19: "top, bottom, left, right, all margin at 12mm"). This
+//       replaced the bound-book mirror (18mm gutter / 12mm outer, flipping
+//       by parity), which on screens read as the footer wandering.
+//   3 · THE FONT ALLOWLIST. Four families, and a pinned size set: the index
+//       deks printed at a size no stylesheet declared for MONTHS before the
+//       census caught it. Pages whose DOM carries drawn <svg> text (the cover
+//       art, the two drawn figures) are checked by family only — their sizes
+//       are viewBox units scaled by the page, not typography.
+//   4 · THE COLOR ALLOWLIST. The site's tokens plus the print pens, exactly.
+//       The book carried THREE faint grays within one bit of each other until
+//       this pass; a color a hair off its token now fails by name. The red is
+//       law: #be123c bit-exact, and anything NEAR red fails harder.
+const MMPT = 72 / 25.4
+// The foot rule sits ON the 12mm bottom-margin line; the text hangs below it
+// in the margin, folio-fashion, baseline ~5mm above the trim (measured 14.0pt).
+const FOOT_BASELINE_BAND = [12.5, 16] // pt above trim
+const FOLIO_EDGE_MM = { odd: 12, even: 12 } // one frame, no parity (2026-08-19)
+// Hyphen-tolerant: the embedded names arrive as "Martian-Mono-SemiExpanded",
+// "SourceSerif4-Italic" or variable-instance names like "16pt-Italic",
+// depending on which face and which resolution path served them.
+const FAMILY_RE = /Archivo|Source[- ]?Serif|Martian[- ]?Mono|Caveat|^\d{1,2}pt\b/
+// Family -> the pt sizes the book is allowed to set it at (±0.15pt). Archivo
+// 20 is the index title, RULED at 20 (her F ruling, 2026-08-19, after seeing
+// both: 20pt stays, the page got air between its two sections instead);
+// Source Serif 7.6 is the index dek her G ruling wired.
+const SIZE_ALLOW = [
+  { key: /Archivo/, sizes: [8, 10, 20, 26, 38] },
+  { key: /Martian[- ]?Mono/, sizes: [5.6, 6.2, 7.5] },
+  { key: /Caveat/, sizes: [10.5] },
+  // 20 = the about page's voice headline, sanctioned for exactly that one
+  // line (her C pick at the about-page audit, 2026-08-19).
+  { key: /./, sizes: [7.6, 9, 10, 11.5, 20] }, // Source Serif 4 + its optical instances
+]
+const COLOR_ALLOW = new Set([
+  '#16181d', '#565b63', '#8a919c', '#f5f6f7', // ink · muted · faint · ground
+  '#ffffff', '#000000', // paper + Chrome's reset-to-black around image draws
+  '#be123c', // the red: threads, the emblem's node, the dotted link marks
+  '#0e7490', '#a8186b', '#7a5e00', // the print lens pens (cyan/magenta/yellow)
+  '#c8ccd2', '#eceef0', // the drawn hairline grey + the tile ground
+])
+// RULED, TWICE (Emilie, 2026-08-19): the NeuroSpace drawn figure's
+// app-sampled palette. Her first E1 vote asked for the pen grammar; shown
+// that it reversed her own 2026-08-12 pick of the app-UI treatment ("maybe
+// the design should look a bit more like the UI of the app"), she re-ruled:
+// "keep the app colors." This set is the ONE sanctioned exception to the
+// color law, and it is closed — do not re-propose recoloring the figure.
+const HELD_APP_SAMPLE = new Set([
+  '#2b2f36', '#b9c0c9', '#3b7fb0', '#d55109', '#6f66a9', '#379e59', '#66b768', '#c0392b',
+])
+
+async function assertHouseStyle(bytes, svgTextCounts) {
+  const check = (cond, msg) => (cond ? console.log('  ✓ ' + msg) : fail('book PDF: ' + msg))
+  const { numPages, pages } = await designCensus(bytes)
+
+  // 1 · THE FOOT HEMLINE. Every page but the cover and the colophon carries a
+  // folio; its baseline is the foot's baseline. One band, no jumps.
+  const folios = []
+  const folioless = []
+  for (let p = 2; p <= numPages - 1; p++) {
+    const want = String(p).padStart(2, '0')
+    // Exact match only: the about page's contents rows print the same padded
+    // numbers ("03", "05", ...) higher up, so the folio is the LOWEST match.
+    const f = pages[p - 1].texts
+      .filter(t => t.str.trim() === want || t.str.trim() === String(p))
+      .sort((a, b) => a.y - b.y)[0]
+    if (f) folios.push({ page: p, ...f })
+    else folioless.push(p)
+  }
+  check(folioless.length === 0, `every page but the cover and colophon prints its folio${folioless.length ? ` (missing on ${folioless.join(', ')})` : ''}`)
+  if (folios.length) {
+    const ys = folios.map(f => f.y)
+    const spread = Math.max(...ys) - Math.min(...ys)
+    check(
+      spread <= 1.2,
+      `every foot sits on ONE baseline (spread ${spread.toFixed(2)}pt across pages ${folios[0].page}-${folios[folios.length - 1].page})`,
+    )
+    const off = folios.filter(f => f.y < FOOT_BASELINE_BAND[0] || f.y > FOOT_BASELINE_BAND[1])
+    check(
+      off.length === 0,
+      `the foot baseline hangs in the 12mm bottom margin${off.length ? ` (off: ${off.map(f => `p${f.page}@${f.y.toFixed(1)}pt`).join(', ')})` : ''}`,
+    )
+    // The folio's OUTER edge mirrors with the binding: 12mm from the right
+    // trim on odd pages, 18mm on even (the bound edge), each parity to 1.2pt.
+    for (const [parity, mm] of Object.entries(FOLIO_EDGE_MM)) {
+      const own = folios.filter(f => (f.page % 2 === 1) === (parity === 'odd'))
+      if (!own.length) continue
+      const edges = own.map(f => pages[f.page - 1].width - (f.x + f.w))
+      const drift = Math.max(...edges) - Math.min(...edges)
+      const target = mm * MMPT
+      const worst = Math.max(...edges.map(e => Math.abs(e - target)))
+      check(
+        drift <= 1.2 && worst <= 2.5,
+        `${parity}-page folios all sit ${mm}mm off the trim (drift ${drift.toFixed(2)}pt, worst |Δ| ${worst.toFixed(2)}pt)`,
+      )
+    }
+  }
+
+  // 1b · THE FOOT RULE. The baseline law alone let the two hairlines sit
+  // 0.8mm apart across every spread (found by measuring, after the "all
+  // green" run): the rule hangs from padding-top, the baseline from
+  // padding-bottom, and only one of them was law. Both are now: every page's
+  // foot rule on the same line — the 12mm bottom-margin line since the
+  // uniform frame (2026-08-19; it was the 196mm line before).
+  const ruleYs = []
+  const ruleMisses = []
+  for (let p = 2; p <= numPages - 1; p++) {
+    const rules = pages[p - 1].footRules
+    if (rules.length !== 1) ruleMisses.push(`p${p} (${rules.length} rules in the foot band)`)
+    else ruleYs.push({ page: p, y: rules[0] })
+  }
+  const ruleSpread = ruleYs.length ? Math.max(...ruleYs.map(r => r.y)) - Math.min(...ruleYs.map(r => r.y)) : 0
+  // AT the line, not merely on ONE line: a spread-only check would bless the
+  // whole frame drifting together.
+  const ruleWorst = ruleYs.length
+    ? Math.max(...ruleYs.map(r => Math.abs(r.y - 12 * MMPT)))
+    : 0
+  check(
+    ruleMisses.length === 0 && ruleSpread <= 1.2 && ruleWorst <= 1.5,
+    `every foot rule sits on the 12mm bottom-margin line (spread ${ruleSpread.toFixed(2)}pt, worst |Δ| ${ruleWorst.toFixed(2)}pt)${ruleMisses.length ? ` (${ruleMisses.join('; ')})` : ''}`,
+  )
+
+  // 2 · THE MARGIN MIRROR, measured on the FOOT FRAME, not the text bbox.
+  // The first run of this guard measured min/max over every text item and
+  // tripped on two DELIBERATE things: the about title's 11mm optical inset
+  // and the drawn figure's art text inside p8's bleeding lead. The frame the
+  // law actually rules is the foot — its left slot starts at the page's left
+  // margin and its folio ends at the right one, it exists on every page but
+  // the cover and colophon, and it measured machine-still (0.0pt drift within
+  // type) in the audit. A padding regression moves the foot with the body, so
+  // nothing the old bbox caught is lost — only the false alarms are.
+  // Law: the uniform 12mm frame, both sides, every page (2026-08-19).
+  const MARGIN_MM = { odd: { left: 12, right: 12 }, even: { left: 12, right: 12 } }
+  const marginMisses = []
+  for (let p = 2; p <= numPages - 1; p++) {
+    const pg = pages[p - 1]
+    const band = pg.texts.filter(t => t.y >= FOOT_BASELINE_BAND[0] - 3 && t.y <= FOOT_BASELINE_BAND[1] + 3)
+    if (!band.length) {
+      marginMisses.push(`p${p} (no foot band to measure)`)
+      continue
+    }
+    const left = Math.min(...band.map(t => t.x))
+    const right = pg.width - Math.max(...band.map(t => t.x + t.w))
+    const want = MARGIN_MM[p % 2 === 1 ? 'odd' : 'even']
+    const dl = Math.abs(left - want.left * MMPT)
+    const dr = Math.abs(right - want.right * MMPT)
+    if (dl > 1.5 || dr > 1.5) {
+      marginMisses.push(
+        `p${p} (L ${(left / MMPT).toFixed(1)}mm vs ${want.left}, R ${(right / MMPT).toFixed(1)}mm vs ${want.right})`,
+      )
+    }
+  }
+  check(
+    marginMisses.length === 0,
+    `the foot frame holds the uniform 12mm margin on both sides of every page${marginMisses.length ? ` (${marginMisses.join('; ')})` : ''}`,
+  )
+
+  // 3 · THE FONT ALLOWLIST.
+  const fontMisses = []
+  for (let p = 1; p <= numPages; p++) {
+    const artPage = (svgTextCounts[p - 1] ?? 0) > 0
+    for (const t of pages[p - 1].texts) {
+      if (!FAMILY_RE.test(t.font)) {
+        fontMisses.push(`p${p}: "${t.font}" is not a book family (sets "${t.str.slice(0, 24)}")`)
+        continue
+      }
+      if (artPage) continue // drawn artwork: sizes are scaled viewBox units
+      const rule = SIZE_ALLOW.find(r => r.key.test(t.font))
+      if (rule && !rule.sizes.some(s => Math.abs(s - t.size) <= 0.15)) {
+        fontMisses.push(`p${p}: ${t.font} at ${t.size}pt is not an allowed size (sets "${t.str.slice(0, 24)}")`)
+      }
+    }
+  }
+  const uniqFontMisses = [...new Set(fontMisses)]
+  check(
+    uniqFontMisses.length === 0,
+    `every face and size is on the allowlist${uniqFontMisses.length ? ` (${uniqFontMisses.slice(0, 6).join('; ')}${uniqFontMisses.length > 6 ? ` … +${uniqFontMisses.length - 6}` : ''})` : ''}`,
+  )
+
+  // 4 · THE COLOR ALLOWLIST + the red's purity.
+  const colorMisses = []
+  const nearRed = []
+  for (let p = 1; p <= numPages; p++) {
+    for (const c of pages[p - 1].colors) {
+      if (c !== '#be123c' && channelDelta(c, '#be123c') <= 20) nearRed.push(`p${p}: ${c}`)
+      if (COLOR_ALLOW.has(c) || HELD_APP_SAMPLE.has(c)) continue
+      const near = [...COLOR_ALLOW].find(t => channelDelta(c, t) <= 12)
+      colorMisses.push(`p${p}: ${c}${near ? ` (a hair off token ${near} — snap it)` : ''}`)
+    }
+  }
+  const uniqColorMisses = [...new Set(colorMisses)]
+  check(
+    uniqColorMisses.length === 0,
+    `every vector color is a token or a held exemption${uniqColorMisses.length ? ` (${uniqColorMisses.slice(0, 6).join('; ')}${uniqColorMisses.length > 6 ? ` … +${uniqColorMisses.length - 6}` : ''})` : ''}`,
+  )
+  check(
+    nearRed.length === 0,
+    `nothing prints NEAR the red — #be123c stays bit-exact and alone${nearRed.length ? ` (${[...new Set(nearRed)].join('; ')})` : ''}`,
+  )
+}
+
 function assertBook(text, domPages) {
   const check = (cond, msg) => (cond ? console.log('  ✓ ' + msg) : fail('book PDF: ' + msg))
   check(
@@ -512,6 +724,12 @@ try {
     const domImgCounts = await page.evaluate(() =>
       [...document.querySelectorAll('.pr-page')].map(p => p.querySelectorAll('img').length),
     )
+    // The font law's artwork map: pages whose DOM draws <svg> text (the cover
+    // art, the drawn figures) set type in viewBox units scaled by the page, so
+    // those pages are held to the family law only, never the size law.
+    const svgTextCounts = await page.evaluate(() =>
+      [...document.querySelectorAll('.pr-page')].map(p => p.querySelectorAll('svg text').length),
+    )
     // Each project page's own /work/ door, read off its printed foot, so the
     // per-plate link assertion knows WHICH id page i must reach.
     const footWorkHrefs = await page.evaluate(() =>
@@ -577,6 +795,7 @@ try {
           await assertOutline(pdf, expectedOutline)
         }
         await assertVector(pdf, domPages, domImgCounts)
+        await assertHouseStyle(pdf, svgTextCounts)
       }
     }
     assertWeight(pdf.length, target.kind)

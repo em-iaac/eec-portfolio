@@ -18,11 +18,21 @@ import type { BookCorner } from '../content/projects/types'
 
 export const PAGE_W_MM = 297
 export const PAGE_H_MM = 210
-export const BOUND_MARGIN_MM = 18
+/* ⚠ THE FRAME IS UNIFORM 12mm ON ALL FOUR SIDES (Emilie, 2026-08-19, judging
+   the finished book: "top, bottom, left, right, all margin at 12mm"). This
+   RETIRES the bound-book mirror — 18mm gutter / 12mm outer, flipping by page
+   parity — that the frame was built on. On screens, unbound, the flip read as
+   the footer wandering side to side, and the book's own build comment had
+   already conceded the pages will never be bound. BOUND/OUTER keep their two
+   names because layoutAssetPage still reasons about which edge a lead bleeds;
+   they simply hold the same number now. */
+export const BOUND_MARGIN_MM = 12
 export const OUTER_MARGIN_MM = 12
-export const TOP_MARGIN_MM = 14
-/** Where the foot hairline sits on a top-lead page, and where the body stops. */
-export const FOOT_RULE_MM = 196
+export const TOP_MARGIN_MM = 12
+/** Where the foot hairline sits on a top-lead page, and where the body stops:
+ *  12mm above the trim, the same 12 as every other edge. The foot TEXT hangs
+ *  below the rule, in the margin, the way a folio classically does. */
+export const FOOT_RULE_MM = 198
 export const GAP_MM = 5
 /** The caption band under a register row. */
 export const CAPTION_MM = 9

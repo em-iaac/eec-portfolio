@@ -27,7 +27,10 @@ export interface PrintFigure {
 
 const INK = '#16181d'
 const MUTED = '#565b63'
-const QUIET = '#8a919b'
+// Snapped to --lang-ink-faint at the consistency pass (her J ruling,
+// 2026-08-19): #8a919b was the token off by one bit, eleven times across the
+// two drawn figures.
+const QUIET = '#8a919c'
 const HAIR = '#c8ccd2'
 // The computation lens, in print: the same ink this project's mark carries on
 // the cover, so the fast path is coloured by the lens the project belongs to
@@ -39,7 +42,15 @@ const PRACTICE = '#a8186b'
 // SAMPLED OFF ITS REPORT rather than chosen here (blue, orange, purple, green,
 // light green). Emilie, 2026-08-12: "maybe the design should look a bit more
 // like the UI of the app to match the design elements of this project."
-const CARD = '#f4f5f6'
+// Snapped to --lang-ground (her J ruling, 2026-08-19): one bit off the token.
+const CARD = '#f5f6f7'
+// THE APP-SAMPLED SET BELOW STANDS, RULED TWICE (the consistency pass,
+// 2026-08-19). The pass's option board proposed recoloring it to the pen
+// grammar and she initially agreed — until shown that this reversed her own
+// 2026-08-12 pick recorded above ("maybe the design should look a bit more
+// like the UI of the app"). Her re-ruling, with both in hand: "keep the app
+// colors." The build's colour allowlist carries these as its one named
+// exemption (HELD_APP_SAMPLE in render-pdfs.mjs). Closed — do not re-propose.
 const VIEWPORT = '#2b2f36'
 // Spelled out in full since the book audit (Emilie, 2026-08-18): the codes
 // CH/WQ/NL/BF/PP appeared nowhere else on the page, so the legend now carries

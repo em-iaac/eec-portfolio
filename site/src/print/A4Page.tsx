@@ -1,9 +1,14 @@
 // G5 · the page primitive. An exact A4 box (overflow hidden + break-after,
 // so headless Chrome never mints the classic blank trailing page). SIDE is
-// the binding truth (REDESIGN-SPEC §8: plates bleed the OUTSIDE edge only,
-// never the bound gutter): the book binds on its short left edge, so odd
-// pages (recto) gutter LEFT and bleed RIGHT; even pages (verso) mirror.
-// Page components read `side` to place their gutter margin and their bleed.
+// the binding truth (REDESIGN-SPEC §8): the book binds on its short left
+// edge, so odd pages (recto) gutter LEFT and bleed RIGHT; even pages (verso)
+// mirror. Page components read `side` to place their gutter margin and their
+// bleed. PLATES bleed the outside edge only; an asset page's LEAD may bleed
+// either edge, because its BookCorner is authored per project ('-outer' or
+// '-bound', see assetGeometry.ts) and four leads chose the bound side for
+// their own composition (her H ruling, 2026-08-19: the corners stand — this
+// comment used to say "never the bound gutter" and the data was right, the
+// law's wording was not).
 import type { ReactNode } from 'react'
 
 export type PageSide = 'recto' | 'verso'

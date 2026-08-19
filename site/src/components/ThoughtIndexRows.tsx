@@ -199,10 +199,19 @@ export default function ThoughtIndexRows({
                 {/* The one nickname bridge (Emilie, 2026-08-18): plate 03's
                     rail says BeIM and this row is the only place the book can
                     say they are the same thought. Print skin only. */}
-                <span className="pr-body" style={{ fontStyle: 'italic' }}>
+                {/* .pr-row__dek, not inline-styled .pr-body (her G ruling,
+                    2026-08-19): print.css declared 7.6pt italic muted for
+                    these rows since the index was drawn and this span was the
+                    only consumer — set inline at 9pt instead, it was the one
+                    measured size in the book matching no declaration. */}
+                <span className="pr-row__dek">
                   {t.title === 'behavior information modeling' ? 'behavior information modeling (BeIM)' : t.title}
                 </span>
-                <span className="pr-mono pr-mono--muted" style={{ whiteSpace: 'nowrap' }}>
+                {/* pr-row__date (her 2C ruling, 2026-08-19): lowercase and a
+                    size down IN PRINT ONLY — the caps live in the shared
+                    MONTHS data, so the demotion is this skin's CSS, and the
+                    screen rows keep their caps untouched. */}
+                <span className="pr-mono pr-mono--muted pr-row__date" style={{ whiteSpace: 'nowrap' }}>
                   {fmtMonthYear(t.date)}
                 </span>
               </span>

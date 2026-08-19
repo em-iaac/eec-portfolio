@@ -12,7 +12,11 @@
 import type { ReactNode } from 'react'
 import LogoMark from '../components/LogoMark'
 import { LENSES, LensGlyph, type Lens } from '../components/Lens'
-import { ADJECTIVES, BIO, BIO_VARIABLES, VOICE } from '../landing/identity'
+// ADJECTIVES left this import at her C ruling (2026-08-19): the roles line is
+// out of the book — her standing rule ("the book names no role") finally
+// caught the one line that had been grandfathered past it. The landing still
+// makes the claim; the book now makes it only in her voice.
+import { BIO, BIO_VARIABLES, VOICE } from '../landing/identity'
 import { MIND, THREADS, VIEWBOX, spline, starPath } from '../landing/mindGraph'
 import type { BookAsset } from '../content/projects/types'
 import { thoughtIndexEntries } from '../data/registry'
@@ -159,11 +163,17 @@ const LENS_INK: Record<string, string> = {
 // laser, and #565b63 put them level with the projects instead of under them.
 // One step darker at the book audit (Emilie, 2026-08-18): at #9aa1ab the
 // category labels were the page’s most likely dropout on a laser print.
-const THREAD_GREY = '#8b929c'
+// SNAPPED TO THE TOKEN at the consistency pass (her J ruling, 2026-08-19):
+// #8b929c was one bit off --lang-ink-faint, which gave the book three faint
+// greys within Δ1 of each other. Same recede, same laser survival, one grey.
+const THREAD_GREY = '#8a919c'
 // Every mark on the cover that is NOT one of the eight. Light enough to recede
 // behind them, dark enough to survive an office laser: this is the drawing, not
 // a watermark, and the shape of the graph still has to be readable.
-const QUIET_MARK = '#cdd2d8'
+// Snapped Δ6 darker onto the drawn-figure hairline grey (her J ruling,
+// 2026-08-19), so the book keeps ONE light grey instead of two a hair apart —
+// and darker is the safe direction for the laser this comment worries about.
+const QUIET_MARK = '#c8ccd2'
 
 const NAME = 'Emilie El Chidiac'
 // ⚠ SUBTITLE and AWARD_FACT ARE GONE (Emilie, 2026-08-12). The cover carried
@@ -396,7 +406,10 @@ function Cover() {
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
           <MindGraphArt ink={ink} marked />
         </div>
-        <div style={{ position: 'absolute', left: '18mm', top: '26mm', width: '135mm' }}>
+        {/* left 12mm (her ruling at the design audit, 2026-08-19): the cover
+            joins the book's uniform 12mm frame instead of holding its old
+            18mm — the one edge in the book that no longer matched anything. */}
+        <div style={{ position: 'absolute', left: '12mm', top: '26mm', width: '135mm' }}>
           <h1
             className="pr-title"
             style={{ fontSize: '38pt', lineHeight: 0.94, margin: 0, color: ink, letterSpacing: '-0.022em' }}
@@ -414,8 +427,10 @@ function Cover() {
         <div
           style={{
             position: 'absolute',
-            right: '14mm',
-            bottom: '11mm',
+            /* 12mm both (the frame ruling, 2026-08-19): the emblem block's
+               anchors sit on the same 12mm frame as every other page. */
+            right: '12mm',
+            bottom: '12mm',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -940,7 +955,12 @@ function IndexPage({ side }: { side: PageSide }) {
             2026-08-12 ruling said ten but the code shipped nine from birth;
             shown both, she kept nine and renamed the header so it stops
             implying the full eighteen. They are already ordered newest first. */}
-        <h3 className="pr-kicker" style={{ margin: '5mm 0 2.2mm' }}>THE LATEST THOUGHTS</h3>
+        {/* 12mm above, was 5 (her F ruling, 2026-08-19: the title stays 20pt,
+            "but have some vertical space between the project and the thoughts
+            since we have the space"). Measured: 16.3mm of slack sat above the
+            foot while the two sections nearly touched; 7mm of it moves up
+            here, so the break reads 12 / 9.3 instead of 5 / 16.3. */}
+        <h3 className="pr-kicker" style={{ margin: '12mm 0 2.2mm' }}>THE LATEST THOUGHTS</h3>
         <ThoughtIndexRows skin="print" limit={9} columns={3} />
 
         {/* THE FOOT, in the book-wide structure since round 4 (2026-08-19):
@@ -1025,19 +1045,17 @@ function AboutPage() {
   return (
     <A4Page outline="About">
       <div className="pr-about">
-        {/* The four adjectives ARE the landing’s claim (identity.ts: the role
-            title was offered as a fifth tier and Emilie cut it, twice). They
-            take the slot a project page gives its number and lens pill. */}
-        <p className="pr-about__meta pr-kicker">{ADJECTIVES.toUpperCase()}</p>
-        {/* One word, set like a project title, the same way the index page’s
-            "Index" is set. The name is in the standfirst under it rather than
-            here, because the cover two pages ago is where the name belongs at
-            size and printing it twice at 30pt is the stutter this pass spent
-            its time removing. */}
-        <h2 className="pr-about__title">About</h2>
-        <p className="pr-about__stand">
-          {NAME}. {VOICE}
-        </p>
+        {/* THE VOICE LEADS (her C pick at the about-page audit, 2026-08-19,
+            from three drawn options). The masthead had stacked four floors of
+            type for two floors of information: the name repeated the cover a
+            page after the cover, and the roles line broke her own standing
+            rule that the book names no role. Both are GONE. "About" drops to
+            the mono kicker register — the same voice as WHO and IN THIS BOOK
+            below it — and the page's real headline, her one-line claim, takes
+            the masthead at size. The word "About" survives for the bookmark
+            panel via data-outline, so the chapter row does not change. */}
+        <p className="pr-about__meta pr-kicker">About</p>
+        <h2 className="pr-about__stand">{VOICE}</h2>
 
         {/* data-must-fit: the page probe only sees content pushed past the SHEET,
             and this column is absolutely positioned inside a box that is 20mm

@@ -3,8 +3,10 @@
    (REDESIGN-SPEC §8 + §10, re-designed in DESIGN LANGUAGE v2 for paper)
 
    Ink on paper, not glass on glass: the ground is the PAPER (white; the
-   #f5f6f7 screen tint never floods a printed page), hairlines print at
-   100% ink / 0.5pt (ink/10 vanishes at 300dpi), mono floors at 7.5pt,
+   #f5f6f7 screen tint never floods a printed page), RULES print 0.3pt muted
+   and OUTLINES 0.5pt full ink (her C ruling, 2026-08-19 — see --pr-rule;
+   the old "100% ink hairlines" doctrine survives only for pills and drawn
+   marks, which are shapes, not rules), mono floors at 7.5pt,
    redline collapses to ink (interaction is dead in print; the emblem's
    one red node survives as identity and reads by size in greyscale).
    Fillets survive as the shape signature: inset images keep a small
@@ -21,7 +23,21 @@
   /* Print tokens. Scoped so nothing leaks into the screen site. */
   --pr-ink: #16181d;
   --pr-ink-muted: #565b63;
-  --pr-hairline: #16181d; /* hairlines print 100% ink, weight carries the quiet */
+  --pr-hairline: #16181d; /* OUTLINES ONLY now: pills and drawn marks keep full ink */
+  /* THE RULES ARE DELICATE (her C ruling at the design audit, 2026-08-19:
+     "the hairlines are very thick and black, they need to be way more
+     delicate"). Every horizontal RULE — foot rules, the asset head rules,
+     the about and index rules, the thought-row rules — prints 0.3pt muted
+     instead of 0.5pt full ink. This knowingly retires the header's old
+     "hairlines print at 100% ink" doctrine for rules: the book is read on
+     screens, where 0.5pt/100K rendered as bars. Outlines (pills, marks) are
+     shapes, not rules, and stay on --pr-hairline at full ink. */
+  /* Escalated muted -> faint at her second call (2026-08-19: "so thick...
+     delicate and dainty"): #565b63 at 0.3pt still read as a dark line at
+     reading zoom. Ink-faint is the book's lightest text gray; on a 300dpi
+     office laser a 0.3pt faint rule prints as a fine light line, which is
+     exactly the register a rule should hold. */
+  --pr-rule: #8a919c;
   --pr-cyan: #0e7490;
   --pr-magenta: #a8186b;
   --pr-yellow: #7a5e00;
@@ -131,20 +147,31 @@
   font-weight: 600;
   font-size: 26pt;
   letter-spacing: -0.01em;
-  line-height: 1.06;
+  /* 36px exactly (see .pr-body): 1.06 asked for 27.56pt = 36.7px. */
+  line-height: 27pt;
   color: var(--pr-ink);
 }
 .pr-dek {
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 11.5pt;
-  line-height: 1.4;
+  /* 21px exactly (see .pr-body): 1.4 asked for 16.1pt and every dek already
+     snapped to 15.75, so this states what the page was doing anyway. */
+  line-height: 15.75pt;
   color: var(--pr-ink);
 }
 .pr-body {
   font-family: var(--font-serif);
   font-size: 9pt;
-  line-height: 1.45;
+  /* THE LEADING IS A WHOLE PIXEL (the consistency pass, 2026-08-19, her D1).
+     1.45 on 9pt asks for 13.05pt, which is 17.4 CSS px — and Chrome's print
+     pipeline snaps every line box to whole pixels, so the book's body set in
+     ALTERNATING 12.75/13.5pt lines and the three plate columns fell out of
+     phase mid-page (measured: no single pitch existed anywhere). 13.5pt is
+     18px exactly: one real pitch, and the page's average leading was already
+     13.1 so the colour barely moves. Every print leading below follows the
+     same law: a value that is not a whole number of pixels is a lottery. */
+  line-height: 13.5pt;
   color: var(--pr-ink);
 }
 /* THE LINKS PASS (Emilie, 2026-08-16 — her option A, "invisible").
@@ -178,15 +205,23 @@
    a note rather than as a rule.
    The offset keeps the dots clear of the mono's descenders; `skip-ink` off
    because at 0.4pt a broken dotted line reads as a printing fault. */
+/* ⚠ THE MARK IS THE COLOR NOW, NOT A LINE (her ruling, 2026-08-19, closing
+   two failed underlines: `text-decoration: underline dotted` shipped as a
+   solid bar because Chrome's print pipeline ignores the style and thickness;
+   the dotted-border replacement drew true vector dots but at fit-zoom they
+   anti-aliased back into a dash. Her call: "or just colored instead" — so
+   every marked link prints in the site's red and carries NO line at all,
+   which nothing can render badly at any zoom. This supersedes the dotted-
+   mark convention from the links pass (2026-08-16) BY HER OWN RULING, and
+   the red law holds its one meaning: red = you can press this, never a
+   category — the threads already proved the grammar in these same feet. */
 .pr-spread__foot .pr-link,
 .pr-assets__foot .pr-link,
 .pr-about__foot .pr-link,
 .pr-index__foot .pr-link,
 .pr-colophon .pr-link {
-  text-decoration: underline dotted 0.4pt;
-  text-underline-offset: 2.2pt;
-  text-decoration-skip-ink: none;
-  text-decoration-color: var(--pr-ink-muted);
+  text-decoration: none;
+  color: var(--pr-red);
 }
 .pr-mono {
   font-family: var(--font-mono);
@@ -203,13 +238,19 @@
   font-family: var(--font-hand);
   font-style: normal;
   font-size: 10.5pt;
+  /* THE WINK SITS IN THE LINE WITHOUT STRETCHING IT (her I ruling,
+     2026-08-19). A 10.5pt inline in 9pt text inherited the body's leading
+     scaled up, so wink-bearing lines inflated to 14.25-15pt and p13 carried a
+     29.25pt scar where its wink wrapped. At line-height 1 the wink's box
+     (10.5pt) stays under the body's 13.5pt pitch and contributes nothing. */
+  line-height: 1;
   color: var(--pr-ink-muted);
 }
 
 /* ---- Rules + pills ------------------------------------------------------- */
 .pr-rule {
   border: 0;
-  border-top: 0.5pt solid var(--pr-hairline);
+  border-top: 0.3pt solid var(--pr-rule);
   margin: 0;
 }
 .pr-pill {
@@ -317,15 +358,23 @@
 .pr-spread--plate.pr-spread--verso .pr-plate__top {
   grid-template-columns: 145mm 1fr;
 }
-/* 18mm side padding on BOTH sides (Emilie, round 3, 2026-08-19: the dek ran
-   too close to the plate; shown 10/14/18 she took 18, which also matches the
-   outer margin). One value both sides made the old recto/verso outer-edge
-   overrides redundant, so they left. */
+/* THE HEAD SPLITS ITS SIDES (the uniform 12mm frame, 2026-08-19): the outer
+   side joins the 12mm frame so the dek's edge aligns with the spine columns
+   below it, while the PLATE side keeps the 18mm her round-3 ruling chose
+   ("the dek ran too close to the plate; shown 10/14/18 she took 18") — that
+   ruling was about clearance from the hero, which has not moved. Top joins
+   the frame at 12. */
 .pr-plate__head {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 14mm 18mm 5mm;
+  padding: 12mm 18mm 5mm;
+}
+.pr-spread--plate.pr-spread--recto .pr-plate__head {
+  padding-left: 12mm; /* hero right: left is the outer edge */
+}
+.pr-spread--plate.pr-spread--verso .pr-plate__head {
+  padding-right: 12mm; /* hero left: right is the outer edge */
 }
 .pr-plate__top .pr-spread__figure {
   height: 77mm;
@@ -336,13 +385,19 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 6mm 10mm 12mm;
-}
-.pr-spread--plate.pr-spread--recto .pr-plate__body {
-  padding-left: 18mm;
-}
-.pr-spread--plate.pr-spread--verso .pr-plate__body {
-  padding-right: 18mm;
+  /* THE UNIFORM 12mm FRAME (Emilie, 2026-08-19, judging the finished book:
+     "top, bottom, left, right, all margin at 12mm"). The recto/verso 18mm
+     gutter overrides that used to follow this rule are GONE — the bound-book
+     mirror they served is retired (see assetGeometry.ts), so the foot stops
+     wandering side to side at every page turn.
+     · 4.17mm bottom: the foot rule sits ON the 12mm bottom-margin line
+       (198mm from the top trim) with the foot text hanging below it in the
+       margin, folio-fashion. 3.9mm — the arithmetic answer — printed the
+       eight in-flow plate feet exactly one CSS pixel (0.75pt) below the
+       absolutely-positioned asset feet, layout rounding in the flow stack;
+       the extra 0.27mm is that pixel, measured off the built file. The
+       build's foot guards hold rule and baseline to ±0.5pt of one line. */
+  padding: 6mm 12mm 4.17mm;
 }
 .pr-plate__body .pr-spine {
   columns: 3;
@@ -382,19 +437,17 @@
 .pr-spread__content {
   display: flex;
   flex-direction: column;
-  padding: 14mm 10mm 12mm;
+  /* Same law as .pr-plate__body (the uniform 12mm frame, 2026-08-19). The
+     strip layout has no current tenant but must not keep the old numbers
+     alive for the next project that takes it. */
+  padding: 12mm 12mm 3.9mm;
 }
 /* The imageless fallback page: content spans the whole sheet. */
 .pr-spread__content--solo {
   grid-column: 1 / -1;
 }
-/* the bound edge gets the wider margin */
-.pr-spread--recto .pr-spread__content {
-  padding-left: 18mm;
-}
-.pr-spread--verso .pr-spread__content {
-  padding-right: 18mm;
-}
+/* The recto/verso gutter overrides that lived here died with the bound-book
+   mirror (the uniform 12mm frame, 2026-08-19). */
 /* ONE HEADER GEOMETRY FOR ALL EIGHT (Emilie, 2026-08-18): the meta used to sit
    beside the chip when short and wrap under it when long, so neighboring
    plates wore two different heads. The meta line now always takes its own row
@@ -425,6 +478,12 @@
 .pr-spread__dek {
   margin: 0 0 6mm;
   max-width: 138mm;
+  /* THE DEK KEEPS ITS TWO-LINE SLOT (her C1, 2026-08-19). The head is
+     bottom-anchored, so Verve's one-line dek dropped its title 16.5pt below
+     the line the other seven titles share — the book's only off-mode role.
+     Reserving both lines (2 x 15.75pt) pins all eight titles to one
+     baseline whether the dek runs one line or two. */
+  min-height: 31.5pt;
 }
 .pr-spine {
   columns: 2;
@@ -468,8 +527,13 @@
    the same x on every page. */
 .pr-spread__foot {
   margin-top: 4mm;
-  padding-top: 3mm;
-  border-top: 0.5pt solid var(--pr-hairline);
+  /* 3.8mm, was 3 (the consistency pass, 2026-08-19). With the baselines
+     unified on the hemline the two foot RULES still sat 0.8mm apart across
+     every spread (asset pages hang theirs 196mm from the top trim, measured
+     38.83pt above the bottom; this one printed at 36.58). The extra 0.8mm
+     lifts the hairline onto the same 196mm line the asset pages rule. */
+  padding-top: 3.8mm;
+  border-top: 0.3pt solid var(--pr-rule);
   display: grid;
   /* Round 5 (2026-08-19): "make the thoughts attached to the right next to
      the page, so the middle is free" — link left, then open middle, then
@@ -551,22 +615,15 @@
   flex-wrap: wrap;
   row-gap: 1.6mm;
 }
+/* One 12mm frame, both sides, no parity (2026-08-19). */
 .pr-assets__rule {
   position: absolute;
   left: 12mm;
-  right: 18mm;
-  border-top: 0.5pt solid var(--pr-hairline);
-}
-.pr-assets--recto .pr-assets__rule {
-  left: 18mm;
   right: 12mm;
+  border-top: 0.3pt solid var(--pr-rule);
 }
 .pr-assets__foot {
   left: 12mm;
-  right: 18mm;
-}
-.pr-assets--recto .pr-assets__foot {
-  left: 18mm;
   right: 12mm;
 }
 /* THE LEAD. It fills its box and is allowed to crop, because a promoted asset
@@ -605,7 +662,9 @@
 .pr-assets__leadcap {
   font-family: var(--font-mono);
   font-size: 5.6pt;
-  line-height: 1.42;
+  /* 11px exactly (see .pr-body): 1.42 asked for 7.95pt and the captions set
+     in alternating 7.5/8.25 lines. */
+  line-height: 8.25pt;
   letter-spacing: 0.01em;
   color: var(--pr-ink-muted);
   margin: 1.6mm 0 0;
@@ -619,6 +678,8 @@
 .pr-assets__leadcap {
   position: absolute;
   font-size: 6.2pt;
+  /* 12px exactly — what 6.2pt was already snapping to before the leading law. */
+  line-height: 9pt;
   margin: 0;
 }
 /* The flow variant: a full-width third row of the meta block, so a meta that
@@ -634,13 +695,12 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 14mm 12mm 12mm;
-}
-.pr-index--recto {
-  padding-left: 18mm;
-}
-.pr-index--verso {
-  padding-right: 18mm;
+  /* The uniform 12mm frame (2026-08-19); the bottom is 3.9mm here, NOT the
+     plate's 4.17: this foot measured ON the line at 3.9 (the plate stack's
+     one-pixel rounding does not occur in this flex column — measured, both,
+     off the built file). The recto/verso gutter overrides died with the
+     bound-book mirror. */
+  padding: 12mm 12mm 3.9mm;
 }
 .pr-index__grid {
   display: grid;
@@ -655,8 +715,8 @@
    Both used to sit at the top and fight the word "Index" for the eye. */
 .pr-index__foot {
   margin-top: auto;
-  padding-top: 3mm;
-  border-top: 0.5pt solid var(--pr-hairline);
+  padding-top: 3.8mm; /* the 196mm rule line — same derivation as .pr-spread__foot */
+  border-top: 0.3pt solid var(--pr-rule);
   /* The same pinned 3-column grid as every project foot (round 4). */
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -730,17 +790,31 @@
   grid-template-columns: 8mm 1fr;
   align-items: baseline;
   padding: 1.2mm 0;
-  border-bottom: 0.5pt solid rgba(22, 24, 29, 0.35);
+  border-bottom: 0.3pt solid var(--pr-rule);
   break-inside: avoid;
 }
 .pr-row:last-child {
   border-bottom: 0;
 }
+/* WIRED AT LAST (her G ruling, 2026-08-19). This rule was declared and never
+   rendered — the print thought-rows set their titles as inline-styled 9pt
+   .pr-body, the one measured size in the whole book that matched no
+   declaration. ThoughtIndexRows' print skin wears the class now, so the
+   index rows quiet down to the size this file always intended for them. */
 .pr-row .pr-row__dek {
   font-size: 7.6pt;
-  line-height: 1.32;
+  /* 13px exactly (see .pr-body): 1.32 asked for 10.03pt. */
+  line-height: 9.75pt;
   font-style: italic;
   color: var(--pr-ink-muted);
+}
+/* THE DATE IS A STAMP, NOT A HEADLINE (her 2C ruling, 2026-08-19). At 7.5pt
+   caps the dates out-shouted the 7.6pt italic titles beside them — the caps,
+   not the size, were the volume. Print skin only: lowercase and a step down
+   to the leadcap register; the screen site keeps its caps. */
+.pr-row .pr-row__date {
+  font-size: 6.2pt;
+  text-transform: lowercase;
 }
 
 /* The lens legend: the ticks named once per page, so colour + shape never
@@ -799,15 +873,14 @@
    contents rather than as a second column of names. The ratio is 1:2, the
    page's own asymmetry rather than an imposed one.
 
-   THE WHOLE BLOCK IS OPTICALLY CENTRED, and this is where page 2 stops copying
-   a project page. A project page opens its title block at 46mm because a PLATE
-   fills everything above it; page 2 has no plate, so the same 46mm was simply a
-   void, and 72mm of the sheet passed before anything began (Emilie, 2026-08-12:
-   "we have so much white space at the top").
-   The field a reader sees is the top trim to the foot rule, 196mm. The content
-   runs 142mm from the meta line to the closing row, so the balanced top margin
-   is (196 - 142) / 2 = 27mm, and everything below follows from it: title 36,
-   standfirst 51, columns 69.
+   ⚠ THE OPTICAL CENTRING IS RETIRED (Emilie, 2026-08-19, her annotated
+   screenshot at the design audit): "the about should be title of the page at
+   the top margin edge, then below it my name, then below the titles, and
+   below that the i work with". The page now anchors to the 12mm frame the
+   way every other page does — the index tops its word at the margin, the
+   asset pages top their meta there, and the about was the one page floating
+   on its own derivation. Order: About / name / roles / voice, the head as
+   one top-anchored masthead, the columns after one clear break.
 
    THE PARTIS ARE 17.8 x 10mm, not 13 x 7.3 (Emilie: "is there a way we can
    have the icons bigger so they are cleaner and clearer"). At 6mm the eight
@@ -821,42 +894,54 @@
   position: relative;
   height: 100%;
 }
+/* THE MASTHEAD IS TWO FLOORS (her C pick, 2026-08-19, from three drawn
+   options at the about-page audit): ABOUT as a mono kicker at the frame —
+   the same register as WHO and IN THIS BOOK, so the page label stops
+   outranking the page's content — and the VOICE as the headline underneath.
+   The name and the roles line are gone: the name repeated the cover one page
+   after the cover, the roles broke her standing rule that the book names no
+   role. The 26pt display word stays the INDEX's grammar; this page traded
+   it knowingly. */
 .pr-about__meta {
   position: absolute;
   left: 12mm;
-  top: 27mm;
+  top: 12mm;
   margin: 0;
 }
-.pr-about__title {
-  position: absolute;
-  left: 11mm; /* 1mm of optical inset: the display face overhangs its box */
-  top: 36mm;
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 26pt;
-  line-height: 1.06;
-  letter-spacing: -0.01em;
-}
+/* THE HEADLINE. Serif italic at 20pt — a size that exists nowhere else in
+   the book and is sanctioned for exactly this line (the type-law allowlist
+   carries it by name). 26.25pt leading = 35px, the whole-pixel law. */
 .pr-about__stand {
   position: absolute;
   left: 12mm;
-  top: 51mm;
-  width: 150mm;
+  top: 18.5mm;
+  width: 240mm;
   margin: 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 11.5pt;
-  line-height: 1.4;
+  font-size: 20pt;
+  line-height: 26.25pt;
+  color: var(--pr-ink);
 }
 .pr-about__cols {
   position: absolute;
   left: 12mm;
-  right: 18mm;
-  top: 69mm;
-  bottom: 20mm;
+  right: 12mm; /* the uniform frame (2026-08-19); was 18 */
+  /* THE MIDDLE, BY HER RULING (2026-08-19), re-derived for the two-floor
+     masthead (her C pick): the masthead now ends ~28, the rule sits at 198,
+     the columns' content runs ~100: 28 + (170 - 100) / 2 = 63. */
+  top: 63mm;
+  /* 18mm: the columns end 6mm clear of the foot rule, which moved to 198mm
+     with the 12mm frame (was rule 196 / clearance from bottom: 20mm). */
+  bottom: 18mm;
   display: grid;
-  grid-template-columns: 81mm 174mm;
+  /* 1fr, not a fixed 174mm (her ruling, 2026-08-19: "the page numbers all
+     the way touch the margins"). The old fixed width summed to the OLD 267mm
+     measure; when the frame widened to 273 the contents rows stopped 6mm
+     short of the margin and the leaders' numbers hung in the air. 1fr fills
+     whatever the frame is, so the numbers land ON the 12mm line like the
+     folio below them — and the next margin change cannot re-break it. */
+  grid-template-columns: 81mm 1fr;
   column-gap: 12mm;
 }
 .pr-about__ch {
@@ -870,7 +955,7 @@
 .pr-about__bio {
   font-family: var(--font-serif);
   font-size: 9pt;
-  line-height: 1.45;
+  line-height: 13.5pt; /* 18px exactly, the body's own leading */
   margin: 0 0 3mm;
 }
 /* A contents line: the parti, the title, a dotted leader, the page. The leader
@@ -894,7 +979,7 @@
   margin: 3.4mm 0 0;
   font-size: 6.2pt;
   letter-spacing: 0.08em;
-  line-height: 1.6;
+  line-height: 9.75pt; /* 13px exactly: 1.6 asked for 9.92pt = 13.2px */
 }
 .pr-about__ti {
   font-family: var(--font-display);
@@ -985,15 +1070,15 @@
 .pr-about__rule {
   position: absolute;
   left: 12mm;
-  right: 18mm;
-  top: 196mm;
-  border-top: 0.5pt solid var(--pr-hairline);
+  right: 12mm;
+  top: 198mm; /* the 12mm bottom-margin line (2026-08-19); was 196 */
+  border-top: 0.3pt solid var(--pr-rule);
 }
 .pr-about__foot {
   position: absolute;
   left: 12mm;
-  right: 18mm;
-  top: 200mm;
+  right: 12mm;
+  top: 202mm; /* rule + 4mm, the asset pages' own offset */
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -1168,7 +1253,7 @@
 /* The asset page's head: plate, credit, hairline, tech. */
 .pr-assets__headrule {
   display: block;
-  border-top: 0.5pt solid var(--pr-hairline, #c8ccd2);
+  border-top: 0.3pt solid var(--pr-rule, #c8ccd2);
   margin: 3.6mm 0;
 }
 .pr-assets__tech {
