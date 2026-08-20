@@ -44,6 +44,7 @@ export interface WorkEntry {
   status: SheetStatus // 'issued' | 'in-preparation'
   date: string // 'YYYY-MM', drives newest-first
   title: string
+  faceTitle?: string // the grid tile's short title where the full one cannot fit (registry-sourced, 2026-08-20)
   lens: Lens
   tags: string[]
   dek: string // the one authored "what it proves" line; the showcase's claim
@@ -218,6 +219,7 @@ function toWorkEntry(entry: RegistryEntry): WorkEntry | null {
     status: entry.sheet.status,
     date: entry.date,
     title: p.title,
+    faceTitle: entry.faceTitle,
     lens: entry.lens,
     tags: entry.tags,
     dek: p.dek,

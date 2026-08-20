@@ -50,9 +50,14 @@
 //   - the spine section renders NOTHING while it loads, never a skeleton. The
 //     chunk is ~1KB and lands inside the sheet's own entrance; a placeholder
 //     would be a second thing moving.
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import useScrollLock from '../../hooks/useScrollLock'
-import { Link } from 'react-router-dom'
+import useHasHover from '../../hooks/useHasHover'
+import { Link, useNavigate } from 'react-router-dom'
+import { LENSES } from '../Lens'
+import { WORK_ARTIFACTS } from './artifacts'
+import { neighborsOf, relatedThoughts } from './neighbors'
+import type { CSSProperties } from 'react'
 import { loadSpine, type ProjectSpine } from '../../content/projects'
 import useSheetSwipe from './useSheetSwipe'
 import useSwipeFlip from './useSwipeFlip'
@@ -60,16 +65,40 @@ import Img from '../Img'
 import SheetVideo from '../sheet/SheetVideo'
 import Lightbox from './Lightbox'
 import QuestionsDot from './QuestionsDot'
-import { LensPill } from '../ui/Pill'
 import { vtName } from '../../lib/viewTransition'
 import { PILLAR_PATH, isPillarRelated } from '../../lib/pillar'
 import type { WorkEntry, WorkPicture } from '../../data/work'
-import { INK_LINK, RED_LINK_ROW } from '../../lib/linkStyles'
+import { RED_LINK_ROW } from '../../lib/linkStyles'
 
 
 // Compact serif for the two-column spine (tighter than the old single-column
 // prose, so the whole plate fits without scrolling).
 const PROSE = 'prose-rag font-serif text-small leading-[1.5] text-[var(--lang-ink)]'
+
+// THE PLATE SCALE (Emilie's rulings 2026-08-20, closing the plate-size
+// question). Round one built a seven-step ladder from the measured clusters;
+// her second ruling shrank it to the floor: "I want the least possible plate
+// scales", with the cappelletti/podcast merge (~90px of absorbed air) as the
+// worked example of how much air a merge may add. Applying that same
+// tolerance everywhere, THREE sizes hold all twenty-one projects:
+//   S 608  explorations + the short middles    (natural 569..608, air <=39)
+//   M 678  the middle band, 11 projects        (natural 627..678, air <=51)
+//   L 796  homage/sensi/lungs/soma/neurospace  (natural 713..795, air <=82)
+// Three sizes stays the floor — small, medium, large — and a plate wears the
+// SMALLEST SIZE THAT HOLDS ITS WORDS; the optical mount absorbs the air at
+// the foot.
+// (RE-DERIVED 2026-08-20 for the 2×2 spine: pairing the beats into rows —
+// WHAT|HOW over WHY|OUTCOME — sizes each row by its taller beat, so the
+// naturals moved NON-uniformly this time (569..795, measured all 21). The
+// clusters re-formed with real seams at 608|627 and 678|713, and every air
+// ceiling sits inside the originally ruled tolerances (54/92/83). Never
+// patch one step: any head or spine change moves all 21 naturals — re-census
+// and re-cluster.)
+// Runtime snap, not per-project data: a narrower viewport wraps the words
+// taller and the same ladder re-assigns honestly, and a future project needs
+// no authoring — it finds its shelf. Capped by the dialog's own max-height
+// (min-height would otherwise outrank it and push past the viewport).
+const PLATE_STEPS = [608, 678, 796]
 
 // The stage's true rendered size (Emilie's quality pass, 2026-07-14): without
 // this hint the browser assumed the Img default (~640px) and loaded the soft
@@ -227,44 +256,41 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
   // handled via 'cancel' (fires only on real user dismissal, so it survives
   // StrictMode's double-invoke and, when the Lightbox is stacked, cancels THAT
   // top dialog first, leaving the sheet open).
+  // MOUNT AND UNMOUNT ONLY — never per project (the flash root cause, caught
+  // frame-by-frame in her recording at the tweak round, 2026-08-20). This
+  // effect used to depend on [entry.id], and an effect's CLEANUP runs before
+  // its re-run: so every press of the new rails closed the dialog (the
+  // ::backdrop vanished — one naked bright frame, "the header shows"), then
+  // showModal() reopened it and the backdrop's own 260ms work-fade replayed
+  // ("...and then disappears"). Measured on the screencast: probe pixel 218
+  // (dimmed) → 252 (naked page) at the press, one showModal call mid-swap.
+  // Un-keying the component (Work.tsx) was necessary but not sufficient —
+  // the close lived HERE. Paging projects now touches neither open state nor
+  // the backdrop; the per-project work (focus, page/lightbox/drawer/scroll
+  // resets) lives in the entry.id effect below.
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
   useLayoutEffect(() => {
     const dlg = ref.current
     if (!dlg) return
     if (!dlg.open) dlg.showModal()
-    // A MODAL FOCUSES ITS SUBJECT, NOT ITS CLOSE CONTROL (Emilie's ruling
-    // 2026-08-04; her report: "the close button shows a red outline on tap").
-    //
-    // `showModal()` focuses the first focusable element in the dialog, and that
-    // is the ✕ — measured, `document.activeElement` was the close button the
-    // instant a project opened. WebKit's :focus-visible heuristic rings an
-    // element the dialog focused, and the ring is `--lang-interaction`, the
-    // site's red. Chromium does not paint it, which is why this only ever
-    // showed on her phone.
-    //
-    // The fix is not to suppress the ring. Removing a focus ring for touch
-    // removes it for the keyboard too, and that is a floor. Focus goes to the
-    // TITLE instead: no control is focused so no control ring can appear, and a
-    // screen reader now opens on the project's name rather than on the word
-    // "Close". Tab still reaches ✕ and it still rings, exactly as before.
-    titleRef.current?.focus({ preventScroll: true })
     // The keydown-less fallback (Android back gesture): close the plate,
     // UNLESS the Lightbox is stacked on top — that close request is the
     // Lightbox's to consume, and the plate must stay open underneath.
+    // (onClose rides a ref so this once-bound listener never goes stale.)
     const onCancel = (e: Event) => {
       if (lightboxRef.current !== null) {
         e.preventDefault()
         return
       }
-      onClose()
+      onCloseRef.current()
     }
     dlg.addEventListener('cancel', onCancel)
     return () => {
       dlg.removeEventListener('cancel', onCancel)
       if (dlg.open) dlg.close()
     }
-    // entry.id keys a fresh open when the deep-linked card changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entry.id])
+  }, [])
 
   const close = () => onClose()
 
@@ -319,7 +345,98 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
     </>
   )
 
-  const hasLinks = isPillarRelated(entry.tags) || entry.links.length > 0
+  const hasLinks = entry.links.length > 0
+
+  // THE NEIGHBORHOOD (her mix of the felt mockups, 2026-08-20: "d2 rails with
+  // d1 drawer for thoughts"). Rails leaf the gallery on desktop; the drawer
+  // holds MADE ME THINK OF everywhere, plus the travel row below lg where the
+  // rails have no room. All record data — components/work/neighbors.ts.
+  const navigate = useNavigate()
+  const neighbors = neighborsOf(entry.id)
+  const related = relatedThoughts(entry.id)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const drawerRef = useRef<HTMLDivElement>(null)
+  const hasHover = useHasHover()
+  // The system's dismissal grammar (ReachDrawer verbatim): an open drawer
+  // closes on a press anywhere outside it — before this, a touch device had
+  // only the tab itself as the way out.
+  useEffect(() => {
+    if (!drawerOpen) return
+    const onDown = (e: PointerEvent) => {
+      if (!drawerRef.current?.contains(e.target as Node)) setDrawerOpen(false)
+    }
+    document.addEventListener('pointerdown', onDown)
+    return () => document.removeEventListener('pointerdown', onDown)
+  }, [drawerOpen])
+  // NO view transition on sheet-to-sheet travel (her flash report, the tweak
+  // round): the dialog stays open and swaps its content in place (Work.tsx
+  // dropped the remount key), so there is nothing for a transition to carry —
+  // the backdrop holds, only the project changes. Paging, not travelling.
+  const goTo = (id: string) => {
+    setDrawerOpen(false)
+    // REPLACE, not push. Paging is one open sheet changing its subject, not a
+    // trail of visits: pushed entries meant close's navigate(-1) landed on
+    // the PREVIOUS PROJECT instead of the page the sheet was opened over
+    // (and Back had to walk every paged project to get out). With replace,
+    // history stays [origin, /work/<current>] however far she leafs — close
+    // and Back both return to where she actually was.
+    navigate(`/work/${id}`, { replace: true })
+  }
+  // The un-keyed swap keeps this component mounted across projects, so the
+  // per-project state resets here instead of by remount: first media page,
+  // no stacked lightbox, drawer shut, story scrolled back to the top.
+  // The plate finds its shelf on the scale (PLATE_STEPS above): measure the
+  // natural height, snap up to the smallest step that holds it. Layout
+  // effect, so the snap lands before paint — no visible resize. Re-runs when
+  // the project changes AND when the spine prose arrives (the words are most
+  // of the height), on resize (wrapping changes the words' height), and once
+  // when the fonts finish loading (a late swap re-wraps a line or two).
+  // Desktop only: the phone bottom sheet docks and sizes as it always has.
+  useLayoutEffect(() => {
+    const dlg = ref.current
+    if (!dlg) return
+    const mq = window.matchMedia('(min-width: 40rem)')
+    const fit = () => {
+      dlg.style.minHeight = ''
+      if (!mq.matches) return
+      const natural = dlg.getBoundingClientRect().height
+      const cap = Math.min(0.92 * window.innerHeight, 54 * 16)
+      const step = PLATE_STEPS.find((s) => s >= natural - 0.5)
+      if (step && step <= cap) dlg.style.minHeight = `${step}px`
+    }
+    fit()
+    window.addEventListener('resize', fit)
+    let live = true
+    document.fonts?.ready.then(() => {
+      if (live) fit()
+    })
+    return () => {
+      live = false
+      window.removeEventListener('resize', fit)
+      dlg.style.minHeight = ''
+    }
+  }, [entry.id, spine])
+
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    setPage(0)
+    setLightbox(null)
+    setDrawerOpen(false)
+    scrollerRef.current?.scrollTo(0, 0)
+    // A MODAL FOCUSES ITS SUBJECT, NOT ITS CLOSE CONTROL (Emilie's ruling
+    // 2026-08-04; her report: "the close button shows a red outline on tap").
+    // showModal() would focus the first focusable — the ✕ — and WebKit rings
+    // it red. Focus lands on the TITLE instead: a screen reader opens on the
+    // project's name, not on the word "Close", and on every rail press the
+    // new project announces itself the same way. Tab still reaches ✕.
+    titleRef.current?.focus({ preventScroll: true })
+  }, [entry.id])
+  // A thought row's destination: the note — except the pillar's own coinage on
+  // a pillar-related project, which keeps opening the flagship essay (the
+  // internal door the searchability pass built; it moved here from the links
+  // row, it did not die).
+  const thoughtRoute = (t: { id: string; route: string }) =>
+    t.id === 'bim' && isPillarRelated(entry.tags) ? PILLAR_PATH : t.route
 
   return (
     <dialog
@@ -346,6 +463,15 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
         if (e.key === 'Escape') {
           e.preventDefault()
           e.stopPropagation()
+          // One layer per press, the house rule: an open drawer panel is the
+          // top layer even when focus never entered it (hover opens it with
+          // focus still on the title), so the check lives HERE, not on the
+          // drawer — measured: without it, Escape over an open panel closed
+          // the whole sheet.
+          if (drawerOpen) {
+            setDrawerOpen(false)
+            return
+          }
           close()
         }
       }}
@@ -363,14 +489,215 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
       <div ref={grabRef} className="work-dialog__grab" aria-hidden="true">
         <span className="work-dialog__grip" />
       </div>
+      {/* THE DISC (Emilie's ruling 2026-08-20, the moving-parts audit): the
+          sheet scrolls and the ✕ floats, so scrolled prose used to slide
+          under a bare glyph. A quiet solid ground — the dialog's own surface
+          with its hairline, same family as the flip buttons — means the words
+          slide under a control, not a stray character. Solid, not glass:
+          the sheet itself dropped blur on 2026-08-06 for readability. */}
       <button
         type="button"
         onClick={close}
         aria-label="Close project"
-        className="absolute top-2.5 right-2.5 z-10 flex size-11 items-center justify-center rounded-[var(--r-pill)] font-mono text-small leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+        className="absolute top-2.5 right-2.5 z-10 flex size-11 items-center justify-center rounded-[var(--r-pill)] border-[0.5px] border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] font-mono text-small leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
       >
         ✕
       </button>
+
+      {/* THE RAILS (D2 of the felt mockups, her mix ruling 2026-08-20; the
+          arrows became the neighbors' own plate drawings at her tweak the
+          same day — "the icons of each project i think its more fun"). Each
+          rail is the next project's ink artifact in a disc, its lens pen as
+          the one accent, the name printed beneath — a press is never a
+          surprise, and the gallery pages like leafing the printed index.
+          Desktop only (min-1200px: below that the viewport gutter is narrower
+          than a rail, and the drawer's travel row carries the job).
+          position: fixed ESCAPES the dialog's overflow clip (the entrance
+          animations hold no transform, so the containing block stays the
+          viewport); as dialog children they stay interactive in the top
+          layer. /work reading order, wrapping like the belts. */}
+      {neighbors && (
+        <>
+          {(
+            [
+              { n: neighbors.prev, side: 'left-4 xl:left-8', word: 'Previous' },
+              { n: neighbors.next, side: 'right-4 xl:right-8', word: 'Next' },
+            ] as const
+          ).map(({ n, side, word }) => (
+            <button
+              key={word}
+              type="button"
+              onClick={() => goTo(n.id)}
+              className={`group fixed top-1/2 z-10 hidden w-24 -translate-y-1/2 flex-col items-center gap-2 min-[1200px]:flex ${side}`}
+            >
+              {/* size-18 (her second sizing pass, 2026-08-20 night: "even
+                  larger... stroke and artifacts too small" — 14 → 16 → 18)
+                  with the --rail stroke grade: the artifacts draw with
+                  non-scaling strokes tuned for the card plates, so at disc
+                  scale the geometry shrank while the ink stayed plate-thick
+                  and the drawings clotted. The modifier re-grades the
+                  strokes to the disc's own scale (language.css). */}
+              <span
+                aria-hidden="true"
+                className="flex size-18 items-center justify-center rounded-[var(--r-pill)] border-[0.5px] border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] p-1.5 transition-transform group-hover:scale-105"
+                style={{ '--plate-accent': LENSES[n.lens].pen } as CSSProperties}
+              >
+                <span className="work-art work-art--rail">{WORK_ARTIFACTS[n.id]}</span>
+              </span>
+              <span className="text-center font-mono text-micro leading-snug tracking-[0.1em] text-white/85 uppercase">
+                {n.faceTitle ?? n.title}
+              </span>
+              <span className="sr-only">
+                {word} project: {n.title}
+              </span>
+            </button>
+          ))}
+        </>
+      )}
+
+      {/* THE DRAWER (D1 of the felt mockups, thoughts only on desktop — the
+          rails carry travel there; below lg the panel gains the travel row).
+          The tab rides the sheet's right edge, the reach-drawer grammar every
+          other room teaches; hover opens it where a pointer exists, press
+          everywhere. The panel opens INWARD over the sheet's edge — the
+          dialog's overflow clips anything outside it — on the sheet's own
+          solid surface. Its rows are the record's correlations
+          (neighbors.ts), so a project with no written threads simply has no
+          tab. The word on the tab is hers ("maybe links?", 2026-08-20) — see
+          the report note on the word vs the contents.
+          Escape closes the PANEL first (stopPropagation), then the sheet —
+          one layer per press, the house rule. */}
+      {related.length > 0 && (
+        <div
+          // MID-HEADER, OPENING INTO THE BLUR (her second tweak, 2026-08-20:
+          // "middle height of the header section... opens outside the card
+          // in the blur area so it doesn't hide anything"). The tab centers
+          // on the header row — stage pad 20px + 279/2 ≈ 160, minus half the
+          // 112px tab = top 104 — and clears the floating ✕ above it. The
+          // PANEL left the sheet: position: fixed escapes the dialog's
+          // overflow clip exactly the way the rails do (no ancestor
+          // transform), so it floats in the backdrop instead of covering the
+          // head. Its right edge rides the viewport (1rem in) until the
+          // gutter outgrows it, then rides the sheet's edge with a 1rem
+          // kiss — never detached, so the tab→panel hover path stays
+          // contiguous and pointerleave cannot fire crossing a gap.
+          ref={drawerRef}
+          // THE WRAPPER OWNS THE TAB'S BOX (her recording, 2026-08-20:
+          // "hover not all the way to the right and it bugs and lags").
+          // The tab display:nones itself when the drawer opens, and an
+          // auto-sized wrapper collapsed to zero under the pointer — so a
+          // cursor on the tab's LEFT half fired pointerleave the instant
+          // the drawer opened, closed it, the tab reappeared, pointerenter
+          // reopened it: an oscillation, her lag. A fixed 44×112 box keeps
+          // the hover ground under the pointer whether the tab is drawn.
+          className="absolute top-[104px] right-0 z-10 h-28 w-11"
+          onPointerEnter={(e) => {
+            if (hasHover && e.pointerType === 'mouse') setDrawerOpen(true)
+          }}
+          onPointerLeave={() => {
+            if (hasHover) setDrawerOpen(false)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' && drawerOpen) {
+              e.preventDefault()
+              e.stopPropagation()
+              setDrawerOpen(false)
+            }
+          }}
+        >
+          {/* THE REACH GRAMMAR, ADOPTED (her system note, 2026-08-20: "the
+              drawer system should be a system in the whole app... the same
+              here and on the cv"). This drawer was the app's one hand-rolled
+              outlier; the tab and every row now speak components/reach's
+              language: the 44px tab width (the sweep's floor, not 28), the
+              12px tab radius, `reach-drawer__row` boxes with the system's
+              hover wash (the red highlight the map's year rows taught),
+              PREVIOUS/NEXT as verb rows exactly like a thought note's exit
+              drawer. It cannot BE <ReachDrawer/> — a modal dialog inerts the
+              page, so the drawer must live inside the dialog's DOM, and its
+              float-in-the-blur placement is this sheet's own ruling — so it
+              is the system's grammar in the sheet's geometry: an EXIT drawer
+              (rows lead out of the room; no `at`, the tab keeps its handle). */}
+          <button
+            type="button"
+            aria-expanded={drawerOpen}
+            aria-controls="sheet-drawer-panel"
+            aria-label="The thoughts this project made (and, on narrow screens, previous and next projects)"
+            onClick={() => setDrawerOpen((o) => !o)}
+            className={`h-28 w-11 items-center justify-center rounded-l-xl border-[0.5px] border-r-0 border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)] ${drawerOpen ? 'hidden' : 'flex'}`}
+          >
+            <span
+              aria-hidden="true"
+              className="font-mono text-micro tracking-[0.2em] uppercase"
+              style={{ writingMode: 'vertical-rl' }}
+            >
+              {/* Her word, second round (2026-08-20): THOUGHTS — the tab names
+                  what the panel actually holds. (LINKS, her first tentative
+                  word, lasted one look at the built thing.) */}
+              THOUGHTS
+            </span>
+          </button>
+          <div
+            id="sheet-drawer-panel"
+            // fixed + top:auto = the static position's top (the wrapper's own
+            // line), horizontal from the right formula above. Full border +
+            // all corners rounded: a floating panel, not an attached flap.
+            className={`fixed right-[max(1rem,calc((100vw_-_66rem)/2_-_14rem))] w-60 rounded-xl border-[0.5px] border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] p-[5px] shadow-[0_10px_30px_rgba(11,14,19,0.35)] ${drawerOpen ? '' : 'hidden'}`}
+          >
+            {neighbors && (
+              <>
+                {/* The travel rows exist exactly where the rails do not: below
+                    1200px the viewport gutter is narrower than a rail, so the
+                    drawer carries prev/next there (same 1200 floor as the
+                    rails' `min-[1200px]:flex`) — as the SYSTEM'S verb rows, a
+                    thought note's PREVIOUS/NEXT verbatim; the project's name
+                    rides the accessible label. */}
+                {/* The breakpoint rides a plain WRAPPER div, never the rows:
+                    `.reach-drawer__row`'s unlayered display:flex beats a
+                    layered Tailwind `min-[1200px]:hidden` (the language.css
+                    layer trap, met again 2026-08-20 — measured: PREVIOUS
+                    rendered at 1440px). A div with no unlayered display rule
+                    hides its children reliably. */}
+                <div className="min-[1200px]:hidden">
+                  <button
+                    type="button"
+                    onClick={() => goTo(neighbors.prev.id)}
+                    aria-label={`Previous project: ${neighbors.prev.title}`}
+                    className="reach-drawer__row w-full"
+                  >
+                    ‹ PREVIOUS
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => goTo(neighbors.next.id)}
+                    aria-label={`Next project: ${neighbors.next.title}`}
+                    className="reach-drawer__row w-full"
+                  >
+                    NEXT ›
+                  </button>
+                  <div className="mx-[11px] my-1 h-px bg-[var(--lang-hairline)]" />
+                </div>
+              </>
+            )}
+            <p className="px-[11px] pt-1.5 pb-1 font-mono text-[9px] tracking-[0.18em] text-[var(--lang-ink-muted)] uppercase">
+              Made me think of
+            </p>
+            <ul className="list-none">
+              {related.map((t) => (
+                <li key={t.id}>
+                  <Link
+                    to={thoughtRoute(t)}
+                    viewTransition
+                    className="reach-drawer__row reach-drawer__row--title w-full no-underline"
+                  >
+                    {t.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
 
       {/* `overscroll-contain`: reaching the end of the sheet's own scroll must
           not hand the gesture to the page underneath it. Without it a flick
@@ -387,113 +714,144 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
           contribution is unambiguously its content, and the container sizes to
           it in every engine. `min-h-0` stays: it is what lets this scroll once
           max-height caps the sheet. */}
-      <div className="no-scrollbar min-h-0 grow overflow-y-auto overscroll-contain px-5 py-4 sm:px-7 sm:py-5">
+      <div ref={scrollerRef} className="no-scrollbar min-h-0 grow overflow-y-auto overscroll-contain px-5 py-4 sm:px-7 sm:py-5">
         {/* THE TOP ROW: asset side + title/info side (the printed plate's
             head-beside-figure). Phones stack info first (T1: title › claim ›
             proof); desktop puts the asset left (sm:order-first). */}
         <div className={current ? 'grid grid-cols-1 gap-x-7 gap-y-4 sm:grid-cols-[1.05fr_1fr]' : ''}>
-          <div className="pr-9 sm:pr-8">
-            {/* THE ONE-LINE IDENTITY (her ruling on the mocked options,
-                2026-08-20): title, lens pill and award share the first line,
-                which is one row saved and a lighter top on every card. A long
-                title wraps the pill cluster to its own line via flex-wrap, so
-                the worst case degrades back to the old two rows.
-                tabIndex -1 so the sheet can land focus here on open (see the
-                layout effect): programmatically focusable, never a tab stop. */}
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 pr-1">
-              <h2
-                ref={titleRef}
-                tabIndex={-1}
-                id={titleId}
-                className="text-lead leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)] outline-none"
-              >
-                {entry.title}
-              </h2>
-              <span className="flex items-center gap-x-2.5">
-                <LensPill lens={entry.lens} />
-                {entry.awardFace &&
-                  (entry.awardHref ? (
-                    <a
-                      href={entry.awardHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`font-mono text-micro font-medium tracking-[0.1em] ${INK_LINK}`}
-                    >
-                      <span aria-hidden="true">✦ </span>
-                      {entry.awardFace}
-                      <span className="sr-only"> (opens in new tab)</span>
-                    </a>
-                  ) : (
-                    <span className="font-mono text-micro font-medium tracking-[0.1em] text-[var(--lang-ink)]">
-                      <span aria-hidden="true">✦ </span>
-                      {entry.awardFace}
-                    </span>
-                  ))}
-              </span>
-            </div>
+          <div className="flex flex-col pr-9 sm:pr-8">
+            {/* THE FILE CARD (her C ruling off the head-composition board,
+                2026-08-20, closing the head's third round — measured first:
+                the old stack ended 63–127px above the asset's foot with every
+                internal gap 10–16px, all the air pooled invisibly below).
+                The kicker line is GONE, structurally, not cosmetically: the
+                title takes the first line, the question breathes under it,
+                and the lens pill + award become the LEDGER's first rows
+                (TYPE · AWARD · TEAM · STACK), pinned with the links to the
+                asset's baseline by mt-auto. The air is now one deliberate
+                band in the middle of the column — it grows on short projects,
+                shrinks on long ones, and the links always land on the same
+                ground line as the asset. The award got QUIETER (a grid row,
+                never louder — its ceiling holds). On phones the column takes
+                its natural height, mt-auto collapses, and pt-4 keeps the old
+                rhythm — the anchor logic only exists where the head stands
+                beside the asset.
+                tabIndex -1 on the title so the sheet can land focus there on
+                open: programmatically focusable, never a tab stop. */}
+            <h2
+              ref={titleRef}
+              tabIndex={-1}
+              id={titleId}
+              className="text-title leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)] outline-none max-sm:text-[26px]"
+            >
+              {entry.title}
+            </h2>
 
             {/* THE CLAIM: the question slot (D4) over the signed dek — the
                 site asks, then answers. The dot (Emilie, 2026-07-14) reveals
                 the other questions the project answers; pressing one lights
                 the spine section that holds the answer. */}
+            {/* THE DOT RIDES THE LAST WORD (2026-08-20, caught on Playscape's
+                plate: the dot wrapped to its own line under the question). An
+                nbsp cannot fix this one — CSS line-breaking allows a wrap
+                before an atomic inline (the dot is a button) no matter what
+                character precedes it — so the question's last word and the
+                dot share a nowrap span and travel together. Same words. */}
             {entry.question && (
-              <p className="mt-3.5 max-w-[48ch] font-serif text-prose leading-snug italic text-[var(--lang-ink)]">
-                {entry.question}
+              <p className="mt-3 max-w-[48ch] font-serif text-prose leading-snug italic text-[var(--lang-ink)]">
+                {spine?.alsoAnswers && spine.alsoAnswers.length > 0 && entry.question.includes(' ')
+                  ? entry.question.slice(0, entry.question.lastIndexOf(' ') + 1)
+                  : entry.question}
                 {spine?.alsoAnswers && spine.alsoAnswers.length > 0 && (
-                  <>
-                    {' '}
+                  <span className="whitespace-nowrap">
+                    {entry.question.includes(' ')
+                      ? entry.question.slice(entry.question.lastIndexOf(' ') + 1)
+                      : ''}
+                    {' '}
                     <QuestionsDot also={spine.alsoAnswers} dialogRef={ref} />
-                  </>
+                  </span>
                 )}
               </p>
             )}
-            <p className={`${entry.question ? 'mt-1.5' : 'mt-3.5'} max-w-[48ch] font-serif text-body leading-snug text-[var(--lang-ink)]`}>
-              {entry.dek}
-            </p>
+            {/* THE PHRASE LEFT THE HEAD (her instinct, the head-air board,
+                2026-08-20: "remove the phrase and only keep the question").
+                The dek stays signed data — the OG description, the book's
+                index page and the CV still read it — the head just stopped
+                saying the answer before the reader asked. */}
 
-            {/* THE FACTS GRID (her ruling on the mocked options, 2026-08-20):
-                the meta credit row and the mono tech + stat line stop being an
-                unanchored mono soup. Each fact starts at a tiny label, so a
-                wrapped line always hangs under its own row, and a recruiter's
-                eye jumps straight to STACK. The PROOF row renders only when a
-                project carries a stat, so the grid degrades to two rows. */}
-            <div className="mt-3.5 grid grid-cols-[auto_1fr] items-baseline gap-x-3.5 gap-y-1 font-mono text-micro text-[var(--lang-ink-muted)]">
-              <span className="text-[0.85em] tracking-[0.15em] opacity-70">TEAM</span>
-              <span className="tracking-[0.08em]">{entry.meta}</span>
-              <span className="text-[0.85em] tracking-[0.15em] opacity-70">STACK</span>
-              <span className="tracking-[0.06em]">{entry.tech}</span>
-              {entry.stat && (
+            {/* THE LEDGER (the File Card's rows; PROOF stayed out — the stat
+                survives in the record, off the head).
+                MARKS OUT, CASE IN (her tick-value refinement, 2026-08-20:
+                one row had a square, one a star, two nothing — "either
+                remove those or add something before team and stack", and
+                caps labels want non-caps values "to differentiate"). So NO
+                glyphs anywhere — the pill and the ✦ left the table (both
+                live on elsewhere: card faces, filters, the book's
+                recognition pages) — and the case split IS the system:
+                labels CAPS-and-tracked, values lowercase, one mono voice
+                from the container. The linked award keeps the CV's
+                quiet-door grammar (dashed line + red hover), inheriting the
+                ledger's color. */}
+            <div className="mt-auto grid grid-cols-[auto_1fr] items-baseline gap-x-3.5 gap-y-1 pt-4 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
+              {/* The FULL lens name, like the book's plate (her note,
+                  2026-08-20: the grid has room the pill never had). */}
+              <span className="text-[0.85em] tracking-[0.15em] opacity-70">TYPE</span>
+              <span className="lowercase">{LENSES[entry.lens].label}</span>
+              {entry.awardFace && (
                 <>
-                  <span className="text-[0.85em] tracking-[0.15em] opacity-70">PROOF</span>
-                  <span className="tracking-[0.06em]">{entry.stat}</span>
+                  <span className="text-[0.85em] tracking-[0.15em] opacity-70">AWARD</span>
+                  {entry.awardHref ? (
+                    <a
+                      href={entry.awardHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative lowercase underline decoration-dashed decoration-1 decoration-[var(--lang-ink-muted)] underline-offset-4 transition-colors hover:text-[var(--lang-interaction)] hover:decoration-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)]"
+                    >
+                      {entry.awardFace}
+                      <span className="sr-only"> (opens in new tab)</span>
+                    </a>
+                  ) : (
+                    <span className="lowercase">{entry.awardFace}</span>
+                  )}
+                </>
+              )}
+              <span className="text-[0.85em] tracking-[0.15em] opacity-70">TEAM</span>
+              <span className="lowercase">{entry.meta}</span>
+              <span className="text-[0.85em] tracking-[0.15em] opacity-70">STACK</span>
+              <span className="lowercase">{entry.tech}</span>
+              {/* LINKS IS THE FIFTH ROW (her C ruling off the six real
+                  mockups, 2026-08-20): the doors joined the record. The
+                  ledger's own typeface, lowercase like every value, RED as
+                  the only signal — no dot, no underline at rest (hover
+                  underlines, the focus ring stays; -m-2 p-2 is the sanctioned
+                  quiet-context hit pad, QUIET_LINK_TAP's own). The head is
+                  three things now: name, question, record. */}
+              {hasLinks && (
+                <>
+                  <span className="text-[0.85em] tracking-[0.15em] opacity-70">LINKS</span>
+                  {/* Middots BETWEEN the doors (her touch-up, 2026-08-20):
+                      the row separates like STACK's value does. The dots
+                      inherit the ledger's muted voice — they are punctuation,
+                      not pressable, so they never wear the red. */}
+                  <span className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
+                    {entry.links.map((l, i) => (
+                      <Fragment key={l.href}>
+                        {i > 0 && <span aria-hidden="true">·</span>}
+                        <a
+                          href={l.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="-m-2 p-2 lowercase text-[var(--lang-interaction)] no-underline underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+                        >
+                          {l.label}
+                          <span className="sr-only"> (opens in new tab)</span>
+                        </a>
+                      </Fragment>
+                    ))}
+                  </span>
                 </>
               )}
             </div>
-
-            {/* THE LINKS, with the identity (her round-3 ruling): the pillar
-                door first (internal), then the links OUT. The negative margin
-                keeps the 44px hit boxes from inflating the row rhythm. */}
-            {hasLinks && (
-              <div className="mt-2 flex flex-wrap items-center gap-x-5 font-mono text-label tracking-[0.1em]">
-                {isPillarRelated(entry.tags) && (
-                  <Link to={PILLAR_PATH} viewTransition className={`-my-2 ${RED_LINK_ROW}`}>
-                    BEHAVIOR INFORMATION MODELING ›
-                  </Link>
-                )}
-                {entry.links.map((l) => (
-                  <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className={`-my-2 ${RED_LINK_ROW}`}>
-                    {/* A live deployment wears the liveness dot (Emilie,
-                        2026-07-15: clearer than words; red = liveness,
-                        governance rule 1). */}
-                    {/\blive\b/i.test(l.label) && (
-                      <span aria-hidden="true" className="mr-1.5 inline-block size-1.5 rounded-full bg-[var(--lang-interaction)]" />
-                    )}
-                    {l.label}
-                    <span className="sr-only"> (opens in new tab)</span>
-                  </a>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* THE ASSET SIDE: a 16:9 WHITE MAT (Emilie's bulletproof ruling,
@@ -520,7 +878,15 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                     <button type="button" onClick={nextPage} aria-label="Next picture" className={`${FLIP_BTN} right-2`}>
                       &rsaquo;
                     </button>
-                    <span className="absolute right-3 bottom-2 rounded-[var(--r-pill)] bg-[var(--lang-scrim-rest)] px-2.5 py-1 font-mono text-micro tracking-[0.1em] text-white">
+                    {/* On a VIDEO page the counter rides top-right (Emilie's
+                        green light 2026-08-20): bottom-right sat on the
+                        native control bar and crowded the timeline. Image
+                        pages keep it at the foot, where nothing lives. */}
+                    <span
+                      className={`absolute right-3 rounded-[var(--r-pill)] bg-[var(--lang-scrim-rest)] px-2.5 py-1 font-mono text-micro tracking-[0.1em] text-white ${
+                        current.kind === 'video' ? 'top-2' : 'bottom-2'
+                      }`}
+                    >
                       {Math.min(page, pages.length - 1) + 1} / {pages.length}
                     </span>
                   </>
@@ -532,11 +898,19 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
           )}
         </div>
 
-        {/* THE SPINE, straight down in two book columns (no collapse; balanced
-            CSS columns pack tighter than a grid, so the plate fits without
-            scrolling). Each beat avoids splitting across the column break.
-            (The links left the foot for the info side, her round-3 ruling.) */}
-        <div className="mt-4 sm:[column-gap:2.25rem] sm:[columns:2]">
+        {/* THE SPINE AS A 2×2 SYSTEM (her touch-up, 2026-08-20: "what and
+            how aligned vertically in the same line, same for why and what
+            came of it"). Balanced CSS columns packed tighter but paired the
+            beats by accident of length; the grid pairs them by LAW:
+            grid-flow-col with two rows places WHAT,WHY down the first
+            column and HOW,OUTCOME down the second, so WHAT|HOW share a top
+            line and WHY|OUTCOME share a second — four quadrants, scannable
+            as a table. A thin spine (no HOW/OUTCOME) simply leaves its
+            column short. Phones keep the single stack.
+            mt-10 from sm (her air note, same day): the head section and the
+            story are two sections; the plate scale re-shelves honestly for
+            the taller content. */}
+        <div className="mt-5 sm:mt-10 sm:grid sm:grid-flow-col sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-x-9 sm:gap-y-2">
           {spineBeats}
         </div>
       </div>

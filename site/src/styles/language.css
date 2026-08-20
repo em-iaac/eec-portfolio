@@ -746,6 +746,29 @@ textarea,
   stroke-width: 2.2;
   stroke-linecap: round;
 }
+/* THE RAIL GRADE (her recording, 2026-08-20: the sheet's prev/next discs
+   drew "too small and black and blobby"). The artifacts' strokes are
+   non-scaling (above) and tuned for the card plates; inside a 64px disc the
+   geometry shrinks ~4x while the ink stays plate-thick, so the drawings
+   clot. This grade thins every line to the disc's own scale — the same
+   drawing, re-inked for a smaller sheet of paper, exactly what an engraver
+   would do. */
+.work-art--rail svg {
+  /* second pass (her note, same night): the drawing fills more of the
+     bigger disc and the ink steps up with it. */
+  width: 84%;
+  height: 84%;
+}
+.work-art--rail .ln {
+  stroke-width: 1.2;
+}
+.work-art--rail .th {
+  stroke-width: 0.75;
+  opacity: 0.5;
+}
+.work-art--rail .acs {
+  stroke-width: 1.5;
+}
 .work-plate__foot {
   display: flex;
   flex: none;
@@ -1349,6 +1372,23 @@ li[data-glow] > button {
   color: var(--lang-ink-muted);
   text-decoration: none;
   white-space: nowrap;
+}
+/* A TITLE ROW (the sheet's thoughts drawer joined the system, 2026-08-20):
+   a row whose wording is a THOUGHT'S NAME, not a verb, so it keeps the
+   record's serif lowercase italic voice inside the system's row box — the
+   44px floor, the pill radius, the hover wash and focus ring all unchanged.
+   Names wrap (a title is allowed two lines; a verb never needs them) and the
+   box breathes vertically so a wrapped name is not clipped by the floor. */
+.reach-drawer__row--title {
+  font-family: var(--font-serif);
+  font-size: var(--text-small);
+  font-style: italic;
+  text-transform: lowercase;
+  letter-spacing: normal;
+  color: var(--lang-ink);
+  white-space: normal;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 .reach-drawer__row.is-on {
   background: var(--lang-ink);

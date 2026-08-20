@@ -219,7 +219,11 @@
 .pr-assets__foot .pr-link,
 .pr-about__foot .pr-link,
 .pr-index__foot .pr-link,
-.pr-colophon .pr-link {
+.pr-colophon .pr-link,
+/* THE LEDGER'S LINKS ROW (her R1 ruling then her C ruling, 2026-08-20): the
+   live address, blog and github print the footer's exact red inside the
+   plate's ledger — the one signal the table carries. */
+.pr-plate-links .pr-link {
   text-decoration: none;
   color: var(--pr-red);
 }
@@ -403,8 +407,15 @@
 .pr-plate__head {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 12mm 18mm 5mm;
+  /* THE FILE CARD (her C ruling off the head-composition board, 2026-08-20):
+     title › question pin to the cell's top line, the ledger + live row stand
+     on its foot (the grid's margin-top: auto below), and the air is the one
+     deliberate band between — the same split-anchor the site's sheet
+     composes against its asset. Bottom padding dropped 5mm → 1.5mm: the
+     ledger's ground line must read as the HERO's ground line beside it, and
+     a 5mm lift at an 18mm gap read as almost-aligned — the worst kind. */
+  justify-content: flex-start;
+  padding: 12mm 18mm 1.5mm;
 }
 .pr-spread--plate.pr-spread--recto .pr-plate__head {
   padding-left: 12mm; /* hero right: left is the outer edge */
@@ -508,18 +519,94 @@
   display: block;
   margin: 0 0 3mm;
 }
+/* ============ THE SITE'S KICKER HEAD, ON PAPER (2026-08-20) ============
+   The sheet's head anatomy printed: one quiet mono kicker line (lens tick +
+   short word · the FULL award — print has room, faces carry the least), then
+   the title, the question in the serif italic the site asks in, the dek, the
+   TEAM/STACK/PROOF grid, and the live door. Print registers hold: no red dot
+   on the question (red means press), the live door is red because it IS the
+   one pressable thing a PDF can carry (a link annotation). */
+/* OPT 1, the airy minimum (her ruling off the head-air board, same day):
+   the PILL is back in the kicker row, the phrase and the PROOF row are gone,
+   the spacing opened toward the before she missed. */
+/* (.pr-plate-kicker came and went 2026-08-20: the File Card ruling dissolved
+   the floating line into the ledger below — TYPE and AWARD are grid rows now.
+   Sensi's was the one kicker that wrapped, 11.7mm tall vs everyone's 6.5.) */
+/* The question rides pr-dek's metrics (11.5/15.75 italic ink — the book's
+   existing voice register, a lawful size); this class only spaces it. */
+.pr-plate-question {
+  margin: 0 0 3mm;
+  max-width: 138mm;
+  /* THE QUESTION'S OWN RUNG (her ruling, 2026-08-20 night: "keep it normal
+     and scale up the text even more"). The serif scale had nothing between
+     the dek's 11.5 and the title-sized 20, so the question earned 14pt —
+     bigger than the dek, still under the title — added to the guard's
+     allowlist as a deliberate amendment of the law, one leading as always:
+     19.5pt is 26 CSS px exactly (the whole-pixel rule). `balance` is GONE
+     at her word — she disliked the even split breaking after "floor" —
+     so the line breaks where the words fall. */
+  font-size: 14pt;
+  line-height: 19.5pt;
+}
+/* (.pr-plate-dek came and went 2026-08-20: the phrase left the head at her
+   instinct on the head-air board; the dek lives on in the index page, the OG
+   cards and the CV.) */
+.pr-plate-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 3mm;
+  row-gap: 1.3mm;
+  align-items: baseline;
+  /* THE ANCHOR (the File Card, 2026-08-20): auto takes ALL the cell's free
+     height, so the ledger + live row stand on the cell's foot — the same
+     ground the hero stands on — and the head's air becomes one deliberate
+     band under the question instead of 6–17mm pooling invisibly down here.
+     The padding is the floor that air can never drop below. */
+  margin-top: auto;
+  padding-top: 4.5mm;
+}
+.pr-plate-grid__label {
+  font-size: 5.6pt; /* the mono scale's smallest lawful rung */
+  letter-spacing: 0.16em;
+  color: var(--pr-ink-muted);
+}
+/* MARKS OUT, CASE IN (her tick-value refinement, 2026-08-20): no glyphs in
+   the table, and the case split is the system — labels CAPS-and-tracked,
+   every value lowercase in the one muted mono voice. */
+.pr-plate-grid > span:not(.pr-plate-grid__label) {
+  text-transform: lowercase;
+}
+.pr-plate-grid__award {
+  /* One type system (her tweak, 2026-08-20): color and tracking come from
+     pr-mono--muted like every other value — never red, never louder. Only
+     the wrap is this class's job: the full spelling breaking cleanly under
+     its label is what structurally retired Sensi's two-line kicker. */
+  white-space: normal;
+}
+/* (.pr-plate-live and its dot came and went 2026-08-20: the standalone row
+   dissolved into the ledger's LINKS row — her C ruling off six real mockups —
+   and the dot retired with it; red text alone is the signal now.) */
+.pr-plate-links {
+  display: flex;
+  flex-wrap: wrap;
+  /* tighter now the middots separate (her touch-up, 2026-08-20) */
+  column-gap: 2mm;
+  row-gap: 1mm;
+}
 .pr-spread__title {
   margin: 0 0 3mm;
 }
 .pr-spread__dek {
-  margin: 0 0 6mm;
+  /* 6mm → 3mm with the kicker head (2026-08-20): the grid sits below the dek
+     now, and the fullest head (Sensi: two-line kicker, two-line question,
+     two-line dek, three grid rows, the live door) must clear its 77mm cell. */
+  margin: 0 0 3mm;
   max-width: 138mm;
-  /* THE DEK KEEPS ITS TWO-LINE SLOT (her C1, 2026-08-19). The head is
-     bottom-anchored, so Verve's one-line dek dropped its title 16.5pt below
-     the line the other seven titles share — the book's only off-mode role.
-     Reserving both lines (2 x 15.75pt) pins all eight titles to one
-     baseline whether the dek runs one line or two. */
-  min-height: 31.5pt;
+  /* THE TWO-LINE SLOT RETIRED with the bottom anchor (2026-08-20, the site's
+     kicker head): her C1 reservation existed so a one-line dek could not
+     drop the title below the other seven — a bottom-anchor problem. The head
+     is TOP-anchored now, so every title pins to one top line by construction
+     and the dek may take exactly the lines it needs. */
 }
 .pr-spine {
   columns: 2;

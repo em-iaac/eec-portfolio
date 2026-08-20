@@ -273,7 +273,14 @@ export default function Work() {
         </section>
       )}
 
-      {selected && <WorkOverlay key={selected.id} entry={selected} onClose={close} />}
+      {/* NO key (the template tweak round, 2026-08-20). Keyed by id, paging
+          project-to-project on the new rails REMOUNTED the dialog: the top
+          layer emptied for a frame, the page behind flashed through, and the
+          entrance animation replayed — her report, "the header shows and then
+          disappears". Un-keyed, the same open dialog swaps its content in
+          place and the backdrop never blinks; WorkOverlay resets its own
+          per-project state on entry.id (page, lightbox, drawer, scroll). */}
+      {selected && <WorkOverlay entry={selected} onClose={close} />}
     </SheetPage>
   )
 }

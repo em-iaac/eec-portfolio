@@ -12,11 +12,16 @@ const sensi: ProjectMeta = {
   slug: 'sensi',
   title: 'Sensi',
   lens: 'computation',
-  // · LIVE APP joined the meta 2026-08-19, when Sensi moved to her own GitHub
-  // and went up as a public demo. It is the same third segment The Lungs and
-  // NeuroSpace already carry: a project with a running deployment says so on
-  // the card, not only down in its links row.
-  meta: 'MACAD STUDIO · TEAM OF 4 · LIVE APP',
+  // · LIVE APP left the meta STRING on 2026-08-20 (her ruling at the moving-
+  // parts audit): the sheet's facts grid anchors this row to a TEAM label now,
+  // and liveness is not a team fact — the pressable red ● LIVE APP one line
+  // below carries it on screen. The BOOK keeps printing the full rail
+  // (`liveApp` below; PrintBook appends · LIVE APP), because print has no
+  // links row and the plate is its only liveness mention — which is exactly
+  // why the segment joined on 2026-08-19 when Sensi moved to her own GitHub
+  // and went up as a public demo.
+  meta: 'MACAD STUDIO · TEAM OF 4',
+  liveApp: true,
   award: 'MACAD AWARDS 2026 · DESIGN COPILOTS · WINNER',
   awardShort: "MACAD '26 WINNER",
   dek: 'Comfort, designed on purpose: a copilot scores a plan across six senses, calibrated to a person, not an average.',

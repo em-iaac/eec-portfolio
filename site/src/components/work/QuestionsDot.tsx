@@ -165,7 +165,13 @@ export default function QuestionsDot({
           style={{ translate: `${shift}px 0` }}
           // SOLID tier fill, never nested glass (the NB AA ruling: backdrop
           // blur does not compose inside the already-blurred plate).
-          className="nbtip-enter absolute top-5 left-[-120px] z-10 block w-[264px] rounded-[var(--r-control)] border-[0.5px] border-[var(--lang-glass-2-border)] bg-[var(--lang-glass-2-solid)] py-1.5 text-left"
+          // `whitespace-normal` is load-bearing (2026-08-20): the dot's anchor
+          // now lives inside the question's `whitespace-nowrap` span (the
+          // widow fix — the dot must ride the last word), and nowrap INHERITS,
+          // so without this every question in the tip rendered as one
+          // unwrappable line overflowing the panel onto the plate behind it —
+          // her screenshot, text over text.
+          className="nbtip-enter absolute top-5 left-[-120px] z-10 block w-[264px] rounded-[var(--r-control)] border-[0.5px] border-[var(--lang-glass-2-border)] bg-[var(--lang-glass-2-solid)] py-1.5 text-left whitespace-normal"
         >
           <span className="block px-3.5 pt-1 pb-0.5 font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)]">
             ALSO ANSWERS

@@ -45,7 +45,28 @@
 // pause button for everyone including touch, and the drag itself.
 import { useEffect, useRef } from 'react'
 
-const PX_PER_SECOND = 4
+// 10px/s — Emilie's pick off the speed ladder, 2026-08-20 ("go for belt 10").
+// She set 4 on 08-02 and judged it slow at the moving-parts audit; the ladder
+// (?belt=6|8|12, stepped on her own machine) settled it at 10. At this speed
+// the award tile holds the first screen ~22s.
+const PX_PER_SECOND = 10
+
+// THE LAG WAS THE SHIMMER, NOT THE ENGINE (the lag hunt, closed 2026-08-20).
+// Her report was that the drift "felt a bit laggy"; the frame numbers were
+// clean on every machine that could be measured, and the URL ladder she
+// stepped on her own screen cleared the suspects one by one: backdrop-blur
+// off felt NO smoother ("if anything a bit more obvious" — the glass stays),
+// but ?snap=1 she ruled "feels better". The cause: at fractional display
+// scaling (her laptop runs 2.5×) a layer translated by SUB-pixel amounts
+// resamples its texture every frame, so crisp hairlines and mono text
+// shimmer as they cross pixel boundaries — which the eye reads as lag, at
+// any speed, with or without blur. So the painted transform now rounds to
+// whole DEVICE pixels (see `paint` below), the same stepping native
+// scrolling produces: at 10px/s and 2.5× that is 25 crisp steps a second.
+// Two more findings from the same hunt, both kept: the belt used to sit DEAD
+// after a mouse drag (Chrome focuses a link on mousedown, so :focus-within
+// held it until the next click anywhere — the blur in endDrag releases it),
+// and the drift speed is hers off the ladder.
 // After a hand lets go, the belt glides, then waits this long before drifting
 // again. Short, because "it continues from where I stopped" is the whole point;
 // long enough that the drift does not appear to fight the last of the glide.
@@ -82,6 +103,13 @@ export default function useBeltDrift({
   pausedRef.current = paused
   const reverseRef = useRef(reverse)
   reverseRef.current = reverse
+  // The sleeping loop's restart handle (see `wake` below): prop changes land
+  // through refs so the main effect is never rebuilt, which means unpausing
+  // needs its own way to restart a loop that went to sleep while paused.
+  const wakeRef = useRef<(() => void) | null>(null)
+  useEffect(() => {
+    if (!paused) wakeRef.current?.()
+  }, [paused])
 
   useEffect(() => {
     const el = ref.current
@@ -113,11 +141,22 @@ export default function useBeltDrift({
       if (v < 0) return v + h
       return v
     }
+    // THE DEVICE-PIXEL SNAP (her ruling off the ladder, 2026-08-20: "snap
+    // feels better" — the header comment has the whole account). The OFFSET
+    // stays fractional — the arithmetic of the loop, the wrap and the glide
+    // are untouched — only the PAINTED value rounds to the device grid, so
+    // edges are always crisp instead of resampling every frame. dpr is read
+    // once per mount; a zoom change mid-visit paints on the old grid until
+    // the next mount, which is invisible (the rounding is at worst half a
+    // device pixel off).
+    const dpr = window.devicePixelRatio || 1
+    const paint = (v: number) => Math.round(v * dpr) / dpr
     const write = (v: number) => {
       offset = v
+      const p = paint(v)
       track.style.transform = horizontal
-        ? `translate3d(${-v}px, 0, 0)`
-        : `translate3d(0, ${-v}px, 0)`
+        ? `translate3d(${-p}px, 0, 0)`
+        : `translate3d(0, ${-p}px, 0)`
     }
 
     const still = () =>
@@ -130,30 +169,65 @@ export default function useBeltDrift({
       now() < userUntil ||
       el.matches(':focus-within')
 
+    // THE LOOP SLEEPS WHEN THE BELT IS STILL (2026-08-20, the moving-parts
+    // audit; Emilie's green light). The old loop re-requested rAF forever —
+    // paused, hovered, off-screen, it still woke the CPU 60 times a second to
+    // early-return, which keeps the page from ever going idle. Now the loop
+    // EXITS when there is nothing to animate and `wake()` restarts it from
+    // the same events that end a stillness: the cursor leaving, a drag
+    // ending, the tab showing, the belt scrolling back on screen, focus
+    // leaving, the pause lifting. `last` resets on wake so the first frame
+    // after a sleep measures dt 0 instead of a clamped 64ms jump.
+    let running = false
+    let resumeTimer: ReturnType<typeof setTimeout> | undefined
+
     const frame = (t: number) => {
-      raf = requestAnimationFrame(frame)
       const dt = last ? Math.min(t - last, 64) : 0
       last = t
-      if (!dt) return
 
       // THE GLIDE runs even while `still()` is true: it IS the visitor's own
       // gesture finishing, not the belt's drift, so pause must not cut it off
       // mid-throw. It ends by decaying, and the drift takes over after.
       if (!dragging && velocity !== 0) {
-        write(wrap(offset + velocity * dt))
-        velocity *= Math.pow(GLIDE_FRICTION, dt / 16)
-        if (Math.abs(velocity) < GLIDE_STOP_PX_PER_MS) {
-          velocity = 0
-          userUntil = now() + RESUME_AFTER_MS
+        if (dt) {
+          write(wrap(offset + velocity * dt))
+          velocity *= Math.pow(GLIDE_FRICTION, dt / 16)
+          if (Math.abs(velocity) < GLIDE_STOP_PX_PER_MS) {
+            velocity = 0
+            userUntil = now() + RESUME_AFTER_MS
+          }
+        }
+        raf = requestAnimationFrame(frame)
+        return
+      }
+      if (still()) {
+        // Sleep. The one stillness that ends by CLOCK rather than by event is
+        // the post-gesture rest (`userUntil`), so that alone arms a timer.
+        running = false
+        const wait = userUntil - now()
+        if (wait > 0) {
+          clearTimeout(resumeTimer)
+          resumeTimer = setTimeout(wake, wait + 16)
         }
         return
       }
-      if (still()) return
-      // Fractional, every frame. This is the whole reason the belt is
-      // translated rather than scrolled.
-      const step = (PX_PER_SECOND * dt) / 1000
-      write(wrap(offset + (reverseRef.current ? -step : step)))
+      if (dt) {
+        // The offset advances fractionally every frame (the whole reason the
+        // belt is translated rather than scrolled); `write` snaps only what
+        // is painted.
+        const step = (PX_PER_SECOND * dt) / 1000
+        write(wrap(offset + (reverseRef.current ? -step : step)))
+      }
+      raf = requestAnimationFrame(frame)
     }
+
+    const wake = () => {
+      if (running) return
+      running = true
+      last = 0
+      raf = requestAnimationFrame(frame)
+    }
+    wakeRef.current = wake
 
     const onEnter = (e: PointerEvent) => {
       // A touch "enters" on contact; only a real hovering pointer should hold
@@ -163,6 +237,7 @@ export default function useBeltDrift({
     }
     const onLeave = () => {
       hovering = false
+      wake()
     }
 
     // THE DRAG, for every pointer type. A mouse gets nothing from the browser
@@ -209,6 +284,20 @@ export default function useBeltDrift({
       // A finger that stopped before lifting should not throw the belt.
       if (now() - lastT > 90) velocity = 0
       if (velocity === 0) userUntil = now() + RESUME_AFTER_MS
+      // A POINTER DRAG MUST NOT PARK THE BELT (the lag hunt, 2026-08-20).
+      // Chrome focuses a link on mousedown, so grabbing the belt with a mouse
+      // left `:focus-within` true when the hand let go — and the belt sat
+      // DEAD until the next click anywhere on the page. That is a stopped
+      // belt answering a finished gesture, and it reads exactly as "laggy".
+      // Blur only after a REAL drag (a tap/click must keep its focus ring and
+      // its navigation), and only if focus actually sits inside the belt —
+      // the keyboard's focus-stop is untouched because a keyboard never drags.
+      if (moved > DRAG_SLOP_PX) {
+        const a = document.activeElement
+        if (a instanceof HTMLElement && el.contains(a)) a.blur()
+      }
+      // The glide (or the post-rest resume timer) needs the loop awake.
+      wake()
     }
     // A drag that ends over a tile must not also open it.
     const onClickCapture = (e: MouseEvent) => {
@@ -224,8 +313,22 @@ export default function useBeltDrift({
         ? null
         : new IntersectionObserver(([entry]) => {
             onScreen = !!entry?.isIntersecting
+            if (onScreen) wake()
           })
     io?.observe(el)
+
+    // Every event that can END a stillness wakes the sleeping loop; `wake`
+    // is idempotent, so waking an already-running loop costs one boolean.
+    const onVisibility = () => {
+      if (!document.hidden) wake()
+    }
+    const onFocusOut = () => wake()
+    const onPrmChange = () => {
+      if (!prm.matches) wake()
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+    el.addEventListener('focusout', onFocusOut)
+    prm.addEventListener?.('change', onPrmChange)
 
     el.addEventListener('pointerenter', onEnter)
     el.addEventListener('pointerleave', onLeave)
@@ -234,11 +337,17 @@ export default function useBeltDrift({
     el.addEventListener('pointerup', endDrag)
     el.addEventListener('pointercancel', endDrag)
     el.addEventListener('click', onClickCapture, true)
-    raf = requestAnimationFrame(frame)
+    wake()
 
     return () => {
+      running = false
       cancelAnimationFrame(raf)
+      clearTimeout(resumeTimer)
+      wakeRef.current = null
       io?.disconnect()
+      document.removeEventListener('visibilitychange', onVisibility)
+      el.removeEventListener('focusout', onFocusOut)
+      prm.removeEventListener?.('change', onPrmChange)
       el.removeEventListener('pointerenter', onEnter)
       el.removeEventListener('pointerleave', onLeave)
       el.removeEventListener('pointerdown', onPointerDown)

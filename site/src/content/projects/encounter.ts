@@ -22,8 +22,11 @@ const encounter: ProjectMeta = {
   question: 'Can a cemetery be designed around life instead of loss?',
   award: 'FINALIST @ CTRL ACT DESIGN',
   // The face's short form (the full line truncated on 390px tiles); the
-  // certificate's own words, never "won".
-  awardShort: 'SHORTLISTED FINALIST',
+  // certificate's own words, never "won". SHORTLISTED FINALIST itself cut
+  // 13px on the 390 /work grid (measured, moving-parts audit) — trimmed to
+  // the one word at her sign-off, 2026-08-20. The sheet and dek keep the
+  // full "shortlisted as finalist" fact.
+  awardShort: 'SHORTLISTED',
   tech: 'SKETCHUP · AUTOCAD · PHOTOSHOP',
   links: [
     { label: 'JEMMA CHIDIAC · PROJECT', href: 'https://jemmachidiacarchitects.com/projects/anfeh-cemetery/' },

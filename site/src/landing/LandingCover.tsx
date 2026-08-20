@@ -94,16 +94,18 @@ function withVariables(para: string): ReactNode {
 // server is dead and the site already says so honestly.
 const PROOF_ID = 'sensi'
 const PROOF_AWARD = ENTRIES.find((e) => e.kind === 'award' && e.refId === PROOF_ID)
-// "MaCAD Awards 2026 · Design Copilots · winner (Sensi)" ->
-// "MaCAD Awards 2026 · winner". The middle segment (the category) and the
-// parenthetical (the project, which the card names anyway) are what a card
-// face has no room for. Uppercased by CSS, which is how every other mono
-// label on the site reaches its final form.
-const AWARD_SHORT = (() => {
-  const parts = PROOF_AWARD?.title.replace(/\s*\([^)]*\)\s*$/, '').split('·').map((s) => s.trim())
-  if (!parts?.length) return ''
-  return parts.length > 1 ? `${parts[0]} · ${parts[parts.length - 1]}` : parts[0]!
-})()
+// THE FACE WEARS THE /WORK SPELLING (Emilie's ruling 2026-08-20, the
+// moving-parts audit). The derived long form — "MaCAD Awards 2026 · winner" —
+// overflowed the tile by a measured 42px at 1280 and 24px at 390, so every
+// belt narrower than 1440 printed "MACAD AWARDS 2026 · W…": the WINNER was
+// the part being cut. The signed face form in the master (awardShort,
+// "MACAD '26 WINNER", signed 2026-07-10) fits every tile width and is the
+// same face the /work card already wears — one award, one spelling, on every
+// card face; the full line stays on the sheet, the CV and the book.
+// The master meta file is ~2KB of strings (the prose lives in the spine
+// chunk), so the landing's no-heavy-imports rule holds.
+import sensiMeta from '../content/projects/sensi'
+const AWARD_SHORT = sensiMeta.awardShort ?? PROOF_AWARD?.title ?? ''
 
 const THOUGHTS = thoughtIndexEntries()
 const THOUGHT_COUNT = THOUGHTS.length
@@ -263,6 +265,12 @@ export default function LandingCover() {
   useEffect(() => {
     assertPaletteMatchesTheme()
   }, [])
+
+  // (The lag hunt came and went 2026-08-20, all in one day: a ?glass=off rung
+  // cleared the backdrop-blur — off felt NO smoother, the glass stays — and a
+  // ?snap=1 rung caught the real cause: sub-pixel shimmer at fractional
+  // display scaling, now baked as the device-pixel snap in useBeltDrift. The
+  // ladder, the ?probe readout and this page's part in them are gone.)
 
   return (
     // THE LANDMARKS SIT OUTSIDE MAIN (accessibility audit, 2026-07-27). The
@@ -823,7 +831,9 @@ function MindSection() {
         <p className="mt-6 font-mono text-micro tracking-[0.14em] text-[var(--lang-ink-muted)] uppercase">
           This is what&apos;s on my mind ·{' '}
           <Link to="/contact" viewTransition className={`pointer-events-auto ${RED_LINK}`}>
-            What&apos;s in yours? &gt;
+            {/* &nbsp; so the arrow can never widow onto its own line (it did
+                at 390, measured 2026-08-20). Same words, unbreakable join. */}
+            What&apos;s in yours?&nbsp;&gt;
           </Link>
         </p>
 

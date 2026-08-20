@@ -1477,6 +1477,26 @@ h3 {
   display: flex;
   flex-direction: column;
 }
+/* OPTICALLY CENTERED, CONTENT-TALL (the plate-size question's third and
+   standing ruling, Emilie 2026-08-20). The road here: a FIXED 47.5rem plate
+   ("most text as a base") lasted one look; PINNED-TOP content height ("only
+   the bottom extends") made the short exploration plates hang high and "look
+   a bit wrong"; her third call — center them all — ships with one refinement:
+   the centering BOX is lifted 5dvh, so every plate sits a touch above true
+   center. True vertical centering reads LOW (the print-shop illusion, the
+   same reason pictures are mounted above the geometric middle); this is the
+   optical mount, in pure CSS. Each plate stays exactly its content's height,
+   no transition, and paging moves both hems symmetrically about one line.
+   `bottom` shrinks the box the UA's `margin: auto` centers within — no
+   transform (a transformed dialog would become the containing block for the
+   rails' `position: fixed`) and no JS measuring.
+   Desktop only: the phone bottom sheet docks and sizes as it always has. */
+@media (min-width: 40rem) {
+  .work-dialog {
+    top: 0;
+    bottom: 5dvh;
+  }
+}
 /* THE PAGE BEHIND THE SHEET IS BLURRED (Emilie, 2026-08-06: "the background
    behind the card, so let's say we open it from the landing, should be blurred
    so the focus is on the card of the project").

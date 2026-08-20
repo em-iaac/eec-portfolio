@@ -10,7 +10,10 @@ const lungs: ProjectMeta = {
   slug: 'lungs',
   title: 'The Lungs',
   lens: 'computation',
-  meta: 'MACAD STUDIO · DATA TEAM OF 3 · LIVE APP',
+  // · LIVE APP left the meta string 2026-08-20 (the TEAM-label ruling; see
+  // sensi.ts). The book still prints it via `liveApp`.
+  meta: 'MACAD STUDIO · DATA TEAM OF 3',
+  liveApp: true,
   award: 'STUDIO AWARD',
   myPart: 'Data team of three: we built the app that ran the studio.',
   dek: "The studio’s data was the architecture: a live app running a hyperbuilding designed to filter a city’s air.",

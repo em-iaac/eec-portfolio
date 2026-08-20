@@ -115,6 +115,13 @@ export interface ProjectMeta {
   title: string
   lens: Lens
   meta: string
+  // A running public deployment (2026-08-20, the TEAM-label ruling): the
+  // SHEET says liveness once, in the pressable red links row, so the meta
+  // string no longer carries "· LIVE APP" — but the printed BOOK has no links
+  // row, its meta rail is its only liveness mention, and this flag is how
+  // PrintBook appends the segment back. Word-for-word what the book printed
+  // before the string was trimmed.
+  liveApp?: boolean
   award?: string
   // The card face's corner-pill short wording (DL-2); the full award line
   // still renders verbatim in the showcase.

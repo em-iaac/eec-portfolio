@@ -63,7 +63,10 @@ export const STRIP_PROJECTS: StripProject[] = ENTRIES.filter(
   (e) => e.kind === 'project' && e.lens && e.sheet,
 ).map((e) => ({
   id: e.id,
-  title: e.title,
+  // The face form where one exists (registry faceTitle, 2026-08-20): a title
+  // that truncates on every tile gets a shorter face; the sheet keeps the
+  // whole name.
+  title: e.faceTitle ?? e.title,
   lens: e.lens!,
   number: e.sheet!.number,
   // The face's origin stamp is derived from the master's meta row in

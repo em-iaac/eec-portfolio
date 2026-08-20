@@ -9,7 +9,7 @@
 // test renderToString’s them directly, and headless Chrome prints them.
 // Variants (cover, index) exist for the design gates and collapse to
 // Emilie’s pick when she signs.
-import type { ReactNode } from 'react'
+import { Fragment, type ReactNode } from 'react'
 import LogoMark from '../components/LogoMark'
 import { LENSES, LensGlyph, type Lens } from '../components/Lens'
 // ADJECTIVES left this import at her C ruling (2026-08-19): the roles line is
@@ -206,14 +206,10 @@ function PrLensTick({ lens, size }: { lens: Lens; size: number }) {
 // social cards render to files at build time too and were carrying the same
 // machine-dependent glyph, so the shape is defined once for both.
 
-function LensPill({ lens }: { lens: Lens }) {
-  return (
-    <span className="pr-pill">
-      <PrLensTick lens={lens} size={8} />
-      {LENSES[lens].label}
-    </span>
-  )
-}
+// (LensPill lived here twice in one day, 2026-08-20 — kicker head, then the
+// head-air board's OPT 1 — and retired for good with the tick-value ledger:
+// "since we have it as a table system we can't have the type as a pill".
+// The plate's TYPE row prints the lens label as plain text now.)
 
 /* ---- 1 · THE COVER ------------------------------------------------------
    The cover carries the SITE’S OWN FRONT DOOR (Emilie’s gate ruling,
@@ -479,7 +475,16 @@ function Folio({ n, side }: { n: number; side: PageSide }) {
 /** A separator must never begin a wrapped line (the book audit’s B22: three
  *  rails broke as "· D5", "· REACT" and "LIVE / APP"). Binding the "·" to the
  *  word before it with a no-break space keeps every break AFTER a separator,
- *  never before one. */
+ *  never before one. (`rail`, just below the helper.)
+ *
+ *  The BOOK's meta rail keeps · LIVE APP (2026-08-20, the TEAM-label ruling):
+ *  the sheet dropped the segment from the meta string because its pressable
+ *  red links row says liveness one line below — but print has no links row,
+ *  this rail is the plate's only liveness mention, and it joined deliberately
+ *  on 2026-08-19. Derived from the master's `liveApp` flag so the printed
+ *  words are exactly what the book said before the string moved. */
+const metaRail = (master: { meta: string; liveApp?: boolean }) =>
+  rail(master.liveApp ? `${master.meta} · LIVE APP` : master.meta)
 const rail = (s: string) => s.replace(/ · /g, ' · ')
 
 function Spread({ data, side, plate, page }: { data: SpreadData; side: PageSide; plate: number; page: number }) {
@@ -526,28 +531,83 @@ function Spread({ data, side, plate, page }: { data: SpreadData; side: PageSide;
     </span>
   )
 
+  // (THE LIVE DOOR's derivation lived here 2026-08-20, morning to evening:
+  // first "LIVE APP · host", then the bare host, and finally the row simply
+  // prints every link's own label like the site's — the ledger's LINKS row
+  // below needs no special case, and the URL still rides the annotation.)
+
+  // THE FILE CARD (her C ruling off the head-composition board, 2026-08-20,
+  // superseding the same day's airy minimum — measured first: the 77mm cell
+  // held 48–59mm of content with 6–17mm pooled at its foot, and Sensi's
+  // kicker was the one head that wrapped, 11.7mm tall vs everyone's 6.5).
+  // The kicker row is GONE: the title takes the cell's first line, the
+  // question breathes under it, and the lens pill + full award become the
+  // LEDGER's first rows (TYPE · AWARD · TEAM · STACK), pinned with the links
+  // to the cell's foot — the same ground the hero stands on — by the grid's
+  // margin-top auto (print.css). The award got QUIETER: a grid row at the
+  // rail's own size, ink, never louder. The site's sheet composes the same
+  // way; one family, two dialects.
+  // THE LINKS PRINT RED (her R1 ruling, same board): the whole pressable
+  // phrase joins the footer's exact grammar — red means press here, and the
+  // head's links were the last holdout. Blog + github stayed (her confirmed
+  // 08-19 reversal); full award spelling, no red dot on the question.
+  // ⚠ THE P-NUMBER IS STILL NOT PRINTED (Emilie, 2026-08-12) — PLATE NN up
+  // the seam remains the book's only sequence.
   const head = (
     <>
-      {/* ⚠ THE P-NUMBER IS NOT PRINTED (Emilie, 2026-08-12). The book carried
-          TWO numbering systems on one page: `P-101` here, which is the SITE’s
-          catalogue number, and `PLATE 01` up the seam, which is the book’s own
-          sequence. In book order the P-numbers read 101, 106, 102, 105, 103,
-          104, 108, 121, so to anyone who has not memorised the site they look
-          arbitrary, and they sat in the most prominent corner of the page.
-          PLATE NN survives because it counts 01 to 08 in the order the reader
-          meets them. `entry.number` is still the site’s, and /work still shows
-          it; only the book stops repeating it. */}
-      <div className="pr-spread__meta">
-        <LensPill lens={entry.lens} />
-        <span className="pr-mono pr-mono--muted">{rail(master.meta)}</span>
-      </div>
-      {entry.recognition && (
-        <span className="pr-mono pr-spread__award">
-          <RecognitionMark size={6} /> {entry.recognition}
-        </span>
-      )}
       <h2 className="pr-title pr-spread__title">{master.title}</h2>
-      {master.dek && <p className="pr-dek pr-spread__dek">{master.dek}</p>}
+      {/* The QUESTION at its own 14pt rung (pr-plate-question, print.css —
+          her night ruling: bigger, wrapping NORMALLY, no balance). The last
+          two words are glued with a no-break space: at natural wrapping The
+          Huddle printed a one-word second line (measured), and her widow law
+          stands — a second line carries at least two words. Same words. */}
+      {master.question && (
+        <p className="pr-dek pr-plate-question">{master.question.replace(/ (\S+)$/, ' $1')}</p>
+      )}
+      {/* THE LEDGER — MARKS OUT, CASE IN (her tick-value refinement,
+          2026-08-20: one row wore the pill, one the recognition mark, two
+          nothing). No glyphs in the table — the pill and the mark live on
+          elsewhere (the index's legend, the recognition pages) — and the
+          case split is the system: labels CAPS, values lowercase
+          (pr-plate-grid, print.css), one muted mono voice.
+          LINKS IS THE FIFTH ROW (her C ruling off the six real mockups,
+          same day): the doors joined the record — live app, blog and github
+          print red in the ledger's own face, the one signal the table
+          carries (the dot retired with the standalone row).
+          Head anatomy is two groups now: title+question pin the cell's top,
+          the five-row record stands on its foot, one air band between. */}
+      <div className="pr-plate-grid pr-mono">
+        <span className="pr-plate-grid__label">TYPE</span>
+        <span className="pr-mono--muted">{LENSES[entry.lens].label}</span>
+        {entry.recognition && (
+          <>
+            <span className="pr-plate-grid__label">AWARD</span>
+            <span className="pr-mono--muted pr-plate-grid__award">{entry.recognition}</span>
+          </>
+        )}
+        <span className="pr-plate-grid__label">TEAM</span>
+        <span className="pr-mono--muted">{rail(master.meta)}</span>
+        <span className="pr-plate-grid__label">STACK</span>
+        <span className="pr-mono--muted">{rail(master.tech)}</span>
+        {(master.links?.length ?? 0) > 0 && (
+          <>
+            <span className="pr-plate-grid__label">LINKS</span>
+            {/* The links wear their own LABELS, same as the site's row (her
+                note, 2026-08-20 evening: "write live app instead of the
+                url" — the address detour lasted a day; the URL still rides
+                the annotation and the footer). Middots between the doors
+                like STACK's value — muted punctuation, never red. */}
+            <span className="pr-plate-links pr-mono--muted">
+              {(master.links ?? []).map((l, i) => (
+                <Fragment key={l.href}>
+                  {i > 0 && <span aria-hidden="true">·</span>}
+                  <PrLink href={l.href}>{l.label}</PrLink>
+                </Fragment>
+              ))}
+            </span>
+          </>
+        )}
+      </div>
     </>
   )
 
@@ -762,7 +822,7 @@ function AssetPage({ data, side, plate, page }: { data: SpreadData; side: PageSi
               foot carrying the thread instead of the title, this page never
               named its project in type. Now it does, once, up here. */}
           <span className="pr-mono">{master.title}</span>
-          <span className="pr-mono pr-mono--muted">{rail(master.meta)}</span>
+          <span className="pr-mono pr-mono--muted">{metaRail(master)}</span>
           {/* THE HEAD NOW CARRIES THE TECH LINE, under a hairline (Emilie,
               2026-08-12: "maybe we should have some type of header with the
               plate, the context and the tools or tech used"). The facing project

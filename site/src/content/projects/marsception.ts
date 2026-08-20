@@ -28,6 +28,12 @@ const marsception: ProjectMeta = {
   // beats SIGNED at the S2 sign-off, 2026-07-17.
   question: 'How do you design a habitat for Mars?',
   award: 'TOP 50 @ VOLUME ZERO',
+  // Face form signed 2026-08-20 (moving-parts audit, second round): the full
+  // line cut 13px on the 390 /work grid, and the first fix — swapping @ for a
+  // middot — bought no width, so it still cut. The face carries the least:
+  // TOP 50 alone. VOLUME ZERO stays on the sheet's full award line and
+  // everywhere else the long form prints.
+  awardShort: 'TOP 50',
   myPart: 'A two-person entry with Charles Abi Chahine.',
   tech: 'RHINO · SUBD · AI WORKFLOWS · V-RAY',
   links: [],

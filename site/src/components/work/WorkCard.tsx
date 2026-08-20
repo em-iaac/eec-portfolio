@@ -13,7 +13,7 @@
 // Card's `face` override so the glass skin, the morph plumbing and the button
 // semantics stay in the primitive. Print and OG never render plates
 // (screen-only by intent; the book keeps true covers).
-import { useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import Card from '../ui/Card'
 import useHasHover from '../../hooks/useHasHover'
 import Img, { findImage } from '../Img'
@@ -40,7 +40,29 @@ export default function WorkCard({
   // The reveal state: pointer or keyboard focus wakes the tile (every tile
   // now, not only animated covers: the cover itself is behind the plate).
   const [hovered, setHovered] = useState(false)
+  // THE DWELL BEAT (Emilie's ruling 2026-08-20, the moving-parts audit). The
+  // still cover reveals instantly (11–21KB, already the feel of the grid);
+  // the ANIMATED file only starts loading after the cursor has rested 200ms.
+  // Before this, sweeping the cursor across the grid pulled every animated
+  // cover it crossed — 58–720KB each at the 640 rung, and ~16MB for a full
+  // sweep on a dpr>2 screen resolving the 1024 rung. A deliberate hover
+  // pays once; a pass-through pays nothing.
+  const [playing, setPlaying] = useState(false)
+  const dwellRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasHover = useHasHover()
+  useEffect(() => {
+    if (!hovered) {
+      if (dwellRef.current) clearTimeout(dwellRef.current)
+      dwellRef.current = null
+      setPlaying(false)
+      return
+    }
+    dwellRef.current = setTimeout(() => setPlaying(true), 200)
+    return () => {
+      if (dwellRef.current) clearTimeout(dwellRef.current)
+      dwellRef.current = null
+    }
+  }, [hovered])
   const animatedCover = entry.cover
     ? Boolean(findImage(entry.cover.slug, entry.cover.name)?.animated)
     : false
@@ -81,7 +103,10 @@ export default function WorkCard({
       <span className="work-plate__foot">
         <span className="flex min-w-0 items-center gap-1.5 text-small leading-tight font-semibold text-[var(--lang-ink)]">
           <LensMark lens={entry.lens} size={9} />
-          <span className="truncate">{entry.title}</span>
+          {/* The face form where the full title cannot fit (registry
+              faceTitle, Emilie's ruling 2026-08-20); the sheet one tap away
+              keeps the whole name. */}
+          <span className="truncate">{entry.faceTitle ?? entry.title}</span>
         </span>
         {entry.awardFace && (
           <span className="truncate font-mono text-micro tracking-[0.08em] text-[var(--lang-ink)]">
@@ -106,7 +131,8 @@ export default function WorkCard({
             name={entry.cover.name}
             alt={entry.cover.alt}
             priority={priority}
-            still={!hovered || !animatedCover}
+            still={!playing || !animatedCover}
+            capPlay
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
             className="block h-full w-full object-cover"
           />

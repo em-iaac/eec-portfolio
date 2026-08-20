@@ -77,6 +77,12 @@ export interface RegistryEntry {
   kind: EntryKind
   date: string // 'YYYY-MM'
   title: string
+  // The CARD FACE's short title where the full one cannot fit (2026-08-20,
+  // Emilie's ruling at the moving-parts audit: faces are index entries, so a
+  // title that truncates on every face gets a face form instead). Only the
+  // /work grid tile and the landing belt tile read it; the sheet, the book,
+  // search and the worlds keep `title` whole.
+  faceTitle?: string
   lens?: Lens
   tags: string[]
   sheet?: SheetRef
@@ -274,6 +280,9 @@ export const ENTRIES: RegistryEntry[] = [
     kind: 'project',
     date: '2023-10',
     title: 'Rings of Mars: Ring 4000',
+    // Signed 2026-08-20: the full title truncated on all four card faces
+    // (measured -4 to -25px, moving-parts audit).
+    faceTitle: 'Rings of Mars',
     lens: 'practice',
     tags: ['ai', 'practice', 'future'],
     sheet: sheet('P-109', 'in-preparation', 'mars'),

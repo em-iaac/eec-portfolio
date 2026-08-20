@@ -13,7 +13,10 @@ const neurospace: ProjectMeta = {
   slug: 'neurospace',
   title: 'NeuroSpace',
   lens: 'computation',
-  meta: 'MACAD · SOLO · LIVE APP',
+  // · LIVE APP left the meta string 2026-08-20 (the TEAM-label ruling; see
+  // sensi.ts). The book still prints it via `liveApp`.
+  meta: 'MACAD · SOLO',
+  liveApp: true,
   dek: 'Your room is doing something to you right now: move a slider and watch a browser score it live.',
   dekSigned: true,
   // THE QUESTION (D4 round 2, Emilie’s direction 2026-07-14): visualize the

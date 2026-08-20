@@ -77,8 +77,15 @@ export default function ShowcaseRoute() {
   return (
     <>
       {behind}
+      {/* NO key (the flash's third head, her report 2026-08-20: "if the
+          projects are opened from the landing page from the belt, the flash
+          remains, but if opened from the work page it's fixed"). Work.tsx
+          dropped its remount key and the overlay's open effect went
+          mount-only — but THIS mount site still keyed by id, so paging with
+          the rails over the landing / thoughts / cv remounted the dialog and
+          replayed the backdrop fade. Same rule both places now: the overlay
+          resets its own per-project state on entry.id. */}
       <WorkOverlay
-        key={entry.id}
         entry={entry}
         // BACK, not a navigate to /work. Going back returns them to the page
         // they opened it from, at the scroll position they left, which is the

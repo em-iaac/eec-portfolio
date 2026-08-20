@@ -528,7 +528,9 @@ const SIZE_ALLOW = [
   { key: /Caveat/, sizes: [10.5] },
   // 20 = the about page's voice headline, sanctioned for exactly that one
   // line (her C pick at the about-page audit, 2026-08-19).
-  { key: /./, sizes: [7.6, 9, 10, 11.5, 20] }, // Source Serif 4 + its optical instances
+  // 14 joined 2026-08-20 (her ruling): the plate question's own rung —
+  // the scale had nothing between the dek's 11.5 and the title-sized 20.
+  { key: /./, sizes: [7.6, 9, 10, 11.5, 14, 20] }, // Source Serif 4 + its optical instances
 ]
 const COLOR_ALLOW = new Set([
   '#16181d', '#565b63', '#8a919c', '#f5f6f7', // ink · muted · faint · ground

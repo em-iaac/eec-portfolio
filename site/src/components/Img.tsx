@@ -30,6 +30,7 @@ export default function Img({
   priority = false,
   develop = false,
   still = false,
+  capPlay = false,
   className,
   style,
 }: {
@@ -45,6 +46,13 @@ export default function Img({
    *  2026-07-14: grid covers sit STILL at rest; the caller flips this off
    *  while hovered to play, and reduced motion still wins below). */
   still?: boolean
+  /** Cap animated PLAYBACK at the smallest rung (Emilie's ruling 2026-08-20,
+   *  the moving-parts audit). Card covers render at 180–300 CSS px, so the
+   *  640 file is already ≥2× supersampled — but a dpr>2 screen was resolving
+   *  the srcset to the 1024 rung: falcon 1113KB, urban-risk 2003KB, per
+   *  hover. Cover call sites pass this; the stage and the Lightbox keep the
+   *  full ladder. Stills are never capped (they are 11–21KB anyway). */
+  capPlay?: boolean
   className?: string
   style?: CSSProperties
 }) {
@@ -56,7 +64,11 @@ export default function Img({
   // of looping (governance rule 7 applies to figures too). A `still` caller
   // gets the same first frame even without the preference.
   const variants =
-    entry.animated && (prm || still) && entry.static?.length ? entry.static : entry.variants
+    entry.animated && (prm || still) && entry.static?.length
+      ? entry.static
+      : entry.animated && capPlay
+        ? entry.variants.slice(0, 1)
+        : entry.variants
   const largest = variants[variants.length - 1]
   if (!largest) return null
   // Develop owns the filter transition; hover no longer colorizes (retired
