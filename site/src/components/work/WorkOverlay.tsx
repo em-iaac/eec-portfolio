@@ -13,10 +13,12 @@
 //      (video>live>photo>audio>text), then every supporting frame; ‹ ›
 //      arrows flip, tapping a picture opens it full size in the Lightbox
 //      (her pick: arrows flip, tap zooms). The TITLE/INFO side carries the
-//      identity the old top bar held: title, lens + award, the claim (the
-//      question slot when D4's discovery session fills it, then the signed
-//      dek), the plate's meta credit row, the mono tech + stat line, and the
-//      LINKS (pillar door + links out; her round-3 ruling: the links live
+//      identity the old top bar held: the ONE-LINE IDENTITY (title + lens +
+//      award on the first line; her ruling on the mocked options, 2026-08-20),
+//      the claim (the question slot when D4's discovery session fills it,
+//      then the signed dek), the TEAM/STACK/PROOF facts grid (same ruling:
+//      the meta row and the tech + stat line, each anchored to a label), and
+//      the LINKS (pillar door + links out; her round-3 ruling: the links live
 //      with the project identity, next to the asset — the foot retired).
 //      Depth stays in the linked repo/blog (a portfolio, not a blog).
 //   2. THE SPINE below, straight down in two wide columns (no "THE STORY"
@@ -391,36 +393,43 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
             proof); desktop puts the asset left (sm:order-first). */}
         <div className={current ? 'grid grid-cols-1 gap-x-7 gap-y-4 sm:grid-cols-[1.05fr_1fr]' : ''}>
           <div className="pr-9 sm:pr-8">
-            {/* tabIndex -1 so the sheet can land focus here on open (see the
+            {/* THE ONE-LINE IDENTITY (her ruling on the mocked options,
+                2026-08-20): title, lens pill and award share the first line,
+                which is one row saved and a lighter top on every card. A long
+                title wraps the pill cluster to its own line via flex-wrap, so
+                the worst case degrades back to the old two rows.
+                tabIndex -1 so the sheet can land focus here on open (see the
                 layout effect): programmatically focusable, never a tab stop. */}
-            <h2
-              ref={titleRef}
-              tabIndex={-1}
-              id={titleId}
-              className="text-lead leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)] outline-none"
-            >
-              {entry.title}
-            </h2>
-            <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1">
-              <LensPill lens={entry.lens} />
-              {entry.awardFace &&
-                (entry.awardHref ? (
-                  <a
-                    href={entry.awardHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`font-mono text-micro font-medium tracking-[0.1em] ${INK_LINK}`}
-                  >
-                    <span aria-hidden="true">✦ </span>
-                    {entry.awardFace}
-                    <span className="sr-only"> (opens in new tab)</span>
-                  </a>
-                ) : (
-                  <span className="font-mono text-micro font-medium tracking-[0.1em] text-[var(--lang-ink)]">
-                    <span aria-hidden="true">✦ </span>
-                    {entry.awardFace}
-                  </span>
-                ))}
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 pr-1">
+              <h2
+                ref={titleRef}
+                tabIndex={-1}
+                id={titleId}
+                className="text-lead leading-tight font-semibold tracking-[-0.01em] text-[var(--lang-ink)] outline-none"
+              >
+                {entry.title}
+              </h2>
+              <span className="flex items-center gap-x-2.5">
+                <LensPill lens={entry.lens} />
+                {entry.awardFace &&
+                  (entry.awardHref ? (
+                    <a
+                      href={entry.awardHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`font-mono text-micro font-medium tracking-[0.1em] ${INK_LINK}`}
+                    >
+                      <span aria-hidden="true">✦ </span>
+                      {entry.awardFace}
+                      <span className="sr-only"> (opens in new tab)</span>
+                    </a>
+                  ) : (
+                    <span className="font-mono text-micro font-medium tracking-[0.1em] text-[var(--lang-ink)]">
+                      <span aria-hidden="true">✦ </span>
+                      {entry.awardFace}
+                    </span>
+                  ))}
+              </span>
             </div>
 
             {/* THE CLAIM: the question slot (D4) over the signed dek — the
@@ -442,14 +451,24 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
               {entry.dek}
             </p>
 
-            {/* The plate's meta credit row + the mono tech (+ stat) line. */}
-            <p className="mt-3.5 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
-              {entry.meta}
-            </p>
-            <p className="mt-1.5 font-mono text-micro tracking-[0.06em] text-[var(--lang-ink-muted)]">
-              {entry.tech}
-              {entry.stat && <span> · {entry.stat}</span>}
-            </p>
+            {/* THE FACTS GRID (her ruling on the mocked options, 2026-08-20):
+                the meta credit row and the mono tech + stat line stop being an
+                unanchored mono soup. Each fact starts at a tiny label, so a
+                wrapped line always hangs under its own row, and a recruiter's
+                eye jumps straight to STACK. The PROOF row renders only when a
+                project carries a stat, so the grid degrades to two rows. */}
+            <div className="mt-3.5 grid grid-cols-[auto_1fr] items-baseline gap-x-3.5 gap-y-1 font-mono text-micro text-[var(--lang-ink-muted)]">
+              <span className="text-[0.85em] tracking-[0.15em] opacity-70">TEAM</span>
+              <span className="tracking-[0.08em]">{entry.meta}</span>
+              <span className="text-[0.85em] tracking-[0.15em] opacity-70">STACK</span>
+              <span className="tracking-[0.06em]">{entry.tech}</span>
+              {entry.stat && (
+                <>
+                  <span className="text-[0.85em] tracking-[0.15em] opacity-70">PROOF</span>
+                  <span className="tracking-[0.06em]">{entry.stat}</span>
+                </>
+              )}
+            </div>
 
             {/* THE LINKS, with the identity (her round-3 ruling): the pillar
                 door first (internal), then the links OUT. The negative margin

@@ -51,7 +51,8 @@ const spine: ProjectSpine = {
       The platform tracked three design teams across the full ten-week studio, and it is still
       live, with two doors: a public page where anyone can watch the tower’s data, and a
       managerial side behind IAAC emails. Building a platform alongside the project it supports
-      is messy, and the mess is the lesson: the building breathes, so does the app.
+      is messy, the teams’ data outran the app more than once, and the mess is the lesson: the
+      building breathes, so does the app.
     </>
   ),
 }

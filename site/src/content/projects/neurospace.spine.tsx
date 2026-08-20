@@ -21,7 +21,8 @@ const spine: ProjectSpine = {
       makes that invisible layer legible: move a slider and the room rebuilds while a score
       answers back, live. I built it on my own: a Grasshopper definition doing the heavy geometry
       on the server through Rhino.Compute, Three.js drawing the room in the browser, and a
-      scoring pass that estimates the behavioral effect the moment you let go.
+      scoring pass that estimates the behavioral effect the moment you let go. It is built to be
+      played with, not read.
     </>
   ),
   why: (
@@ -52,13 +53,18 @@ const spine: ProjectSpine = {
   ],
   // ✔ SIGNED by Emilie, 2026-08-18 (the book audit): the slot used to carry no
   // event at all; it now leads with the checkable and keeps every honesty line.
+  // REOPENED KNOWINGLY at the words pass (2026-08-19, her ruling): the Valentine
+  // line joins the end. She is the podcast's guest and a named researcher in the
+  // field; her feedback on NeuroSpace itself came up in the interview round.
   outcome: (
     <>
       It shipped live: the app runs in the browser today, and the weights it scores with sit in
       the public repo, which means you can read them and argue with them.
       <NB note="a score you can argue with beats a number you have to trust." /> The score stays
       a heuristic, not an instrument. It estimates; it never measures your body, and it shows
-      every assumption on the way to the number so you are free to overrule it.
+      every assumption on the way to the number so you are free to overrule it. When Dr. Cleo
+      Valentine saw it, her note set the frame I kept: treat every score as a hypothesis, then
+      watch how it translates.
     </>
   ),
 }

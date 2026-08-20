@@ -18,7 +18,9 @@ const spine: ProjectSpine = {
       A render is a promise, not a product: you cannot snap a JPEG together on your living-room
       floor. lEgoarCh takes a text prompt and returns a LEGO Architecture set that is digitally
       verified buildable: AI imagines it, deterministic code makes it snap together, brick by
-      brick, out of real catalog parts. Built with Charles Abi Chahine, end to end as a pair.
+      brick, out of real catalog parts. Built with Charles Abi Chahine, end to end as a pair; I
+      stitched the stages into one flow, prompt in, set out, and gave it its interface and its
+      story.
     </>
   ),
   why: (
@@ -30,7 +32,7 @@ const spine: ProjectSpine = {
   ),
   how: [
     <>
-      A LoRA tuned on a 40-image dataset teaches FLUX the LEGO Architecture look; the prompt
+      A LoRA fine-tuned on a 40-image dataset teaches FLUX the LEGO Architecture look; the prompt
       becomes a styled render.
     </>,
     <>TRELLIS lifts the render into a 3D mesh, and the mesh is voxelized into brick space.</>,

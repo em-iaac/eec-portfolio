@@ -107,7 +107,10 @@ export const EDUCATION: CvEntry[] = [
       // evidence-backed rather than fashionable.
       'Sensi, an agentic copilot scoring a floor plan across six senses, calibrated to a person. Project lead, team of four.',
       "The Lungs, the deployed app that ran the studio: a hyperbuilding designed to filter a city's air. Data team of three.",
-      'lEgoarCh, a pipeline turning generative images into brick sets verified buildable against the real catalogue.',
+      // THE SWEEP (2026-08-19, her ruling): the input is a TEXT prompt, not
+      // images (the renders are the pipeline's intermediate), and "catalog"
+      // takes the US spelling the spine already uses.
+      'lEgoarCh, a pipeline turning a text prompt into brick sets verified buildable against the real catalog.',
       'Methods: agent orchestration, generative pipelines, Rhino Compute, machine learning applied in teams.',
     ],
   },
@@ -179,6 +182,12 @@ export const EXPERIENCE: CvEntry[] = [
       // measure, so it had the room to say what the work actually was. SubD
       // and the AI workflows are both on the project's own tech row.
       'Rings of Mars: Ring 4000, a Marsception entry with Charles Abi Chahine: SubD modeling and generative AI.',
+      // THE WORDS PASS (2026-08-19, her ruling): "design system" claimed. The
+      // Pen Table is real and countable (tokens + type shared by the site, the
+      // printed book and the share cards), and the term is near-universal in
+      // big-tech design-technologist listings. No card count in the string, so
+      // the line can never go stale.
+      "Pen Table, this portfolio's design system: one token set governing the site, a printed book and the share cards.",
       // Workshops dropped: she ATTENDS them, and attending a workshop is not a
       // self-employed activity. Only the research claim survives.
       'Ongoing independent research in computational design and emerging technologies.',
@@ -197,7 +206,9 @@ export const EXPERIENCE: CvEntry[] = [
     // Abdullatif Al Fozan Award on mosque architecture", which was the third
     // strand and is now gone. Raised with her rather than dropped silently.
     projects: [
-      'The Encounter, an Anfeh cemetery in planted tomb terraces: shaped the concept, landscape and tomb details. Finalist.',
+      // Aligned DOWN at the sweep (2026-08-19, her ruling): the project master
+      // says "concept support" and she ruled the CV was overstating.
+      'The Encounter, an Anfeh cemetery in planted tomb terraces: concept support, landscape and tomb details. Finalist.',
       'Falcon Square, an Al Khobar monument: takeoff lines mirrored into a steel falcon, led from the first sketch.',
     ],
   },
@@ -343,9 +354,18 @@ export const SKILLS = [
     // Re-weighted 2026-07-27: AI-assisted development is table stakes now, so
     // this group leads with what still discriminates. "Prompt engineering"
     // never appears (retired term).
+    // THE WORDS PASS (2026-08-19, her rulings): "LoRA fine-tuning" replaces the
+    // bare LoRA (the searchable spelling, verified against the actual training
+    // notebook), "experiment tracking (Weights & Biases)" and "rapid
+    // prototyping" join (both true, both screened), and "AI-augmented design
+    // workflows" gives up its slot as the row's vaguest phrase.
     group: 'AI workflows',
+    // Trimmed to TWO printed lines (her fix, 2026-08-20): the row had wrapped
+    // to three with only "design automation" stranded on the last. Only the
+    // connective glosses went ("of model output", "experiment tracking");
+    // every searchable term survived. Measured at 2 lines on the web CV.
     items:
-      'AI agents and copilots (LangGraph) · evaluation and benchmarking of model output · GenAI pipelines (ComfyUI · ControlNet · LoRA · FLUX) · AI-augmented design workflows · design automation',
+      'AI agents and copilots (LangGraph) · evaluation and benchmarking · GenAI pipelines (LoRA fine-tuning · FLUX · ComfyUI · ControlNet) · Weights & Biases · rapid prototyping · design automation',
   },
   {
     // Speckle restored (a named filter term for consultancy roles, and The
@@ -362,9 +382,13 @@ export const SKILLS = [
     // and communication words her widened targets screen on and the CV carried
     // nowhere. Neuroarchitecture itself stays in the narrative, never in a
     // skills row (it has no hiring market as a term).
+    // "Rhino-Revit interoperability" joined at the words pass (2026-08-19, her
+    // ruling): the exact phrase AEC listings screen on ("interoperable workflow
+    // particularly between Rhino and Revit", Gensler), and Rhino.Inside in the
+    // Ships-with row already evidences it.
     group: 'Domain',
     items:
-      'human experience · occupant wellbeing · daylighting · evidence-based design · research design · evaluation methods · benchmarking · human-AI interaction · demo and narrative craft',
+      'human experience · occupant wellbeing · daylighting · evidence-based design · research design · evaluation methods · benchmarking · Rhino-Revit interoperability · human-AI interaction · demo and narrative craft',
   },
 ]
 

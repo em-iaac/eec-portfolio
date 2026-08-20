@@ -390,7 +390,7 @@ export const DrawifaceFigure = (
 // built. The empty slot is the argument.
 export const EvosearchFigure = (
   <Fig
-    alt="A bar chart of the qualities a fitness function scores. Three bars, for weight, span and cost, are drawn and filled. A fourth slot labelled legible has no bar at all, only an empty dashed outline in red."
+    alt="A bar chart of the qualities a fitness function scores. Three bars, for weight, span and cost, are drawn and filled. A fourth slot labeled legible has no bar at all, only an empty dashed outline in red."
     caption="Four design qualities against a fitness function. Three carry a measure and are scored; the fourth has none and leaves the search."
   >
     <path className="ax" d="M36 138h232" />
@@ -497,7 +497,7 @@ export const RespondFigure = (
 // the toy version of one idea side by side. A translation.
 export const ExplainFigure = (
   <Fig
-    alt="On the left a dense tangle of boxes and arrows labelled the diagram; on the right the same idea as three stacked toy bricks in red, labelled the toy."
+    alt="On the left a dense tangle of boxes and arrows labeled the diagram; on the right the same idea as three stacked toy bricks in red, labeled the toy."
     caption="One idea in two representations: a process diagram, and the same process as three stacked bricks."
   >
     <rect className="th" x="26" y="40" width="30" height="18" />
@@ -565,7 +565,7 @@ export const AdjacencyFigure = (
 // that suspicious. Neither is labelled at the axis, on purpose.
 export const ExperienceFigure = (
   <Fig
-    alt="A learning curve plot. Two curves rise steeply and then flatten, one drawn in ink and one in red, following each other so closely they are almost indistinguishable. The horizontal axis is labelled experience on one side and data on the other."
+    alt="A learning curve plot. Two curves rise steeply and then flatten, one drawn in ink and one in red, following each other so closely they are almost indistinguishable. The horizontal axis is labeled experience on one side and data on the other."
     caption="Learning curves for a person and for a model, on a shared axis of experience and data. The two are near-indistinguishable in shape."
   >
     <path className="ax" d="M40 140h230M40 140V26" />
@@ -644,7 +644,7 @@ export const LlmFigure = (
 // ---------------------------------------------------------------------------
 export const LatentFigure = (
   <Fig
-    alt="A scatter of dots on two unlabelled axes. The dots gather into two loose clumps with empty space between them, and one dot in that empty space is marked in red."
+    alt="A scatter of dots on two unlabeled axes. The dots gather into two loose clumps with empty space between them, and one dot in that empty space is marked in red."
     caption="Points embedded on two unnamed axes. Clusters form by similarity; the marked point lies in the sparse region between them."
   >
     <path className="ax" d="M40 142h224M40 142V26" />

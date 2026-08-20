@@ -190,7 +190,7 @@
                                          "The inspired gesture is cheap now; anyone can generate a thousand renders before lunch.",
                                          "A render is a proposal. A connected, supported, catalog-legal brick model is the proof."
                                      ],
-                      "summary":  "lEgoarCh converts text prompts into physically buildable LEGO Architecture sets by pairing generative AI for design with deterministic computation for verification. The pipeline generates styled renders with a LoRA-tuned diffusion model, produces 3D meshes, voxelizes the geometry, and optimizes brick placement using real catalog LEGO parts while enforcing structural connectivity, support, and perceptual color accuracy.",
+                      "summary":  "lEgoarCh turns a text prompt into a LEGO Architecture collectible, digitally verified buildable, by pairing generative AI for design with deterministic computation for verification. The pipeline generates styled renders with a LoRA fine-tuned diffusion model, produces 3D meshes, voxelizes the geometry, and optimizes brick placement using real catalog LEGO parts while enforcing structural connectivity, support, and perceptual color accuracy.",
                       "techMentions":  [
                                            "FLUX.2 Klein",
                                            "Claude Haiku",

@@ -45,11 +45,16 @@ const spine: ProjectSpine = {
       was grown from.
     </>,
   ],
+  // The "bill of parts is exact at any moment" claim was CUT at the words pass
+  // (2026-08-19): asked to stand behind it, she could not place it, and a claim
+  // its author cannot explain does not ship. REDRAFTED next day at her note
+  // ("less poetic, more technical and real"): the outcome is the change of
+  // controls, physics placing the modules. The close is her own sentence.
   outcome: (
     <>
-      Because the building is an aggregation of known parts, the bill of parts is exact at any
-      moment: the architecture stays buildable arithmetic, not a sculpture. Wind, once a
-      problem, ends up as the project’s material.
+      Wind is physics, so the planning became physics too: collision and settling dictated the
+      groupings, and no module was placed by hand. We controlled the aggregation by tuning the
+      forces, which is the only way it did not control us.
     </>
   ),
 }

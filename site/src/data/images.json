@@ -922,7 +922,7 @@
     {
       "name": "perceptual-colour",
       "role": "gallery",
-      "alt": "Colour matching by CIEDE2000 instead of RGB distance, snapping every voxel to the nearest of 48 real LEGO colours",
+      "alt": "Color matching by CIEDE2000 instead of RGB distance, snapping every voxel to the nearest of 48 real LEGO colors",
       "aspect": 2.4205,
       "variants": [
         {
@@ -2431,7 +2431,7 @@
     {
       "name": "episode-art",
       "role": "gallery",
-      "alt": "Episode key art: a building cutaway splitting from grey efficiency into a warm, neuron-lit half, picturing the show’s core question",
+      "alt": "Episode key art: a building cutaway splitting from gray efficiency into a warm, neuron-lit half, picturing the show’s core question",
       "aspect": 1.8318,
       "variants": [
         {
@@ -3800,7 +3800,7 @@
     {
       "name": "reaction-cover",
       "role": "gif",
-      "alt": "An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space",
+      "alt": "An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in gray space",
       "aspect": 1.7778,
       "animated": true,
       "variants": [

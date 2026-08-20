@@ -19,15 +19,17 @@ const spine: ProjectSpine = {
       Every tool in the stack could tell us how a building performs. None of them would say how a
       room feels. Sensi closes that gap: a copilot that reads a floor plan and scores comfort
       across six senses (thermal, visual, acoustic, spatial, olfactory, tactile), calibrated to
-      one person at a time, not an average. Project lead, A to Z, built by a team of four:
-      Lakzhmy Mari Zaro, María Sánchez Domínguez, Charles Abi Chahine and me.
+      one person at a time, not an average. It was prototyped first as an MCP tool, then rebuilt
+      as a standalone app. Project lead, A to Z, built by a team of four: Lakzhmy Mari Zaro,
+      María Sánchez Domínguez, Charles Abi Chahine and me.
     </>
   ),
   why: (
     <>
       Comfort is usually the thing we hope shows up after the design is done. I wanted it to be a
       layer you can interrogate while the plan is still soft, because you do not walk into a room
-      and average your experience: the thing that is wrong is the thing you notice.
+      and average your experience: the thing that is wrong is the thing you notice. And nothing
+      you fix stays fixed alone: the whole project is the ripple, what a change drags along.
     </>
   ),
   how: [
@@ -45,8 +47,9 @@ const spine: ProjectSpine = {
       <NB note={'the six scores argue like a family. the coupling matrix is the dinner table.'} />
     </>,
     <>
-      The copilot suggests edits the layout can absorb, previews them without committing, then
-      renders the comparison and hands over the report.
+      The copilot suggests edits the layout can absorb and previews them without committing: a
+      vision model redraws the room’s atmosphere while keeping its structure, then hands over the
+      comparison and the report.
     </>,
   ],
   outcome: (

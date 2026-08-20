@@ -31,7 +31,7 @@ const xrLab: ProjectMeta = {
   image: {
     slug: 'xr',
     name: 'reaction-cover',
-    alt: 'An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space',
+    alt: 'An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in gray space',
   },
   showcaseDraft: false, // spine + credits + alts SIGNED by Emilie (S2 sign-off, 2026-07-17)
 }

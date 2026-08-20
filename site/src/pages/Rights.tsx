@@ -232,7 +232,7 @@ export default function Rights() {
             <div className={PROSE}>
               <Clause n="2.1">
                 All text, drawings, diagrams and the downloadable book on this site are the
-                copyright of Emilie El Chidiac. No licence for reuse is granted.
+                copyright of Emilie El Chidiac. No license for reuse is granted.
               </Clause>
               <Clause n="2.2">
                 Source code is published separately, in the repositories linked from each project,
@@ -301,7 +301,7 @@ export default function Rights() {
                 a colophon into an inventory. */}
             <div className={PROSE}>
               <Clause n="4.1">
-                The following third-party material is used under the licences stated.
+                The following third-party material is used under the licenses stated.
               </Clause>
             </div>
             <ul className="mt-3 max-w-[62ch]">

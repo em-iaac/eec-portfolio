@@ -306,7 +306,7 @@ export const ENTRIES: RegistryEntry[] = [
     project: 'xr-lab',
     // S2 enrich (2026-07-16): the first real cover for the quiet P-111 tile,
     // from her LAU XR Lab research assets; alt SIGNED by Emilie (S2 sign-off, 2026-07-17).
-    image: { slug: 'xr', name: 'reaction-cover', alt: 'An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space' },
+    image: { slug: 'xr', name: 'reaction-cover', alt: 'An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in gray space' },
     explore: { label: 'XR FOR EDUCATION', nodeKind: 'project', order: 10 },
   },
 
@@ -920,7 +920,7 @@ export const ENTRIES: RegistryEntry[] = [
     // came out of; they were HANDED OUT together at the annual exhibition, which
     // is the event the record should carry. Was 2026-05.
     date: '2026-06',
-    title: 'Jury award · AIA Generative AI (lEgoarCh)',
+    title: 'Jury award · MaCAD Generative AI (lEgoarCh)',
     lens: 'computation',
     tags: ['ai'],
     refId: 'legoarch',
