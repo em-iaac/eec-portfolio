@@ -60,6 +60,7 @@ import { neighborsOf, relatedThoughts } from './neighbors'
 import type { CSSProperties } from 'react'
 import { loadSpine, type ProjectSpine } from '../../content/projects'
 import useSheetSwipe from './useSheetSwipe'
+import useSheetPage from './useSheetPage'
 import useSwipeFlip from './useSwipeFlip'
 import Img from '../Img'
 import SheetVideo from '../sheet/SheetVideo'
@@ -79,26 +80,28 @@ const PROSE = 'prose-rag font-serif text-small leading-[1.5] text-[var(--lang-in
 // question). Round one built a seven-step ladder from the measured clusters;
 // her second ruling shrank it to the floor: "I want the least possible plate
 // scales", with the cappelletti/podcast merge (~90px of absorbed air) as the
-// worked example of how much air a merge may add. Applying that same
-// tolerance everywhere, THREE sizes hold all twenty-one projects:
-//   S 608  explorations + the short middles    (natural 569..608, air <=39)
-//   M 678  the middle band, 11 projects        (natural 627..678, air <=51)
-//   L 796  homage/sensi/lungs/soma/neurospace  (natural 713..795, air <=82)
-// Three sizes stays the floor — small, medium, large — and a plate wears the
+// worked example of how much air a merge may add. A plate wears the
 // SMALLEST SIZE THAT HOLDS ITS WORDS; the optical mount absorbs the air at
 // the foot.
-// (RE-DERIVED 2026-08-20 for the 2×2 spine: pairing the beats into rows —
-// WHAT|HOW over WHY|OUTCOME — sizes each row by its taller beat, so the
-// naturals moved NON-uniformly this time (569..795, measured all 21). The
-// clusters re-formed with real seams at 608|627 and 678|713, and every air
-// ceiling sits inside the originally ruled tolerances (54/92/83). Never
+// RE-CENSUSED 2026-08-21 (the fill-the-spines round: every project now
+// carries all four beats except the podcast, whose no-HOW ruling stands).
+// The three bootcamp minis grew off the S shelf entirely (astroidal 776,
+// chair-sim 717, playscape 717) and encounter joined the tall band (737),
+// which left S holding exactly two plates: cappelletti 596 and podcast 608.
+// Two plates do not earn a step of their own when her worked tolerance is
+// ~90px of air and the merge costs at most 82 (cappelletti at 678). So the
+// ladder is TWO sizes now, the least it has ever been:
+//   M 678  the short-through-middle band, 12   (natural 596..678, air <=82)
+//   L 796  the tall band, 9                    (natural 713..795, air <=83)
+// Measured all 21 at 1464px against the live build; the seam is real: 35px
+// of empty between 678 (huddle) and 713 (homage), nothing inside it. Never
 // patch one step: any head or spine change moves all 21 naturals — re-census
-// and re-cluster.)
+// and re-cluster.
 // Runtime snap, not per-project data: a narrower viewport wraps the words
 // taller and the same ladder re-assigns honestly, and a future project needs
 // no authoring — it finds its shelf. Capped by the dialog's own max-height
 // (min-height would otherwise outrank it and push past the viewport).
-const PLATE_STEPS = [608, 678, 796]
+const PLATE_STEPS = [678, 796]
 
 // The stage's true rendered size (Emilie's quality pass, 2026-07-14): without
 // this hint the browser assumed the Img default (~640px) and loaded the soft
@@ -382,6 +385,15 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
     // and Back both return to where she actually was.
     navigate(`/work/${id}`, { replace: true })
   }
+  // SWIPE TO PAGE (her ask 2026-08-21): below sm the drawer's PREVIOUS/NEXT
+  // rows are gone and the sheet itself answers a sideways drag — the media
+  // stage is excluded (a drag there flips pictures), and the pager rides a
+  // ref so paging's own re-render never re-binds listeners mid-gesture.
+  const pagerRef = useRef<{ prev: () => void; next: () => void } | null>(null)
+  pagerRef.current = neighbors
+    ? { prev: () => goTo(neighbors.prev.id), next: () => goTo(neighbors.next.id) }
+    : null
+  useSheetPage(ref, stageRef, pagerRef)
   // The un-keyed swap keeps this component mounted across projects, so the
   // per-project state resets here instead of by remount: first media page,
   // no stacked lightbox, drawer shut, story scrolled back to the top.
@@ -439,6 +451,16 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
     t.id === 'bim' && isPillarRelated(entry.tags) ? PILLAR_PATH : t.route
 
   return (
+    <>
+      {/* THE VEIL (her report 2026-08-21): the blur behind the sheet, moved
+          out of ::backdrop because the minifier shipped that rule's blur as
+          -webkit- only (iOS blurred, Chrome did not — see index.css). The
+          blur is THIS Tailwind utility: its var()-chained output survives
+          the build where a raw backdrop-filter pair does not. The sibling
+          stays in the page, under the top layer; the ::backdrop keeps the
+          scrim above it. Mounts and unmounts with the sheet, takes no
+          pointer (index.css .work-veil). */}
+      <div className="work-veil backdrop-blur-[10px]" aria-hidden="true" />
     <dialog
       ref={ref}
       aria-labelledby={titleId}
@@ -622,7 +644,7 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
             type="button"
             aria-expanded={drawerOpen}
             aria-controls="sheet-drawer-panel"
-            aria-label="The thoughts this project made (and, on narrow screens, previous and next projects)"
+            aria-label="The thoughts this project made"
             onClick={() => setDrawerOpen((o) => !o)}
             className={`h-28 w-11 items-center justify-center rounded-l-xl border-[0.5px] border-r-0 border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)] ${drawerOpen ? 'hidden' : 'flex'}`}
           >
@@ -644,41 +666,12 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
             // all corners rounded: a floating panel, not an attached flap.
             className={`fixed right-[max(1rem,calc((100vw_-_66rem)/2_-_14rem))] w-60 rounded-xl border-[0.5px] border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] p-[5px] shadow-[0_10px_30px_rgba(11,14,19,0.35)] ${drawerOpen ? '' : 'hidden'}`}
           >
-            {neighbors && (
-              <>
-                {/* The travel rows exist exactly where the rails do not: below
-                    1200px the viewport gutter is narrower than a rail, so the
-                    drawer carries prev/next there (same 1200 floor as the
-                    rails' `min-[1200px]:flex`) — as the SYSTEM'S verb rows, a
-                    thought note's PREVIOUS/NEXT verbatim; the project's name
-                    rides the accessible label. */}
-                {/* The breakpoint rides a plain WRAPPER div, never the rows:
-                    `.reach-drawer__row`'s unlayered display:flex beats a
-                    layered Tailwind `min-[1200px]:hidden` (the language.css
-                    layer trap, met again 2026-08-20 — measured: PREVIOUS
-                    rendered at 1440px). A div with no unlayered display rule
-                    hides its children reliably. */}
-                <div className="min-[1200px]:hidden">
-                  <button
-                    type="button"
-                    onClick={() => goTo(neighbors.prev.id)}
-                    aria-label={`Previous project: ${neighbors.prev.title}`}
-                    className="reach-drawer__row w-full"
-                  >
-                    ‹ PREVIOUS
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => goTo(neighbors.next.id)}
-                    aria-label={`Next project: ${neighbors.next.title}`}
-                    className="reach-drawer__row w-full"
-                  >
-                    NEXT ›
-                  </button>
-                  <div className="mx-[11px] my-1 h-px bg-[var(--lang-hairline)]" />
-                </div>
-              </>
-            )}
+            {/* THE TRAVEL ROWS ARE GONE FOR GOOD (her ask 2026-08-21: "the
+                thoughts drawer is just for thoughts now"). They lived here
+                one day: first everywhere below 1200, then only sm..1200 once
+                the phone learned to swipe. Now travel is the rails from
+                1200 up and the sideways swipe below it (useSheetPage's gate
+                widened to match) — the drawer holds only what its tab says. */}
             <p className="px-[11px] pt-1.5 pb-1 font-mono text-[9px] tracking-[0.18em] text-[var(--lang-ink-muted)] uppercase">
               Made me think of
             </p>
@@ -924,5 +917,6 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
         />
       )}
     </dialog>
+    </>
   )
 }

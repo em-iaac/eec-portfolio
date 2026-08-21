@@ -71,6 +71,33 @@ test('every image ref exists in images.json', () => {
   expect(broken).toEqual([])
 })
 
+// ONE COVER, TWO SURFACES (Emilie's ask 2026-08-21: "match the cover of the
+// projects on hover to be the same as the one of the work page"). The landing
+// strip reveals the REGISTRY entry's image; the /work card reveals the CONTENT
+// project's. They were authored twice and had drifted three times over —
+// Sensi's strip wore the app shape while its card wore the galaxy, NeuroSpace
+// wore the old landing shot, the podcast strip had nothing at all. The two
+// fields must be the same picture, byte for byte, alt included.
+test('the landing tile cover equals the /work cover for every project', () => {
+  const broken: string[] = []
+  for (const e of ENTRIES) {
+    // the strip's own filter: sheet-kind entries share `project` but no tile
+    if (e.kind !== 'project' || !e.project) continue
+    const p = PROJECTS_BY_SLUG[e.project]
+    if (!p?.image) continue
+    if (
+      !e.image ||
+      e.image.slug !== p.image.slug ||
+      e.image.name !== p.image.name ||
+      e.image.alt !== p.image.alt
+    )
+      broken.push(
+        `${e.id}: registry ${e.image ? `${e.image.slug}/${e.image.name}` : '(none)'} != project ${p.image.slug}/${p.image.name}`,
+      )
+  }
+  expect(broken).toEqual([])
+})
+
 // Thought notes (Session 11) resolve like sheets: a drafted note must belong
 // to a thought, point at its own /thoughts/:id leaf, and have a body to render.
 test('every note ref is a thought pointing at its own leaf', () => {

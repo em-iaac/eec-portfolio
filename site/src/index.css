@@ -1505,11 +1505,32 @@ h3 {
    NOT reading. Glass on the card put the noise inside the text; glass on the
    backdrop puts it behind, where it does the job it was always meant to do.
    The scrim stays and does the contrast work on its own, so a browser without
-   backdrop-filter loses only the softening, never the legibility. */
+   backdrop-filter loses only the softening, never the legibility.
+   ⚠ THE BLUR DOES NOT LIVE HERE ANY MORE (her report 2026-08-21: "not blurred
+   on the desktop but it is on the phone"). The cause was never the browser —
+   it was the BUILD: the CSS minifier folds a standard + -webkit- pair of the
+   same logical property into ONE declaration and keeps the LAST one written,
+   so this rule shipped as `-webkit-backdrop-filter` alone. iOS Safari honors
+   the prefix (her phone blurred); desktop Chrome does not (sharp). Verified
+   against dist byte-for-byte, twice — a hand-rolled pair does not survive
+   this pipeline, whatever the order. The blur now rides .work-veil via the
+   TAILWIND utility (backdrop-blur-[10px], on the element in WorkOverlay),
+   whose var()-chained form the minifier demonstrably ships intact. This rule
+   keeps only the scrim. Do not put a raw backdrop-filter pair back here. */
 .work-dialog::backdrop {
   background: rgba(11, 14, 19, 0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+}
+/* The veil: rendered by WorkOverlay as the dialog's page-side sibling, so it
+   mounts and unmounts with the sheet. Above every page stacking context (the
+   census tops out at z-50), inert to the pointer, and beneath the top layer
+   by nature — the ::backdrop scrim dims ON TOP of the blur it casts, same
+   composition the one-rule version intended. The blur itself is the Tailwind
+   class on the element — see the ::backdrop note above for why. */
+.work-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
 }
 
 /* THE GRAB BAND (2026-08-03, her ruling: "grab handle + swipe down"). It exists
@@ -1579,8 +1600,25 @@ h3 {
   }
 }
 
+/* SWIPE TO PAGE PROJECTS (her ask 2026-08-21; useSheetPage). The load-bearing
+   line, same as the gallery box inside: vertical pans stay the browser's — the
+   sheet still scrolls — and a sideways move reaches the handler instead of
+   being claimed for a pan the sheet cannot make and cancelled. The band is the
+   gesture's own: everything under the rails' 1200px floor, since the drawer's
+   travel rows are gone for good (her second ask, same day). */
+@media (max-width: 1199.98px) {
+  .work-dialog {
+    touch-action: pan-y;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .work-dialog[open]::backdrop {
+    animation: work-fade 260ms ease both;
+  }
+  /* The veil arrives with the scrim, not before it: opacity multiplies a
+     backdrop-filter's output, so the same fade eases the blur in. */
+  .work-veil {
     animation: work-fade 260ms ease both;
   }
   /* The rise is the NO-view-transitions entrance only (DL-1): where the API

@@ -518,12 +518,18 @@ export default function LandingCover() {
         {/* THE SCROLL CUE, CENTRED AT THE FOOT (Emilie, 2026-07-27: "the
             projects and notes hint would be nicer in the middle"). It spans the
             whole first screen rather than the identity column, so it belongs to
-            the page and not to the biography. It is a LINK, not an ornament: a
-            keyboard user gets the shortcut a scroll wheel gives everyone else,
-            and it says how much there is so the scroll is an informed one. */}
-        <a
-          href="#doors-heading"
-          className="absolute bottom-4 left-1/2 hidden -translate-x-1/2 items-center gap-2 px-4 py-3 font-mono text-micro tracking-[0.14em] whitespace-nowrap text-[var(--lang-ink-muted)] uppercase no-underline hover:text-[var(--lang-interaction)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lang-interaction)] lg:inline-flex"
+            the page and not to the biography.
+            AN ORNAMENT AFTER ALL (her ruling 2026-08-21: "do not let the user
+            press the works 21 projects 18 notes with the down arrow — it's
+            just a directional sign"). It was a link for one summer so the
+            keyboard had the shortcut a wheel gives everyone else; her call
+            outranks that argument — the header pill and the doors below are
+            the keyboard's paths, and this line now only points. aria-hidden
+            because a sign that repeats what the doors themselves announce is
+            noise to a screen reader, not information. */}
+        <div
+          aria-hidden="true"
+          className="absolute bottom-4 left-1/2 hidden -translate-x-1/2 items-center gap-2 px-4 py-3 font-mono text-micro tracking-[0.14em] whitespace-nowrap text-[var(--lang-ink-muted)] uppercase select-none lg:inline-flex"
         >
           <span>
             {STRIP_PROJECTS.length} projects · {THOUGHT_COUNT} notes
@@ -531,7 +537,7 @@ export default function LandingCover() {
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" className="shrink-0">
             <path d="M6 1v9M2.5 6.5 6 10l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-        </a>
+        </div>
       </section>
 
       {/* ============ TWO · THE TWO DOORS ============

@@ -20,7 +20,10 @@ const playscape: ProjectMeta = {
     name: 'net-settle',
     alt: 'The settled playscape at rest: a double layer climbing net draped by Kangaroo over soft red inflatable mounds',
   },
-  showcaseDraft: false, // spine + credits + alts SIGNED by Emilie (S2 sign-off, 2026-07-17)
+  // WHAT/WHY + credits + alts signed at S2 (2026-07-17); the HOW + OUTCOME
+  // added 2026-08-21 from her interview (the multi-physics loop, form
+  // finding as the word) await her read.
+  showcaseDraft: true,
 }
 
 export default playscape

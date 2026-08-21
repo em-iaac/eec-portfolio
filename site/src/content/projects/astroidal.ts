@@ -24,7 +24,10 @@ const astroidal: ProjectMeta = {
   // Created crossfade cover: card face ONLY, never a deck page (Emilie's
   // round-3 rule: a cover I assembled is not an asset).
   coverMontage: true,
-  showcaseDraft: false, // spine + credits + alts SIGNED by Emilie (S2 sign-off, 2026-07-17)
+  // WHAT/WHY + credits + alts signed at S2 (2026-07-17); the HOW + OUTCOME
+  // added 2026-08-21 from her interview (the function, the six dials, the
+  // Cappelletti thread) await her read.
+  showcaseDraft: true,
 }
 
 export default astroidal

@@ -222,6 +222,13 @@ const VLIVE_SIDE = 9
 const VYEAR_X = 10
 const VLEFT_EDGE = VYEAR_X + 6
 
+/** The grace of the gathering press (her pick 2026-08-21; the refs that use
+ *  these live on the component, the consumers are the fold's dismiss handler
+ *  and onNodeClick — one set of numbers so the three catchers agree). */
+const GRACE_MS = 1600
+const FLIGHT_MS = 1000
+const GRACE_R = 48
+
 const vTurn = (x: number, y: number) =>
   `matrix(0 ${(-1 / VCOMP).toFixed(4)} -1 0 ${(x + y).toFixed(1)} ${(y + x / VCOMP).toFixed(1)})`
 
@@ -718,6 +725,22 @@ export default function NeuralWorld() {
     // engine is stable; run once on mount.
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // THE PRESS SPOT STAYS THE DOOR (her pick 2026-08-21, off the entry-flow
+  // audit). Choosing a mark sends it flying — measured, the gather flight is
+  // 849px over ~840ms on desktop — so the spot the visitor pressed twice is
+  // empty field by the time a third press lands there, and "a tap on nothing
+  // steps back" read that press as an exit. Three fast presses on one mark
+  // ended one rung DOWN. The spot of the gathering press is remembered here,
+  // and for a short grace it still answers for the subject — whoever takes
+  // the press: the fold's dismiss handler (empty field), onNodeClick (a mark
+  // transiting the spot mid-flight), or the retargeted-click catch (down on
+  // a moving mark, up over nothing). `lastPress` is stamped on every
+  // pointerdown so a keyboard-driven gather (no press) leaves the grace
+  // unset. GRACE_MS outlasts the measured settle (836ms) by a beat; within
+  // FLIGHT_MS a stray field press is not a decision; GRACE_R is a thumb.
+  const lastPress = useRef({ x: 0, y: 0, t: -Infinity })
+  const graceRef = useRef<{ x: number; y: number; t: number } | null>(null)
+
   // Drag-to-pan + non-passive wheel (React's onWheel is passive; the
   // preventDefault needs a real listener) + the scroll-position save (from
   // the live scroll listener: an unmount cleanup would read a detached
@@ -751,6 +774,9 @@ export default function NeuralWorld() {
     let moved = 0
     let scrolls = false
     const down = (e: PointerEvent) => {
+      // Stamped for EVERY press, marks included — the grace above needs the
+      // coordinates of the press that gathers, and that press is on a mark.
+      lastPress.current = { x: e.clientX, y: e.clientY, t: performance.now() }
       // `.nw-foldopen` IS ON THIS LIST, and leaving it off made the map's only
       // door unusable (found 2026-08-07 by clicking it): OPEN is a <g role=link>
       // inside the drawing, not an <a>, so without naming it here a click on the
@@ -1018,6 +1044,26 @@ export default function NeuralWorld() {
     const svg = svgRef.current
     if (!stage || !svg) return
     freeSnap()
+    // TURNED, THE JUMP RUNS DOWN THE OTHER AXIS (her report 2026-08-21: "the
+    // year drawer doesn't work on the phone"). This function read the desktop
+    // projection and wrote scrollLeft — turned, the stage scrolls TOP and the
+    // scale lives on the other edge, so a year press (and the TODAY button)
+    // computed a wrong number and wrote it to an axis that never moves. Same
+    // class of bug as the arrival sweep's, fixed the same way: the turn maps
+    // world x to screen y as (WORLD.w − x) — now sits at the top — and the
+    // rendered scale is the svg's height over the turned viewBox's height.
+    if (vertical) {
+      const scale = svg.getBoundingClientRect().height / WORLD.w || 1
+      const target = (WORLD.w - worldX) * scale - stage.clientHeight / 2
+      const max = stage.scrollHeight - stage.clientHeight
+      const top = Math.max(0, Math.min(max, target))
+      const distance = Math.abs(top - stage.scrollTop)
+      if (distance < 8) return
+      const glide =
+        smooth === 'always' ? !prm : smooth && !prm && distance < stage.clientHeight * 2
+      stage.scrollTo({ top, behavior: glide ? 'smooth' : 'auto' })
+      return
+    }
     const scale = svg.getBoundingClientRect().height / WORLD.h || 1
     const target = worldX * scale - stage.clientWidth / 2
     const max = stage.scrollWidth - stage.clientWidth
@@ -1349,6 +1395,17 @@ export default function NeuralWorld() {
     if (!stage || !fold) return
     let drag: { x: number; y: number; tx: number; ty: number } | null = null
     let moved = 0
+    // ⚠ A PRESS ON A MOVING MARK CAN DIE BETWEEN DOWN AND UP (found on the
+    // phone, 2026-08-21, verifying the grace): the gather flight is slow and
+    // short turned (~140px), so a fast third tap goes DOWN on the subject
+    // while it is still under the finger and UP after it has slid away — and
+    // when down and up land on different elements the browser retargets the
+    // click to their common ancestor, the svg, where no handler lives. The
+    // tap dissolved: not a switch, not a step back, not a door. Desktop never
+    // showed it because its 849px flight vacates the spot before any human
+    // presses again. `nodePress` remembers such a press so `up` can give it
+    // to the grace instead of letting it die.
+    let nodePress: { x: number; y: number; el: Element } | null = null
     const down = (e: PointerEvent) => {
       // ⚠ `.nw-node` IS ON THIS LIST, and leaving it off is what stopped you
       // switching inside the chosen view (her flow, 2026-08-07: "when we press
@@ -1361,7 +1418,12 @@ export default function NeuralWorld() {
       // as "hold something else" and dropped a rung. The fix is not to order
       // the two handlers, it is for this one to keep its hands off a mark at
       // all — a press on a mark is never a press on empty field.
-      if ((e.target as Element).closest('.nw-node, .nw-foldopen, a, button')) return
+      const pressed = (e.target as Element).closest('.nw-node, .nw-foldopen, a, button')
+      if (pressed) {
+        nodePress = { x: e.clientX, y: e.clientY, el: pressed }
+        moved = 0
+        return
+      }
       moved = 0
       drag = { x: e.clientX, y: e.clientY, tx: camAt.current.tx, ty: camAt.current.ty }
       stage.classList.add('dragging')
@@ -1381,13 +1443,67 @@ export default function NeuralWorld() {
     // The gesture bookkeeping stays, because a tap on empty field is still the
     // way out and it must not fire at the end of a stray drag.
     const move = (e: PointerEvent) => {
-      if (!drag) return
-      moved = Math.max(moved, Math.abs(e.clientX - drag.x), Math.abs(e.clientY - drag.y))
+      const from = drag ?? nodePress
+      if (!from) return
+      moved = Math.max(moved, Math.abs(e.clientX - from.x), Math.abs(e.clientY - from.y))
     }
-    const up = () => {
+    // THE GRACE (her pick 2026-08-21, board 1 of the entry-flow audit). The
+    // gathering press is the second press on the same mark, and the fold then
+    // moves that mark 849px away — so the trained third press lands on empty
+    // field. For GRACE_MS after the gather, a still press within GRACE_R of
+    // the gathering press means the subject, and opens it; anywhere else on
+    // the field while the fold is still flying (FLIGHT_MS, measured settle
+    // 836ms) is a stray press against a moving drawing, not a decision, and
+    // does nothing. After both windows the field means what it always meant.
+    // Escape is untouched — a deliberate exit never waits.
+    const graceHit = (e: PointerEvent) => {
+      const g = graceRef.current
+      if (!g || !fold.open) return false
+      if (performance.now() - g.t >= GRACE_MS) return false
+      return Math.hypot(e.clientX - g.x, e.clientY - g.y) <= GRACE_R
+    }
+    const up = (e: PointerEvent) => {
+      // A press that went DOWN on a mark and came UP over nothing is the
+      // retargeted-click case above: no click will fire anywhere. If it sits
+      // in the grace it means the subject — open it; otherwise let it
+      // dissolve, which is also right (a press on a moving mark that ended
+      // nowhere is not a decision). A press that stayed on its element is
+      // left entirely to the click handlers, as ever.
+      if (nodePress && moved <= 4) {
+        const still =
+          document
+            .elementFromPoint(e.clientX, e.clientY)
+            ?.closest('.nw-node, .nw-foldopen, a, button') ?? null
+        if (still !== nodePress.el && graceHit(e)) {
+          nodePress = null
+          graceRef.current = null
+          travel(fold.open!.route)
+          return
+        }
+        nodePress = null
+        return
+      }
+      nodePress = null
       // A tap on empty field releases; a drag never does.
-      if (drag && moved <= 4) stepBack()
+      if (drag && moved <= 4) {
+        const dt = graceRef.current ? performance.now() - graceRef.current.t : Infinity
+        if (graceHit(e)) {
+          drag = null
+          stage.classList.remove('dragging')
+          graceRef.current = null
+          travel(fold.open!.route)
+          return
+        }
+        if (dt >= FLIGHT_MS) stepBack()
+      }
       drag = null
+      stage.classList.remove('dragging')
+    }
+    // A cancel is the browser taking the gesture, not the visitor deciding —
+    // it resets the bookkeeping and steps nowhere.
+    const cancel = () => {
+      drag = null
+      nodePress = null
       stage.classList.remove('dragging')
     }
     // Swallowed, not acted on: the stage sits inside a scrolling document, and
@@ -1399,13 +1515,13 @@ export default function NeuralWorld() {
     stage.addEventListener('pointerdown', down)
     window.addEventListener('pointermove', move)
     window.addEventListener('pointerup', up)
-    window.addEventListener('pointercancel', up)
+    window.addEventListener('pointercancel', cancel)
     stage.addEventListener('wheel', wheel, { passive: false })
     return () => {
       stage.removeEventListener('pointerdown', down)
       window.removeEventListener('pointermove', move)
       window.removeEventListener('pointerup', up)
-      window.removeEventListener('pointercancel', up)
+      window.removeEventListener('pointercancel', cancel)
       stage.removeEventListener('wheel', wheel)
     }
     // dismiss only touches refs + setState
@@ -1488,14 +1604,53 @@ export default function NeuralWorld() {
     }
   }
 
+  /** The grace is armed by the press that reorganises the map — gathering,
+   *  and switching inside the fold, which re-gathers just the same. Only a
+   *  real press arms it: a keyboard Enter leaves `lastPress` stale and the
+   *  age check turns it away. */
+  function armGrace() {
+    const p = lastPress.current
+    graceRef.current =
+      performance.now() - p.t < 800 ? { x: p.x, y: p.y, t: performance.now() } : null
+  }
+
   function onNodeClick(n: WorldNode) {
     if (fold) {
-      // inside the fold: choosing the subject again steps back, choosing any
-      // other member re-folds on it (walking the neighbourhood)
+      // ONE BODY, ONE VERB (her pick 2026-08-21, board 2). The subject's mark
+      // used to let go here — her "two targets, two verbs" — but the door's
+      // hit rect paints over most of the mark, so the same mark answered a
+      // press two opposite ways depending on which sliver took it: measured,
+      // the top edge of the hit ring released while everything below opened.
+      // Inside the fold the subject now means one thing, IN; letting go
+      // belongs to the field and to Escape, which both already say so.
       if (n.id === fold.subject) {
-        releaseFold()
+        if (fold.open) travel(fold.open.route)
+        else releaseFold()
         return
       }
+      // THE GRACE OUTRANKS A TRANSITING MARK (the phone found this: the
+      // gather flight is short and slow turned, and the members sweep
+      // through the pressed spot on their way to their folded places — a
+      // fast third press on the same spot landed on "comfort as data"
+      // passing underneath and switched the whole fold onto it). A still
+      // press inside the grace means the subject, whatever is crossing.
+      {
+        const g = graceRef.current
+        const p = lastPress.current
+        if (
+          g &&
+          fold.open &&
+          performance.now() - g.t < GRACE_MS &&
+          performance.now() - p.t < 800 &&
+          Math.hypot(p.x - g.x, p.y - g.y) <= GRACE_R
+        ) {
+          graceRef.current = null
+          travel(fold.open.route)
+          return
+        }
+      }
+      // choosing any other member re-folds on it (walking the neighbourhood)
+      armGrace()
       hold(n.id)
       applyFold(n.id)
       return
@@ -1508,6 +1663,7 @@ export default function NeuralWorld() {
     // everything around it: the door works, the chosen view cannot be scrolled
     // or zoomed away, and each rung now says what it can do.
     if (lockedId.current === n.id) {
+      armGrace()
       applyFold(n.id) // HELD -> CHOSEN
       return
     }
@@ -2511,8 +2667,11 @@ export default function NeuralWorld() {
                 The arrow is not decoration — it is what says "door" on a phone,
                 which has no hover to reveal the underline.
                 This group is drawn AFTER the neurons, so its hit area sits over
-                the name and takes the click; the mark itself is still the way
-                to let go. Two targets, two verbs. */}
+                the name and takes the click.
+                (Two targets, two verbs retired 2026-08-21, her pick: the rect
+                painted over most of the mark anyway, so the mark's own verb is
+                also IN now — see onNodeClick — and the field and Escape carry
+                letting go.) */}
             {fold?.open && (
               <g
                 className="nw-foldopen"
@@ -2550,6 +2709,20 @@ export default function NeuralWorld() {
                   const dateBaseline = vertical ? base + fold.font * 1.35 : base + 12 + fold.font * 1.2
                   const arrowX = fold.open.x - a * 1.1
                   const arrowY = dateBaseline + fold.font * 0.95
+                  // ONE BODY, ONE DOOR (her pick 2026-08-21, board 2 of the
+                  // entry-flow audit). The hit rect used to stop above the
+                  // arrow, leaving a 17px dead band and an arrow hittable only
+                  // on its own 1.5px strokes — measured, a click dead-centre
+                  // on the arrow read as empty field and stepped back. The
+                  // reddest, most button-shaped thing in the frame did the
+                  // opposite of opening. The rect now runs from over the mark
+                  // to under the arrow, and its width floors at the same 44px
+                  // the height always floored at: "sensi" measured 36px wide
+                  // on a phone, under the touch floor, because a short name
+                  // made a narrow door.
+                  const rectW = Math.max(w + fold.font * 0.8, fold.hit)
+                  const rectY = base - Math.max(fold.hit, fold.font * 1.5) * 0.74
+                  const rectH = Math.max(arrowY + a + fold.font * 0.25 - rectY, fold.hit)
                   return (
                     // THE DOOR IS DRAWN UPRIGHT AND LEFT ALONE. Counter-turning
                     // the whole group about the subject's baseline makes its
@@ -2560,10 +2733,10 @@ export default function NeuralWorld() {
                     <g transform={vertical ? vTurn(fold.open!.x, base) : undefined}>
                       <rect
                         className="nw-doorring"
-                        x={fold.open.x - w / 2 - fold.font * 0.4}
-                        y={base - Math.max(fold.hit, fold.font * 1.5) * 0.74}
-                        width={w + fold.font * 0.8}
-                        height={Math.max(fold.hit, fold.font * 3.4)}
+                        x={fold.open.x - rectW / 2}
+                        y={rectY}
+                        width={rectW}
+                        height={rectH}
                         rx={fold.font * 0.5}
                         fill="transparent"
                         stroke="none"
@@ -2631,12 +2804,27 @@ function WorldYearRail({
     const stage = stageRef.current
     if (!stage || snapAt.length === 0) return
     const pick = () => {
-      // +8px so a year sitting exactly on the edge reads as arrived, not as the
-      // one before it.
-      const x = stage.scrollLeft + 8
       let cur = WORLD.skeleton.years[0]?.label ?? null
-      for (let i = 0; i < snapAt.length; i++) {
-        if (snapAt[i]! <= x) cur = WORLD.skeleton.years[i]?.label ?? cur
+      // TURNED, THE READING RUNS DOWN THE OTHER AXIS (her report 2026-08-21:
+      // "the year drawer doesn't work on the phone"). scrollLeft is zero
+      // forever on a stage that scrolls vertically, so the tab read 2020 at
+      // every position — visible in the audit's rest frame, NOW at the top
+      // and the tab naming the oldest year on the map. The reading edge stays
+      // the edge the eye enters at: the TOP, which turned is the newest
+      // visible moment ((WORLD.w − scrollTop/scale), the sweep's own mapping).
+      // The class is read per pick, not per mount, so a rotation re-answers.
+      if (stage.classList.contains('is-vertical')) {
+        const sh = stage.querySelector('svg')?.getBoundingClientRect().height || 0
+        if (!sh) return
+        const tTop = WORLD.w - ((stage.scrollTop + 8) * WORLD.w) / sh
+        for (const y of WORLD.skeleton.years) if (y.x <= tTop) cur = y.label
+      } else {
+        // +8px so a year sitting exactly on the edge reads as arrived, not as
+        // the one before it.
+        const x = stage.scrollLeft + 8
+        for (let i = 0; i < snapAt.length; i++) {
+          if (snapAt[i]! <= x) cur = WORLD.skeleton.years[i]?.label ?? cur
+        }
       }
       // Only when it actually changes: React bails out on an identical string,
       // but saying so here is what makes that guarantee legible.

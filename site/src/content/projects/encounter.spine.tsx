@@ -31,6 +31,29 @@ const spine: ProjectSpine = {
       Anfeh&rsquo;s salt pans.
     </>
   ),
+  // HOW added 2026-08-21 (her ask: every spine carries all four beats),
+  // drafted from the office's own published concept (the epicenter, the
+  // line, the in-between; jemmachidiacarchitects.com) with her part woven in
+  // per her signed myPart; approved by her as drafted, same day.
+  how: [
+    <>
+      The concept set the rotation: the chapel as epicenter, crescents of semi buried tombs
+      turning around it, every burial keeping its claim on the living.
+    </>,
+    <>
+      A directional line bounds the view toward the burials and walks the visitor through the
+      landscape to the chapel and the condolences hall.
+    </>,
+    <>
+      The in-between carries the landscape: courtyards and gathering pockets where the planting
+      runs with the built form. My part lived here and in the trials for the tomb details,
+      planning the terraces and testing how a flowerbed roof sits on a tomb.
+    </>,
+    <>
+      Renders with the team carried the entry: the split bell tower, the chapel light, the sunken
+      court.
+    </>,
+  ],
   outcome: (
     <>
       The entry was shortlisted as finalist and the certificate of achievement carries my name.

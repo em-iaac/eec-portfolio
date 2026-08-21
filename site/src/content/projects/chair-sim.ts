@@ -22,7 +22,10 @@ const chairSim: ProjectMeta = {
     name: 'voxel-sizes',
     alt: 'The settled chair rebuilt at growing voxel sizes, from fine grain steps to chunky rubber ring modules',
   },
-  showcaseDraft: false, // spine + credits + alts SIGNED by Emilie (S2 sign-off, 2026-07-17)
+  // WHAT/WHY + credits + alts signed at S2 (2026-07-17); the HOW + OUTCOME
+  // added 2026-08-21 from her interview (collision as the pencil, the
+  // caoutchouc findings, the baby trials) await her read.
+  showcaseDraft: true,
 }
 
 export default chairSim

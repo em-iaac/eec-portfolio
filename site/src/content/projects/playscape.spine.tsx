@@ -28,6 +28,35 @@ const spine: ProjectSpine = {
       place a kid would run to.
     </>
   ),
+  // HOW + OUTCOME added 2026-08-21 (her ask: every spine carries all four
+  // beats). Her account in the fill-the-spines interview: a real exploration
+  // of the Kangaroo physics solver, multiple simulations in one loop
+  // (collision, gravity, wind, force), and form finding as the word that
+  // mattered.
+  how: [
+    <>
+      Python scripts the base surfaces; Kangaroo pressure goals inflate them into five soft
+      mounds.
+    </>,
+    <>
+      Two square rope nets drop in sequence: gravity pulls, collision catches them on the
+      inflatables, and they tension into a double layer climbing canopy.
+    </>,
+    <>
+      Wind and force loads shake the settled state to see what holds; anchor heights and net
+      rotation are the iteration dials.
+    </>,
+    <>A section grounds it: padded floors and porthole openings for kids.</>,
+  ],
+  outcome: (
+    <>
+      Form finding was the point, and it is the word that mattered: the geometry was never drawn,
+      it was negotiated with a physics solver holding pressure, gravity, collision and wind in
+      one loop until they agreed. Kangaroo stopped being a plugin and became a counterparty. The
+      playground is the byproduct; what stayed is knowing how to ask a solver for a shape, and to
+      take its refusals seriously.
+    </>
+  ),
 }
 
 export default spine

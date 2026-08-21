@@ -39,7 +39,10 @@ const encounter: ProjectMeta = {
   // Created crossfade cover: card face ONLY, never a deck page (Emilie's
   // round-3 rule: a cover I assembled is not an asset).
   coverMontage: true,
-  showcaseDraft: false, // spine + credits + alts SIGNED by Emilie (S2 sign-off, 2026-07-17)
+  // Spine + credits + alts SIGNED at S2 (2026-07-17); the HOW (the
+  // epicenter / the line / the in-between, her part woven) drafted and
+  // APPROVED BY HER AS DRAFTED in the fill-the-spines round, 2026-08-21.
+  showcaseDraft: false,
 }
 
 export default encounter

@@ -87,16 +87,23 @@ export default function useSwipeFlip(
       }
     }
 
+    // A cancel is the browser taking the gesture back, and it arrives with
+    // zeroed coordinates — deciding on it computes d = −startX, which reads
+    // as a hard left flip (found 2026-08-21 chasing the same bug in
+    // useSheetPage). A cancel decides nothing.
+    const onPointerCancel = () => {
+      dragging = false
+    }
     stage.addEventListener('pointerdown', onPointerDown)
     stage.addEventListener('pointermove', onPointerMove)
     stage.addEventListener('pointerup', endDrag)
-    stage.addEventListener('pointercancel', endDrag)
+    stage.addEventListener('pointercancel', onPointerCancel)
     stage.addEventListener('click', onClickCapture, true)
     return () => {
       stage.removeEventListener('pointerdown', onPointerDown)
       stage.removeEventListener('pointermove', onPointerMove)
       stage.removeEventListener('pointerup', endDrag)
-      stage.removeEventListener('pointercancel', endDrag)
+      stage.removeEventListener('pointercancel', onPointerCancel)
       stage.removeEventListener('click', onClickCapture, true)
     }
   }, [stageRef, onPrev, onNext, enabled])

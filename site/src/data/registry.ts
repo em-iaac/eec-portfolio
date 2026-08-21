@@ -180,7 +180,16 @@ export const ENTRIES: RegistryEntry[] = [
     sheet: sheet('P-101', 'issued', 'sensi'),
     project: 'sensi',
     live: true, // still live + growing (Emilie 2026-07-24)
-    image: { slug: 'sensi', name: 'app-shape', alt: 'Sensi interface scoring a floor plan across six senses' },
+    // THE LANDING WEARS THE WORK'S COVER (her ask 2026-08-21: "match the
+    // cover of the projects on hover to be the same as the one of the work
+    // page"). This field is the strip tile's hover reveal, and it must EQUAL
+    // the content project's `image` (the /work cover) — the validator now
+    // holds the two together, so a cover change lands on both surfaces.
+    image: {
+      slug: 'sensi',
+      name: 'galaxy-cover',
+      alt: "Sensi’s relationship galaxy: six senses as glowing constellations, every thread a coupling between two comfort scores",
+    },
     explore: { label: 'SENSI', nodeKind: 'project', order: 0 },
   },
   {
@@ -192,7 +201,12 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['neuro', 'geometry', 'simulation', 'data', 'web'],
     sheet: sheet('P-102', 'issued', 'neurospace'),
     project: 'neurospace',
-    image: { slug: 'neurospace', name: 'landing', alt: 'NeuroSpace landing page with parametric room and live scores' },
+    // = the content project's image, by the same rule as Sensi's above.
+    image: {
+      slug: 'neurospace',
+      name: 'demo-cover',
+      alt: 'The red parametric room of NeuroSpace mid-morph, the live NeuroScore answering a slider drag',
+    },
     explore: { label: 'NEUROSPACE', nodeKind: 'project', order: 1 },
   },
   {
@@ -204,7 +218,7 @@ export const ENTRIES: RegistryEntry[] = [
     tags: ['geometry', 'simulation', 'climate'],
     sheet: sheet('P-103', 'in-preparation', 'huddle'),
     project: 'huddle',
-    image: { slug: 'huddle', name: 'wasp-growth', alt: 'Animated WASP growth study for The Huddle: modules aggregating along the wind across the Punta Arenas plot' },
+    image: { slug: 'huddle', name: 'wasp-growth', alt: 'The WASP growth study for The Huddle: modules aggregating along the wind across the Punta Arenas plot' },
     explore: { label: 'THE HUDDLE', nodeKind: 'project', order: 2 },
   },
   {
@@ -232,7 +246,7 @@ export const ENTRIES: RegistryEntry[] = [
     project: 'legoarch',
     // 2026-07-15: the cover is the live solve cut (the golden sagrada-render
     // left the web manifest; it remains the BOOK plate via its print rung).
-    image: { slug: 'legoarch', name: 'demo-cover', alt: "Saint Basil's Cathedral solving into a brick layout in lEgoarCh, the stage with no AI in it on purpose" },
+    image: { slug: 'legoarch', name: 'demo-cover', alt: "Saint Basil’s Cathedral solving into a brick layout in lEgoarCh, the stage with no AI in it on purpose" },
     explore: { label: 'LEGOARCH', nodeKind: 'project', order: 4 },
   },
   {
@@ -257,6 +271,14 @@ export const ENTRIES: RegistryEntry[] = [
     sheet: sheet('P-107', 'in-preparation', 'podcast'),
     project: 'podcast',
     links: [{ label: 'SPOTIFY', href: 'https://open.spotify.com/episode/6WpF5HmKteEBateSqSWe0D' }],
+    // = the content project's image (the /work cover) — this entry had no
+    // image at all, so the landing tile was the one plate with nothing
+    // behind its hover while its /work card showed the quote reel.
+    image: {
+      slug: 'podcast',
+      name: 'demo-cover',
+      alt: 'The podcast quote reel: seven timestamped lines from the conversation on architecture and the brain',
+    },
     explore: { label: 'OPTIMIZING FOR THE MIND', nodeKind: 'project', order: 6 },
   },
   {
