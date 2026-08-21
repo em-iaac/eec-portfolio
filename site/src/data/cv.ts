@@ -136,7 +136,7 @@ export const EXPERIENCE: CvEntry[] = [
     // Her actual employment title (her review, 2026-07-27), not "Project
     // Architect": this is the anchor title, already true on a payslip, and it
     // is the single most valuable line on the page.
-    title: 'Design Technology Architect',
+    title: 'Design Technologist',
     org: 'Dynamic Solution Co., Kuwait',
     // Written from her own account of the job (2026-07-27). No client is
     // named: brand SECTORS, team size and method are disclosable under
@@ -388,7 +388,7 @@ export const SKILLS = [
     // Ships-with row already evidences it.
     group: 'Domain',
     items:
-      'human experience · occupant wellbeing · daylighting · evidence-based design · research design · evaluation methods · benchmarking · Rhino-Revit interoperability · human-AI interaction · demo and narrative craft',
+      'design technology · human experience · occupant wellbeing · daylighting · evidence-based design · research design · evaluation methods · benchmarking · Rhino-Revit interoperability · human-AI interaction · demo and narrative craft',
   },
 ]
 

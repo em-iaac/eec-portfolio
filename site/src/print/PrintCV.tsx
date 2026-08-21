@@ -152,7 +152,7 @@ export function CvSheet() {
             so the text layer still reads the name first. */}
         <h1>
           Emilie El Chidiac{' '}
-          <span style={{ fontWeight: 400, color: 'var(--pr-ink-muted)' }}>| Design Technology Architect</span>
+          <span style={{ fontWeight: 400, color: 'var(--pr-ink-muted)' }}>| Design Technologist</span>
         </h1>
         {/* draftCopy: the summary stays Emilie-flagged until she signs it. Set
             in the body face, not italic: it is a paragraph that argues, not a

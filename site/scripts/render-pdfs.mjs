@@ -145,7 +145,7 @@ function assertCv(text) {
   check(text.numPages === 1, 'one page exactly' + (text.numPages === 1 ? '' : ` (got ${text.numPages})`))
   check(lines.some(l => l.includes('Emilie El Chidiac')), 'name reads contiguously in the text layer')
   check(all.includes('chidiacemilie@gmail.com'), 'current email present')
-  check(all.includes('Design Technology Architect'), 'anchor title present')
+  check(all.includes('Design Technologist'), 'anchor title present')
   check(all.includes('Aug 2024 - Present'), 'real "Aug 2024 - Present" dates in the embedded text')
   check(all.includes('Rhino Compute'), '"Rhino Compute" spelled with the space')
   check(!all.includes('—'), 'zero em dashes')

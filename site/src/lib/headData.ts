@@ -42,7 +42,7 @@ export const SITE_NAME = 'Emilie El Chidiac'
 
 // The landing strings. index.html carries the same values statically (the
 // pre-JS first paint); lib/headData.test.ts asserts the two never drift.
-export const LANDING_TITLE = 'Emilie El Chidiac | Design Technology Architect'
+export const LANDING_TITLE = 'Emilie El Chidiac | Design Technologist'
 export const LANDING_DESCRIPTION =
   "Computational tools that model how architecture affects the people inside it, and change the design before it's built."
 // THE FALLBACK CARD IS GENERATED NOW (Emilie, 2026-08-06: "and the main website
@@ -54,7 +54,7 @@ export const LANDING_DESCRIPTION =
 // link already shared against that URL.)
 const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og/home.png`
 const DEFAULT_OG_ALT =
-  'Emilie El Chidiac, Design Technology Architect: the EEC constellation cube mark, a graph cube with one red node'
+  'Emilie El Chidiac, Design Technologist: the EEC constellation cube mark, a graph cube with one red node'
 
 // The four index-page descriptions (authored in S1, SIGNED by Emilie
 // 2026-07-13) + the pillar's line (SIGNED as interim 2026-07-13; S5 still
@@ -69,9 +69,9 @@ const PAGE_DESCRIPTIONS: Record<string, string> = {
   '/thoughts':
     'Short essays by Emilie El Chidiac on neuroarchitecture, computational design, and behavior information modeling: the thinking behind the tools.',
   '/contact':
-    'Get in touch with Emilie El Chidiac, Design Technology Architect: email, LinkedIn, GitHub, and the portfolio and CV as PDFs.',
+    'Get in touch with Emilie El Chidiac, Design Technologist: email, LinkedIn, GitHub, and the portfolio and CV as PDFs.',
   '/cv':
-    'The CV of Emilie El Chidiac, Design Technology Architect: computational design, neuroarchitecture research, and AI-assisted tools. Download the PDF.',
+    'The CV of Emilie El Chidiac, Design Technologist: computational design, neuroarchitecture research, and AI-assisted tools. Download the PDF.',
   // draftCopy: NEW at the rights pass (2026-07-30), unsigned. Says what the
   // page is for without pretending to be a legal document, and carries no
   // keyword freight: nobody is searching for this page, it just has to be
@@ -108,7 +108,7 @@ const PERSON = {
   name: 'Emilie El Chidiac',
   alternateName: ['Emilie Chidiac', 'Emilie El Chidiac'],
   url: SITE_ORIGIN + '/',
-  jobTitle: 'Design Technology Architect',
+  jobTitle: 'Design Technologist',
   // The three D6 terms + the tool vocabulary screeners filter for (Emilie's
   // extension ruling, 2026-07-13; every term honestly hers).
   knowsAbout: [

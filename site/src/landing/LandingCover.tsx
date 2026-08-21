@@ -344,7 +344,7 @@ export default function LandingCover() {
       <main
         id="main"
         tabIndex={-1}
-        aria-label="Emilie El Chidiac, Design Technology Architect"
+        aria-label="Emilie El Chidiac, Design Technologist"
         className="bg-[var(--lang-ground)] text-[var(--lang-ink)] outline-none"
       >
       {/* ============ ONE · THE IDENTITY AND THE STRIPS ============

@@ -328,7 +328,7 @@ export default function CV() {
             only. */}
         <h1 className="cv-name font-semibold tracking-[-0.01em] text-[var(--lang-ink)]">
           Emilie El Chidiac{' '}
-          <span className="font-normal text-[var(--lang-ink-muted)]">| Design Technology Architect</span>
+          <span className="font-normal text-[var(--lang-ink-muted)]">| Design Technologist</span>
         </h1>
         {/* LEAD step: the summary now sits ABOVE body size. It used to match
             the bullets exactly, which gave the most important line on the page

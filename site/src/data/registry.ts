@@ -864,7 +864,7 @@ export const ENTRIES: RegistryEntry[] = [
     // the same job carried two titles on two surfaces for six weeks: the map
     // said one and the CV, the book and the <title> said the other. Found by the
     // cross-surface pass, which exists for exactly this.
-    title: 'Design Technology Architect · Dynamic Solution · Kuwait',
+    title: 'Design Technologist · Dynamic Solution · Kuwait',
     tags: ['practice'],
   },
   {

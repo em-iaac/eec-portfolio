@@ -49,7 +49,7 @@ const RECONCILE: Record<string, { cv: string | null; map: string; why?: string }
   'self-open': { cv: 'Self-employed', map: 'Self-employed' },
   'barch-grad': { cv: 'Bachelor of Architecture', map: 'B.ARCH' },
   'soma-start': { cv: 'SOMA', map: 'SOMA' },
-  'dynamic-start': { cv: 'Design Technology Architect', map: 'Design Technology Architect' },
+  'dynamic-start': { cv: 'Design Technologist', map: 'Design Technologist' },
   'macad-start': { cv: 'Master in Advanced Computational Design', map: 'MaCAD begins' },
   licence: { cv: 'Licensed architect', map: 'Licensed architect' },
   gss: { cv: 'Global Summer School', map: 'Global Summer School' },
