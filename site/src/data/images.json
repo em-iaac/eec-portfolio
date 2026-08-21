@@ -922,7 +922,7 @@
     {
       "name": "perceptual-colour",
       "role": "gallery",
-      "alt": "Color matching by CIEDE2000 instead of RGB distance, snapping every voxel to the nearest of 48 real LEGO colors",
+      "alt": "Colour matching by CIEDE2000 instead of RGB distance, snapping every voxel to the nearest of 48 real LEGO colours",
       "aspect": 2.4205,
       "variants": [
         {
@@ -2431,7 +2431,7 @@
     {
       "name": "episode-art",
       "role": "gallery",
-      "alt": "Episode key art: a building cutaway splitting from gray efficiency into a warm, neuron-lit half, picturing the show’s core question",
+      "alt": "Episode key art: a building cutaway splitting from grey efficiency into a warm, neuron-lit half, picturing the show’s core question",
       "aspect": 1.8318,
       "variants": [
         {
@@ -2905,6 +2905,26 @@
           "w": 1600,
           "file": "assets/projects/encounter-cert/certificate-1600.webp",
           "kb": 251
+        }
+      ]
+    }
+  ],
+  "sensi-macad-cert": [
+    {
+      "name": "certificate",
+      "role": "gallery",
+      "alt": "The IAAC letter naming Emilie El Chidiac for the Sensi award at the Design Copilot Studio, MaCAD 2025-26, signed by the academic secretary",
+      "aspect": 0.75,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi-macad-cert/certificate-640.webp",
+          "kb": 36
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi-macad-cert/certificate-1024.webp",
+          "kb": 65
         }
       ]
     }
@@ -3800,7 +3820,7 @@
     {
       "name": "reaction-cover",
       "role": "gif",
-      "alt": "An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in gray space",
+      "alt": "An SN2 reaction rendered for AR: the chloride ion leaves the molecule as methanol forms, ball and stick in grey space",
       "aspect": 1.7778,
       "animated": true,
       "variants": [

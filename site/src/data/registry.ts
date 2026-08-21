@@ -936,11 +936,20 @@ export const ENTRIES: RegistryEntry[] = [
     lens: 'computation',
     tags: ['ai', 'research'],
     refId: 'sensi',
-    // FLAG-03 (CONTENT-STRATEGY.md §3): the award has no public anchor yet.
-    // The showcase award pill already reads this entry's refId; the moment
-    // Emilie's announcement (LinkedIn post or an IAAC page) is live, add its
-    // URL here and the pill LIGHTS UP as a link everywhere, no code change:
-    //   links: [{ label: 'ANNOUNCEMENT', href: 'https://...' }],
+    // FLAG-03 (CONTENT-STRATEGY.md §3) ANSWERED THE OTHER WAY (2026-08-21).
+    // The flag waited on a public anchor and IAAC never published one, so the
+    // pill links the CERTIFICATE itself, exactly as the Cemetery Challenge
+    // finalist pill has since S2. Evidence a reader can open beats a URL that
+    // does not exist. When Emilie's announcement post is live it can join this
+    // row as { label: 'ANNOUNCEMENT', href: 'https://...' }.
+    //   The certificate's own words are "a Special award" and the trophy reads
+    //   "MaCAD Awards 2026 / Design Copilots" over the four names; neither says
+    //   "winner". Raised with her the day it arrived, and she ruled the record
+    //   KEEPS "winner": the category had exactly one awarded project, which is
+    //   the fact the word carries.
+    links: [
+      { label: 'CERTIFICATE', href: '/assets/projects/sensi-macad-cert/certificate-1024.webp' },
+    ],
   },
   {
     id: 'legoarch-jury',

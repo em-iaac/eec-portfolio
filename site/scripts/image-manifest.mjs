@@ -633,6 +633,23 @@ export const MANIFEST = {
       alt: 'The certificate of achievement from Ctrl Act Design naming Emilie Chidiac, shortlisted as finalist of the Cemetery Challenge',
     },
   ],
+  // The MaCAD award pill's link target, the same pattern as encounter-cert
+  // one slug up (2026-08-21): IAAC published no page for the 2026 awards, so
+  // the certificate IS the anchor, and FLAG-03's "no public URL" is answered
+  // by evidence rather than by a link. Baked under its own slug so no strip
+  // ever picks it up.
+  //   The letter's own words are "a Special award" and the trophy reads
+  //   "MaCAD Awards 2026 / Design Copilots" over the four names. Neither
+  //   says "winner". Raised with her the day the certificate arrived; her
+  //   ruling (2026-08-21) is that the record KEEPS "winner", because the
+  //   category had exactly one awarded project and that is the fact the word
+  //   is carrying.
+  'sensi-macad-cert': [
+    {
+      src: 'academic/iaac/sensi/macad-award-certificate.png', role: 'gallery', name: 'certificate',
+      alt: 'The IAAC letter naming Emilie El Chidiac for the Sensi award at the Design Copilot Studio, MaCAD 2025-26, signed by the academic secretary',
+    },
+  ],
   // FALCON SQUARE (round 3, 2026-07-17: the deck IS Emilie’s final-assets
   // folder, her own picks renamed by caption; her pattern for every project).
   // MIDAN AL SAKR, the office’s Moujassam Watan entry for Al Khobar; she LED
