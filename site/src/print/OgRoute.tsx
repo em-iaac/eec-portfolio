@@ -227,7 +227,7 @@ function cardFor(cardKey: string): CardData | null {
   // because the landing IS the whole record rather than one piece of it.
   if (cardKey === 'home') {
     return {
-      kicker: 'DESIGN TECHNOLOGY ARCHITECT',
+      kicker: 'DESIGN TECHNOLOGIST',
       title: 'Emilie El Chidiac',
       serifTitle: false,
       line: VOICE,
@@ -373,7 +373,7 @@ export default function OgRoute() {
           {card.path}
         </span>
         <span className="font-mono text-[15px] tracking-[0.14em] text-[var(--lang-ink-muted)]">
-          DESIGN TECHNOLOGY ARCHITECT
+          DESIGN TECHNOLOGIST
         </span>
       </div>
     </div>

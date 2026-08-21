@@ -89,7 +89,7 @@ export default function Footer({ inFlow = false, tools }: {
             EMILIE EL CHIDIAC
           </span>
           <span className="mt-0.5 font-mono text-micro tracking-[0.08em] text-[var(--lang-ink-muted)]">
-            DESIGN TECHNOLOGY ARCHITECT
+            DESIGN TECHNOLOGIST
           </span>
         </div>
         {/* Below sm: with a tool, one centred row of tool + marks (that is the
