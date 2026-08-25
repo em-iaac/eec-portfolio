@@ -79,7 +79,7 @@ export interface WorkEntry {
   featured: boolean // S4 (D2): in the /work featured tier (leads, larger)
 }
 
-type ImgRow = { name: string; alt?: string }
+type ImgRow = { name: string; alt?: string; screen?: boolean }
 
 // Slugs referenced by more than one project (only 'professional' today: SOMA +
 // Marsception share a folder). A shared slug shows NO strip, so one project
@@ -165,11 +165,16 @@ const originOf = (p: Project): string =>
 // excluded, shared folders suppressed. Alt text prefers the manifest's
 // authored line (S4b: 80-140 chars, context not contents) and derives from
 // the frame name otherwise; never blank.
+// `screen: false` (the sensi refresh, 2026-08-25): an image the BOOK still
+// prints but the screen strip no longer shows — sensi's app-shape and report
+// were replaced on screen by richer captures, while the printed spread and
+// register keep their ruled plates untouched (image-manifest.mjs carries the
+// flag; the print surfaces read assets by NAME and never through this strip).
 function stripFor(slug: string | undefined, coverName: string | undefined, title: string): WorkPicture[] {
   if (!slug || SHARED_SLUGS.has(slug)) return []
   const all = (images as Record<string, ImgRow[]>)[slug] ?? []
   return all
-    .filter((i) => i.name !== coverName)
+    .filter((i) => i.name !== coverName && i.screen !== false)
     .map((i) => ({ slug, name: i.name, alt: i.alt ?? `${title}: ${humanize(i.name)}` }))
 }
 

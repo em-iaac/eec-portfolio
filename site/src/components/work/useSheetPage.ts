@@ -17,8 +17,9 @@
 // WHAT THE GESTURE MUST NOT STEAL, checked at the press:
 //   - the media stage: a sideways drag there flips PICTURES (useSwipeFlip),
 //     and one gesture must never mean two things at once
-//   - the stacked Lightbox (its own <dialog>; a swipe over a zoomed picture
-//     belongs to the picture)
+//   - anything that scrolls or drags sideways itself — the contact-sheet
+//     thumb band and the gallery face's strip declare [data-own-gesture]
+//     (and the face nulls the pager entirely; WorkOverlay)
 //   - buttons, links and media controls — a press there is a press
 //   - and the vertical axis entirely: the sheet scrolls, so the gesture only
 //     claims a move that is clearly sideways (dominant axis, checked once at
@@ -121,10 +122,14 @@ export default function useSheetPage(
       if (!pagerRef.current) return
       if (!window.matchMedia(RAILLESS).matches) return
       const t = e.target as Element
-      // A press inside a stacked dialog (the Lightbox) is never this sheet's.
+      // A press inside a stacked dialog is never this sheet's.
       if (t.closest('dialog') !== dlg) return
       if (t.closest('button, a, video, audio, input, textarea, select')) return
       if (excludeRef.current?.contains(t)) return
+      // A surface that scrolls or drags sideways itself (the thumb band, the
+      // gallery strip) declares it and keeps its gesture — one drag must
+      // never mean two things (the stage's own rule, made general).
+      if (t.closest('[data-own-gesture]')) return
       dragging = true
       claimed = false
       startX = lastX = e.clientX

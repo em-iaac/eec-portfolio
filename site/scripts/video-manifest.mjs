@@ -30,9 +30,12 @@ export const VIDEOS = {
   lungs: [
     { src: 'academic/iaac/lungs/lungs-45s-edit.mp4', name: 'demo', audio: false, posterAt: 15, crf: 23 },
   ],
+  // flow-report DELETED (Emilie, 2026-08-25, the sensi asset pass): built
+  // since the demo round but shown nowhere — only vids[0] ever leads the
+  // plate, and the report flow lives inside the scored demo. The folder
+  // tells no lies (her pick over leaving it unused).
   sensi: [
     { src: 'academic/iaac/sensi/demos/sensi-45s-16x9-scored.mp4', name: 'demo', audio: true, posterAt: 12, crf: 23 },
-    { src: 'academic/iaac/sensi/demos/report.mp4', name: 'flow-report', audio: false, posterAt: 3, crf: 25 },
   ],
   // NeuroSpace slider-tour screen capture (Session 9 tail; RE-CUT 2026-07-15,
   // Emilie's pick at the gallery review): the motion beat for P-102, drag a

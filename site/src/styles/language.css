@@ -776,6 +776,14 @@ textarea,
   gap: 2px;
   min-width: 0;
 }
+/* THE LEVEL LINE (Emilie's pick, 2026-08-25, the polish pass): a foot with no
+   recognition row keeps the row's height anyway — 13.5px of award line plus
+   the 2px gap, measured on the live grid — so every title in a grid or belt
+   row sits on ONE line whether or not the card carries an award. The reserve
+   rides the single child, not the foot, so award feet are byte-identical. */
+.work-plate__foot > :only-child {
+  margin-bottom: 15.5px;
+}
 /* The reveal: the true cover over the plate. Opacity only (element-level,
    never a filter, rule 7); PRM gets the instant swap. */
 .work-plate__cover {

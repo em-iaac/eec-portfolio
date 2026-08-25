@@ -9,10 +9,11 @@
 // asset was "too horizontal and thin"): the sheet now mirrors the printed
 // plate (print/PrintBook.tsx) so card ⇄ showcase ⇄ book are ONE logic:
 //   1. THE TOP ROW, divided in two like the printed page: the ASSET side
-//      (left on desktop) is a tall 4:3 flip-through gallery — hero first
-//      (video>live>photo>audio>text), then every supporting frame; ‹ ›
-//      arrows flip, tapping a picture opens it full size in the Lightbox
-//      (her pick: arrows flip, tap zooms). The TITLE/INFO side carries the
+//      (left on desktop) is the stage — hero first (video>live>photo>audio>
+//      text), then every supporting frame — with the CONTACT SHEET band
+//      beneath it and the GALLERY FACE one press away (the 2026-08-25
+//      redesign; the block comment above the face carries it in full; the
+//      Lightbox died there). The TITLE/INFO side carries the
 //      identity the old top bar held: the ONE-LINE IDENTITY (title + lens +
 //      award on the first line; her ruling on the mocked options, 2026-08-20),
 //      the claim (the question slot when D4's discovery session fills it,
@@ -29,11 +30,10 @@
 //
 // ESCAPE (her round-3 report, reproduced live: this Chromium delivers the
 // Escape keydown but never fires the native <dialog> 'cancel' close request,
-// so Esc silently did nothing). Both dialogs now handle Escape themselves on
-// keydown, peeling ONE layer per press: full-size picture › the plate › the
-// grid. The 'cancel' listeners stay as the fallback for close requests that
-// arrive WITHOUT a keydown (Android's back gesture), with a guard so the
-// plate never closes underneath a stacked Lightbox.
+// so Esc silently did nothing). The dialog handles Escape itself on keydown,
+// peeling ONE layer per press: drawer panel › gallery face › the grid. The
+// 'cancel' listener stays as the fallback for close requests that arrive
+// WITHOUT a keydown (Android's back gesture), peeling the same way.
 //
 // THE SPINE ARRIVES SEPARATELY (2026-08-03, the phone pass). WHAT / WHY / HOW /
 // WHAT CAME OF IT, and the question dot's other questions, are no longer copied
@@ -64,7 +64,6 @@ import useSheetPage from './useSheetPage'
 import useSwipeFlip from './useSwipeFlip'
 import Img from '../Img'
 import SheetVideo from '../sheet/SheetVideo'
-import Lightbox from './Lightbox'
 import QuestionsDot from './QuestionsDot'
 import { vtName } from '../../lib/viewTransition'
 import { PILLAR_PATH, isPillarRelated } from '../../lib/pillar'
@@ -83,25 +82,25 @@ const PROSE = 'prose-rag font-serif text-small leading-[1.5] text-[var(--lang-in
 // worked example of how much air a merge may add. A plate wears the
 // SMALLEST SIZE THAT HOLDS ITS WORDS; the optical mount absorbs the air at
 // the foot.
-// RE-CENSUSED 2026-08-21 (the fill-the-spines round: every project now
-// carries all four beats except the podcast, whose no-HOW ruling stands).
-// The three bootcamp minis grew off the S shelf entirely (astroidal 776,
-// chair-sim 717, playscape 717) and encounter joined the tall band (737),
-// which left S holding exactly two plates: cappelletti 596 and podcast 608.
-// Two plates do not earn a step of their own when her worked tolerance is
-// ~90px of air and the merge costs at most 82 (cappelletti at 678). So the
-// ladder is TWO sizes now, the least it has ever been:
-//   M 678  the short-through-middle band, 12   (natural 596..678, air <=82)
-//   L 796  the tall band, 9                    (natural 713..795, air <=83)
-// Measured all 21 at 1464px against the live build; the seam is real: 35px
-// of empty between 678 (huddle) and 713 (homage), nothing inside it. Never
-// patch one step: any head or spine change moves all 21 naturals — re-census
-// and re-cluster.
+// RE-CENSUSED 2026-08-25 (the asset-flow redesign: the contact-sheet band
+// under the stage added its 52px — h-11 thumbs + mt-2 — to every multi-page
+// plate, and the stage column governs every natural, so all 21 moved up by
+// exactly that). The CLUSTERS HELD THEIR SHAPE: the same 35px seam sits
+// between huddle (730) and homage (765), nothing inside it, so the ladder
+// stays the two sizes her "least possible plate scales" ruling asked for:
+//   M 730  the short-through-middle band, 12   (natural 648..730, air <=82)
+//   L 847  the tall band, 9                    (natural 765..847, air <=82)
+// Measured all 21 at 1464px against the dev build (2026-08-21's method).
+// Note the L step now clears the 0.92·viewport cap only on screens taller
+// than ~921px (was ~865): below that, tall plates go content-tall and the
+// dialog's own max-height evens them out — the same degradation the old
+// ladder had, one threshold higher. Never patch one step: any head, band or
+// spine change moves all 21 naturals — re-census and re-cluster.
 // Runtime snap, not per-project data: a narrower viewport wraps the words
 // taller and the same ladder re-assigns honestly, and a future project needs
 // no authoring — it finds its shelf. Capped by the dialog's own max-height
 // (min-height would otherwise outrank it and push past the viewport).
-const PLATE_STEPS = [678, 796]
+const PLATE_STEPS = [730, 847]
 
 // The stage's true rendered size (Emilie's quality pass, 2026-07-14): without
 // this hint the browser assumed the Img default (~640px) and loaded the soft
@@ -118,14 +117,10 @@ const STAGE_SIZES = '(max-width: 640px) 92vw, 480px'
 // media (and the pipeline-framed covers, image-manifest frame16x9) fills it
 // exactly, so the mat only ever shows where an asset genuinely is not 16:9.
 
-// The ‹ › page-turn buttons (shared style with the Lightbox nav).
-const FLIP_BTN =
-  'absolute top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-[var(--r-pill)] bg-[var(--lang-scrim-rest)] font-mono text-body leading-none text-white transition-colors hover:bg-[var(--lang-scrim-hover)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
-
 // ---- THE ASSET SIDE (the flip-through gallery) ----------------------------
 // One page per piece of media: the hero first, then every supporting frame.
-// Image pages open the Lightbox; the video/live/audio heroes are their own
-// interactive surfaces and do not.
+// Image pages open the gallery face; the video/live/audio heroes are their
+// own interactive surfaces and do not.
 type MediaPage =
   | { kind: 'video'; video: NonNullable<WorkEntry['heroVideo']> }
   | { kind: 'live'; cover: WorkPicture; live: NonNullable<WorkEntry['live']> }
@@ -231,34 +226,169 @@ function SpineBeat({ label, beat, children }: { label: string; beat: string; chi
   )
 }
 
+// ══════════ THE CONTACT SHEET + THE GALLERY FACE (her pick, 2026-08-25) ═════
+// The asset flow, rebuilt from a five-way live prototype round (?flow=a..mix;
+// the flag is gone, this is the winner — "the mix"). The LIGHTBOX IS DEAD:
+// she rejected the overlay-on-overlay pattern outright ("I don't want this
+// blur and lightbox effect"), so seeing a picture properly no longer costs a
+// second dialog. Two faces of ONE sheet instead:
+//   - THE PLATE (default): head-beside-stage exactly as ruled, plus the
+//     CONTACT SHEET — a thumb band under the stage showing every page at
+//     once (no more flipping blind through "1 / 11"), with the ‹ › steppers
+//     at the band's ends, in their own area, never overlapping the asset
+//     (her control note, 2026-08-25).
+//   - THE GALLERY FACE: pressing an image turns the sheet to a full-width
+//     strip, one asset per page at reading size — the Mars board's fine
+//     print is legible in place. Controls live in their OWN zones, inset in
+//     the card (her note): a top bar (‹ THE PLATE · counter · ✕), reserved
+//     rail columns for ‹ › beside the strip, the thumb band below. The
+//     strip pages by wheel (one notch = one page), rails, arrow keys,
+//     thumbs, and touch; Escape and ‹ THE PLATE turn home. The THOUGHTS tab
+//     is plate chrome and does not follow onto the face.
+const FIG_CAP = 'mt-1.5 mb-0 font-mono text-micro tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase'
+
 export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const titleId = `work-title-${entry.id}`
   // The page behind this sheet does not scroll while it is open
   // (hooks/useScrollLock.ts carries the why, and why containment was not
-  // enough). Counted, so the Lightbox stacking over this holds its own.
+  // enough).
   useScrollLock()
-  const [lightbox, setLightbox] = useState<number | null>(null)
-  // The cancel listener is bound once (layout effect below) and must read the
-  // CURRENT lightbox state, not its mount-time closure: a ref carries it.
-  const lightboxRef = useRef(lightbox)
-  lightboxRef.current = lightbox
   const [page, setPage] = useState(0)
+  const [face, setFace] = useState<'plate' | 'gallery'>('plate')
+  // The cancel listener is bound once (layout effect below) and must read the
+  // CURRENT face, not its mount-time closure: a ref carries it (the same
+  // staleness answer the Lightbox's listener used to need).
+  const faceRef = useRef(face)
+  faceRef.current = face
+  // THE TURN NEVER RESIZES THE SHEET (measured: on screens where the plate
+  // ladder's step exceeds the 0.92·viewport cap the sheet is content-sized,
+  // and the face's h-full chain had nothing to resolve against — the turn
+  // dropped it 769→642). The plate's HEIGHT is pinned AT THE PRESS — a
+  // layout effect measures too late (React has already committed the face's
+  // DOM; caught live: the pin read 642, the face's own height), and pinning
+  // min-height is not enough (the dialog's used height stays auto, so the
+  // face's percentage chain still resolves to nothing; also caught live —
+  // the thumbs floated with 145px of air beneath). An explicit height makes
+  // the whole chain definite: face fills the plate's exact box, thumbs land
+  // on its foot. Every exit path clears it through the effect cleanup.
+  // Desktop only — the phone bottom sheet docks and sizes to its own
+  // fixed-height media.
+  const openFace = () => {
+    const dlg = ref.current
+    if (dlg && window.matchMedia('(min-width: 40rem)').matches) {
+      dlg.style.height = `${Math.round(dlg.getBoundingClientRect().height)}px`
+    }
+    setFace('gallery')
+  }
+  useLayoutEffect(() => {
+    if (face !== 'gallery') return
+    return () => {
+      if (ref.current) ref.current.style.height = ''
+    }
+  }, [face])
+  // Turning the face unmounts the pressed control, and a modal whose focus
+  // fell to body stops hearing Escape — focus must land inside the new face
+  // (found live in the prototype round: the turn deafened Escape).
+  useEffect(() => {
+    if (face === 'gallery') {
+      ;(ref.current?.querySelector('[data-face-back]') as HTMLElement | null)?.focus()
+    } else {
+      titleRef.current?.focus({ preventScroll: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [face])
 
-  const { pages, images } = buildPages(entry)
+  const { pages } = buildPages(entry)
   const many = pages.length > 1
   const current = pages[Math.min(page, pages.length - 1)]
   const prevPage = () => setPage((p) => (p - 1 + pages.length) % pages.length)
   const nextPage = () => setPage((p) => (p + 1) % pages.length)
+  const pageIdx = Math.min(page, pages.length - 1)
+
+  // The gallery face's strip. galleryIdx tracks whichever figure sits
+  // nearest the strip's center; scrollToPage centers one.
+  const stripRef = useRef<HTMLDivElement>(null)
+  const [galleryIdx, setGalleryIdx] = useState(0)
+  const scrollToPage = (i: number) => {
+    const strip = stripRef.current
+    if (!strip) return
+    const kid = strip.children[Math.max(0, Math.min(i, pages.length - 1))] as HTMLElement | undefined
+    if (!kid) return
+    const left = kid.offsetLeft - (strip.clientWidth - kid.clientWidth) / 2
+    // Neighbors glide; a distant thumb jump CUTS — Chromium's smooth scroll
+    // scales with distance (~1.8s across a 10-page strip, measured), and a
+    // jump that cruises past eight pages reads as lag, not travel.
+    const far = Math.abs(left - strip.scrollLeft) > strip.clientWidth * 1.5
+    strip.scrollTo({ left, behavior: far ? 'auto' : 'smooth' })
+  }
+  useEffect(() => {
+    if (face !== 'gallery') return
+    const strip = stripRef.current
+    if (!strip) return
+    // Open on the page the plate was showing.
+    const start = strip.children[pageIdx] as HTMLElement | undefined
+    if (start) strip.scrollTo({ left: start.offsetLeft - (strip.clientWidth - start.clientWidth) / 2 })
+    setGalleryIdx(pageIdx)
+    // A mouse wheel pages the strip (accumulated, so one notch = one page and
+    // snap never fights a half-scroll); a trackpad's sideways pan stays
+    // native. Bound here because React's root wheel listener is passive.
+    let acc = 0
+    let cooling = false
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return
+      e.preventDefault()
+      if (cooling) return
+      acc += e.deltaY
+      if (Math.abs(acc) > 50) {
+        const dir = acc > 0 ? 1 : -1
+        acc = 0
+        cooling = true
+        setTimeout(() => {
+          cooling = false
+        }, 250)
+        setGalleryIdx((g) => {
+          const next = Math.max(0, Math.min(g + dir, pages.length - 1))
+          const kid = strip.children[next] as HTMLElement | undefined
+          if (kid) strip.scrollTo({ left: kid.offsetLeft - (strip.clientWidth - kid.clientWidth) / 2, behavior: 'smooth' })
+          return next
+        })
+      }
+    }
+    const onScroll = () => {
+      const center = strip.scrollLeft + strip.clientWidth / 2
+      let best = 0
+      let bestDist = Infinity
+      for (let i = 0; i < strip.children.length; i++) {
+        const el = strip.children[i] as HTMLElement
+        const dist = Math.abs(el.offsetLeft + el.clientWidth / 2 - center)
+        if (dist < bestDist) {
+          bestDist = dist
+          best = i
+        }
+      }
+      // The first and last figures cannot physically reach the strip's
+      // center — at the rails, the end page is the honest answer.
+      if (strip.scrollLeft <= 2) best = 0
+      else if (strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 2) best = strip.children.length - 1
+      setGalleryIdx(best)
+    }
+    strip.addEventListener('wheel', onWheel, { passive: false })
+    strip.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      strip.removeEventListener('wheel', onWheel)
+      strip.removeEventListener('scroll', onScroll)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [face])
 
   // Open as a true modal on mount (top layer, focus trap, background inert).
   // A LAYOUT effect since DL-1: react-router runs the route update inside
   // document.startViewTransition's flushSync, so the dialog must be [open]
-  // synchronously for the new-state capture to see the morph target. Escape is
-  // handled via 'cancel' (fires only on real user dismissal, so it survives
-  // StrictMode's double-invoke and, when the Lightbox is stacked, cancels THAT
-  // top dialog first, leaving the sheet open).
+  // synchronously for the new-state capture to see the morph target. Escape
+  // is handled via 'cancel' (fires only on real user dismissal, so it
+  // survives StrictMode's double-invoke).
   // MOUNT AND UNMOUNT ONLY — never per project (the flash root cause, caught
   // frame-by-frame in her recording at the tweak round, 2026-08-20). This
   // effect used to depend on [entry.id], and an effect's CLEANUP runs before
@@ -269,7 +399,7 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
   // (dimmed) → 252 (naked page) at the press, one showModal call mid-swap.
   // Un-keying the component (Work.tsx) was necessary but not sufficient —
   // the close lived HERE. Paging projects now touches neither open state nor
-  // the backdrop; the per-project work (focus, page/lightbox/drawer/scroll
+  // the backdrop; the per-project work (focus, page/face/drawer/scroll
   // resets) lives in the entry.id effect below.
   const onCloseRef = useRef(onClose)
   onCloseRef.current = onClose
@@ -277,13 +407,14 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
     const dlg = ref.current
     if (!dlg) return
     if (!dlg.open) dlg.showModal()
-    // The keydown-less fallback (Android back gesture): close the plate,
-    // UNLESS the Lightbox is stacked on top — that close request is the
-    // Lightbox's to consume, and the plate must stay open underneath.
-    // (onClose rides a ref so this once-bound listener never goes stale.)
+    // The keydown-less fallback (Android back gesture): one layer per
+    // request, the house rule — an open gallery face consumes the first
+    // back, the sheet the next. (Both ride refs so this once-bound listener
+    // never goes stale.)
     const onCancel = (e: Event) => {
-      if (lightboxRef.current !== null) {
+      if (faceRef.current === 'gallery') {
         e.preventDefault()
+        setFace('plate')
         return
       }
       onCloseRef.current()
@@ -350,6 +481,165 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
 
   const hasLinks = entry.links.length > 0
 
+  // The record line under a gallery figure: number + what the page is.
+  const figCaption = (pg: MediaPage, i: number) => {
+    const what =
+      pg.kind === 'image' ? pg.pic.alt : pg.kind === 'video' ? pg.video.ariaLabel : pg.kind === 'live' ? pg.live.label : 'the conversation'
+    return `fig ${i + 1} · ${what}`
+  }
+
+  // THE CONTACT SHEET (the plate's half of her mix): every page visible at
+  // once, the current one marked — flipping blind through a counter is gone.
+  // Shared with the gallery face, where a press jumps the strip instead of
+  // the stage. `data-own-gesture`: a sideways drag on the band is the band's
+  // (useSheetPage), never a project page-turn.
+  const thumbRow = (active: number, pick: (i: number) => void, topMargin = 'mt-2') => (
+    <div data-own-gesture className={`${topMargin} no-scrollbar flex min-w-0 gap-1.5 max-sm:overflow-x-auto`}>
+      {pages.map((pg, i) => (
+        <button
+          key={i}
+          type="button"
+          onClick={() => pick(i)}
+          aria-label={`Page ${i + 1} of ${pages.length}`}
+          aria-current={i === active}
+          className={`h-11 overflow-hidden rounded-md bg-white transition-opacity focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)] max-sm:w-16 max-sm:shrink-0 sm:min-w-0 sm:flex-1 ${
+            i === active
+              ? 'border-[1.5px] border-[var(--lang-ink)]'
+              : 'border-[0.5px] border-[var(--lang-hairline)] opacity-70 hover:opacity-100'
+          }`}
+        >
+          {pg.kind === 'image' ? (
+            <Img slug={pg.pic.slug} name={pg.pic.name} alt="" still capPlay sizes="80px" className="h-full w-full object-cover" />
+          ) : (pg.kind === 'video' || pg.kind === 'live') && entry.cover ? (
+            <span className="relative block h-full w-full">
+              <Img slug={entry.cover.slug} name={entry.cover.name} alt="" still capPlay sizes="80px" className="h-full w-full object-cover" />
+              <span className="absolute inset-0 flex items-center justify-center bg-[var(--lang-scrim-faint)] font-mono text-micro text-white">▶</span>
+            </span>
+          ) : (
+            <span className="flex h-full w-full items-center justify-center font-mono text-micro text-[var(--lang-ink-muted)]">
+              {pg.kind === 'audio' ? '♪' : '▶'}
+            </span>
+          )}
+        </button>
+      ))}
+    </div>
+  )
+
+  // The ‹ › steppers wear the band's own quiet voice — in their own area,
+  // never drawn over the asset (her control ruling, 2026-08-25).
+  const STEP_BTN =
+    'flex h-11 w-8 shrink-0 items-center justify-center rounded-md border-[0.5px] border-[var(--lang-hairline)] font-serif text-[22px] leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]'
+
+  // The plate's control band: [‹] [the contact sheet] [›].
+  const plateBand = many && (
+    <div className="mt-2 flex items-center gap-1.5">
+      <button type="button" onClick={prevPage} aria-label="Previous picture" className={STEP_BTN}>
+        &lsaquo;
+      </button>
+      {thumbRow(pageIdx, setPage, 'mt-0')}
+      <button type="button" onClick={nextPage} aria-label="Next picture" className={STEP_BTN}>
+        &rsaquo;
+      </button>
+    </div>
+  )
+
+  // THE GALLERY FACE (the other half of the mix). Every control in its own
+  // inset zone (her ruling): the top bar holds ‹ THE PLATE, the counter and
+  // the sheet's ✕ side by side — nothing overlaps the counter or the media;
+  // the ‹ › rails are reserved columns beside the strip. The strip pages by
+  // wheel (one notch = one page; bound non-passively in the effect above —
+  // React's own onWheel cannot preventDefault), rails, arrow keys, thumbs
+  // and touch. Desktop fills the plate's own snapped height (no size jump on
+  // the turn); phones size the media to the viewport instead — a percentage
+  // chain against a content-sized sheet resolves to nothing.
+  // (A function, not a const element: it reaches thumbRow above and stays
+  // next to the plate band it mirrors.)
+  const galleryFace = () => (
+    <div className="face-in flex h-full min-h-0 flex-col">
+      <div className="flex items-center justify-between gap-3 pb-3">
+        <button
+          type="button"
+          data-face-back
+          onClick={() => setFace('plate')}
+          className="-m-2 p-2 font-mono text-label tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+        >
+          &lsaquo; The plate
+        </button>
+        <span className="ml-auto font-mono text-label tracking-[0.12em] text-[var(--lang-ink-muted)] uppercase">
+          {galleryIdx + 1} / {pages.length}
+        </span>
+        <button
+          type="button"
+          onClick={close}
+          aria-label="Close project"
+          className="flex size-11 shrink-0 items-center justify-center rounded-[var(--r-pill)] border-[0.5px] border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] font-mono text-small leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+        >
+          ✕
+        </button>
+      </div>
+      <div className="flex min-h-0 flex-1 items-stretch gap-1">
+        {many && (
+          <button
+            type="button"
+            onClick={() => scrollToPage(galleryIdx - 1)}
+            aria-label="Previous picture"
+            className="hidden w-9 shrink-0 items-center justify-center rounded-md font-serif text-[26px] leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)] sm:flex"
+          >
+            &lsaquo;
+          </button>
+        )}
+        {/* snap-PROXIMITY, not mandatory: a mandatory center-snap makes the
+            first and last pages unreachable (the rail position re-snaps to
+            the neighbor's center — measured: jump-to-last settled 465px
+            short). data-own-gesture: the strip's drag is its own. */}
+        <div
+          ref={stripRef}
+          data-own-gesture
+          className="no-scrollbar flex min-w-0 flex-1 snap-x snap-proximity items-stretch gap-6 overflow-x-auto"
+        >
+          {pages.map((pg, i) => (
+            <figure key={i} className="m-0 flex max-w-[88%] shrink-0 snap-center flex-col">
+              {pg.kind === 'image' ? (
+                /* The centering wrapper is what keeps the mat honest: a
+                   stretched <img> letterboxes INSIDE its white backing (wide
+                   frames grew vertical mat bands — seen live), so the box
+                   must hug the drawn picture and the wrapper absorb the
+                   slack. A transparent drawing still gets its paper: for it
+                   the hugged box IS the drawn area (the S6-A mat ruling). */
+                <div className="flex min-h-0 grow items-center justify-center max-sm:h-[46dvh] max-sm:grow-0">
+                  <Img
+                    slug={pg.pic.slug}
+                    name={pg.pic.name}
+                    alt={pg.pic.alt}
+                    priority={Math.abs(i - pageIdx) < 3}
+                    sizes="1000px"
+                    className="h-auto max-h-full w-auto max-w-full rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] bg-white object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="relative min-h-0 w-[min(80vw,52rem)] grow overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] bg-white max-sm:h-[46dvh] max-sm:w-[86vw] max-sm:grow-0">
+                  <StageContent page={pg} onZoom={() => {}} />
+                </div>
+              )}
+              <figcaption className={`${FIG_CAP} shrink-0 text-center`}>{figCaption(pg, i)}</figcaption>
+            </figure>
+          ))}
+        </div>
+        {many && (
+          <button
+            type="button"
+            onClick={() => scrollToPage(galleryIdx + 1)}
+            aria-label="Next picture"
+            className="hidden w-9 shrink-0 items-center justify-center rounded-md font-serif text-[26px] leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)] sm:flex"
+          >
+            &rsaquo;
+          </button>
+        )}
+      </div>
+      {many && thumbRow(galleryIdx, scrollToPage, 'mt-3')}
+    </div>
+  )
+
   // THE NEIGHBORHOOD (her mix of the felt mockups, 2026-08-20: "d2 rails with
   // d1 drawer for thoughts"). Rails leaf the gallery on desktop; the drawer
   // holds MADE ME THINK OF everywhere, plus the travel row below lg where the
@@ -389,10 +679,13 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
   // rows are gone and the sheet itself answers a sideways drag — the media
   // stage is excluded (a drag there flips pictures), and the pager rides a
   // ref so paging's own re-render never re-binds listeners mid-gesture.
+  // NULLED ON THE GALLERY FACE: the face is one media surface, its sideways
+  // axis belongs to the strip alone.
   const pagerRef = useRef<{ prev: () => void; next: () => void } | null>(null)
-  pagerRef.current = neighbors
-    ? { prev: () => goTo(neighbors.prev.id), next: () => goTo(neighbors.next.id) }
-    : null
+  pagerRef.current =
+    neighbors && face !== 'gallery'
+      ? { prev: () => goTo(neighbors.prev.id), next: () => goTo(neighbors.next.id) }
+      : null
   useSheetPage(ref, stageRef, pagerRef)
   // The un-keyed swap keeps this component mounted across projects, so the
   // per-project state resets here instead of by remount: first media page,
@@ -432,8 +725,8 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
   const scrollerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     setPage(0)
-    setLightbox(null)
     setDrawerOpen(false)
+    setFace('plate')
     scrollerRef.current?.scrollTo(0, 0)
     // A MODAL FOCUSES ITS SUBJECT, NOT ITS CLOSE CONTROL (Emilie's ruling
     // 2026-08-04; her report: "the close button shows a red outline on tap").
@@ -478,10 +771,14 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
         if (e.target === ref.current) close()
       }}
       // Escape, handled here because this Chromium never delivers the native
-      // 'cancel' close request (reproduced live; header comment). A stacked
-      // Lightbox handles its own Escape FIRST and stops propagation, so this
-      // only ever fires when the plate is the top layer.
+      // 'cancel' close request (reproduced live; header comment).
       onKeyDown={(e) => {
+        // On the gallery face the arrow keys page the strip.
+        if (face === 'gallery' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+          e.preventDefault()
+          scrollToPage(galleryIdx + (e.key === 'ArrowRight' ? 1 : -1))
+          return
+        }
         if (e.key === 'Escape') {
           e.preventDefault()
           e.stopPropagation()
@@ -489,9 +786,14 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
           // top layer even when focus never entered it (hover opens it with
           // focus still on the title), so the check lives HERE, not on the
           // drawer — measured: without it, Escape over an open panel closed
-          // the whole sheet.
+          // the whole sheet. The gallery face is the next layer in; the
+          // sheet itself is last.
           if (drawerOpen) {
             setDrawerOpen(false)
+            return
+          }
+          if (face === 'gallery') {
+            setFace('plate')
             return
           }
           close()
@@ -517,14 +819,18 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
           with its hairline, same family as the flip buttons — means the words
           slide under a control, not a stray character. Solid, not glass:
           the sheet itself dropped blur on 2026-08-06 for readability. */}
-      <button
-        type="button"
-        onClick={close}
-        aria-label="Close project"
-        className="absolute top-2.5 right-2.5 z-10 flex size-11 items-center justify-center rounded-[var(--r-pill)] border-[0.5px] border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] font-mono text-small leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
-      >
-        ✕
-      </button>
+      {/* On the gallery face the ✕ sits INSET in the face's own control bar
+          (her ruling, 2026-08-25) — the floating disc would overlap it. */}
+      {face !== 'gallery' && (
+        <button
+          type="button"
+          onClick={close}
+          aria-label="Close project"
+          className="absolute top-2.5 right-2.5 z-10 flex size-11 items-center justify-center rounded-[var(--r-pill)] border-[0.5px] border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] font-mono text-small leading-none text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)]"
+        >
+          ✕
+        </button>
+      )}
 
       {/* THE RAILS (D2 of the felt mockups, her mix ruling 2026-08-20; the
           arrows became the neighbors' own plate drawings at her tweak the
@@ -561,12 +867,14 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                   strokes to the disc's own scale (language.css). */}
               <span
                 aria-hidden="true"
-                className="flex size-18 items-center justify-center rounded-[var(--r-pill)] border-[0.5px] border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] p-1.5 transition-transform group-hover:scale-105"
+                className="flex size-18 items-center justify-center rounded-[var(--r-pill)] border-[0.5px] border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] p-1.5 transition-[transform,border-color] group-hover:scale-105 group-hover:border-[var(--lang-ink-muted)]"
                 style={{ '--plate-accent': LENSES[n.lens].pen } as CSSProperties}
               >
                 <span className="work-art work-art--rail">{WORK_ARTIFACTS[n.id]}</span>
               </span>
-              <span className="text-center font-mono text-micro leading-snug tracking-[0.1em] text-white/85 uppercase">
+              {/* Full white + a soft ink shadow (her pick, 2026-08-25): the
+                  light-mode scrim left white/85 at ~3:1 at micro size. */}
+              <span className="text-center font-mono text-micro leading-snug tracking-[0.1em] text-white uppercase [text-shadow:0_1px_10px_rgba(11,14,19,0.85),0_0_2px_rgba(11,14,19,0.6)]">
                 {n.faceTitle ?? n.title}
               </span>
               <span className="sr-only">
@@ -589,7 +897,10 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
           the report note on the word vs the contents.
           Escape closes the PANEL first (stopPropagation), then the sheet —
           one layer per press, the house rule. */}
-      {related.length > 0 && (
+      {/* Plate chrome only: the tab does not follow onto the gallery face
+          (her control ruling, 2026-08-25 — the media room keeps no edge
+          furniture). */}
+      {related.length > 0 && face !== 'gallery' && (
         <div
           // MID-HEADER, OPENING INTO THE BLUR (her second tweak, 2026-08-20:
           // "middle height of the header section... opens outside the card
@@ -612,7 +923,11 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
           // the drawer opened, closed it, the tab reappeared, pointerenter
           // reopened it: an oscillation, her lag. A fixed 44×112 box keeps
           // the hover ground under the pointer whether the tab is drawn.
-          className="absolute top-[104px] right-0 z-10 h-28 w-11"
+          // TUCKED UP ON PHONES (her A pick, 2026-08-25): below sm the tab
+          // shortens and rises into the chrome band beside the ✕, so the
+          // reading column scrolls clear instead of losing word-ends under a
+          // 112px flap mid-prose. From sm up the mid-header geometry stands.
+          className="absolute top-[104px] right-0 z-10 h-28 w-11 max-sm:top-[60px] max-sm:h-24"
           onPointerEnter={(e) => {
             if (hasHover && e.pointerType === 'mouse') setDrawerOpen(true)
           }}
@@ -646,7 +961,7 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
             aria-controls="sheet-drawer-panel"
             aria-label="The thoughts this project made"
             onClick={() => setDrawerOpen((o) => !o)}
-            className={`h-28 w-11 items-center justify-center rounded-l-xl border-[0.5px] border-r-0 border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)] ${drawerOpen ? 'hidden' : 'flex'}`}
+            className={`h-28 w-11 items-center justify-center rounded-l-xl border-[0.5px] border-r-0 border-[var(--lang-hairline)] bg-[var(--lang-glass-2-solid)] text-[var(--lang-ink-muted)] transition-colors hover:text-[var(--lang-ink)] focus-visible:outline-2 focus-visible:outline-[var(--lang-interaction)] max-sm:h-24 ${drawerOpen ? 'hidden' : 'flex'}`}
           >
             <span
               aria-hidden="true"
@@ -708,6 +1023,10 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
           it in every engine. `min-h-0` stays: it is what lets this scroll once
           max-height caps the sheet. */}
       <div ref={scrollerRef} className="no-scrollbar min-h-0 grow overflow-y-auto overscroll-contain px-5 py-4 sm:px-7 sm:py-5">
+        {face === 'gallery' ? (
+          galleryFace()
+        ) : (
+          <>
         {/* THE TOP ROW: asset side + title/info side (the printed plate's
             head-beside-figure). Phones stack info first (T1: title › claim ›
             proof); desktop puts the asset left (sm:order-first). */}
@@ -862,31 +1181,29 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
                 style={many ? { touchAction: 'pan-y' } : undefined}
                 className="relative aspect-video max-h-[46vh] w-full overflow-hidden rounded-[var(--r-image)] border-[0.5px] border-[var(--lang-hairline)] bg-white"
               >
-                <StageContent page={current} onZoom={(i) => setLightbox(i)} />
+                {/* Pressing an image turns the sheet to the gallery face —
+                    the same picture at reading size, no stacked dialog (the
+                    Lightbox is gone; her ruling, 2026-08-25). */}
+                <StageContent page={current} onZoom={openFace} />
                 {many && (
-                  <>
-                    <button type="button" onClick={prevPage} aria-label="Previous picture" className={`${FLIP_BTN} left-2`}>
-                      &lsaquo;
-                    </button>
-                    <button type="button" onClick={nextPage} aria-label="Next picture" className={`${FLIP_BTN} right-2`}>
-                      &rsaquo;
-                    </button>
-                    {/* On a VIDEO page the counter rides top-right (Emilie's
-                        green light 2026-08-20): bottom-right sat on the
-                        native control bar and crowded the timeline. Image
-                        pages keep it at the foot, where nothing lives. */}
-                    <span
-                      className={`absolute right-3 rounded-[var(--r-pill)] bg-[var(--lang-scrim-rest)] px-2.5 py-1 font-mono text-micro tracking-[0.1em] text-white ${
-                        current.kind === 'video' ? 'top-2' : 'bottom-2'
-                      }`}
-                    >
-                      {Math.min(page, pages.length - 1) + 1} / {pages.length}
-                    </span>
-                  </>
+                  /* On a VIDEO page the counter rides top-right (Emilie's
+                     green light 2026-08-20): bottom-right sat on the
+                     native control bar and crowded the timeline. Image
+                     pages keep it at the foot, where nothing lives. The
+                     ‹ › arrows LEFT the stage for the band below (her
+                     control ruling, 2026-08-25: never over the asset). */
+                  <span
+                    className={`absolute right-3 rounded-[var(--r-pill)] border-[0.5px] border-white/30 bg-[var(--lang-scrim-rest)] px-2.5 py-1 font-mono text-micro tracking-[0.1em] text-white ${
+                      current.kind === 'video' ? 'top-2' : 'bottom-2'
+                    }`}
+                  >
+                    {pageIdx + 1} / {pages.length}
+                  </span>
                 )}
               </div>
-              {/* The dot row retired (G-FLUFF, Emilie 2026-07-14): with the
-                  fuller galleries the counter + arrows carry the job alone. */}
+              {/* The dot row retired (G-FLUFF, Emilie 2026-07-14); the
+                  contact sheet carries the set now. */}
+              {plateBand}
             </div>
           )}
         </div>
@@ -906,16 +1223,9 @@ export default function WorkOverlay({ entry, onClose }: { entry: WorkEntry; onCl
         <div className="mt-5 sm:mt-10 sm:grid sm:grid-flow-col sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-x-9 sm:gap-y-2">
           {spineBeats}
         </div>
+          </>
+        )}
       </div>
-
-      {lightbox !== null && images.length > 0 && (
-        <Lightbox
-          pictures={images}
-          index={Math.min(lightbox, images.length - 1)}
-          onNavigate={setLightbox}
-          onClose={() => setLightbox(null)}
-        />
-      )}
     </dialog>
     </>
   )

@@ -19,45 +19,64 @@
 // shelf / outputs swapped to clean crops (the old sources exposed personal
 // browser tabs).
 export const MANIFEST = {
-  // SENSI (finalized with Emilie at the desk, 2026-07-14): the galaxy IS the
+  // SENSI (finalized with Emilie at the desk, 2026-07-14; REFRESHED with her
+  // 2026-08-25, the asset pass riding the flow redesign): the galaxy IS the
   // card cover (still constellation at rest, ripples on hover; web intermediate
   // galaxy-cover-web.webp cut from her galaxy-cover-dynamic master, 8s @ 8fps,
-  // ffmpeg, local derived file like the pasta-atlas crop). The flip-through
-  // runs in ACT ORDER behind the 45s scored demo video: onboard gif + shot,
-  // shape shots, report gif + shot, galaxy UI gif, then the two idea frames.
-  // Demo gif sources are the richer demos/blog gifs exports.
+  // ffmpeg, local derived file like the pasta-atlas crop).
+  // THE TWO DEMO GIFS ARE GONE (her ruling: they retold the 45s scored video,
+  // 1.2MB of duplication); the flip-through runs in JOURNEY ORDER behind the
+  // video: the app's front door, the onboarding chat, the comfort profile
+  // beside the plan, the green lens, the checkpoints timeline, the galaxy
+  // (gif + full bloom), the report's kitchen card, then the idea frames.
+  // app-shape and report carry screen:false — the printed spread and register
+  // keep those exact ruled plates while the SCREEN shows the richer captures.
+  // 00-landing captured headless from the live app 2026-08-25 (fresh browser:
+  // the generic Google button ships, never her signed-in chip).
   sensi: [
     {
       src: 'academic/iaac/sensi/app-screenshots/galaxy-cover-web.webp', role: 'gif', name: 'galaxy-cover', frame16x9: true, bg: '#424242',
       alt: "Sensi’s relationship galaxy at rest: six senses as glowing constellations, every thread a coupling between two scores",
     },
     {
-      src: 'academic/iaac/sensi/demos/blog gifs/Sensi_Demo1.gif', role: 'gif', name: 'demo-onboarding',
-      alt: 'Onboarding demo: the copilot interviews one person and reveals the persona it will design for, comfort with a subject',
+      src: 'academic/iaac/sensi/app-screenshots/00-landing.png', role: 'gallery', name: 'landing',
+      alt: "Sensi’s front door: borrow Wren’s senses for an instant read-only tour, or be the person the next plan is scored for",
     },
     {
       src: 'academic/iaac/sensi/app-screenshots/01-onboarding.png', role: 'gallery', name: 'onboarding',
       alt: "Sensi’s onboarding chat calibrating the comfort copilot to one person: their noise tolerance, their thermal grudges",
     },
     {
-      src: 'academic/iaac/sensi/app-screenshots/06-shape.png', role: 'hero', name: 'app-shape',
+      src: 'academic/iaac/sensi/app-screenshots/06-shape.png', role: 'hero', name: 'app-shape', screen: false,
       alt: 'The Sensi workspace mid-edit: a floor plan scored across six senses, conflicts flagged while the layout is still soft',
+    },
+    {
+      src: 'academic/iaac/sensi/app-screenshots/04-shape.png', role: 'gallery', name: 'comfort-profile',
+      alt: "The comfort profile beside the plan: Em’s priorities weighed against research baselines, the persona the scores answer to",
     },
     {
       src: 'academic/iaac/sensi/app-screenshots/09.2-shape.png', role: 'gallery', name: 'green-lens',
       alt: 'The green lens over a city apartment plan: what shapes nature here, the kitchen flagged thirsty for daylight and plants',
     },
     {
-      src: 'academic/iaac/sensi/demos/blog gifs/Sensi_Demo2.gif', role: 'gif', name: 'demo-report',
-      alt: 'The vision report scrolling: room scores, the prompt they become, and the render the copilot hands back',
+      src: 'academic/iaac/sensi/app-screenshots/08-shape.png', role: 'gallery', name: 'checkpoints-timeline',
+      alt: 'Senses across checkpoints: each edit a step on the timeline, six sense lines rising and trading as the layout learns',
     },
     {
-      src: 'academic/iaac/sensi/app-screenshots/11-report.png', role: 'gallery', name: 'report',
+      src: 'academic/iaac/sensi/app-screenshots/11-report.png', role: 'gallery', name: 'report', screen: false,
       alt: 'The vision report Sensi hands over: comfort scores shaped for one person, with the edits the layout absorbed',
     },
     {
       src: 'academic/iaac/sensi/demos/blog gifs/Sensi_Demo3.2.gif', role: 'gif', name: 'relationship-galaxy',
       alt: 'Animated relationship galaxy in Sensi, the comfort copilot, mapping how six sense scores pull on each other across a floor plan',
+    },
+    {
+      src: 'academic/iaac/sensi/app-screenshots/10.3-shape.png', role: 'gallery', name: 'galaxy-bloom',
+      alt: 'The relationship galaxy in full bloom: every coupling fibered out, six senses pulling on each other across the whole home',
+    },
+    {
+      src: 'academic/iaac/sensi/app-screenshots/13-report.png', role: 'gallery', name: 'vision-report',
+      alt: "The report’s kitchen card: scores become a prompt, the prompt becomes a render, discomfort made visible room by room",
     },
     {
       src: 'academic/iaac/sensi/blog/Screenshot-2026-06-28-074954.png', role: 'gallery', name: 'sensory-layer',

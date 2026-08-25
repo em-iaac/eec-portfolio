@@ -108,6 +108,8 @@ for (const [slug, items] of Object.entries(MANIFEST)) {
       // S4b: authored alt (80-140 chars) rides the manifest into images.json;
       // data/work.ts prefers it over the derived strip alt.
       ...(item.alt ? { alt: item.alt } : {}),
+      // screen:false = print keeps it, the screen strip skips it (work.ts).
+      ...(item.screen === false ? { screen: false } : {}),
       aspect: item.frame16x9
         ? 1.7778
         : +(meta.width / (isGif ? meta.pageHeight ?? meta.height : meta.height)).toFixed(4),

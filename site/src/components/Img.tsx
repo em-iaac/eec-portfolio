@@ -50,7 +50,7 @@ export default function Img({
    *  the moving-parts audit). Card covers render at 180–300 CSS px, so the
    *  640 file is already ≥2× supersampled — but a dpr>2 screen was resolving
    *  the srcset to the 1024 rung: falcon 1113KB, urban-risk 2003KB, per
-   *  hover. Cover call sites pass this; the stage and the Lightbox keep the
+   *  hover. Cover call sites pass this; the stage and the gallery face keep the
    *  full ladder. Stills are never capped (they are 11–21KB anyway). */
   capPlay?: boolean
   className?: string

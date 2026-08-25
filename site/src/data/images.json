@@ -32,33 +32,25 @@
       ]
     },
     {
-      "name": "demo-onboarding",
-      "role": "gif",
-      "alt": "Onboarding demo: the copilot interviews one person and reveals the persona it will design for, comfort with a subject",
-      "aspect": 1.8723,
-      "animated": true,
+      "name": "landing",
+      "role": "gallery",
+      "alt": "Sensi’s front door: borrow Wren’s senses for an instant read-only tour, or be the person the next plan is scored for",
+      "aspect": 1.7778,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/sensi/demo-onboarding-640.webp",
-          "kb": 298
+          "file": "assets/projects/sensi/landing-640.webp",
+          "kb": 7
         },
         {
           "w": 1024,
-          "file": "assets/projects/sensi/demo-onboarding-1024.webp",
-          "kb": 678
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/sensi/demo-onboarding-static-640.webp",
-          "kb": 1
+          "file": "assets/projects/sensi/landing-1024.webp",
+          "kb": 18
         },
         {
-          "w": 1024,
-          "file": "assets/projects/sensi/demo-onboarding-static-1024.webp",
-          "kb": 3
+          "w": 1600,
+          "file": "assets/projects/sensi/landing-1600.webp",
+          "kb": 37
         }
       ]
     },
@@ -84,6 +76,7 @@
       "name": "app-shape",
       "role": "hero",
       "alt": "The Sensi workspace mid-edit: a floor plan scored across six senses, conflicts flagged while the layout is still soft",
+      "screen": false,
       "aspect": 1.8757,
       "variants": [
         {
@@ -95,6 +88,24 @@
           "w": 1024,
           "file": "assets/projects/sensi/app-shape-1024.webp",
           "kb": 41
+        }
+      ]
+    },
+    {
+      "name": "comfort-profile",
+      "role": "gallery",
+      "alt": "The comfort profile beside the plan: Em’s priorities weighed against research baselines, the persona the scores answer to",
+      "aspect": 1.8794,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/comfort-profile-640.webp",
+          "kb": 14
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/comfort-profile-1024.webp",
+          "kb": 29
         }
       ]
     },
@@ -117,33 +128,20 @@
       ]
     },
     {
-      "name": "demo-report",
-      "role": "gif",
-      "alt": "The vision report scrolling: room scores, the prompt they become, and the render the copilot hands back",
-      "aspect": 1.8723,
-      "animated": true,
+      "name": "checkpoints-timeline",
+      "role": "gallery",
+      "alt": "Senses across checkpoints: each edit a step on the timeline, six sense lines rising and trading as the layout learns",
+      "aspect": 1.8685,
       "variants": [
         {
           "w": 640,
-          "file": "assets/projects/sensi/demo-report-640.webp",
-          "kb": 260
+          "file": "assets/projects/sensi/checkpoints-timeline-640.webp",
+          "kb": 12
         },
         {
           "w": 1024,
-          "file": "assets/projects/sensi/demo-report-1024.webp",
-          "kb": 583
-        }
-      ],
-      "static": [
-        {
-          "w": 640,
-          "file": "assets/projects/sensi/demo-report-static-640.webp",
-          "kb": 13
-        },
-        {
-          "w": 1024,
-          "file": "assets/projects/sensi/demo-report-static-1024.webp",
-          "kb": 27
+          "file": "assets/projects/sensi/checkpoints-timeline-1024.webp",
+          "kb": 25
         }
       ]
     },
@@ -151,6 +149,7 @@
       "name": "report",
       "role": "gallery",
       "alt": "The vision report Sensi hands over: comfort scores shaped for one person, with the edits the layout absorbed",
+      "screen": false,
       "aspect": 1.8685,
       "variants": [
         {
@@ -193,6 +192,42 @@
           "w": 1024,
           "file": "assets/projects/sensi/relationship-galaxy-static-1024.webp",
           "kb": 7
+        }
+      ]
+    },
+    {
+      "name": "galaxy-bloom",
+      "role": "gallery",
+      "alt": "The relationship galaxy in full bloom: every coupling fibered out, six senses pulling on each other across the whole home",
+      "aspect": 1.8819,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/galaxy-bloom-640.webp",
+          "kb": 11
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/galaxy-bloom-1024.webp",
+          "kb": 23
+        }
+      ]
+    },
+    {
+      "name": "vision-report",
+      "role": "gallery",
+      "alt": "The report’s kitchen card: scores become a prompt, the prompt becomes a render, discomfort made visible room by room",
+      "aspect": 1.9082,
+      "variants": [
+        {
+          "w": 640,
+          "file": "assets/projects/sensi/vision-report-640.webp",
+          "kb": 15
+        },
+        {
+          "w": 1024,
+          "file": "assets/projects/sensi/vision-report-1024.webp",
+          "kb": 33
         }
       ]
     },
