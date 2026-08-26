@@ -418,8 +418,14 @@ export const SKILLS = [
     // particularly between Rhino and Revit", Gensler), and Rhino.Inside in the
     // Ships-with row already evidences it.
     group: 'Domain',
+    // TRIMMED TO TWO PRINTED LINES (her ruling 2026-08-26), the same repair the
+    // AI-workflows row took on 2026-08-20: the row had wrapped to three, with
+    // the single word "craft" stranded alone on the last one. "craft" is cut
+    // (the row now reads "demo and narrative") and "daylighting" gives up its
+    // slot. ⚠ daylighting was a real AEC/performance screening term and it now
+    // appears NOWHERE on the CV — raised with her, cut on her instruction.
     items:
-      'design technology · human experience · occupant wellbeing · daylighting · evidence-based design · research design · evaluation methods · benchmarking · Rhino-Revit interoperability · human-AI interaction · demo and narrative craft',
+      'design technology · human experience · occupant wellbeing · evidence-based design · research design · evaluation methods · benchmarking · Rhino-Revit interoperability · human-AI interaction · demo and narrative',
   },
 ]
 
