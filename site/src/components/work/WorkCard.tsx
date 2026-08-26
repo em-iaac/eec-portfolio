@@ -108,6 +108,15 @@ export default function WorkCard({
               keeps the whole name. */}
           <span className="truncate">{entry.faceTitle ?? entry.title}</span>
         </span>
+        {/* NO TECH ROW ON THE FACE (Emilie, 2026-08-26, the researcher pass).
+            Direction A was built twice — the full tech row, then a curated
+            faceTech short form measured to fit without an ellipsis — and she
+            removed both: "it still feels too crowded, we can just remove it
+            and leave things how they were before, and just highlight the
+            awards." So the award line stays the face's ONLY second row and
+            the level-line reserve keeps plain titles level with it; the
+            stack reads in the sheet's STACK ledger one tap away. Do not
+            re-propose tech on the tile face. */}
         {entry.awardFace && (
           <span className="truncate font-mono text-micro tracking-[0.08em] text-[var(--lang-ink)]">
             <span aria-hidden="true">✦ </span>

@@ -120,6 +120,12 @@ const PERSON = {
     'Grasshopper',
     'Rhino',
     'generative AI',
+    // The researcher pass (Emilie, 2026-08-26): the tech-researcher vocabulary
+    // the Wednesday award post's readers screen for; every term honestly hers
+    // (Sensi's LangGraph stack, the blind A/B harness in its repo).
+    'Python',
+    'machine learning',
+    'LLM evaluation',
   ],
   email: 'mailto:chidiacemilie@gmail.com',
   sameAs: [

@@ -38,8 +38,14 @@ const spine: ProjectSpine = {
       tolerance.
     </>,
     <>
+      {/* The evals clause (the researcher pass, Emilie 2026-08-26, "c and a
+          mix"): drafted from the repo's own code — nodes/quality/evaluator.py
+          gates every reply APPROVED or REVISE, nodes/scoring/
+          suggestion_critic.py reads each suggestion for feasibility and
+          cross-sense consequences. draftCopy until she signs the words. */}
       One action classifier, a single LLM call per turn, routes each request through a LangGraph
-      state graph: analyze, edit, preview, audit.
+      state graph: analyze, edit, preview, audit. Two evals ride inside it: a critic reads every
+      suggestion for cross-sense damage, and an evaluator reads every reply before you do.
     </>,
     <>
       A coupling matrix ripples every change into the neighboring senses, so a fix that quietly
@@ -58,6 +64,11 @@ const spine: ProjectSpine = {
       end to end, including a living room arranged to fail. They mostly agreed, and it would have
       been easy to call that validation. We wrote agreement is not truth into the notes instead,
       and kept every disagreement as data.
+      {/* The a sentence (same ruling): drafted from bench_quality.py — the
+          blind A/B that replays each node's captured prompts through the old
+          and new model before a swap is adopted. draftCopy until signed. */}{' '}
+      That habit hardened into evals: swap a model and the same apartment replays through the
+      same captured prompts, old against new, judged blind before the swap is believed.
     </>
   ),
 }

@@ -6,7 +6,11 @@
 // The strategy pass’s finding: /thoughts already proves the writing, so the word was
 // spending a slot it did not need, while the one standard term every screener searches
 // appeared nowhere a human could see. Four words stays the ceiling; no `AI` prefix.
-export const ADJECTIVES = 'architect · computational designer · researcher · creative technologist'
+// REORDERED, SAME FOUR WORDS (Emilie, 2026-08-26, the researcher pass): the line
+// opened on `architect` and the award-post audience reads left to right, so the
+// strongest searched term leads and `architect` closes as the origin — the same
+// arc the BIO below already walks. Order is the only change; the G4 words stand.
+export const ADJECTIVES = 'computational designer · researcher · creative technologist · architect'
 export const VOICE = 'I work with design, technology and minds.'
 
 // WINK REMOVED (Emilie, 2026-08-06, the last pass before print): "let’s remove
