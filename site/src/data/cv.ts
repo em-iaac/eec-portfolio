@@ -58,8 +58,8 @@
 // pass: optional, because Dynamic Solution (the current job) cannot name its
 // work and two of the older roles have none worth a line.
 export type CvEntry = {
-  // Education carries no dates at all (her call, 2026-07-27): years live in
-  // EXPERIENCE and AWARDS, where a reader is actually computing tenure.
+  // Optional. Every EXPERIENCE entry carries dates; in EDUCATION only the
+  // degree in progress does (her amendment 2026-08-26, see the note above).
   dates?: string
   title: string
   org: string
@@ -72,11 +72,21 @@ export type CvEntry = {
   projects?: string[]
 }
 
-// DATE FORMAT, one rule, no exceptions (her audit, 2026-07-27): EXPERIENCE
-// carries month + year on every entry, EDUCATION carries none at all. The
+// DATE FORMAT (her audit, 2026-07-27, AMENDED BY HER 2026-08-26): EXPERIENCE
+// carries month + year on every entry. EDUCATION carried none at all, and now
+// carries them on the MaCAD entry ONLY: at the recruiter pass she ruled the
+// degree must show "Sep 2025 - Dec 2026" so a reader can see she is FINISHING,
+// which is the one fact a dateless education block cannot say. The bachelor
+// stays dateless knowingly (raised with her): the end date of a degree in
+// progress is load-bearing, the end date of one completed years ago is not. The
 // earlier hybrid (months on the recent roles, bare years on the older two)
 // was defensible on parsing grounds and still read as an inconsistency to a
 // human, which is the reader who was going to notice.
+// THE RECRUITER PASS (2026-08-26) re-measured this ceiling off the shipped
+// PDF rather than trusting the number: the text column's right edge is 547pt,
+// the longest surviving bullet ends at 544pt, and a character costs ~4pt. Every
+// bullet touched this pass was fitted against those numbers and re-measured in
+// the rebuilt PDF, not estimated.
 // EVERY BULLET IS ONE PRINTED LINE (her call, 2026-07-27). A bullet that wraps
 // for the sake of two words reads as sloppy, so each string below is written
 // to a measured ceiling of roughly 118 characters at 8.6pt across the A4
@@ -96,7 +106,12 @@ export const EDUCATION: CvEntry[] = [
     // on the diploma ("Master's Degree in Advanced Computation for Architecture
     // & Design"); IAAC renamed the course and the old URL redirects. Both are
     // true, this is the current one.
-    title: 'Master in Advanced Computational Design for Architecture II',
+    dates: 'Sep 2025 - Dec 2026',
+    // THE RECRUITER PASS (2026-08-26, her ruling): the searchable acronym joins
+    // the full name. The awards block already writes "MaCAD" twice, and until
+    // now nothing on the page let a screener match the two strings to each
+    // other. The "II" survives: it is the official programme name.
+    title: 'Master in Advanced Computational Design for Architecture (MaCAD) II',
     org: 'IAAC, Barcelona',
     // Mirrors the bachelor's honours line (her call): what the school judged.
     // Scholarship name confirmed by her.
@@ -105,13 +120,19 @@ export const EDUCATION: CvEntry[] = [
       // "agentic" earns its place here rather than in a skills row: Sensi IS
       // an agentic copilot, so the fastest-growing term in this cluster is
       // evidence-backed rather than fashionable.
-      'Sensi, an agentic copilot scoring a floor plan across six senses, calibrated to a person. Project lead, team of four.',
+      // THE RECRUITER PASS (2026-08-26): "LLM" joins it, literally, because AI
+      // screeners grep literal tokens and the word appeared ZERO times on this
+      // page. It costs four characters and the bullet still prints one line.
+      // "evals" could NOT also fit here without cutting either the six-senses
+      // claim or "calibrated to a person", so it lands on the methods line
+      // directly below, in the skills row, and in the lead. Flagged to her.
+      'Sensi, an agentic LLM copilot scoring a floor plan across six senses, calibrated to a person. Project lead, team of four.',
       "The Lungs, the deployed app that ran the studio: a hyperbuilding designed to filter a city's air. Data team of three.",
       // THE SWEEP (2026-08-19, her ruling): the input is a TEXT prompt, not
       // images (the renders are the pipeline's intermediate), and "catalog"
       // takes the US spelling the spine already uses.
       'lEgoarCh, a pipeline turning a text prompt into brick sets verified buildable against the real catalog.',
-      'Methods: agent orchestration, generative pipelines, Rhino Compute, machine learning applied in teams.',
+      'Methods: agent orchestration, evals, generative pipelines, Rhino Compute, machine learning applied in teams.',
     ],
   },
   {
@@ -138,6 +159,11 @@ export const EXPERIENCE: CvEntry[] = [
     // is the single most valuable line on the page.
     title: 'Design Technologist',
     org: 'Dynamic Solution Co., Kuwait',
+    // B5, HER RULING 2026-08-26: this role carries NO number. "Studio of ten"
+    // came out at her instruction ("I dont want to put numbers, and remove
+    // studio of ten"), which knowingly reverses the recruiter pass's own
+    // one-honest-number-per-role brief for this entry alone. The team framing
+    // survives as "Interdisciplinary teams".
     // Written from her own account of the job (2026-07-27). No client is
     // named: brand SECTORS, team size and method are disclosable under
     // ordinary NDA practice, project names are not. This block also now
@@ -154,7 +180,7 @@ export const EXPERIENCE: CvEntry[] = [
       'Drive parametric design and generative design for exhibitions and brand experiences: Rhino, Grasshopper, Kangaroo.',
       'Direct generative AI from text to image and text to deck, and judge which outputs are worth keeping.',
       'Prototype web and VR experiences for clients, designed human-centered and detailed for disassembly.',
-      'Prepare and present concept and pitch for sports, F&B and automotive brands. Studio of ten, interdisciplinary teams.',
+      'Prepare and present concept and pitch for sports, F&B and automotive brands. Interdisciplinary teams.',
     ],
   },
   {
@@ -162,8 +188,13 @@ export const EXPERIENCE: CvEntry[] = [
     title: 'Design Architect',
     org: 'SOMA, Dubai | Beirut',
     // Project names lead (her review): they are the scannable part.
+    // B5 (her ruling 2026-08-26): the bullet named four towers without ever
+    // saying "four", so the number was already earned and simply unsaid. It
+    // goes AFTER the names, never before: splitProjectLink keys the /work/soma
+    // door to the bullet's leading string, and a number in front would kill
+    // the link annotation and fail cv.test.ts.
     projects: [
-      'Verve City Walk, District O, Enara, Saria: led facade and massing studies in Rhino and Grasshopper.',
+      'Verve City Walk, District O, Enara, Saria: led facade and massing studies on four towers in Rhino and Grasshopper.',
       // LOD 300 confirmed by her as true of the SOMA delivery too, 2026-07-27,
       // so the keyword is back on the project that earned it.
       'Delivered those studies into the Revit BIM set at LOD 300: floorplans, interiors, masterplan documentation.',
@@ -219,7 +250,7 @@ export const EXPERIENCE: CvEntry[] = [
     // European screener.
     org: 'Lebanese American University XR Lab, Byblos',
     projects: [
-      'Modelled and animated chemical reactions for AR learning, and researched VR integration in education.',
+      'Modeled and animated chemical reactions for AR learning, and researched VR integration in education.',
     ],
   },
 ]
@@ -365,7 +396,7 @@ export const SKILLS = [
     // connective glosses went ("of model output", "experiment tracking");
     // every searchable term survived. Measured at 2 lines on the web CV.
     items:
-      'AI agents and copilots (LangGraph) · evaluation and benchmarking · GenAI pipelines (LoRA fine-tuning · FLUX · ComfyUI · ControlNet) · Weights & Biases · rapid prototyping · design automation',
+      'AI agents and LLM copilots (LangGraph) · evals and benchmarking · GenAI pipelines (LoRA fine-tuning · FLUX · ComfyUI · ControlNet) · Weights & Biases · rapid prototyping · design automation',
   },
   {
     // Speckle restored (a named filter term for consultancy roles, and The
@@ -494,8 +525,17 @@ export const CERTIFICATES = [
 // hyphen in "AI-assisted" is itself a break opportunity and Chrome took it.
 export const FOCUS_NOBREAK = 'AI-assisted, of course.'
 
+// THE RECRUITER PASS (2026-08-26). The brief asked for this line to stop
+// opening with Rhino/Grasshopper so the research/AI identity could lead. It was
+// stress-tested at her instruction and the reorder was ARGUED DOWN: for her
+// strongest honest fit (computational design in a practice) Rhino + Grasshopper
+// IS the screened baseline, an ATS ranks on presence rather than position, and
+// a reader of a two-line summary reads both lines. The real defect was content,
+// not order: the header's only AI content was a JOKE conceding that AI is table
+// stakes, so the top of the page claimed no AI capability at all. Her ruling:
+// the additive tweak. Both signed sentences are untouched, byte for byte.
 export const FOCUS =
-  'I build tools in Rhino, Grasshopper and code that score how a space works on the people inside it. AI-assisted, of course. The judgment about what they get wrong is mine.'
+  'I build tools in Rhino, Grasshopper and code that score how a space works on the people inside it: LLM agents, and the evals that catch them. AI-assisted, of course. The judgment about what they get wrong is mine.'
 
 // THE STAMP IS DERIVED, NOT TYPED (2026-07-27). It used to be a hardcoded
 // string, which meant it was wrong the day after anyone forgot to bump it.

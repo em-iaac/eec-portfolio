@@ -505,12 +505,20 @@ describe('the ATS CV page', () => {
     expect(count(cvHtml, 'pr-page--portrait')).toBe(1)
     expect(cvHtml).toContain('Emilie El Chidiac')
     expect(cvHtml).toContain('chidiacemilie@gmail.com')
-    // Education carries no dates by design since the CV pass (2026-07-27):
-    // years live in EXPERIENCE and AWARDS, where a reader computes tenure.
+    // EVERY EXPERIENCE ENTRY IS DATED, always: that is where a reader computes
+    // tenure, and a role without dates reads as a gap being hidden.
+    expect(EXPERIENCE.every(e => e.dates)).toBe(true)
+    // EDUCATION was dateless by design from the CV pass (2026-07-27) until the
+    // recruiter pass (2026-08-26), when she ruled the degree IN PROGRESS must
+    // show its window so a reader can see she is finishing. Exactly one
+    // education entry may carry dates, and it must be the MaCAD one: if a
+    // second ever appears, the block has drifted back into the mixed dating
+    // her 2026-07-27 audit removed, and that is a decision, not a typo.
+    const datedEducation = EDUCATION.filter(e => e.dates)
+    expect(datedEducation.length).toBe(1)
+    expect(datedEducation[0]!.title).toContain('MaCAD')
     // Every entry that DOES declare dates must still print them.
-    const dated = [...EDUCATION, ...EXPERIENCE].filter(e => e.dates)
-    expect(dated.length).toBe(EXPERIENCE.length)
-    for (const e of dated) {
+    for (const e of [...EDUCATION, ...EXPERIENCE].filter(e => e.dates)) {
       expect(cvHtml).toContain(e.dates)
     }
     expect(cvHtml).toContain('Rhino Compute')
