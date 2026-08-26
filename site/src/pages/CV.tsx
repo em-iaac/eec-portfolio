@@ -333,14 +333,22 @@ export default function CV() {
         {/* LEAD step: the summary now sits ABOVE body size. It used to match
             the bullets exactly, which gave the most important line on the page
             no hierarchy at all. draftCopy: FOCUS is unsigned. */}
-        {/* The break is FORCED here, not left to the measure: the printed page
-            starts its second line on "AI-assisted, of course." and the screen
-            now does the same. Split on the same named phrase both surfaces
-            share, so the two can never drift apart. */}
+        {/* THE FORCED BREAK IS GONE (her ruling 2026-08-26). It used to mirror
+            the printed page, which started its second line on "AI-assisted, of
+            course." — but a hard <br> mirrors a break POSITION, and a break
+            position is a fact about a measure, not about the words. The
+            recruiter pass lengthened this sentence, the PDF's break moved to
+            the middle of the first sentence, and the <br> went on forcing the
+            OLD position: the screen spent three lines saying what the paper
+            says in two, with half of the second line left empty.
+            So the screen now wraps the way the paper does, at its own measure,
+            and the ONE thing that must not break is held by the same nowrap
+            span the print page uses (PrintCV's Lead). The two surfaces agree
+            on the RULE now, not on a pixel, so neither can strand the other
+            again. */}
         <p className="cv-lead mt-3 font-serif text-[var(--lang-ink)]">
-          {(FOCUS.split(FOCUS_NOBREAK)[0] ?? '').trimEnd()}
-          <br />
-          {FOCUS_NOBREAK}
+          {FOCUS.split(FOCUS_NOBREAK)[0] ?? ''}
+          <span className="whitespace-nowrap">{FOCUS_NOBREAK}</span>
           {FOCUS.split(FOCUS_NOBREAK)[1] ?? ''}
         </p>
       </div>
