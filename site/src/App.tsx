@@ -139,6 +139,35 @@ function ScrollToTop() {
 // of a page lands on one dashboard row. No-op in dev (BASE_URL = '/').
 const COUNT_BASE = import.meta.env.BASE_URL.replace(/\/$/, '')
 
+// THE READ + THE DOORS (2026-09-07, design D of the screen-time pass).
+// GoatCounter has no time on page, so two anonymous EVENTS carry it, both
+// through the same count.js call (sendBeacon first, image fallback):
+//   read:<path>  fired ONCE per page once it has been in view for READ_MS of
+//                ACTIVE time: visible tab AND focused window, so a tab left
+//                in the background, or a window alt-tabbed away from, does
+//                not count as attention. Fires while the page is still open,
+//                so it never races pagehide. Read ÷ visits = held attention.
+//   out:<door>   one delegated click on any <a> whose href is one of the
+//                six doors a recruiter uses (the Sensi app, the CV and book
+//                PDFs, GitHub, LinkedIn, email). Six rows, never grows; the
+//                title carries the page the click came from.
+// Both show as rows in the dashboard's Pages list under those prefixes and
+// count in the visits total. Aggregate counts only: no cookie, no IP, no
+// identity, so /rights 3.2 stays true as written (her ruling, unchanged).
+const READ_MS = 30_000
+const DOORS: ReadonlyArray<readonly [RegExp, string]> = [
+  [/^https?:\/\/sensi\.emiliechidiac\.com(\/|$)/i, 'sensi'],
+  [/\/cv-emilie-el-chidiac\.pdf$/i, 'cv-pdf'],
+  [/\/portfolio-emilie-el-chidiac\.pdf$/i, 'book-pdf'],
+  [/^https?:\/\/(www\.)?github\.com(\/|$)/i, 'github'],
+  [/^https?:\/\/(www\.)?linkedin\.com(\/|$)/i, 'linkedin'],
+  [/^mailto:/i, 'email'],
+]
+function doorOf(href: string): string | null {
+  for (const [re, name] of DOORS) if (re.test(href)) return name
+  return null
+}
+
 function PageCount() {
   const { pathname } = useLocation()
   const first = useRef(true)
@@ -149,6 +178,65 @@ function PageCount() {
     }
     window.goatcounter?.count?.({ path: COUNT_BASE + pathname })
   }, [pathname])
+
+  // THE READ: a stopwatch that only runs while the page is visible and the
+  // window focused; at READ_MS of accumulated active time the event fires.
+  // Restarts per pathname (a hash change inside a sheet is the same page).
+  useEffect(() => {
+    const path = COUNT_BASE + pathname
+    let active = 0 // ms banked from finished stretches
+    let since: number | null = null // start of the running stretch, if any
+    let timer: ReturnType<typeof setTimeout> | undefined
+    let sent = false
+    const isActive = () => document.visibilityState === 'visible' && document.hasFocus()
+    const fire = () => {
+      sent = true
+      since = null
+      window.goatcounter?.count?.({ path: 'read:' + path, event: true })
+    }
+    const pause = () => {
+      if (since === null) return
+      active += performance.now() - since
+      since = null
+      clearTimeout(timer)
+    }
+    const resume = () => {
+      if (sent || since !== null || !isActive()) return
+      since = performance.now()
+      timer = setTimeout(fire, Math.max(0, READ_MS - active))
+    }
+    const sync = () => (isActive() ? resume() : pause())
+    resume()
+    document.addEventListener('visibilitychange', sync)
+    window.addEventListener('focus', sync)
+    window.addEventListener('blur', sync)
+    return () => {
+      pause()
+      document.removeEventListener('visibilitychange', sync)
+      window.removeEventListener('focus', sync)
+      window.removeEventListener('blur', sync)
+    }
+  }, [pathname])
+
+  // THE DOORS: one capture-phase listener on the document, so no link
+  // component is touched and a handler that stops propagation cannot hide
+  // the click. Modified clicks (new tab) still count; middle clicks do not.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.button !== 0) return
+      const a = (e.target as Element | null)?.closest?.('a[href]')
+      if (!(a instanceof HTMLAnchorElement)) return
+      const door = doorOf(a.href)
+      if (!door) return
+      window.goatcounter?.count?.({
+        path: 'out:' + door,
+        title: COUNT_BASE + location.pathname,
+        event: true,
+      })
+    }
+    document.addEventListener('click', onClick, true)
+    return () => document.removeEventListener('click', onClick, true)
+  }, [])
   return null
 }
 
